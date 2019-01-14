@@ -8,6 +8,39 @@ class BaseModel(object):
         self.param_defaults = {}
 
 
+class AccessToken(BaseModel):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.param_defaults = {
+            'app_id': None,
+            'application': None,
+            'type': None,
+            'expires_at': None,
+            'is_valid': None,
+            'issued_at': None,
+            'scopes': None,
+            'user_id': None,
+        }
+        for (param, default) in self.param_defaults.items():
+            setattr(self, param, kwargs.get(param, default))
+
+    def __repr__(self):
+        return "AccessToken(app_id={aid}, app_name={name})".format(
+            aid=self.app_id,
+            name=self.application,
+        )
+
+    @classmethod
+    def new_from_json_dict(cls, data, **kwargs):
+        json_data = data.copy()
+        if kwargs:
+            for key, val in kwargs.items():
+                json_data[key] = val
+        c = cls(**json_data)
+        c.__json = data
+        return c
+
+
 class Page(BaseModel):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -34,7 +67,7 @@ class Page(BaseModel):
             'website': None,
         }
 
-        for (param, default) in self.param_defaults:
+        for (param, default) in self.param_defaults.items():
             setattr(self, param, kwargs.get(param, default))
 
     def __repr__(self):
