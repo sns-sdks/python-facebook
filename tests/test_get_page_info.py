@@ -10,5 +10,4 @@ class PageInfoTest(unittest.TestCase):
 
     def testSimplePageInfo(self):
         data = self.api.get_page_info(page_id=149515305173840)
-        print(data)
         self.assertEqual(type(data), pyfacebook.Page)

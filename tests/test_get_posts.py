@@ -10,5 +10,4 @@ class PostsTest(unittest.TestCase):
 
     def testSimplePosts(self):
         data = self.api.get_posts(page_id=149515305173840, count=10)
-        print(data)
         self.assertEqual(type(data), list)

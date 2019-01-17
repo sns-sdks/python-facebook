@@ -2,12 +2,12 @@
 
 from __future__ import absolute_import
 
-from .error import PyFacebookError
+from .error import PyFacebookError  # noqa
 
 from .models import (
-    AccessToken,
-    Page,
-    Post
+    AccessToken,                    # noqa
+    Page,                           # noqa
+    Post                            # noqa
 )
 
-from .api import Api
+from .api import Api                # noqa

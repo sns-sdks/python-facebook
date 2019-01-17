@@ -4,8 +4,9 @@ import re
 import requests
 
 from pyfacebook.error import PyFacebookError
-from pyfacebook.ratelimit import RateLimit
 from pyfacebook.models import AccessToken, Page, Post
+from pyfacebook.ratelimit import RateLimit
+from pyfacebook.utils import constant
 
 
 class Api(object):
@@ -134,13 +135,13 @@ class Api(object):
                 If True JSON data will be returned, instead of pyfacebook.AccessToken
         :return:
         """
-        if not all([self.app_id, self.app_secret]):
-            raise PyFacebookError({
-                'message': 'Get token info need provide app account.'
-            })
+        if all([self.app_id, self.app_secret]):
+            access_token = "{0}|{1}".format(self.app_id, self.app_secret)
+        else:
+            access_token = self.token
         args = {
             "input_token": self.token,
-            "access_token": "{0}|{1}".format(self.app_id, self.app_secret),
+            "access_token": access_token,
         }
         resp = self._request(
             '{0}/debug_token'.format(self.version),
@@ -174,15 +175,8 @@ class Api(object):
         else:
             raise PyFacebookError({'message': "Specify at least one of page_id or username"})
 
-        fields = [
-            'id', 'about', 'category', 'category_list', 'checkins', 'cover',
-            'description', 'description_html', 'emails', 'engagement', 'fan_count',
-            'global_brand_page_name', 'global_brand_root_id', 'link', 'name', 'phone',
-            'page_about_story', 'username', 'verification_status', 'website'
-        ]
-
         args = {
-            'fields': ','.join(fields)
+            'fields': ','.join(constant.PAGE_FIELDS)
         }
 
         resp = self._request(
@@ -227,23 +221,8 @@ class Api(object):
         else:
             raise PyFacebookError({'message': "Specify at least one of page_id or username"})
 
-        fields = [
-            'id', 'attachments', 'caption', 'child_attachments', 'created_time', 'description',
-            'full_picture', 'icon', 'link', 'message', 'name',
-            'permalink_url', 'picture', 'shares', 'source', 'status_type',
-            'type', 'updated_time',
-            'comments.summary(true).limit(0)', 'reactions.summary(true).limit(0)',
-            'reactions.type(LIKE).limit(0).summary(total_count).as(like)',
-            'reactions.type(LOVE).limit(0).summary(total_count).as(love)',
-            'reactions.type(WOW).limit(0).summary(total_count).as(wow)',
-            'reactions.type(HAHA).limit(0).summary(total_count).as(haha)',
-            'reactions.type(SAD).limit(0).summary(total_count).as(sad)',
-            'reactions.type(ANGRY).limit(0).summary(total_count).as(angry)',
-            'reactions.type(THANKFUL).limit(0).summary(total_count).as(thankful)',
-        ]
-
         args = {
-            'fields': ','.join(fields),
+            'fields': ','.join(set(constant.POST_BASIC_FIELDS + constant.POST_REACTIONS_FIELD)),
             'since': since_time,
             'until': until_time,
             'limit': count,
@@ -259,5 +238,33 @@ class Api(object):
 
         return [Post.new_from_json_dict(item) for item in data['data']]
 
-    def get_post_info(self):
-        pass
+    def get_post_info(self,
+                      post_id=None,
+                      return_json=False):
+        """
+        Obtain give page's basic info.
+
+        Args:
+            post_id (str)
+                The id for you want to retrieve post.
+            return_json (bool, optional):
+                If True JSON data will be returned, instead of pyfacebook.Page
+        :return:
+        """
+        if post_id is None:
+            raise PyFacebookError({'message': "Must specify the post id"})
+
+        args = {
+            'fields': ','.join(set(constant.POST_BASIC_FIELDS + constant.POST_REACTIONS_FIELD))
+        }
+        resp = self._request(
+            method='GET',
+            path='{0}/{1}'.format(self.version, post_id),
+            args=args
+        )
+
+        data = self._parse_response(resp.content.decode('utf-8'))
+        if return_json:
+            return data
+        else:
+            return Post.new_from_json_dict(data)
