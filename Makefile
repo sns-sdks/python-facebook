@@ -1,4 +1,4 @@
-all: help env clean lint test
+all: help env clean lint test build
 
 .PHONY: all
 
@@ -26,3 +26,8 @@ lint:
 test:
 	pytest -s
 	#python setup.py test
+
+build: clean
+	python setup.py check
+	python setup.py sdist
+	python setup.py bdist_wheel
