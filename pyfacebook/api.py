@@ -131,7 +131,7 @@ class Api(object):
 
         Args:
             return_json (bool, optional):
-            If True JSON data will be returned, instead of pyfacebook.AccessToken
+                If True JSON data will be returned, instead of pyfacebook.AccessToken
         :return:
         """
         if not all([self.app_id, self.app_secret]):
@@ -152,3 +152,112 @@ class Api(object):
             return data
         else:
             return AccessToken.new_from_json_dict(data['data'])
+
+    def get_page_info(self, page_id=None, username=None, return_json=False):
+        """
+        Obtain give page's basic info.
+
+        Args:
+            page_id (int, optional)
+                The id for you want to retrieve data
+            username (str, optional)
+                The username (page username) for you want to retrieve data
+                Either page_id or username is required. if all given. use username.
+            return_json (bool, optional):
+                If True JSON data will be returned, instead of pyfacebook.Page
+        :return:
+        """
+        if page_id:
+            target = page_id
+        elif username:
+            target = username
+        else:
+            raise PyFacebookError({'message': "Specify at least one of page_id or username"})
+
+        fields = [
+            'id', 'about', 'category', 'category_list', 'checkins', 'cover',
+            'description', 'description_html', 'emails', 'engagement', 'fan_count',
+            'global_brand_page_name', 'global_brand_root_id', 'link', 'name', 'phone',
+            'page_about_story', 'username', 'verification_status', 'website'
+        ]
+
+        args = {
+            'fields': ','.join(fields)
+        }
+
+        resp = self._request(
+            method='GET',
+            path='{0}/{1}'.format(self.version, target),
+            args=args
+        )
+        data = self._parse_response(resp.content.decode('utf-8'))
+        if return_json:
+            return data
+        else:
+            return Page.new_from_json_dict(data)
+
+    def get_posts(self,
+                  page_id=None,
+                  username=None,
+                  since_time=None,
+                  until_time=None,
+                  count=100):
+        """
+        Obtain give page's posts info.
+
+        Args:
+            page_id (int, optional)
+                The id for you want to retrieve data
+            username (str, optional)
+                The username (page username) for you want to retrieve data
+                Either page_id or username is required. if all given. use username.
+            since_time (str, optional)
+                The posts retrieve begin time.
+            until_time ()
+                The posts retrieve until time.
+                If neither since_time or until_time, it will by now time.
+            count (int, optional)
+                The count to retrieve posts, may be paging.
+        :return:
+        """
+        if page_id:
+            target = page_id
+        elif username:
+            target = username
+        else:
+            raise PyFacebookError({'message': "Specify at least one of page_id or username"})
+
+        fields = [
+            'id', 'attachments', 'caption', 'child_attachments', 'created_time', 'description',
+            'full_picture', 'icon', 'link', 'message', 'name',
+            'permalink_url', 'picture', 'shares', 'source', 'status_type',
+            'type', 'updated_time',
+            'comments.summary(true).limit(0)', 'reactions.summary(true).limit(0)',
+            'reactions.type(LIKE).limit(0).summary(total_count).as(like)',
+            'reactions.type(LOVE).limit(0).summary(total_count).as(love)',
+            'reactions.type(WOW).limit(0).summary(total_count).as(wow)',
+            'reactions.type(HAHA).limit(0).summary(total_count).as(haha)',
+            'reactions.type(SAD).limit(0).summary(total_count).as(sad)',
+            'reactions.type(ANGRY).limit(0).summary(total_count).as(angry)',
+            'reactions.type(THANKFUL).limit(0).summary(total_count).as(thankful)',
+        ]
+
+        args = {
+            'fields': ','.join(fields),
+            'since': since_time,
+            'until': until_time,
+            'limit': count,
+        }
+
+        resp = self._request(
+            method='GET',
+            path='{0}/{1}/{2}'.format(self.version, target, 'posts'),
+            args=args
+        )
+
+        data = self._parse_response(resp.content.decode('utf-8'))
+
+        return [Post.new_from_json_dict(item) for item in data['data']]
+
+    def get_post_info(self):
+        pass

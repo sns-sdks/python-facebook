@@ -7,6 +7,16 @@ class BaseModel(object):
     def __init__(self, **kwargs):
         self.param_defaults = {}
 
+    @classmethod
+    def new_from_json_dict(cls, data, **kwargs):
+        json_data = data.copy()
+        if kwargs:
+            for key, val in kwargs.items():
+                json_data[key] = val
+        c = cls(**json_data)
+        c.__json = data
+        return c
+
 
 class AccessToken(BaseModel):
     def __init__(self, **kwargs):
@@ -29,16 +39,6 @@ class AccessToken(BaseModel):
             aid=self.app_id,
             name=self.application,
         )
-
-    @classmethod
-    def new_from_json_dict(cls, data, **kwargs):
-        json_data = data.copy()
-        if kwargs:
-            for key, val in kwargs.items():
-                json_data[key] = val
-        c = cls(**json_data)
-        c.__json = data
-        return c
 
 
 class Page(BaseModel):
@@ -117,3 +117,22 @@ class Post(BaseModel):
             pid=self.id,
             link=self.link
         )
+
+    @classmethod
+    def new_from_json_dict(cls, data, **kwargs):
+        json_data = data.copy()
+        if kwargs:
+            for key, val in kwargs.items():
+                if isinstance(val, dict):
+                    if not key.endswith('attachments'):
+                        if 'count' in val:
+                            json_data[key] = val['count']
+                        elif 'summary' in val:
+                            json_data[key] = val['summary'].get('total_count', 0)
+                    else:
+                        json_data[key] = val
+                else:
+                    json_data[key] = val
+        c = cls(**json_data)
+        c.__json = data
+        return c
