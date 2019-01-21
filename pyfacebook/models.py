@@ -112,9 +112,9 @@ class Post(BaseModel):
             setattr(self, param, kwargs.get(param, default))
 
     def __repr__(self):
-        return "Post(ID={pid}, link={link})".format(
+        return "Post(ID={pid}, permalink_url={permalink_url})".format(
             pid=self.id,
-            link=self.link
+            permalink_url=self.permalink_url
         )
 
     @classmethod
