@@ -3,7 +3,7 @@
 from __future__ import absolute_import, print_function
 
 #
-# Copyright 2007-2016 The Python-Twitter Developers
+# Copyright 2018 Ikroskun follows by The Python-Twitter Developers
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ def extract_metaitem(meta):
 
 
 setup(
-    name='python-twitter',
+    name='python-facebook',
     version=extract_metaitem('version'),
     license=extract_metaitem('license'),
     description=extract_metaitem('description'),
