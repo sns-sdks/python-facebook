@@ -122,16 +122,19 @@ class Post(BaseModel):
         json_data = data.copy()
         if kwargs:
             for key, val in kwargs.items():
-                if isinstance(val, dict):
-                    if not key.endswith('attachments'):
-                        if 'count' in val:
-                            json_data[key] = val['count']
-                        elif 'summary' in val:
-                            json_data[key] = val['summary'].get('total_count', 0)
-                    else:
-                        json_data[key] = val
+                json_data[key] = val
+        # handle the different count.
+        for key, val in json_data.items():
+            if isinstance(val, dict):
+                if not key.endswith('attachments'):
+                    if 'count' in val:
+                        json_data[key] = val['count']
+                    elif 'summary' in val:
+                        json_data[key] = val['summary'].get('total_count', 0)
                 else:
                     json_data[key] = val
+            else:
+                json_data[key] = val
         c = cls(**json_data)
         c.__json = data
         return c

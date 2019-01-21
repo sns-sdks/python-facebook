@@ -248,7 +248,7 @@ class Api(object):
             post_id (str)
                 The id for you want to retrieve post.
             return_json (bool, optional):
-                If True JSON data will be returned, instead of pyfacebook.Page
+                If True JSON data will be returned, instead of pyfacebook.Page, or return origin data by facebook.
         :return:
         """
         if post_id is None:
