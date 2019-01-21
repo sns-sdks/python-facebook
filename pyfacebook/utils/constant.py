@@ -6,7 +6,7 @@ PAGE_FIELDS = [
     'id', 'about', 'category', 'category_list', 'checkins', 'cover',
     'description', 'description_html', 'emails', 'engagement', 'fan_count',
     'global_brand_page_name', 'global_brand_root_id', 'link', 'name', 'phone',
-    'page_about_story', 'username', 'verification_status', 'website'
+    'username', 'verification_status', 'website'
 ]
 
 POST_BASIC_FIELDS = [

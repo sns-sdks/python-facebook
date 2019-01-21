@@ -61,7 +61,6 @@ class Page(BaseModel):
             'link': None,
             'name': None,
             'phone': None,
-            'page_about_story': None,
             'username': None,
             'verification_status': None,
             'website': None,
