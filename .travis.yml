@@ -1,0 +1,4 @@
+language: python
+sudo: required
+before_install: sudo pip install -r requirements.test.txt
+script: py.test
