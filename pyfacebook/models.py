@@ -33,7 +33,6 @@ class BaseModel(object):
 
 class AccessToken(BaseModel):
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
         self.param_defaults = {
             'app_id': None,
             'application': None,
@@ -56,7 +55,6 @@ class AccessToken(BaseModel):
 
 class Page(BaseModel):
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
         self.param_defaults = {
             'id': None,
             'about': None,
@@ -91,7 +89,6 @@ class Page(BaseModel):
 
 class Post(BaseModel):
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
         self.param_defaults = {
             'id': None,
             'attachments': None,

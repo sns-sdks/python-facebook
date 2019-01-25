@@ -2,6 +2,11 @@ Python Facebook
 
 A Python wrapper around for Facebook Common API.
 
+.. image:: https://travis-ci.org/MerleLiuKun/python-facebook.svg?branch=master
+    :target: https://travis-ci.org/MerleLiuKun/python-facebook
+    :alt: Build Status
+
+
 ======
 THANKS
 ======
