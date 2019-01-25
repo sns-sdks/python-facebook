@@ -38,7 +38,7 @@ This API need facebook OAUTH keys to get any data from facebook. And the faceboo
 If you not have facebook app, you can view `Facebook Developers <https://developers.facebook.com/>`_ to apply one. If you
 have app. you can do as follows example.
 
-All the OAuth Doc to see ` Facebook Access Token <https://developers.facebook.com/docs/facebook-login/access-tokens/#usertokens>`_
+All the OAuth Doc to see `Facebook Access Token <https://developers.facebook.com/docs/facebook-login/access-tokens/#usertokens>`_
 
 To create an instance of the ``pyfacebook.Api`` with two different methods. Use only long term token or provide app
 id, app secret and short token::
