@@ -2,7 +2,6 @@
 coverage
 flake8
 pytest
-pytest-cov
 pytest-runner
 codecov
 responses
