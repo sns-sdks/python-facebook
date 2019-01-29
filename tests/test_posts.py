@@ -81,4 +81,3 @@ class PostsTest(unittest.TestCase):
 
     def testAsJsonString(self):
         self.assertEqual(self.SIMPLE_DATA, self._load_simple_post().as_json_string())
-

@@ -1,7 +1,14 @@
 import json
 import re
+import time
 
 import requests
+
+try:
+    # python 3
+    from urllib.parse import urlparse, parse_qsl
+except ImportError:
+    from urlparse import urlparse, parse_qsl
 
 from pyfacebook.error import PyFacebookError
 from pyfacebook.models import AccessToken, Page, Post
@@ -91,6 +98,9 @@ class Api(object):
             elif "access_token" not in args:
                 args["access_token"] = self.token
         try:
+            if self.sleep_on_rate_limit:
+                interval = self.rate_limit.get_sleep_interval()
+                time.sleep(interval)
             response = self.session.request(
                 method,
                 self.base_url + path,
@@ -190,12 +200,49 @@ class Api(object):
         else:
             return Page.new_from_json_dict(data)
 
+    def get_posts_paged(self,
+                        target=None,
+                        next_page=None,
+                        args=None):
+        """
+        Fetch the paging posts data for given page.
+
+        Args:
+            target:
+                The ID or username for which page you want to retrieve data.
+            next_page (str, optional):
+                The paging next page url. for begin it is None.
+            args:
+                Relative params you want to retrieve data. Now is pointed.
+
+        Returns:
+            next_page (str), previous_page (str), list of pyfacebook.Post instances.
+        """
+        if next_page is None:
+            path = '{0}/{1}/{2}'.format(self.version, target, 'posts')
+        else:
+            parse_path = urlparse(next_page)
+            path = parse_path.path
+            args = dict(parse_qsl(parse_path.query))
+        resp = self._request(
+            method='GET',
+            path=path,
+            args=args
+        )
+        next_page, previous_page = None, None
+        data = self._parse_response(resp.content.decode('utf-8'))
+        if 'paging' in data:
+            next_page = data['paging'].get('next')
+            previous_page = data['paging'].get('previous')
+        result = [Post.new_from_json_dict(item) for item in data['data']]
+        return next_page, previous_page, result
+
     def get_posts(self,
                   page_id=None,
                   username=None,
                   since_time=None,
                   until_time=None,
-                  count=100):
+                  count=10):
         """
         Obtain give page's posts info.
 
@@ -211,7 +258,7 @@ class Api(object):
                 The posts retrieve until time.
                 If neither since_time or until_time, it will by now time.
             count (int, optional)
-                The count to retrieve posts, may be paging.
+                The count is each request get the result count. For posts it should no more than 100.
         :return:
         """
         if page_id:
@@ -228,15 +275,20 @@ class Api(object):
             'limit': count,
         }
 
-        resp = self._request(
-            method='GET',
-            path='{0}/{1}/{2}'.format(self.version, target, 'posts'),
-            args=args
-        )
+        result = []
+        next_page = None
 
-        data = self._parse_response(resp.content.decode('utf-8'))
+        while True:
+            next_page, previous_page, posts = self.get_posts_paged(
+                target=target,
+                next_page=next_page,
+                args=args
+            )
+            result += posts
+            if next_page is None:
+                break
 
-        return [Post.new_from_json_dict(item) for item in data['data']]
+        return result
 
     def get_post_info(self,
                       post_id=None,

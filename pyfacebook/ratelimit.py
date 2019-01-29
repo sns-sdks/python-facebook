@@ -1,4 +1,7 @@
 import json
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class RateLimit(object):
@@ -22,3 +25,25 @@ class RateLimit(object):
             self.call_count = data['call_count']
             self.total_cputime = data['total_cputime']
             self.total_time = data['total_time']
+
+    def get_sleep_interval(self):
+        usage_count = max(
+            self.call_count,
+            self.total_time,
+            self.total_cputime
+        )
+        interval = 1
+        if usage_count < 20:
+            interval = 1
+        if usage_count < 50:
+            interval = 3
+        if usage_count < 80:
+            interval = 5
+        if usage_count < 90:
+            interval = 60 * 5
+            logging.debug("App usage is arrive {0}%, need sleep {1} seconds".format(usage_count, interval))
+        if usage_count > 100:
+            interval = 60 * 20
+            logging.debug("App usage is arrive {0}%, need sleep {1} seconds".format(usage_count, interval))
+
+        return interval
