@@ -7,6 +7,7 @@ help:
 	@echo "  clean       remove unwanted stuff"
 	@echo "  lint        check style with flake8"
 	@echo "  test        run tests"
+	@echo "  coverage    run tests with coverage
 
 env:
 	pip install -Ur requirements.txt
@@ -26,6 +27,13 @@ lint:
 test:
 	pytest -s
 	#python setup.py test
+
+
+coverage: clean
+	coverage run --source=pyfacebook setup.py test
+	coverage html
+	coverage report
+
 
 build: clean
 	python setup.py check

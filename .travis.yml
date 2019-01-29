@@ -13,4 +13,9 @@ matrix:
 
 install:
   - pip install -r requirements.test.txt
-script: py.test
+script:
+  - py.test -s
+  - pytest --cov=pyfacebook tests/
+
+after_success:
+  - codecov

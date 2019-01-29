@@ -6,6 +6,10 @@ A Python wrapper around for Facebook Common API.
     :target: https://travis-ci.org/MerleLiuKun/python-facebook
     :alt: Build Status
 
+.. image:: http://codecov.io/github/MerleLiuKun/python-facebook/coverage.svg?branch=master
+    :target: http://codecov.io/github/MerleLiuKun/python-facebook
+    :alt: Codecov
+
 
 ======
 THANKS
