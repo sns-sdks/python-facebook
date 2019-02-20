@@ -18,7 +18,9 @@ from .error import PyFacebookError  # noqa
 from .models import (
     AccessToken,                    # noqa
     Page,                           # noqa
-    Post                            # noqa
+    Post,                           # noqa
+    InstagramUser,                  # noqa
+    InstagramMedia,                 # noqa
 )
 
-from .api import Api                # noqa
+from .api import Api, InstagramApi                # noqa

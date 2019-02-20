@@ -47,3 +47,8 @@ class RateLimit(object):
             logging.debug("App usage is arrive {0}%, need sleep {1} seconds".format(usage_count, interval))
 
         return interval
+
+    def info(self):
+        return "Current Limit is RateLimit(call_count={0},total_cputime={1},total_time={2})".format(
+            self.call_count, self.total_cputime, self.total_time
+        )

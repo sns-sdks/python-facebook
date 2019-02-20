@@ -153,3 +153,63 @@ class Post(BaseModel):
         c = cls(**json_data)
         c.__json = data
         return c
+
+
+class InstagramUser(BaseModel):
+    def __init__(self, **kwargs):
+        BaseModel.__init__(self, **kwargs)
+        self.id = None
+        self.username = None
+        self.param_defaults = {
+            'biography': None,
+            'id': None,
+            'ig_id': None,
+            'followers_count': None,
+            'follows_count': None,
+            'media_count': None,
+            'name': None,
+            'profile_picture_url': None,
+            'username': None,
+            'website': None,
+        }
+        for (param, default) in self.param_defaults.items():
+            setattr(self, param, kwargs.get(param, default))
+
+    def __repr__(self):
+        return "User(ID={uid}, username={username})".format(
+            uid=self.id,
+            username=self.username
+        )
+
+
+class InstagramMedia(BaseModel):
+    def __init__(self, **kwargs):
+        BaseModel.__init__(self, **kwargs)
+        self.id = None
+        self.permalink = None
+        self.param_defaults = {
+            'caption': None,
+            'children': None,
+            'comments': None,
+            'comments_count': None,
+            'id': None,
+            'ig_id': None,
+            'is_comment_enabled': None,
+            'like_count': None,
+            'media_type': None,
+            'media_url': None,
+            'owner': None,
+            'permalink': None,
+            'shortcode': None,
+            'thumbnail_url': None,
+            'timestamp': None,
+            'username': None,
+        }
+        for (param, default) in self.param_defaults.items():
+            setattr(self, param, kwargs.get(param, default))
+
+    def __repr__(self):
+        return "Media(ID={mid}, link={link})".format(
+            mid=self.id,
+            link=self.permalink
+        )

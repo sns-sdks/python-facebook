@@ -28,3 +28,30 @@ POST_REACTIONS_FIELD = [
     'reactions.type(ANGRY).limit(0).summary(total_count).as(angry)',
     'reactions.type(THANKFUL).limit(0).summary(total_count).as(thankful)'
 ]
+
+# =======================================
+# Follows is Instagram fields to get data
+# =======================================
+
+INSTAGRAM_USER_FIELD = [
+    'biography',
+    'id', 'ig_id',
+    'followers_count',
+    'follows_count',
+    'media_count',
+    'name',
+    'profile_picture_url',
+    'username',
+    'website',
+]
+
+INSTAGRAM_MEDIA_PUBLIC_FIELD = [
+    'caption', 'comments_count', 'id',
+    'like_count', 'media_type', 'media_url',
+    'permalink', 'timestamp', 'username'
+]
+
+INSTAGRAM_MEDIA_OWNER_FIELD = [
+    'ig_id', 'is_comment_enabled', 'owner', 'shortcode',
+    'thumbnail_url'
+]
