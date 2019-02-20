@@ -23,7 +23,18 @@ class BaseModel(object):
         """ Create a dictionary representation of the object. To convert all model properties. """
         data = {}
         for (key, value) in self.param_defaults.items():
-            data[key] = getattr(self, key, None)
+            key_attr = getattr(self, key, None)
+            if isinstance(key_attr, (list, tuple, set)):
+                data[key] = list()
+                for sub_obj in key_attr:
+                    if getattr(sub_obj, 'as_dict', None):
+                        data[key].append(sub_obj.as_dict())
+                    else:
+                        data[key].append(sub_obj)
+            elif getattr(key_attr, 'as_dict', None):
+                data[key] = key_attr.as_dict()
+            elif key_attr is not None:
+                data[key] = getattr(self, key, None)
         return data
 
     def as_json_string(self):

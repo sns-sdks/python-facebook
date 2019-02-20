@@ -25,7 +25,7 @@ lint:
 
 
 test:
-	pytest -s
+	pytest -s tests
 	#python setup.py test
 
 

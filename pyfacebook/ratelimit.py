@@ -42,6 +42,9 @@ class RateLimit(object):
         if usage_count < 90:
             interval = 60 * 5
             logging.debug("App usage is arrive {0}%, need sleep {1} seconds".format(usage_count, interval))
+        if usage_count < 100:
+            interval = 60 * 10
+            logging.debug("App usage is arrive {0}%, need sleep {1} seconds".format(usage_count, interval))
         if usage_count > 100:
             interval = 60 * 20
             logging.debug("App usage is arrive {0}%, need sleep {1} seconds".format(usage_count, interval))
