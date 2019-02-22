@@ -514,11 +514,9 @@ class InstagramApi(BaseApi):
 
         for item in data['data']:
             timestamp = datetime.datetime.strptime(item['timestamp'][:-5], '%Y-%m-%dT%H:%M:%S')
-            begin, end = True, True
-            if since_time is not None:
-                begin = since_time < timestamp
-            if until_time is not None:
-                end = until_time > timestamp
+            begin = True if since_time is not None else since_time < timestamp
+            end = True if until_time is not None else until_time > timestamp
+
             if all([begin, end]):
                 result.append(InstagramMedia.new_from_json_dict(item))
             if not begin:
