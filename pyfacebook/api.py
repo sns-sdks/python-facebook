@@ -144,7 +144,8 @@ class BaseApi(object):
         Args:
             return_json (bool, optional):
                 If True JSON data will be returned, instead of pyfacebook.AccessToken
-        :return:
+        Returns:
+            Current access token's info,  pyfacebook.AccessToken instance.
         """
         if all([self.app_id, self.app_secret]):
             access_token = "{0}|{1}".format(self.app_id, self.app_secret)
@@ -201,7 +202,9 @@ class Api(BaseApi):
                 Either page_id or username is required. if all given. use username.
             return_json (bool, optional):
                 If True JSON data will be returned, instead of pyfacebook.Page
-        :return:
+
+        Returns:
+            Page info, pyfacebook.Page instance or json str.
         """
         if page_id:
             target = page_id
@@ -284,7 +287,9 @@ class Api(BaseApi):
                 If neither since_time or until_time, it will by now time.
             count (int, optional)
                 The count is each request get the result count. For posts it should no more than 100.
-        :return:
+
+        Returns:
+            posts info list.
         """
         if page_id:
             target = page_id
@@ -325,8 +330,10 @@ class Api(BaseApi):
             post_id (str)
                 The id for you want to retrieve post.
             return_json (bool, optional):
-                If True JSON data will be returned, instead of pyfacebook.Page, or return origin data by facebook.
-        :return:
+                If True JSON data will be returned, instead of pyfacebook.Post, or return origin data by facebook.
+
+        Returns:
+            post info.
         """
         if post_id is None:
             raise PyFacebookError({'message': "Must specify the post id"})
@@ -491,14 +498,10 @@ class InstagramApi(BaseApi):
         if not owner:
             data = data['business_discovery']['media']
 
-        print(data)
-
         if 'paging' in data:
-            print('paging')
             cursors = data['paging'].get('cursors', {})
             next_cursor = cursors.get('after')
             previous_cursor = cursors.get('before')
-            print(next_cursor, previous_cursor, cursors)
 
         result = []
         try:
