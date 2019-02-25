@@ -28,14 +28,16 @@ Introduction
 
 Library provides a service to easy use Facebook web api.
 
+It currently includes the use of ``Facebook`` and ``Instagram Business`` product data.
+
 
 =====
 Using
 =====
 
----
-API
----
+------------
+Facebook API
+------------
 
 The API is exposed via the ``pyfacebook.Api`` class.
 
@@ -96,13 +98,94 @@ To fetch point post info::
     Out[9]: 1016
 
 
+-------------
+Instagram API
+-------------
+
+At present, the business Account of Instagram can be accessed through the API provided by Facebook.
+
+That is ``pyfacebook.Instagram Api`` can only get data of the business Account on Instagram platform.
+
+The business Account is the Account who associates ``Instagram`` account with ``Facebook`` page.
+
+
+Initialization of the ``pyfacebook.InstagramApi`` instance requires the provision of user authorization ``Token`` for App with ``Instagram`` privileges, and also need an available ``Instagram`` business account.
+
+For detailed documentation, please consult:
+
+- `Instagram Developer <https://developers.facebook.com/products/instagram/>`_
+- `Business Discovery API <https://developers.facebook.com/docs/instagram-api/business-discovery>`_
+
+Usage example:
+
+Similar to ``Facebook Api``, the ``InstagramApi`` instance can also be initialized in two ways, but requires an additional ``instagram_business_id`` parameter::
+
+    # Use temporary tokens and App secret
+    In [1] import pyfacebook
+
+    In [2] api = pyfacebook.InstagramApi(
+       ...     app_id = 'App ID',
+       ...     app_secret='App secret',
+       ...     short_token='your temporary token',
+       ...     instagram_business_id='your Instagram business id')
+
+    # Use long-term tokens
+    In [3] api = pyfacebook.InstagramApi(
+       ...     long_term_token='your long term access token',
+       ...     instagram_business_id='your Instagram business id')
+
+
+Get basic information about a user::
+
+    In [12]: api.get_user_info(username='jaychou')
+    Out[12]: User(ID=17841405792603923, username=jaychou)
+
+    In [13]: api.get_user_info(username='jaychou', return_json=True)
+    Out[13]:
+    {'business_discovery': {'biography': 'https://www.facebook.com/jay/',
+      'id': '17841405792603923',
+      'ig_id': 5951385086,
+      'followers_count': 3303887,
+      'follows_count': 50,
+      'media_count': 319,
+      'name': 'Jay Chou 周杰倫',
+      'profile_picture_url': 'https://scontent.xx.fbcdn.net/v/t51.2885-15/21147825_124638651514445_4540910313213526016_a.jpg?_nc_cat=1&_nc_ht=scontent.xx&oh=9a84c5d93df1cf7fb600d21efc87f983&oe=5CE45FFA',
+      'username': 'jaychou',
+      'website': 'https://youtu.be/MAjY8mCTXWk'},
+      'id': '17841406338772941'}
+
+Mass access to a user's posts(Get nearly 50 by default)::
+
+    In [3]: api.get_medias(username='jaychou')
+    Out[3]:
+        [Media(ID=17852512102358859, link=https://www.instagram.com/p/BuKth42Hpsm/),
+         Media(ID=17914455160286660, link=https://www.instagram.com/p/BuILzrcnljS/),
+         Media(ID=18038180344016282, link=https://www.instagram.com/p/BuDAlT0n0kq/),
+         Media(ID=18000503476161727, link=https://www.instagram.com/p/Bt6SyHmnGyn/),
+         Media(ID=17863710898325821, link=https://www.instagram.com/p/Bt49wLUnTaO/),
+         Media(ID=17857272226339334, link=https://www.instagram.com/p/Bt4n5Q5ncKa/),
+         Media(ID=17854413100345353, link=https://www.instagram.com/p/Bt33bRznSNo/),
+         Media(ID=18033275821031206, link=https://www.instagram.com/p/Bt2bECmn0R_/),
+         Media(ID=18033135562032465, link=https://www.instagram.com/p/Bt1sedfnnqD/),
+         Media(ID=17933504032265945, link=https://www.instagram.com/p/BtzPPiGn2gE/),
+         Media(ID=18017672368106762, link=https://www.instagram.com/p/Btt-rKqHGLH/),
+         Media(ID=18033213532062450, link=https://www.instagram.com/p/BtkVolVnhXu/),
+         Media(ID=18031391875036047, link=https://www.instagram.com/p/BtjkEmxH7gR/),
+         Media(ID=18029417977062683, link=https://www.instagram.com/p/Btd5jPvHQUm/).....]
+
+
+Get information about a post(This API is available only for posts on the current Instagram business account and is not available to others)::
+
+    In [5]: api.get_media_info(media_id='17861821972334188')
+    Out[5]: Media(ID=17861821972334188, link=https://www.instagram.com/p/BuGD8NmF4KI/)
+
 ----
 TODO
 ----
 
-Now. You can get page info and page post info.
+Now. You can Only get page info and page post info.
 
 doing:
-
+- Acquisition of Insights Data
 - publish
 - more.

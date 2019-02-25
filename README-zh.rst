@@ -10,6 +10,8 @@ Python Facebook
     :target: https://codecov.io/gh/MerleLiuKun/python-facebook
     :alt: Codecov
 
+README: `English <https://github.com/MerleLiuKun/python-facebook/blob/master/README.rst>`_ | `中文 <https://github.com/MerleLiuKun/python-facebook/blob/master/README-zh.rst>`_
+
 ====
 致谢
 ====
