@@ -98,6 +98,28 @@ To fetch point post info::
     Out[9]: 1016
 
 
+To fetch pointed object(post,picture and so on)'s comments data::
+
+    In [10]: res = api.get_comments(object_id='20531316728_10157619579661729', summary=True)
+    In [11]: res
+    Out[11]:
+    ([Comment(ID=10157619579661729_10157621841846729,created_time=2018-08-16T13:01:09+0000),
+      Comment(ID=10157619579661729_10157621842496729,created_time=2018-08-16T13:01:31+0000),
+      Comment(ID=10157619579661729_10157621842611729,created_time=2018-08-16T13:01:34+0000),
+      Comment(ID=10157619579661729_10157621842701729,created_time=2018-08-16T13:01:37+0000),
+      Comment(ID=10157619579661729_10157621843186729,created_time=2018-08-16T13:01:52+0000),
+      Comment(ID=10157619579661729_10157621843316729,created_time=2018-08-16T13:01:55+0000),
+      Comment(ID=10157619579661729_10157621843376729,created_time=2018-08-16T13:01:58+0000),
+      Comment(ID=10157619579661729_10157621843721729,created_time=2018-08-16T13:02:11+0000),
+      Comment(ID=10157619579661729_10157621843771729,created_time=2018-08-16T13:02:13+0000),
+      Comment(ID=10157619579661729_10157621843836729,created_time=2018-08-16T13:02:14+0000)],
+     CommentSummary(order=chronological,total_count=987))
+    In [12]res[1]
+    Out[12]: CommentSummary(order=chronological,total_count=987)
+    res[13].as_json_string()
+    Out[13]: '{"can_comment": true, "order": "chronological", "total_count": 987}'
+
+
 -------------
 Instagram API
 -------------
@@ -183,9 +205,10 @@ Get information about a post(This API is available only for posts on the current
 TODO
 ----
 
-Now. You can Only get page info and page post info.
+Now. You can Only get page info and page post info and object(post,picture)'s comment.
 
-doing:
+TODO:
+
 - Acquisition of Insights Data
 - publish
 - more.

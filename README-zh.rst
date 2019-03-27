@@ -108,6 +108,28 @@ Facebook API
     Out[9]: 1016
 
 
+获取某对象(贴文,图片等)的评论数据::
+
+    In [10]: res = api.get_comments(object_id='20531316728_10157619579661729', summary=True)
+    In [11]: res
+    Out[11]:
+    ([Comment(ID=10157619579661729_10157621841846729,created_time=2018-08-16T13:01:09+0000),
+      Comment(ID=10157619579661729_10157621842496729,created_time=2018-08-16T13:01:31+0000),
+      Comment(ID=10157619579661729_10157621842611729,created_time=2018-08-16T13:01:34+0000),
+      Comment(ID=10157619579661729_10157621842701729,created_time=2018-08-16T13:01:37+0000),
+      Comment(ID=10157619579661729_10157621843186729,created_time=2018-08-16T13:01:52+0000),
+      Comment(ID=10157619579661729_10157621843316729,created_time=2018-08-16T13:01:55+0000),
+      Comment(ID=10157619579661729_10157621843376729,created_time=2018-08-16T13:01:58+0000),
+      Comment(ID=10157619579661729_10157621843721729,created_time=2018-08-16T13:02:11+0000),
+      Comment(ID=10157619579661729_10157621843771729,created_time=2018-08-16T13:02:13+0000),
+      Comment(ID=10157619579661729_10157621843836729,created_time=2018-08-16T13:02:14+0000)],
+     CommentSummary(order=chronological,total_count=987))
+    In [12]res[1]
+    Out[12]: CommentSummary(order=chronological,total_count=987)
+    res[13].as_json_string()
+    Out[13]: '{"can_comment": true, "order": "chronological", "total_count": 987}'
+
+
 -------------
 Instagram API
 -------------
@@ -193,9 +215,9 @@ Instagram API
 TODO
 ====
 
-现在只可以通过该``API`` 获取到主页基本信息以及主页的贴文数据。
+现在只可以通过该``API`` 获取到主页基本信息以及主页的贴文数据以及对象(帖子,图片)的评论数据。
 
-在做：
+待做：
 
 - Insights 数据的获取
 - 发布帖子
