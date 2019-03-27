@@ -12,7 +12,7 @@ except ImportError:
     from urlparse import urlparse, parse_qsl
 
 from pyfacebook.error import PyFacebookError
-from pyfacebook.models import AccessToken, Page, Post, InstagramUser, InstagramMedia
+from pyfacebook.models import AccessToken, Comment, CommentSummary, Page, Post, InstagramUser, InstagramMedia
 from pyfacebook.ratelimit import RateLimit
 from pyfacebook.utils import constant
 
@@ -352,6 +352,117 @@ class Api(BaseApi):
             return data
         else:
             return Post.new_from_json_dict(data)
+
+    def paged_by_next(self,
+                      resource,
+                      target,
+                      next_page=None,
+                      args=None):
+        """
+        Use paged request by next method.
+
+        Args:
+            resource (str)
+                The resource you want to retrieve.
+                Now can posts, comments,
+            target:
+                The ID or username for which object you want to retrieve data.
+            next_page (str, optional):
+                The paging next page url. for begin it is None.
+            args:
+                Relative params you want to retrieve data. Now is pointed.
+        Returns:
+            next_page (str), previous_page (str), json data from api.
+        """
+        if next_page is None:
+            path = '{0}/{1}/{2}'.format(self.version, target, resource)
+        else:
+            parse_path = urlparse(next_page)
+            path = parse_path.path
+            args = dict(parse_qsl(parse_path.query))
+
+        resp = self._request(
+            method='GET',
+            path=path,
+            args=args
+        )
+
+        next_page, previous_page = None, None
+        data = self._parse_response(resp.content.decode('utf-8'))
+        if 'paging' in data:
+            next_page = data['paging'].get('next')
+            previous_page = data['paging'].get('previous')
+        return next_page, previous_page, data
+
+    def get_comments(self,
+                     object_id=None,
+                     summary=False,
+                     filter_type='toplevel',
+                     order_type='chronological',
+                     count=10,
+                     limit=50,
+                     return_json=False):
+        """
+        To get point object's comments.
+        Doc refer: https://developers.facebook.com/docs/graph-api/reference/v3.2/object/comments.
+        Args:
+             object_id (str)
+                The object id which you want to retrieve comments.
+                object can be post picture and so on.
+            summary (bool, optional)
+                If True will return comments summary of metadata.
+            filter_type (enum, optional)
+                Valid params are toplevel/stream,
+                If you chose toplevel only return top level comment.
+                stream will return parent and child comment.
+                default is toplevel
+            order_type (enum, optional)
+                Valid params are chronological/reverse_chronological,
+                If chronological, will return comments sorted by the oldest comments first.
+                If reverse_chronological, will return comments sorted by the newest comments first.
+            count (int, optional)
+                The count will retrieve comments.
+            limit (int, optional)
+                Each request retrieve comments count from api.
+                For comments. Should not more than 100.
+            return_json (bool, optional):
+                If True JSON data will be returned, instead of pyfacebook.Post, or return origin data by facebook.
+        Returns:
+            This will return tuple.
+            (Comments set, CommentSummary's data)
+        """
+        if object_id is None:
+            raise PyFacebookError({'message': "Must specify the post id"})
+
+        args = {
+            'fields': ','.join(constant.COMMENT_BASIC_FIELDS),
+            'summary': summary,
+            'filter': filter_type,
+            'order': order_type,
+            'limit': min(count, limit),
+        }
+
+        comments = []
+        next_page = None
+
+        while True:
+            next_page, previous_page, data = self.paged_by_next(
+                resource='comments',
+                target=object_id,
+                next_page=next_page,
+                args=args
+            )
+            if return_json:
+                comments += data.get('data', [])
+                comment_summary = data.get('summary', {})
+            else:
+                comments += [Comment.new_from_json_dict(item) for item in data.get('data', [])]
+                comment_summary = CommentSummary.new_from_json_dict(data.get('summary', {}))
+            if next_page is None:
+                break
+            if len(comments) >= count:
+                break
+        return comments, comment_summary
 
 
 class InstagramApi(BaseApi):

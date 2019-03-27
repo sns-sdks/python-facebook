@@ -166,6 +166,46 @@ class Post(BaseModel):
         return c
 
 
+class Comment(BaseModel):
+    def __init__(self, **kwargs):
+        BaseModel.__init__(self, **kwargs)
+        self.param_defaults = {
+            'id': None,
+            'created_time': None,
+            'message': None,
+            'like_count': None,
+            'permalink_url': None,
+            'from': None,
+            'comment_count': None
+        }
+        for (param, default) in self.param_defaults.items():
+            setattr(self, param, kwargs.get(param, default))
+
+    def __repr__(self):
+        return "Comment(ID={c_id},created_time={c_time})".format(
+            c_id=self.id,
+            c_time=self.created_time
+        )
+
+
+class CommentSummary(BaseModel):
+    def __init__(self, **kwargs):
+        BaseModel.__init__(self, **kwargs)
+        self.param_defaults = {
+            'order': None,
+            'total_count': None,
+            'can_comment': None,
+        }
+        for (param, default) in self.param_defaults.items():
+            setattr(self, param, kwargs.get(param, default))
+
+    def __repr__(self):
+        return "CommentSummary(order={order},total_count={count})".format(
+            order=self.order,
+            count=self.total_count
+        )
+
+
 class InstagramUser(BaseModel):
     def __init__(self, **kwargs):
         BaseModel.__init__(self, **kwargs)

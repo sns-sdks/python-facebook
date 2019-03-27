@@ -19,6 +19,8 @@ from .models import (
     AccessToken,                    # noqa
     Page,                           # noqa
     Post,                           # noqa
+    Comment,                        # noqa
+    CommentSummary,                 # noqa
     InstagramUser,                  # noqa
     InstagramMedia,                 # noqa
 )

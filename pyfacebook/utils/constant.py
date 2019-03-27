@@ -29,6 +29,11 @@ POST_REACTIONS_FIELD = [
     'reactions.type(THANKFUL).limit(0).summary(total_count).as(thankful)'
 ]
 
+COMMENT_BASIC_FIELDS = [
+    'id', 'created_time', 'like_count', 'message',
+    'permalink_url', 'comment_count', 'from'
+]
+
 # =======================================
 # Follows is Instagram fields to get data
 # =======================================
