@@ -22,10 +22,20 @@ README: `English <https://github.com/MerleLiuKun/python-facebook/blob/master/REA
 
 
 ====
+安装
+====
+
+现在可以使用 `pip` 来安装这个包啦::
+
+    $pip install python-facebook-api
+
+由于 `python-facebook` 名称已经被占用，所以只能以这样的名字了。吐槽一波，好名字都被占用，并且好久都没有更新了！！
+
+====
 说明
 ====
 
-该库提供一种更加简单的方式去使用 ``Facebook`` 平台的数据接口。
+该库提供一种更加简单的方式去使用 ``Facebook`` 平台的数据接口。 注意，当你使用时，由于一些原因，需要在外网环境下才可以使用。
 
 目前包括了 ``Facebook``, ``Instagram Business`` 产品数据的使用。
 

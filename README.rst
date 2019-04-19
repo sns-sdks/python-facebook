@@ -30,6 +30,15 @@ Library provides a service to easy use Facebook web api.
 
 It currently includes the use of ``Facebook`` and ``Instagram Business`` product data.
 
+==========
+Installing
+==========
+
+You can install this lib from `pypi`::
+
+    $pip install python-facebook-api
+
+This is name is ugly. but the `python-facebook` is exists and it not update long time.
 
 =====
 Using

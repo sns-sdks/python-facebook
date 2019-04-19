@@ -44,7 +44,7 @@ def extract_metaitem(meta):
 
 
 setup(
-    name='python-facebook',
+    name='python-facebook-api',
     version=extract_metaitem('version'),
     license=extract_metaitem('license'),
     description=extract_metaitem('description'),
