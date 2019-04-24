@@ -232,49 +232,14 @@ class Api(BaseApi):
         else:
             return Page.new_from_json_dict(data)
 
-    def get_posts_paged(self,
-                        target=None,
-                        next_page=None,
-                        args=None):
-        """
-        Fetch the paging posts data for given page.
-
-        Args:
-            target:
-                The ID or username for which page you want to retrieve data.
-            next_page (str, optional):
-                The paging next page url. for begin it is None.
-            args:
-                Relative params you want to retrieve data. Now is pointed.
-
-        Returns:
-            next_page (str), previous_page (str), list of pyfacebook.Post instances.
-        """
-        if next_page is None:
-            path = '{0}/{1}/{2}'.format(self.version, target, 'posts')
-        else:
-            parse_path = urlparse(next_page)
-            path = parse_path.path
-            args = dict(parse_qsl(parse_path.query))
-        resp = self._request(
-            method='GET',
-            path=path,
-            args=args
-        )
-        next_page, previous_page = None, None
-        data = self._parse_response(resp.content.decode('utf-8'))
-        if 'paging' in data:
-            next_page = data['paging'].get('next')
-            previous_page = data['paging'].get('previous')
-        result = [Post.new_from_json_dict(item) for item in data['data']]
-        return next_page, previous_page, result
-
     def get_posts(self,
                   page_id=None,
                   username=None,
                   since_time=None,
                   until_time=None,
-                  count=10):
+                  count=10,
+                  limit=10,
+                  return_json=False):
         """
         Obtain give page's posts info.
 
@@ -290,8 +255,12 @@ class Api(BaseApi):
                 The posts retrieve until time.
                 If neither since_time or until_time, it will by now time.
             count (int, optional)
-                The count is each request get the result count. For posts it should no more than 100.
-
+                The count will retrieve posts.
+            limit (int, optional)
+                Each request retrieve posts count from api.
+                For posts it should no more than 100.
+            return_json (bool, optional):
+                If True JSON data will be returned, instead of pyfacebook.Post, or return origin data by facebook.
         Returns:
             posts info list.
         """
@@ -306,23 +275,28 @@ class Api(BaseApi):
             'fields': ','.join(set(constant.POST_BASIC_FIELDS + constant.POST_REACTIONS_FIELD)),
             'since': since_time,
             'until': until_time,
-            'limit': count,
+            'limit': limit,
         }
 
-        result = []
+        posts = []
         next_page = None
 
         while True:
-            next_page, previous_page, posts = self.get_posts_paged(
+            next_page, previous_page, data = self.paged_by_next(
+                resource='posts',
                 target=target,
                 next_page=next_page,
                 args=args
             )
-            result += posts
+            if return_json:
+                posts += data.get('data', [])
+            else:
+                posts += [Post.new_from_json_dict(item) for item in data['data']]
             if next_page is None:
                 break
-
-        return result
+            if len(posts) >= count:
+                break
+        return posts[:count]
 
     def get_post_info(self,
                       post_id=None,
@@ -383,6 +357,9 @@ class Api(BaseApi):
         else:
             parse_path = urlparse(next_page)
             path = parse_path.path
+            # now the path has begin with /
+            if path.startswith('/'):
+                path = path[1:]
             args = dict(parse_qsl(parse_path.query))
 
         resp = self._request(
@@ -430,7 +407,7 @@ class Api(BaseApi):
                 Each request retrieve comments count from api.
                 For comments. Should not more than 100.
             return_json (bool, optional):
-                If True JSON data will be returned, instead of pyfacebook.Post, or return origin data by facebook.
+                If True JSON data will be returned, instead of pyfacebook.Comment, or return origin data by facebook.
         Returns:
             This will return tuple.
             (Comments set, CommentSummary's data)

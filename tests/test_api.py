@@ -62,7 +62,7 @@ class ApiCallTest(unittest.TestCase):
                 'link': 'link',
                 'name': 'name',
                 'username': 'username',
-                'verification_status': u'blue_verified',
+                'verification_status': 'blue_verified',
                 'website': 'website'
             }
         )
@@ -134,3 +134,296 @@ class ApiCallTest(unittest.TestCase):
 
         self.assertEqual(post_id, post_info.id)
         self.assertEqual(1717, post_info.like)
+
+    @responses.activate
+    def testGetPosts(self):
+        page_id = '123456789'
+        responses.add(
+            method=responses.GET,
+            url=DEFAULT_GRAPH_URL + DEFAULT_GRAPH_VERSION + '/' + page_id + '/' + 'posts',
+            json={
+                'data': [
+                    {
+                        'angry': {'data': [], 'summary': {'total_count': 0}},
+                        'attachments': {
+                            'data': [{
+                                'media': {
+                                    'image': {
+                                        'height': 405,
+                                        'src': 'src',
+                                        'width': 720
+                                    }
+                                },
+                                'target': {
+                                    'id': '123456789',
+                                    'url': 'url'
+                                },
+                                'title': 'title',
+                                'type': 'video_autoplay',
+                                'url': 'url'
+                            }]
+                        },
+                        'comments': {
+                            'data': [],
+                            'summary': {
+                                'can_comment': True,
+                                'order': 'ranked',
+                                'total_count': 21
+                            }
+                        },
+                        'created_time': '2019-04-24T05:00:21+0000',
+                        'full_picture': 'full_picture',
+                        'haha': {'data': [], 'summary': {'total_count': 1}},
+                        'icon': 'https://www.facebook.com/images/icons/video.gif',
+                        'id': '123456789_123456789',
+                        'like': {'data': [], 'summary': {'total_count': 314}},
+                        'link': 'link',
+                        'love': {'data': [], 'summary': {'total_count': 38}},
+                        'message': 'message',
+                        'name': 'name',
+                        'permalink_url': 'permalink_url',
+                        'picture': 'picture',
+                        'reactions': {
+                            'data': [],
+                            'summary': {'total_count': 362, 'viewer_reaction': 'NONE'}
+                        },
+                        'sad': {'data': [], 'summary': {'total_count': 0}},
+                        'shares': {'count': 7},
+                        'status_type': 'added_video',
+                        'thankful': {'data': [], 'summary': {'total_count': 0}},
+                        'type': 'video',
+                        'updated_time': '2019-04-24T11:47:38+0000',
+                        'wow': {'data': [], 'summary': {'total_count': 9}}},
+                    {
+                        'angry': {'data': [], 'summary': {'total_count': 0}},
+                        'attachments': {
+                            'data': [{
+                                'media': {
+                                    'image': {
+                                        'height': 405,
+                                        'src': 'src',
+                                        'width': 720
+                                    }
+                                },
+                                'target': {
+                                    'id': '123456789',
+                                    'url': 'url'
+                                },
+                                'title': 'title',
+                                'type': 'video_autoplay',
+                                'url': 'url'
+                            }]
+                        },
+                        'comments': {
+                            'data': [],
+                            'summary': {
+                                'can_comment': True,
+                                'order': 'ranked',
+                                'total_count': 27
+                            }
+                        },
+                        'created_time': '2019-04-24T00:00:23+0000',
+                        'full_picture': 'full_picture',
+                        'haha': {'data': [], 'summary': {'total_count': 0}},
+                        'icon': 'https://www.facebook.com/images/icons/video.gif',
+                        'id': '123456789_12345678910',
+                        'like': {'data': [], 'summary': {'total_count': 330}},
+                        'link': 'link',
+                        'love': {'data': [], 'summary': {'total_count': 44}},
+                        'message': 'message',
+                        'name': 'name',
+                        'permalink_url': 'permalink_url',
+                        'picture': 'picture',
+                        'reactions': {
+                            'data': [],
+                            'summary': {'total_count': 386, 'viewer_reaction': 'NONE'}
+                        },
+                        'sad': {'data': [], 'summary': {'total_count': 0}},
+                        'shares': {'count': 18},
+                        'status_type': 'added_video',
+                        'thankful': {'data': [], 'summary': {'total_count': 0}},
+                        'type': 'video',
+                        'updated_time': '2019-04-24T12:05:27+0000',
+                        'wow': {'data': [], 'summary': {'total_count': 12}}},
+                    {
+                        'angry': {'data': [], 'summary': {'total_count': 1}},
+                        'attachments': {
+                            'data': [{
+                                'media': {
+                                    'image': {
+                                        'height': 405,
+                                        'src': 'src',
+                                        'width': 720
+                                    }
+                                },
+                                'target': {
+                                    'id': '123456789',
+                                    'url': 'url'
+                                },
+                                'title': 'url',
+                                'type': 'video_autoplay',
+                                'url': 'url'
+                            }]
+                        },
+                        'comments': {
+                            'data': [],
+                            'summary': {
+                                'can_comment': True,
+                                'order': 'ranked',
+                                'total_count': 43
+                            }
+                        },
+                        'created_time': '2019-04-23T05:00:25+0000',
+                        'full_picture': 'full_picture',
+                        'haha': {'data': [], 'summary': {'total_count': 3}},
+                        'icon': 'https://www.facebook.com/images/icons/video.gif',
+                        'id': '123456789_12345678911',
+                        'like': {'data': [], 'summary': {'total_count': 581}},
+                        'link': 'link',
+                        'love': {'data': [], 'summary': {'total_count': 66}},
+                        'message': 'message',
+                        'name': 'name',
+                        'permalink_url': 'permalink_url',
+                        'picture': 'picture',
+                        'reactions': {
+                            'data': [],
+                            'summary': {'total_count': 677, 'viewer_reaction': 'NONE'}
+                        },
+                        'sad': {'data': [], 'summary': {'total_count': 1}},
+                        'shares': {'count': 27},
+                        'status_type': 'added_video',
+                        'thankful': {'data': [], 'summary': {'total_count': 0}},
+                        'type': 'video',
+                        'updated_time': '2019-04-24T11:54:30+0000',
+                        'wow': {'data': [], 'summary': {'total_count': 25}}}
+                ],
+                'paging': {
+                    'cursors': {
+                        'after': 'after',
+                        'before': 'before'
+                    },
+                    'next': 'https://graph.facebook.com/v3.2/123456789/posts/next'}
+            }
+        )
+
+        responses.add(
+            method=responses.GET,
+            url=DEFAULT_GRAPH_URL + DEFAULT_GRAPH_VERSION + '/' + page_id + '/' + 'posts/next?access_token=testToken',
+            json={
+                'data': [
+                    {
+                        'angry': {'data': [], 'summary': {'total_count': 0}},
+                        'attachments': {
+                            'data': [{
+                                'media': {
+                                    'image': {
+                                        'height': 405,
+                                        'src': 'src',
+                                        'width': 720
+                                    }
+                                },
+                                'target': {
+                                    'id': '123456789',
+                                    'url': 'url'
+                                },
+                                'title': 'title',
+                                'type': 'video_autoplay',
+                                'url': 'url'
+                            }]
+                        },
+                        'comments': {
+                            'data': [],
+                            'summary': {
+                                'can_comment': True,
+                                'order': 'ranked',
+                                'total_count': 21
+                            }
+                        },
+                        'created_time': '2019-04-24T05:00:21+0000',
+                        'full_picture': 'full_picture',
+                        'haha': {'data': [], 'summary': {'total_count': 1}},
+                        'icon': 'https://www.facebook.com/images/icons/video.gif',
+                        'id': '123456789_12345678912',
+                        'like': {'data': [], 'summary': {'total_count': 314}},
+                        'link': 'link',
+                        'love': {'data': [], 'summary': {'total_count': 38}},
+                        'message': 'message',
+                        'name': 'name',
+                        'permalink_url': 'permalink_url',
+                        'picture': 'picture',
+                        'reactions': {
+                            'data': [],
+                            'summary': {'total_count': 362, 'viewer_reaction': 'NONE'}
+                        },
+                        'sad': {'data': [], 'summary': {'total_count': 0}},
+                        'shares': {'count': 7},
+                        'status_type': 'added_video',
+                        'thankful': {'data': [], 'summary': {'total_count': 0}},
+                        'type': 'video',
+                        'updated_time': '2019-04-24T11:47:38+0000',
+                        'wow': {'data': [], 'summary': {'total_count': 9}}},
+                    {
+                        'angry': {'data': [], 'summary': {'total_count': 0}},
+                        'attachments': {
+                            'data': [{
+                                'media': {
+                                    'image': {
+                                        'height': 405,
+                                        'src': 'src',
+                                        'width': 720
+                                    }
+                                },
+                                'target': {
+                                    'id': '123456789',
+                                    'url': 'url'
+                                },
+                                'title': 'title',
+                                'type': 'video_autoplay',
+                                'url': 'url'
+                            }]
+                        },
+                        'comments': {
+                            'data': [],
+                            'summary': {
+                                'can_comment': True,
+                                'order': 'ranked',
+                                'total_count': 27
+                            }
+                        },
+                        'created_time': '2019-04-24T00:00:23+0000',
+                        'full_picture': 'full_picture',
+                        'haha': {'data': [], 'summary': {'total_count': 0}},
+                        'icon': 'https://www.facebook.com/images/icons/video.gif',
+                        'id': '123456789_1234567891013',
+                        'like': {'data': [], 'summary': {'total_count': 330}},
+                        'link': 'link',
+                        'love': {'data': [], 'summary': {'total_count': 44}},
+                        'message': 'message',
+                        'name': 'name',
+                        'permalink_url': 'permalink_url',
+                        'picture': 'picture',
+                        'reactions': {
+                            'data': [],
+                            'summary': {'total_count': 386, 'viewer_reaction': 'NONE'}
+                        },
+                        'sad': {'data': [], 'summary': {'total_count': 0}},
+                        'shares': {'count': 18},
+                        'status_type': 'added_video',
+                        'thankful': {'data': [], 'summary': {'total_count': 0}},
+                        'type': 'video',
+                        'updated_time': '2019-04-24T12:05:27+0000',
+                        'wow': {'data': [], 'summary': {'total_count': 12}}},
+                ],
+                'paging': {
+                    'cursors': {
+                        'after': 'after',
+                        'before': 'before'
+                    },
+                    'next': 'https://graph.facebook.com/v3.2/123456789/posts/next'}
+            }
+        )
+
+        posts = self.api.get_posts(page_id, count=4)
+
+        self.assertEqual(4, len(posts))
+        self.assertEqual('123456789_123456789', posts[0].id)
