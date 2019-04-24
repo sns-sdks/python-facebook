@@ -10,6 +10,16 @@ A Python wrapper around for Facebook Common API.
     :target: https://codecov.io/gh/MerleLiuKun/python-facebook
     :alt: Codecov
 
+.. image:: https://img.shields.io/pypi/v/python-facebook-api.svg
+    :target: https://pypi.org/project/python-facebook-api
+    :alt: PyPI
+
+.. image:: https://img.shields.io/pypi/pyversions/python-facebook-api.svg
+    :target: https://pypi.org/project/python-facebook-api
+    :alt: PyPI
+
+
+
 
 README: `English <https://github.com/MerleLiuKun/python-facebook/blob/master/README.rst>`_ | `中文 <https://github.com/MerleLiuKun/python-facebook/blob/master/README-zh.rst>`_
 
