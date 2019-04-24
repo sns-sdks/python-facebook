@@ -102,6 +102,25 @@ class Page(BaseModel):
         )
 
 
+class PagePicture(BaseModel):
+    def __init__(self, **kwargs):
+        BaseModel.__init__(self, **kwargs)
+        self.param_defaults = {
+            'height': None,
+            'width': None,
+            'is_silhouette': None,
+            'url': None
+        }
+        for (param, default) in self.param_defaults.items():
+            setattr(self, param, kwargs.get(param, default))
+
+    def __repr__(self):
+        return "PagePicture(Height={h}, Width={w}, Url={u})".format(
+            h=self.height, w=self.width,
+            u=self.url
+        )
+
+
 class Post(BaseModel):
     def __init__(self, **kwargs):
         BaseModel.__init__(self, **kwargs)

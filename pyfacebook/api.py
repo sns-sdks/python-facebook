@@ -12,7 +12,10 @@ except ImportError:
     from urlparse import urlparse, parse_qsl
 
 from pyfacebook.error import PyFacebookError
-from pyfacebook.models import AccessToken, Comment, CommentSummary, Page, Post, InstagramUser, InstagramMedia
+from pyfacebook.models import (
+    AccessToken, Comment, CommentSummary, Page, Post, PagePicture,
+    InstagramUser, InstagramMedia
+)
 from pyfacebook.ratelimit import RateLimit
 from pyfacebook.utils import constant
 
@@ -463,6 +466,50 @@ class Api(BaseApi):
             if len(comments) >= count:
                 break
         return comments, comment_summary
+
+    def get_picture(self,
+                    page_id=None,
+                    pic_type=None,
+                    return_json=False):
+        """
+        Obtain the point page's picture.
+
+        Args:
+            page_id (int, optional)
+                The id for you want to retrieve data
+            pic_type (str, optional)
+                The picture you want to get, It can be one of the following values: small, normal, large, square.
+                If not provide, default is small.
+            return_json (bool, optional):
+                If True JSON data will be returned, instead of pyfacebook.PagePicture
+        Returns:
+            Page picture info, pyfacebook.PagePicture instance or json str.
+        """
+        if page_id is None:
+            raise PyFacebookError({'message': "Must specify page_id"})
+        if pic_type is not None and pic_type not in constant.PAGE_PICTURE_TYPE:
+            raise PyFacebookError({
+                'message': "For field picture: pic_type must be one of the following values: {}".format(
+                    ', '.join(constant.PAGE_PICTURE_TYPE)
+                )
+            })
+
+        args = {
+            'redirect': 0,  # if set 0 the api will return json response.
+            'type': 'small' if pic_type is None else pic_type,
+        }
+
+        resp = self._request(
+            method='GET',
+            path='{0}/{1}/picture'.format(self.version, page_id),
+            args=args
+        )
+
+        data = self._parse_response(resp.content.decode('utf-8'))
+        if return_json:
+            return data
+        else:
+            return PagePicture.new_from_json_dict(data['data'])
 
 
 class InstagramApi(BaseApi):

@@ -34,6 +34,10 @@ COMMENT_BASIC_FIELDS = [
     'permalink_url', 'comment_count', 'from'
 ]
 
+PAGE_PICTURE_TYPE = [
+    'small', 'normal', 'album', 'large', 'square'
+]
+
 # =======================================
 # Follows is Instagram fields to get data
 # =======================================
