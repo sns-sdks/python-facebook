@@ -59,12 +59,13 @@ class BaseApi(object):
             version_regex = re.compile("^\\d.\\d{1,2}$")
             match = version_regex.search(str(version))
             if match is not None:
-                if str(version) not in Api.VALID_API_VERSIONS:
+                target_version = "v" + str(version)
+                if target_version not in Api.VALID_API_VERSIONS:
                     raise PyFacebookError({
                         "message": "Valid API version are {}".format(",".join(Api.VALID_API_VERSIONS))
                     })
                 else:
-                    self.version = "v" + str(version)
+                    self.version = target_version
 
         if not (long_term_token or all([self.app_id, self.app_secret, self.short_token])):
             raise PyFacebookError({'message': 'Missing long term token or app account'})
