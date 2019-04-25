@@ -67,8 +67,13 @@ class ApiCallTest(unittest.TestCase):
             }
         )
         page_info = self.api.get_page_info(page_id=page_id)
+
         self.assertEqual('about', page_info.about)
         self.assertEqual(49788740, page_info.engagement['count'])
+
+        page_info = self.api.get_page_info(page_id=page_id, return_json=True)
+
+        self.assertEqual('about', page_info['about'])
 
     @responses.activate
     def testGetPostInfo(self):
@@ -134,6 +139,9 @@ class ApiCallTest(unittest.TestCase):
 
         self.assertEqual(post_id, post_info.id)
         self.assertEqual(1717, post_info.like)
+
+        post_info = self.api.get_post_info(post_id=post_id, return_json=True)
+        self.assertEqual(post_id, post_info['id'])
 
     @responses.activate
     def testGetPosts(self):
@@ -419,7 +427,8 @@ class ApiCallTest(unittest.TestCase):
                         'after': 'after',
                         'before': 'before'
                     },
-                    'next': 'https://graph.facebook.com/v3.2/123456789/posts/next'}
+                    # 'next': 'https://graph.facebook.com/v3.2/123456789/posts/next'
+                }
             }
         )
 
@@ -427,3 +436,135 @@ class ApiCallTest(unittest.TestCase):
 
         self.assertEqual(4, len(posts))
         self.assertEqual('123456789_123456789', posts[0].id)
+
+        posts = self.api.get_posts(page_id, count=5, return_json=True)
+        self.assertEqual(5, len(posts))
+        self.assertEqual('123456789_123456789', posts[0]['id'])
+
+    @responses.activate
+    def testGetComments(self):
+        object_id = '123456789'
+        responses.add(
+            method=responses.GET,
+            url=DEFAULT_GRAPH_URL + DEFAULT_GRAPH_VERSION + '/' + object_id + '/' + 'comments',
+            json={
+                "data": [
+                    {
+                        "id": "123456789_123456789",
+                        "created_time": "2019-04-09T05:57:32+0000",
+                        "like_count": 0,
+                        "message": "comment1",
+                        "permalink_url": "permalink_url",
+                        "comment_count": 0
+                    },
+                    {
+                        "id": "123456789_12345678910",
+                        "created_time": "2019-04-09T05:58:23+0000",
+                        "like_count": 1,
+                        "message": "comment2",
+                        "permalink_url": "permalink_url",
+                        "comment_count": 0
+                    },
+                    {
+                        "id": "123456789_12345678911",
+                        "created_time": "2019-04-09T05:58:30+0000",
+                        "like_count": 5,
+                        "message": "comment3",
+                        "permalink_url": "permalink_url",
+                        "comment_count": 1
+                    },
+                ],
+                "paging": {
+                    "cursors": {
+                        "before": "before",
+                        "after": "before"
+                    },
+                    "next": "https://graph.facebook.com/v3.2/123456789/comments/next"
+                },
+                "summary": {
+                    "order": "chronological",
+                    "total_count": 108,
+                    "can_comment": True
+                }
+            }
+        )
+
+        responses.add(
+            method=responses.GET,
+            url=DEFAULT_GRAPH_URL + DEFAULT_GRAPH_VERSION + '/' + object_id + '/' + 'comments/next',
+            json={
+                "data": [
+                    {
+                        "id": "123456789_123456789",
+                        "created_time": "2019-04-09T05:57:32+0000",
+                        "like_count": 0,
+                        "message": "comment1",
+                        "permalink_url": "permalink_url",
+                        "comment_count": 0
+                    },
+                    {
+                        "id": "123456789_12345678910",
+                        "created_time": "2019-04-09T05:58:23+0000",
+                        "like_count": 1,
+                        "message": "comment2",
+                        "permalink_url": "permalink_url",
+                        "comment_count": 0
+                    },
+                    {
+                        "id": "123456789_12345678911",
+                        "created_time": "2019-04-09T05:58:30+0000",
+                        "like_count": 5,
+                        "message": "comment3",
+                        "permalink_url": "permalink_url",
+                        "comment_count": 1
+                    },
+                ],
+                "paging": {
+                    "cursors": {
+                        "before": "before",
+                        "after": "before"
+                    },
+                    # "next": "https://graph.facebook.com/v3.2/123456789/comments/next"
+                },
+                "summary": {
+                    "order": "chronological",
+                    "total_count": 108,
+                    "can_comment": True
+                }
+            }
+        )
+
+        comments, summary = self.api.get_comments(object_id=object_id, summary=True, count=4)
+
+        self.assertEqual(4, len(comments))
+        self.assertEqual('chronological', summary.order)
+
+        comments, summary = self.api.get_comments(object_id=object_id, summary=True, count=5, return_json=True)
+
+        self.assertEqual(5, len(comments))
+        self.assertEqual(108, summary['total_count'])
+
+    @responses.activate
+    def testGetPicture(self):
+        page_id = '123456789'
+
+        responses.add(
+            method=responses.GET,
+            url=DEFAULT_GRAPH_URL + DEFAULT_GRAPH_VERSION + '/' + page_id + '/' + 'picture',
+            json={
+                'data': {
+                    'height': 50,
+                    'is_silhouette': False,
+                    'url': 'url',
+                    'width': 50
+                }
+            }
+        )
+
+        picture_info = self.api.get_picture(page_id=page_id)
+
+        self.assertEqual(50, picture_info.height)
+
+        picture_info = self.api.get_picture(page_id=page_id, return_json=True)
+
+        self.assertEqual(50, picture_info['height'])

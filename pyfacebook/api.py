@@ -443,7 +443,7 @@ class Api(BaseApi):
                 break
             if len(comments) >= count:
                 break
-        return comments, comment_summary
+        return comments[:count], comment_summary
 
     def get_picture(self,
                     page_id=None,
@@ -485,7 +485,7 @@ class Api(BaseApi):
 
         data = self._parse_response(resp.content.decode('utf-8'))
         if return_json:
-            return data
+            return data['data']
         else:
             return PagePicture.new_from_json_dict(data['data'])
 
