@@ -563,9 +563,9 @@ class InstagramApi(BaseApi):
             media_id (str)
                 The id for you want to retrieve media.
             return_json (bool, optional):
-                If True JSON data will be returned, instead of pyfacebook.InstagramMedia, or return origin data by facebook.
+                If True origin data by facebook will be returned, or will return pyfacebook.InstagramMedia.
         Returns:
-            media basin data.
+            media basic data.
         """
         if media_id is None:
             raise PyFacebookError({'message': "Must specify the media id"})
@@ -585,7 +585,12 @@ class InstagramApi(BaseApi):
         else:
             return InstagramMedia.new_from_json_dict(data)
 
-    def get_media_paged(self, args, since_time, until_time, next_cursor=None, owner=False):
+    def get_media_paged(self,
+                        args,
+                        since_time,
+                        until_time,
+                        next_cursor=None,
+                        owner=False):
         """
         Fetch paging data from api.
 
@@ -656,14 +661,21 @@ class InstagramApi(BaseApi):
             end = True if until_time is None else until_time > timestamp
 
             if all([begin, end]):
-                result.append(InstagramMedia.new_from_json_dict(item))
+                result.append(item)
+                # result.append(InstagramMedia.new_from_json_dict(item))
             if not begin:
                 next_cursor = None
                 break
 
         return next_cursor, previous_cursor, result
 
-    def get_medias(self, username=None, since_time=None, until_time=None, count=50):
+    def get_medias(self,
+                   username=None,
+                   since_time=None,
+                   until_time=None,
+                   count=10,
+                   limit=5,
+                   return_json=False):
         """
         Obtain given user's media.
         If username not provide, will return the instagram business account's media.
@@ -677,7 +689,11 @@ class InstagramApi(BaseApi):
                 The media retrieve until time.
                 If neither since_time or until_time, it will by now time.
             count (int, optional)
-                The count is each request get the result count. default is 50.
+                The count is you want to retrieve medias.
+            limit (int, optional)
+                The count each request get the result count. default is 5.
+            return_json (bool, optional):
+                If True origin data by facebook will be returned, or will return pyfacebook.InstagramMedia list
 
         Returns:
             media data list.
@@ -686,18 +702,18 @@ class InstagramApi(BaseApi):
             owner = True
             args = {
                 'fields': ','.join(constant.INSTAGRAM_MEDIA_OWNER_FIELD + constant.INSTAGRAM_MEDIA_PUBLIC_FIELD),
-                'limit': count,
+                'limit': limit,
             }
         else:
             # notice:
             # this args is to provide origin data to paged methods.
             owner = False
             args = {
-                'limit': count,
+                'limit': limit,
                 'username': username,
                 'fields': 'business_discovery.username({username}){{media.limit({limit}){{{fields}}}}}'.format(
                     username=username,
-                    limit=count,
+                    limit=limit,
                     fields=','.join(constant.INSTAGRAM_MEDIA_PUBLIC_FIELD)
                 )
             }
@@ -710,7 +726,13 @@ class InstagramApi(BaseApi):
                 args=args, since_time=since_time, until_time=until_time,
                 next_cursor=next_cursor, owner=owner
             )
-            result += medias
+            if return_json:
+                result += medias
+            else:
+                result += [InstagramMedia.new_from_json_dict(item) for item in medias]
             if next_cursor is None:
+                break
+            if len(result) >= count:
+                result = result[:count]
                 break
         return result
