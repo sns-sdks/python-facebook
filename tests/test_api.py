@@ -67,13 +67,14 @@ class ApiCallTest(unittest.TestCase):
             }
         )
         page_info = self.api.get_page_info(page_id=page_id)
-
         self.assertEqual('about', page_info.about)
         self.assertEqual(49788740, page_info.engagement['count'])
 
         page_info = self.api.get_page_info(page_id=page_id, return_json=True)
-
         self.assertEqual('about', page_info['about'])
+
+        page_info_by_name = self.api.get_page_info(username=page_id)
+        self.assertEqual('name', page_info_by_name.name)
 
     @responses.activate
     def testGetPostInfo(self):
@@ -432,12 +433,12 @@ class ApiCallTest(unittest.TestCase):
             }
         )
 
-        posts = self.api.get_posts(page_id, count=4)
+        posts = self.api.get_posts(page_id=page_id, count=4)
 
         self.assertEqual(4, len(posts))
         self.assertEqual('123456789_123456789', posts[0].id)
 
-        posts = self.api.get_posts(page_id, count=5, return_json=True)
+        posts = self.api.get_posts(username=page_id, count=5, return_json=True)
         self.assertEqual(5, len(posts))
         self.assertEqual('123456789_123456789', posts[0]['id'])
 

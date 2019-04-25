@@ -30,12 +30,31 @@ class ApiTest(unittest.TestCase):
             url=self.base_url + "{}/oauth/access_token".format(self.version),
             json={'access_token': 'testToken'}
         )
+
+        responses.add(
+            method=responses.GET,
+            url=self.base_url + '{0}/debug_token'.format(self.version),
+            json={'data': {
+                'app_id': 'test',
+                'application': 'test',
+                'type': 'test',
+                'expires_at': 'test',
+                'is_valid': 'test',
+                'issued_at': 'test',
+                'scopes': 'test',
+                'user_id': 'test',
+            }}
+        )
+
         api = pyfacebook.Api(
             app_id='test',
             app_secret='test',
             short_token='test'
         )
         self.assertEqual(api.token, "testToken")
+
+        info = api.get_token_info()
+        self.assertEqual(type(info), pyfacebook.AccessToken)
 
     @responses.activate
     def testApiOnlyLongTermToken(self):
@@ -60,3 +79,30 @@ class ApiTest(unittest.TestCase):
         )
         info = api.get_token_info()
         self.assertEqual(type(info), pyfacebook.AccessToken)
+
+    @responses.activate
+    def testApiParams(self):
+        responses.add(
+            method=responses.GET,
+            url=self.base_url + "{}/oauth/access_token".format(self.version),
+            json={'access_token': 'testToken'}
+        )
+        self.assertRaises(
+            pyfacebook.PyFacebookError,
+            lambda: pyfacebook.Api(
+                app_id='test',
+                app_secret='test',
+                short_token='test',
+                interval_between_request=0,
+            )
+        )
+
+        self.assertRaises(
+            pyfacebook.PyFacebookError,
+            lambda: pyfacebook.Api(
+                app_id='test',
+                app_secret='test',
+                short_token='test',
+                version='3.3',
+            )
+        )

@@ -66,6 +66,8 @@ class BaseApi(object):
                     })
                 else:
                     self.version = target_version
+            else:
+                self.version = Api.VALID_API_VERSIONS[-1]
 
         if not (long_term_token or all([self.app_id, self.app_secret, self.short_token])):
             raise PyFacebookError({'message': 'Missing long term token or app account'})
