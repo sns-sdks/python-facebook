@@ -66,6 +66,12 @@ class ApiCallTest(unittest.TestCase):
                 'website': 'website'
             }
         )
+
+        self.assertRaises(
+            pyfacebook.PyFacebookError,
+            lambda: self.api.get_page_info()
+        )
+
         page_info = self.api.get_page_info(page_id=page_id)
         self.assertEqual('about', page_info.about)
         self.assertEqual(49788740, page_info.engagement['count'])
@@ -134,6 +140,11 @@ class ApiCallTest(unittest.TestCase):
                 'wow': {'data': [], 'summary': {'total_count': 64}}
 
             }
+        )
+
+        self.assertRaises(
+            pyfacebook.PyFacebookError,
+            lambda: self.api.get_post_info()
         )
 
         post_info = self.api.get_post_info(post_id=post_id)
@@ -433,6 +444,11 @@ class ApiCallTest(unittest.TestCase):
             }
         )
 
+        self.assertRaises(
+            pyfacebook.PyFacebookError,
+            lambda: self.api.get_posts()
+        )
+
         posts = self.api.get_posts(page_id=page_id, count=4)
 
         self.assertEqual(4, len(posts))
@@ -535,6 +551,11 @@ class ApiCallTest(unittest.TestCase):
             }
         )
 
+        self.assertRaises(
+            pyfacebook.PyFacebookError,
+            lambda: self.api.get_comments()
+        )
+
         comments, summary = self.api.get_comments(object_id=object_id, summary=True, count=4)
 
         self.assertEqual(4, len(comments))
@@ -560,6 +581,11 @@ class ApiCallTest(unittest.TestCase):
                     'width': 50
                 }
             }
+        )
+
+        self.assertRaises(
+            pyfacebook.PyFacebookError,
+            lambda: self.api.get_picture()
         )
 
         picture_info = self.api.get_picture(page_id=page_id)
