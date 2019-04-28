@@ -92,3 +92,62 @@ class InsApiTest(unittest.TestCase):
 
         media_info_json = self.api.get_media_info(media_id=media_id, return_json=True)
         self.assertEqual(media_id, media_info_json['id'])
+
+    @responses.activate
+    def testGetMedias(self):
+        responses.add(
+            method=responses.GET,
+            url=DEFAULT_GRAPH_URL + DEFAULT_GRAPH_VERSION + '/' + self.instagram_business_id,
+            json={
+                "business_discovery": {
+                    "media": {
+                        "data": [
+                            {
+                                'caption': 'caption1',
+                                'comments_count': 1,
+                                'id': '17861821972334188',
+                                'like_count': 4,
+                                'media_type': 'IMAGE',
+                                'media_url': 'media_url',
+                                'permalink': 'https://www.instagram.com/p/BuGD8NmF4KI/',
+                                'timestamp': '2019-02-20T07:10:15+0000',
+                                'username': 'ikroskun'
+                            },
+                            {
+                                'caption': 'caption2',
+                                'comments_count': 0,
+                                'id': '17864312515295083',
+                                'like_count': 0,
+                                'media_type': 'IMAGE',
+                                'media_url': 'media_url',
+                                'permalink': 'https://www.instagram.com/p/BporjsCF6mt/',
+                                'timestamp': '2018-11-01T11:13:38+0000',
+                                'username': 'ikroskun'
+                            },
+                            {
+                                'caption': 'caption3',
+                                'comments_count': 0,
+                                'id': '17924095942208544',
+                                'like_count': 1,
+                                'media_type': 'IMAGE',
+                                'media_url': 'media_url',
+                                'permalink': 'https://www.instagram.com/p/BoqBgsNl5qT/',
+                                'timestamp': '2018-10-08T03:13:19+0000',
+                                'username': 'ikroskun'
+                            }
+                        ],
+                        "paging": {
+                            "cursors": {
+                                "after": "after"
+                            }
+                        }
+                    }
+                }
+            }
+        )
+
+        medias = self.api.get_medias(username='test', count=5, limit=3)
+        self.assertEqual(len(medias), 5)
+
+        medias_json = self.api.get_medias(username='test', since_time='2018-10-30', until_time='2019-02-21')
+        self.assertEqual(len(medias_json), 2)
