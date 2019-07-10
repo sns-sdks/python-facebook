@@ -300,6 +300,16 @@ class Api(BaseApi):
                 break
         return posts[:count]
 
+    def get_feeds(self,
+                  page_id=None,
+                  username=None,
+                  since_time=None,
+                  until_time=None,
+                  count=10,
+                  limit=10,
+                  return_json=False):
+        pass
+
     def get_post_info(self,
                       post_id=None,
                       return_json=False):
