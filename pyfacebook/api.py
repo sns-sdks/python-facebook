@@ -21,7 +21,7 @@ from pyfacebook.utils import constant
 
 
 class BaseApi(object):
-    VALID_API_VERSIONS = ["v3.1", "v3.2"]
+    VALID_API_VERSIONS = ["v3.2", "v3.3"]
     GRAPH_URL = "https://graph.facebook.com/"
     INTERVAL_BETWEEN_REQUEST = 3  # seconds
 

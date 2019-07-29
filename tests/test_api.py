@@ -200,7 +200,6 @@ class ApiCallTest(unittest.TestCase):
                         'link': 'link',
                         'love': {'data': [], 'summary': {'total_count': 38}},
                         'message': 'message',
-                        'name': 'name',
                         'permalink_url': 'permalink_url',
                         'picture': 'picture',
                         'reactions': {
@@ -211,7 +210,6 @@ class ApiCallTest(unittest.TestCase):
                         'shares': {'count': 7},
                         'status_type': 'added_video',
                         'thankful': {'data': [], 'summary': {'total_count': 0}},
-                        'type': 'video',
                         'updated_time': '2019-04-24T11:47:38+0000',
                         'wow': {'data': [], 'summary': {'total_count': 9}}},
                     {
@@ -251,7 +249,6 @@ class ApiCallTest(unittest.TestCase):
                         'link': 'link',
                         'love': {'data': [], 'summary': {'total_count': 44}},
                         'message': 'message',
-                        'name': 'name',
                         'permalink_url': 'permalink_url',
                         'picture': 'picture',
                         'reactions': {
@@ -262,7 +259,6 @@ class ApiCallTest(unittest.TestCase):
                         'shares': {'count': 18},
                         'status_type': 'added_video',
                         'thankful': {'data': [], 'summary': {'total_count': 0}},
-                        'type': 'video',
                         'updated_time': '2019-04-24T12:05:27+0000',
                         'wow': {'data': [], 'summary': {'total_count': 12}}},
                     {
@@ -302,7 +298,6 @@ class ApiCallTest(unittest.TestCase):
                         'link': 'link',
                         'love': {'data': [], 'summary': {'total_count': 66}},
                         'message': 'message',
-                        'name': 'name',
                         'permalink_url': 'permalink_url',
                         'picture': 'picture',
                         'reactions': {
@@ -313,7 +308,6 @@ class ApiCallTest(unittest.TestCase):
                         'shares': {'count': 27},
                         'status_type': 'added_video',
                         'thankful': {'data': [], 'summary': {'total_count': 0}},
-                        'type': 'video',
                         'updated_time': '2019-04-24T11:54:30+0000',
                         'wow': {'data': [], 'summary': {'total_count': 25}}}
                 ],
@@ -368,7 +362,6 @@ class ApiCallTest(unittest.TestCase):
                         'link': 'link',
                         'love': {'data': [], 'summary': {'total_count': 38}},
                         'message': 'message',
-                        'name': 'name',
                         'permalink_url': 'permalink_url',
                         'picture': 'picture',
                         'reactions': {
@@ -379,7 +372,6 @@ class ApiCallTest(unittest.TestCase):
                         'shares': {'count': 7},
                         'status_type': 'added_video',
                         'thankful': {'data': [], 'summary': {'total_count': 0}},
-                        'type': 'video',
                         'updated_time': '2019-04-24T11:47:38+0000',
                         'wow': {'data': [], 'summary': {'total_count': 9}}},
                     {
@@ -419,7 +411,6 @@ class ApiCallTest(unittest.TestCase):
                         'link': 'link',
                         'love': {'data': [], 'summary': {'total_count': 44}},
                         'message': 'message',
-                        'name': 'name',
                         'permalink_url': 'permalink_url',
                         'picture': 'picture',
                         'reactions': {
@@ -430,7 +421,6 @@ class ApiCallTest(unittest.TestCase):
                         'shares': {'count': 18},
                         'status_type': 'added_video',
                         'thankful': {'data': [], 'summary': {'total_count': 0}},
-                        'type': 'video',
                         'updated_time': '2019-04-24T12:05:27+0000',
                         'wow': {'data': [], 'summary': {'total_count': 12}}},
                 ],

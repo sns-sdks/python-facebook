@@ -4,16 +4,16 @@
 
 PAGE_FIELDS = [
     'id', 'about', 'category', 'category_list', 'checkins', 'cover',
-    'description', 'description_html', 'emails', 'engagement', 'fan_count',
-    'global_brand_page_name', 'global_brand_root_id', 'link', 'name', 'phone',
-    'username', 'verification_status', 'website'
+    'description', 'description_html', 'display_subtext', 'emails',
+    'engagement', 'fan_count', 'founded',
+    'global_brand_root_id', 'link', 'name', 'phone', 'rating_count',
+    'single_line_address', 'username', 'verification_status', 'website'
 ]
 
 POST_BASIC_FIELDS = [
-    'id', 'attachments', 'caption', 'child_attachments', 'created_time', 'description',
-    'full_picture', 'icon', 'link', 'message', 'name',
-    'permalink_url', 'picture', 'shares', 'source', 'status_type',
-    'type', 'updated_time',
+    'id', 'attachments', 'child_attachments', 'created_time',
+    'full_picture', 'icon', 'message', 'permalink_url', 'picture', 'shares',
+    'status_type', 'updated_time',
     'comments.summary(true).limit(0)',
     'reactions.summary(true).limit(0)',
 ]
