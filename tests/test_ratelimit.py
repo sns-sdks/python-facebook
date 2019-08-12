@@ -72,7 +72,7 @@ class RateLimitTest(unittest.TestCase):
         self.assertEqual(60 * 5, self.api.rate_limit.get_sleep_interval())
 
     @responses.activate
-    def testGetRateLimitIntervalLess90(self):
+    def testGetRateLimitIntervalBlank(self):
         headers = {'x-app-usage': ''}
         responses.add(
             method=responses.GET,

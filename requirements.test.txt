@@ -1,9 +1,0 @@
--r requirements.txt
-coverage
-flake8
-pytest
-pytest-runner
-codecov
-responses
-pycodestyle
-
