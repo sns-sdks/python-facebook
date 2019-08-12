@@ -11,7 +11,8 @@ help:
 	@echo "  coverage    run tests with coverage"
 
 env:
-	pip install -Ur requirements.txt
+	pip install pipenv
+	pipenv install --dev
 
 
 clean:

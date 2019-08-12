@@ -12,10 +12,12 @@ matrix:
       sudo: required  # required for Python 3.7 (travis-ci/travis-ci#9069)
 
 install:
-  - pip install -r requirements.test.txt
+  - pip install pipenv
+  - pipenv install --dev
 script:
-  - py.test -s
-  - coverage run --source=pyfacebook setup.py test
+  - make lint
+  - make test
+  - make coverage
 
 after_success:
   - codecov

@@ -79,14 +79,17 @@ class Page(BaseModel):
             'cover': None,
             'description': None,
             'description_html': None,
+            'display_subtext': None,
             'emails': None,
             'engagement': None,
             'fan_count': None,
-            'global_brand_page_name': None,
+            'founded': None,  # only for category_list has company
             'global_brand_root_id': None,
             'link': None,
             'name': None,
             'phone': None,
+            'rating_count': None,
+            'single_line_address': None,
             'username': None,
             'verification_status': None,
             'website': None,
@@ -127,19 +130,14 @@ class Post(BaseModel):
         self.param_defaults = {
             'id': None,
             'attachments': None,
-            'caption': None,
             'child_attachments': None,
             'created_time': None,
-            'description': None,
             'full_picture': None,
             'icon': None,
-            'link': None,
             'message': None,
-            'name': None,  # Link's name
             'permalink_url': None,
             'picture': None,
             'shares': None,
-            'source': None,
             'status_type': None,
             'type': None,
             'updated_time': None,
@@ -183,6 +181,30 @@ class Post(BaseModel):
         c = cls(**json_data)
         c.__json = data
         return c
+
+
+class Attachment(BaseModel):
+    def __init__(self, **kwargs):
+        BaseModel.__init__(self, **kwargs)
+        self.param_defaults = {
+            'description': None,
+            'description_tags': None,
+            'media': None,
+            'media_type': None,
+            'target': None,
+            'title': None,
+            'type': None,
+            'unshimmed_url': None,
+            'url': None
+        }
+        for (param, default) in self.param_defaults.items():
+            setattr(self, param, kwargs.get(param, default))
+
+    def __repr__(self):
+        return "Attachment(TITLE={title},url={url})".format(
+            title=self.title,
+            url=self.url
+        )
 
 
 class Comment(BaseModel):

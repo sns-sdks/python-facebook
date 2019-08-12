@@ -21,7 +21,7 @@ from pyfacebook.utils import constant
 
 
 class BaseApi(object):
-    VALID_API_VERSIONS = ["v3.1", "v3.2"]
+    VALID_API_VERSIONS = ["v3.2", "v3.3"]
     GRAPH_URL = "https://graph.facebook.com/"
     INTERVAL_BETWEEN_REQUEST = 3  # seconds
 
@@ -286,6 +286,78 @@ class Api(BaseApi):
         while True:
             next_page, previous_page, data = self.paged_by_next(
                 resource='posts',
+                target=target,
+                next_page=next_page,
+                args=args
+            )
+            if return_json:
+                posts += data.get('data', [])
+            else:
+                posts += [Post.new_from_json_dict(item) for item in data['data']]
+            if next_page is None:
+                break
+            if len(posts) >= count:
+                break
+        return posts[:count]
+
+    def get_feeds(self,
+                  page_id=None,
+                  username=None,
+                  since_time=None,
+                  until_time=None,
+                  count=10,
+                  limit=10,
+                  return_json=False):
+        pass
+
+    def get_published_posts(self,
+                            page_id=None,
+                            since_time=None,
+                            until_time=None,
+                            count=10,
+                            limit=10,
+                            return_json=False):
+        """
+
+        Obtain give page's posts info. If token is authorized for app.
+        This endpoint need the page token and has manage-pages.
+
+        Args:
+            page_id (int, optional)
+                The id for you want to retrieve data
+            since_time (str, optional)
+                The posts retrieve begin time.
+            until_time ()
+                The posts retrieve until time.
+                If neither since_time or until_time, it will by now time.
+            count (int, optional)
+                The count will retrieve posts.
+            limit (int, optional)
+                Each request retrieve posts count from api.
+                For posts it should no more than 100.
+            return_json (bool, optional):
+                If True JSON data will be returned, instead of pyfacebook.Post, or return origin data by facebook.
+        Returns:
+            posts info list.
+        """
+        if page_id:
+            target = page_id
+        else:
+            raise PyFacebookError({'message': "Specify at least one of page_id or username"})
+
+        args = {
+            'fields': ','.join(set(constant.POST_BASIC_FIELDS + constant.POST_REACTIONS_FIELD)),
+            'since': since_time,
+            'until': until_time,
+            'limit': limit,
+        }
+
+        posts = []
+        next_page = None
+
+        while True:
+            next_page, previous_page, data = self.paged_by_next(
+                resource='published_posts',
                 target=target,
                 next_page=next_page,
                 args=args

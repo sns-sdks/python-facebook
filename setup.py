@@ -3,7 +3,7 @@
 from __future__ import absolute_import, print_function
 
 #
-# Copyright 2018 Ikroskun follows by The Python-Twitter Developers
+# Copyright 2018 Ikaroskun follows by The Python-Twitter Developers
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.

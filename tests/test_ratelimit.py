@@ -8,7 +8,7 @@ import pyfacebook
 class RateLimitTest(unittest.TestCase):
     def setUp(self):
         self.base_url = "https://graph.facebook.com/"
-        self.version = "v3.2"
+        self.version = pyfacebook.Api.VALID_API_VERSIONS[-1]
         self.api = pyfacebook.Api(
             long_term_token='testToken',
         )
@@ -72,7 +72,7 @@ class RateLimitTest(unittest.TestCase):
         self.assertEqual(60 * 5, self.api.rate_limit.get_sleep_interval())
 
     @responses.activate
-    def testGetRateLimitIntervalLess90(self):
+    def testGetRateLimitIntervalBlank(self):
         headers = {'x-app-usage': ''}
         responses.add(
             method=responses.GET,
