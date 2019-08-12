@@ -8,6 +8,10 @@ class BaseModel(object):
     def __init__(self, **kwargs):
         self.param_defaults = {}
 
+    def initial_param(self, kwargs):
+        for (param, default) in self.param_defaults.items():
+            setattr(self, param, kwargs.get(param, default))
+
     @classmethod
     def new_from_json_dict(cls, data, **kwargs):
         """ convert the data from api to model's properties. """
@@ -43,6 +47,11 @@ class BaseModel(object):
 
 
 class AccessToken(BaseModel):
+    """
+    A class representing the access token structure.
+    Refer: https://developers.facebook.com/docs/graph-api/reference/v4.0/debug_token
+    """
+
     def __init__(self, **kwargs):
         BaseModel.__init__(self, **kwargs)
         self.app_id = None
@@ -52,13 +61,13 @@ class AccessToken(BaseModel):
             'application': None,
             'type': None,
             'expires_at': None,
+            'data_access_expires_at': None,
             'is_valid': None,
             'issued_at': None,
             'scopes': None,
             'user_id': None,
         }
-        for (param, default) in self.param_defaults.items():
-            setattr(self, param, kwargs.get(param, default))
+        self.initial_param(kwargs)
 
     def __repr__(self):
         return "AccessToken(app_id={aid}, app_name={name})".format(
@@ -67,7 +76,81 @@ class AccessToken(BaseModel):
         )
 
 
+class Cover(BaseModel):
+    """
+    A class representing the cover photo structure.
+    Refer: https://developers.facebook.com/docs/graph-api/reference/cover-photo/
+    """
+
+    def __init__(self, **kwargs):
+        BaseModel.__init__(self, **kwargs)
+        self.param_defaults = {
+            "id": None,
+            "cover_id": None,  # Has Deprecated. Use the id field instead.
+            "offset_x": None,
+            "offset_y": None,
+            "source": None,
+        }
+        self.initial_param(kwargs)
+
+    def __repr__(self):
+        return "Cover(id={id},source={source})".format(
+            id=self.id, source=self.source
+        )
+
+
+class PageCategory(BaseModel):
+    """
+    A class representing the page category structure.
+    Refer: https://developers.facebook.com/docs/graph-api/reference/page-category/
+    """
+
+    def __init__(self, **kwargs):
+        BaseModel.__init__(self, **kwargs)
+        self.param_defaults = {
+            "id": None,
+            "api_enum": None,  # maybe never return.
+            "name": None,
+        }
+        self.initial_param(kwargs)
+
+    def __repr__(self):
+        return "PageCategory(id={id},name={name})".format(
+            id=self.id, name=self.name
+        )
+
+
+class PageEngagement(BaseModel):
+    """
+    A class representing the engagement structure.
+    Refer: https://developers.facebook.com/docs/graph-api/reference/engagement/
+    """
+
+    def __init__(self, **kwargs):
+        BaseModel.__init__(self, **kwargs)
+        self.param_defaults = {
+            "count": None,
+            "count_string": None,
+            "count_string_with_like": None,
+            "count_string_without_like": None,
+            "social_sentence": None,
+            "social_sentence_with_like": None,
+            "social_sentence_without_like": None,
+        }
+        self.initial_param(kwargs)
+
+    def __repr__(self):
+        return "PageEngagement(count={count},social_sentence={so})".format(
+            count=self.count, so=self.social_sentence
+        )
+
+
 class Page(BaseModel):
+    """
+    A class representing the page structure.
+    Refer:
+    """
+
     def __init__(self, **kwargs):
         BaseModel.__init__(self, **kwargs)
         self.param_defaults = {
@@ -99,9 +182,25 @@ class Page(BaseModel):
             setattr(self, param, kwargs.get(param, default))
 
     def __repr__(self):
-        return "Page(ID={pid}, username={username})".format(
+        return "Page(id={pid}, username={username})".format(
             pid=self.id,
             username=self.username
+        )
+
+    @classmethod
+    def new_from_json_dict(cls, data, **kwargs):
+        category_list = data.get('category_list')
+        if category_list:
+            category_list = [PageCategory.new_from_json_dict(ca) for ca in category_list]
+        cover = data.get('cover')
+        if cover:
+            cover = Cover.new_from_json_dict(cover)
+        engagement = data.get('engagement')
+        if engagement:
+            engagement = PageEngagement.new_from_json_dict(engagement)
+        return super(cls, cls).new_from_json_dict(
+            data=data, category_list=category_list,
+            cover=cover, engagement=engagement
         )
 
 

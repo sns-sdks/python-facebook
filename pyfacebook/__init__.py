@@ -15,6 +15,9 @@ from .error import PyFacebookError  # noqa
 
 from .models import (  # noqa
     AccessToken,
+    Cover,
+    PageCategory,
+    PageEngagement,
     Page,
     Post,
     Comment,
