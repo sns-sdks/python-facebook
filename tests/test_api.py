@@ -2,29 +2,35 @@
 
 from __future__ import unicode_literals, print_function
 
+import json
 import unittest
 import pyfacebook
 
 import responses
 
 DEFAULT_GRAPH_URL = "https://graph.facebook.com/"
-DEFAULT_GRAPH_VERSION = 'v3.2'
+DEFAULT_GRAPH_VERSION = pyfacebook.Api.VALID_API_VERSIONS[-1]
 
 
 class ApiCallTest(unittest.TestCase):
     @responses.activate
     def setUp(self):
+        self.base_path = 'testdata/facebook/'
+
+        with open(self.base_path + 'exchange_token.json', 'rb') as f:
+            token_data = json.loads(f.read().decode('utf-8'))
+
         responses.add(
             method=responses.GET,
             url=DEFAULT_GRAPH_URL + DEFAULT_GRAPH_VERSION + '/oauth/access_token',
-            json={'access_token': 'testToken'}
+            json=token_data
         )
 
         self.api = pyfacebook.Api(
             app_id='test',
             app_secret='test',
             short_token='test',
-            version='3.2',
+            version=DEFAULT_GRAPH_VERSION,
             timeout=1,
             interval_between_request=1,
             sleep_on_rate_limit=True
@@ -32,39 +38,13 @@ class ApiCallTest(unittest.TestCase):
 
     @responses.activate
     def testGetPageInfo(self):
-        page_id = '123456789'
+        page_id = '20531316728'
+        with open(self.base_path + 'page_info.json', 'rb') as f:
+            page_data = json.loads(f.read().decode('utf-8'))
         responses.add(
             method=responses.GET,
             url=DEFAULT_GRAPH_URL + DEFAULT_GRAPH_VERSION + '/' + page_id,
-            json={
-                'about': 'about',
-                'category': 'category',
-                'category_list': [{
-                    'id': 'category_id',
-                    'name': 'category_name'
-                }],
-                'checkins': 1,
-                'cover': {
-                    'cover_id': 'cover_cover_id',
-                    'id': 'cover_id',
-                    'offset_x': 50,
-                    'offset_y': 50,
-                    'source': 'cover_source'
-                },
-                'description': 'description',
-                'description_html': 'description_html',
-                'engagement': {
-                    'count': 49788740,
-                    'social_sentence': '49M people like this.'},
-                'fan_count': 49788740,
-                'global_brand_page_name': 'global_brand_page_name',
-                'id': '123456789',
-                'link': 'link',
-                'name': 'name',
-                'username': 'username',
-                'verification_status': 'blue_verified',
-                'website': 'website'
-            }
+            json=page_data
         )
 
         self.assertRaises(
@@ -73,14 +53,14 @@ class ApiCallTest(unittest.TestCase):
         )
 
         page_info = self.api.get_page_info(page_id=page_id)
-        self.assertEqual('about', page_info.about)
-        self.assertEqual(49788740, page_info.engagement['count'])
+        self.assertEqual(page_info.id, page_id)
+        self.assertEqual(page_info.engagement.count, 214429223)
 
         page_info = self.api.get_page_info(page_id=page_id, return_json=True)
-        self.assertEqual('about', page_info['about'])
+        self.assertEqual(page_info['checkins'], 11)
 
         page_info_by_name = self.api.get_page_info(username=page_id)
-        self.assertEqual('name', page_info_by_name.name)
+        self.assertEqual(page_info_by_name.name, 'Facebook')
 
     @responses.activate
     def testGetPostInfo(self):
@@ -558,19 +538,14 @@ class ApiCallTest(unittest.TestCase):
 
     @responses.activate
     def testGetPicture(self):
-        page_id = '123456789'
+        page_id = '20531316728'
 
+        with open(self.base_path + 'page_picture.json', 'rb') as f:
+            picture_data = json.loads(f.read().decode('utf-8'))
         responses.add(
             method=responses.GET,
             url=DEFAULT_GRAPH_URL + DEFAULT_GRAPH_VERSION + '/' + page_id + '/' + 'picture',
-            json={
-                'data': {
-                    'height': 50,
-                    'is_silhouette': False,
-                    'url': 'url',
-                    'width': 50
-                }
-            }
+            json=picture_data
         )
 
         self.assertRaises(
@@ -580,8 +555,8 @@ class ApiCallTest(unittest.TestCase):
 
         picture_info = self.api.get_picture(page_id=page_id)
 
-        self.assertEqual(50, picture_info.height)
+        self.assertEqual(picture_info.height, 100)
 
         picture_info = self.api.get_picture(page_id=page_id, return_json=True)
 
-        self.assertEqual(50, picture_info['height'])
+        self.assertEqual(picture_info['height'], 100)

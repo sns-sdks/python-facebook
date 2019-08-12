@@ -548,7 +548,7 @@ class Api(BaseApi):
 
         args = {
             'redirect': 0,  # if set 0 the api will return json response.
-            'type': 'small' if pic_type is None else pic_type,
+            'type': 'normal' if pic_type is None else pic_type,
         }
 
         resp = self._request(

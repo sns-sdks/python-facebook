@@ -148,7 +148,7 @@ class PageEngagement(BaseModel):
 class Page(BaseModel):
     """
     A class representing the page structure.
-    Refer:
+    Refer: https://developers.facebook.com/docs/graph-api/reference/page/
     """
 
     def __init__(self, **kwargs):
@@ -205,9 +205,14 @@ class Page(BaseModel):
 
 
 class PagePicture(BaseModel):
+    """
+    A class representing the page picture structure.
+    Refer: https://developers.facebook.com/docs/graph-api/reference/profile-picture-source/
+    """
     def __init__(self, **kwargs):
         BaseModel.__init__(self, **kwargs)
         self.param_defaults = {
+            'cache_key': None,
             'height': None,
             'width': None,
             'is_silhouette': None,

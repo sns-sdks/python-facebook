@@ -19,6 +19,7 @@ from .models import (  # noqa
     PageCategory,
     PageEngagement,
     Page,
+    PagePicture,
     Post,
     Comment,
     CommentSummary,

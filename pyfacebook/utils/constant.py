@@ -10,10 +10,16 @@ PAGE_FIELDS = [
     'single_line_address', 'username', 'verification_status', 'website'
 ]
 
+POST_ATTACHMENTS = [
+    'description', 'description_tags', 'media', 'media_type', 'target', 'title',
+    'type', 'unshimmed_url', 'url',
+]
+
+
 POST_BASIC_FIELDS = [
-    'id', 'attachments', 'child_attachments', 'created_time',
-    'full_picture', 'icon', 'message', 'permalink_url', 'picture', 'shares',
-    'status_type', 'updated_time',
+    'id', 'attachments{{{}}}'.format(','.join(POST_ATTACHMENTS)),
+    'created_time', 'full_picture', 'icon', 'message',
+    'permalink_url', 'picture', 'shares', 'status_type', 'updated_time',
     'comments.summary(true).limit(0)',
     'reactions.summary(true).limit(0)',
 ]

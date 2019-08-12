@@ -6,7 +6,7 @@ import pyfacebook
 
 class FacebookModelTest(unittest.TestCase):
     def setUp(self):
-        self.base_path = 'testdata/facebook/models/'
+        self.base_path = 'testdata/facebook/'
 
     def testAccessToken(self):
         with open(self.base_path + 'access_token.json', 'rb') as f:
@@ -47,3 +47,20 @@ class FacebookModelTest(unittest.TestCase):
         self.assertTrue(isinstance(page_info.category_list, list))
         self.assertTrue(isinstance(page_info.cover, pyfacebook.Cover))
         self.assertTrue(isinstance(page_info.engagement, pyfacebook.PageEngagement))
+
+    def testPagePicture(self):
+        with open(self.base_path + '/models/page_picture.json', 'rb') as f:
+            picture_data = json.loads(f.read().decode('utf-8'))
+
+        picture = pyfacebook.PagePicture.new_from_json_dict(picture_data)
+
+        try:
+            picture.__repr__()
+        except Exception as e:
+            self.fail(e)
+
+        origin_json_data = json.dumps(picture_data, sort_keys=True)
+        self.assertEqual(origin_json_data, picture.as_json_string())
+        self.assertEqual(picture_data, picture.as_dict())
+
+        self.assertEqual(picture.height, 100)
