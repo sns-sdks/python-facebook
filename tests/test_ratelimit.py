@@ -8,7 +8,7 @@ import pyfacebook
 class RateLimitTest(unittest.TestCase):
     def setUp(self):
         self.base_url = "https://graph.facebook.com/"
-        self.version = "v3.2"
+        self.version = pyfacebook.Api.VALID_API_VERSIONS[-1]
         self.api = pyfacebook.Api(
             long_term_token='testToken',
         )

@@ -12,7 +12,7 @@ class ApiTest(unittest.TestCase):
 
     def setUp(self):
         self.base_url = "https://graph.facebook.com/"
-        self.version = "v3.2"
+        self.version = pyfacebook.Api.VALID_API_VERSIONS[-1]
 
     def testApiSetUp(self):
         self.assertRaises(
@@ -104,6 +104,6 @@ class ApiTest(unittest.TestCase):
                 app_id='test',
                 app_secret='test',
                 short_token='test',
-                version='3.3',
+                version='3.0',
             )
         )
