@@ -237,13 +237,83 @@ class PagePicture(BaseModel):
         )
 
 
+class ReactionSummary(BaseModel):
+    """
+    A class representing the page post reaction summary structure.
+    Refer: https://developers.facebook.com/docs/graph-api/reference/page-post/reactions/
+    """
+
+    def __init__(self, **kwargs):
+        BaseModel.__init__(self, **kwargs)
+        self.param_defaults = {
+            'total_count': None,
+            'viewer_reaction': None,
+        }
+        self.initial_param(kwargs)
+
+    def __repr__(self):
+        return "ReactionSummary(total={total},viewer_reaction={rc})".format(
+            total=self.total_count, rc=self.viewer_reaction
+        )
+
+
+class ShareSummary(BaseModel):
+    """
+    A class representing the page post shares structure.
+    Almost: {"count": 15892}
+    """
+
+    def __init__(self, **kwargs):
+        BaseModel.__init__(self, **kwargs)
+        self.param_defaults = {
+            'count': None,
+        }
+        self.initial_param(kwargs)
+
+    def __repr__(self):
+        return "ShareSummary(count={count})".format(count=self.count)
+
+
+class Attachment(BaseModel):
+    """
+    A class representing the attachment structure.
+    Refer: https://developers.facebook.com/docs/graph-api/reference/story-attachment/
+    """
+
+    def __init__(self, **kwargs):
+        BaseModel.__init__(self, **kwargs)
+        self.param_defaults = {
+            'description': None,
+            'description_tags': None,  # almost not appear
+            'media': None,  # https://developers.facebook.com/docs/graph-api/reference/story-attachment-media/
+            'media_type': None,
+            'target': None,  # https://developers.facebook.com/docs/graph-api/reference/story-attachment-target/
+            'title': None,
+            'type': None,
+            'unshimmed_url': None,
+            'url': None
+        }
+        for (param, default) in self.param_defaults.items():
+            setattr(self, param, kwargs.get(param, default))
+
+    def __repr__(self):
+        return "Attachment(title={title},url={url})".format(
+            title=self.title,
+            url=self.url
+        )
+
+
 class Post(BaseModel):
+    """
+    A class representing the page post structure.
+    Refer: https://developers.facebook.com/docs/graph-api/reference/page-post/
+    """
+
     def __init__(self, **kwargs):
         BaseModel.__init__(self, **kwargs)
         self.param_defaults = {
             'id': None,
             'attachments': None,
-            'child_attachments': None,
             'created_time': None,
             'full_picture': None,
             'icon': None,
@@ -252,7 +322,7 @@ class Post(BaseModel):
             'picture': None,
             'shares': None,
             'status_type': None,
-            'type': None,
+            'type': None,  # now  type change to attachments{media_type}
             'updated_time': None,
             'comments': None,
             'reactions': None,
@@ -275,48 +345,63 @@ class Post(BaseModel):
 
     @classmethod
     def new_from_json_dict(cls, data, **kwargs):
-        json_data = data.copy()
-        if kwargs:
-            for key, val in kwargs.items():
-                json_data[key] = val
-        # handle the different count.
-        for key, val in json_data.items():
-            if isinstance(val, dict):
-                if not key.endswith('attachments'):
-                    if 'count' in val:
-                        json_data[key] = val['count']
-                    elif 'summary' in val:
-                        json_data[key] = val['summary'].get('total_count', 0)
-                else:
-                    json_data[key] = val
-            else:
-                json_data[key] = val
-        c = cls(**json_data)
-        c.__json = data
-        return c
+        # comments summary model
+        comments = data.get('comments', {}).get('summary')
+        if comments:
+            comments = CommentSummary.new_from_json_dict(comments)
+        # shares summary model
+        shares = data.get('shares')
+        if shares:
+            shares = ShareSummary.new_from_json_dict(shares)
 
+        # reactions total and sub item
+        reactions = data.get('reactions', {}).get('summary')
+        if reactions:
+            reactions = ReactionSummary.new_from_json_dict(reactions, viewer_reaction='total')
+        reactions_like = data.get('like', {}).get('summary')
+        if reactions_like:
+            reactions_like = ReactionSummary.new_from_json_dict(reactions_like, viewer_reaction='like')
+        reactions_love = data.get('love', {}).get('summary')
+        if reactions_love:
+            reactions_love = ReactionSummary.new_from_json_dict(reactions_love, viewer_reaction='love')
+        reactions_wow = data.get('wow', {}).get('summary')
+        if reactions_wow:
+            reactions_wow = ReactionSummary.new_from_json_dict(reactions_wow, viewer_reaction='wow')
+        reactions_haha = data.get('haha', {}).get('summary')
+        if reactions_haha:
+            reactions_haha = ReactionSummary.new_from_json_dict(reactions_haha, viewer_reaction='haha')
+        reactions_sad = data.get('sad', {}).get('summary')
+        if reactions_sad:
+            reactions_sad = ReactionSummary.new_from_json_dict(reactions_sad, viewer_reaction='sad')
+        reactions_angry = data.get('angry', {}).get('summary')
+        if reactions_angry:
+            reactions_angry = ReactionSummary.new_from_json_dict(reactions_angry, viewer_reaction='angry')
+        reactions_thankful = data.get('thankful', {}).get('summary')
+        if reactions_thankful:
+            reactions_thankful = ReactionSummary.new_from_json_dict(reactions_thankful, viewer_reaction='thankful')
 
-class Attachment(BaseModel):
-    def __init__(self, **kwargs):
-        BaseModel.__init__(self, **kwargs)
-        self.param_defaults = {
-            'description': None,
-            'description_tags': None,
-            'media': None,
-            'media_type': None,
-            'target': None,
-            'title': None,
-            'type': None,
-            'unshimmed_url': None,
-            'url': None
-        }
-        for (param, default) in self.param_defaults.items():
-            setattr(self, param, kwargs.get(param, default))
+        # attachments
+        attachments = data.get('attachments')
+        if attachments:
+            attachments = [Attachment.new_from_json_dict(item) for item in attachments]
+        # for post type
+        """
+        Deprecated for Page posts for v3.3+.
+        Use attachments{media_type} instead. 
+        If there is no attachments or media_type=link,
+        the value is the same as type=status.
+        """
+        post_type = 'status'  # default
+        if attachments is not None and len(attachments) > 0:
+            media_type = attachments[0].media_type
+            if media_type is not None:
+                post_type = media_type
 
-    def __repr__(self):
-        return "Attachment(TITLE={title},url={url})".format(
-            title=self.title,
-            url=self.url
+        return super(cls, cls).new_from_json_dict(
+            data=data, comments=comments, shares=shares, reactions=reactions,
+            like=reactions_like, love=reactions_love, wow=reactions_wow,
+            haha=reactions_haha, sad=reactions_sad, angry=reactions_angry,
+            thankful=reactions_thankful, attachments=attachments, type=post_type
         )
 
 
