@@ -64,3 +64,30 @@ class FacebookModelTest(unittest.TestCase):
         self.assertEqual(picture_data, picture.as_dict())
 
         self.assertEqual(picture.height, 100)
+
+    def testPagePost(self):
+        with open(self.base_path + '/post_info.json', 'rb') as f:
+            post_data = json.loads(f.read().decode('utf-8'))
+
+        post_info = pyfacebook.Post.new_from_json_dict(post_data)
+
+        try:
+            post_info.__repr__()
+            post_info.comments.__repr__()
+            post_info.shares.__repr__()
+            post_info.reactions.__repr__()
+            post_info.attachments[0].__repr__()
+        except Exception as e:
+            self.fail(e)
+
+        origin_json_data = json.dumps(post_data, sort_keys=True)
+        # real instance has custom 'type' field
+        self.assertNotEqual(post_info.as_json_string(), origin_json_data)
+        self.assertNotEqual(post_info.as_dict(), post_data)
+
+        self.assertEqual(post_info.id, '20531316728_10158658756111729')
+        self.assertTrue(isinstance(post_info.comments, pyfacebook.CommentSummary))
+        self.assertTrue(isinstance(post_info.shares, pyfacebook.ShareSummary))
+        self.assertTrue(isinstance(post_info.reactions, pyfacebook.ReactionSummary))
+        self.assertTrue(isinstance(post_info.attachments[0], pyfacebook.Attachment))
+        self.assertTrue(isinstance(post_info.like, pyfacebook.ReactionSummary))

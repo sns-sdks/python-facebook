@@ -298,8 +298,7 @@ class Attachment(BaseModel):
 
     def __repr__(self):
         return "Attachment(title={title},url={url})".format(
-            title=self.title,
-            url=self.url
+            title=self.title, url=self.url
         )
 
 
@@ -381,13 +380,13 @@ class Post(BaseModel):
             reactions_thankful = ReactionSummary.new_from_json_dict(reactions_thankful, viewer_reaction='thankful')
 
         # attachments
-        attachments = data.get('attachments')
+        attachments = data.get('attachments', {}).get('data', [])
         if attachments:
             attachments = [Attachment.new_from_json_dict(item) for item in attachments]
         # for post type
         """
         Deprecated for Page posts for v3.3+.
-        Use attachments{media_type} instead. 
+        Use attachments{media_type} instead.
         If there is no attachments or media_type=link,
         the value is the same as type=status.
         """
