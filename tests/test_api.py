@@ -170,7 +170,7 @@ class ApiCallTest(unittest.TestCase):
             json=comment_data
         )
 
-        with self.assertRaisesRegex(pyfacebook.PyFacebookError, 'comment'):
+        with self.assertRaisesRegexp(pyfacebook.PyFacebookError, 'comment'):
             self.api.get_comment_info()
 
         comment_info = self.api.get_comment_info(comment_id=comment_id)

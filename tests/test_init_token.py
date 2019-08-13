@@ -3,7 +3,7 @@ from __future__ import unicode_literals, print_function
 
 import unittest
 import pyfacebook
-from requests.exceptions import Timeout
+from requests.exceptions import Timeout, ConnectionError
 
 import responses
 
@@ -15,10 +15,8 @@ class ApiTest(unittest.TestCase):
         self.version = pyfacebook.Api.VALID_API_VERSIONS[-1]
 
     def testApiSetUp(self):
-        self.assertRaises(
-            pyfacebook.PyFacebookError,
-            lambda: pyfacebook.Api(app_id='test')
-        )
+        with self.assertRaises((pyfacebook.PyFacebookError, ConnectionError)):
+            pyfacebook.Api(app_id='test')
 
     def testApiNoAuthError(self):
         api = pyfacebook.Api(long_term_token='test', timeout=1)

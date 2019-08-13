@@ -23,7 +23,7 @@ from pyfacebook.utils import constant
 class BaseApi(object):
     VALID_API_VERSIONS = ["v3.3", "v4.0"]
     GRAPH_URL = "https://graph.facebook.com/"
-    INTERVAL_BETWEEN_REQUEST = 3  # seconds
+    INTERVAL_BETWEEN_REQUEST = 1  # seconds
 
     def __init__(
             self, app_id=None,
@@ -110,6 +110,8 @@ class BaseApi(object):
             if self.sleep_on_rate_limit:
                 interval = self.rate_limit.get_sleep_interval()
                 time.sleep(interval)
+            else:
+                time.sleep(self.interval_between_request)
             response = self.session.request(
                 method,
                 self.base_url + path,
@@ -198,7 +200,10 @@ class Api(BaseApi):
                          sleep_on_rate_limit=sleep_on_rate_limit,
                          proxies=proxies)
 
-    def get_page_info(self, page_id=None, username=None, return_json=False):
+    def get_page_info(self,
+                      page_id=None,
+                      username=None,
+                      return_json=False):
         """
         Obtain give page's basic info.
 
