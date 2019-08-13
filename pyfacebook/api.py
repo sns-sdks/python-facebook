@@ -521,6 +521,39 @@ class Api(BaseApi):
                 break
         return comments[:count], comment_summary
 
+    def get_comment_info(self,
+                         comment_id=None,
+                         return_json=False):
+        """
+        Obtain point comment info.
+        Refer: https://developers.facebook.com/docs/graph-api/reference/v4.0/comment
+        Args:
+            comment_id (str)
+                The comment id you want to retrieve data.
+            return_json (bool, optional):
+                If True JSON data will be returned, instead of pyfacebook.Comment
+        Returns:
+            Comment info, pyfacebook.Comment instance or json str.
+        """
+        if comment_id is None:
+            raise PyFacebookError({'message': "Must specify comment id."})
+
+        args = {
+            'fields': ','.join(constant.COMMENT_BASIC_FIELDS)
+        }
+
+        resp = self._request(
+            method='GET',
+            path='{0}/{1}'.format(self.version, comment_id),
+            args=args
+        )
+
+        data = self._parse_response(resp.content.decode('utf-8'))
+        if return_json:
+            return data
+        else:
+            return CommentSummary.new_from_json_dict(data)
+
     def get_picture(self,
                     page_id=None,
                     pic_type=None,
@@ -540,7 +573,7 @@ class Api(BaseApi):
             Page picture info, pyfacebook.PagePicture instance or json str.
         """
         if page_id is None:
-            raise PyFacebookError({'message': "Must specify page_id"})
+            raise PyFacebookError({'message': "Must specify page id"})
         if pic_type is not None and pic_type not in constant.PAGE_PICTURE_TYPE:
             raise PyFacebookError({
                 'message': "For field picture: pic_type must be one of the following values: {}".format(

@@ -412,6 +412,10 @@ class Post(BaseModel):
 
 
 class Comment(BaseModel):
+    """
+    A class representing the comment structure.
+    Refer: https://developers.facebook.com/docs/graph-api/reference/v4.0/comment
+    """
     def __init__(self, **kwargs):
         BaseModel.__init__(self, **kwargs)
         self.param_defaults = {
@@ -441,6 +445,10 @@ class Comment(BaseModel):
 
 
 class CommentSummary(BaseModel):
+    """
+    A class representing the comment summary structure.
+    Refer: https://developers.facebook.com/docs/graph-api/reference/v4.0/post/comments
+    """
     def __init__(self, **kwargs):
         BaseModel.__init__(self, **kwargs)
         self.param_defaults = {
@@ -453,8 +461,7 @@ class CommentSummary(BaseModel):
 
     def __repr__(self):
         return "CommentSummary(order={order},total_count={count})".format(
-            order=self.order,
-            count=self.total_count
+            order=self.order, count=self.total_count
         )
 
 

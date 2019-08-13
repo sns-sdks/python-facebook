@@ -15,7 +15,6 @@ POST_ATTACHMENTS = [
     'type', 'unshimmed_url', 'url',
 ]
 
-
 POST_BASIC_FIELDS = [
     'id', 'attachments{{{}}}'.format(','.join(POST_ATTACHMENTS)),
     'created_time', 'full_picture', 'icon', 'message',
@@ -38,8 +37,9 @@ POST_REACTIONS_FIELD = [
 ]
 
 COMMENT_BASIC_FIELDS = [
-    'id', 'created_time', 'like_count', 'message',
-    'permalink_url', 'comment_count', 'from'
+    'id', 'attachment', 'created_time', 'like_count',
+    'can_comment', 'can_like', 'comment_count',
+    'from', 'message', 'permalink_url',
 ]
 
 PAGE_PICTURE_TYPE = [

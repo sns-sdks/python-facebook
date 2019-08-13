@@ -108,3 +108,20 @@ class FacebookModelTest(unittest.TestCase):
         self.assertEqual(comment.as_dict(), comment_data)
 
         self.assertEqual(comment.id, '10158658755326729_10158658760011729')
+
+    def testCommentSummary(self):
+        with open(self.base_path + 'models/comment_summary.json', 'rb') as f:
+            comment_summary_data = json.loads(f.read().decode('utf-8'))
+
+        comment_summary = pyfacebook.CommentSummary.new_from_json_dict(comment_summary_data)
+
+        try:
+            comment_summary.__repr__()
+        except Exception as e:
+            self.fail(e)
+
+        origin_json_data = json.dumps(comment_summary_data, sort_keys=True)
+        self.assertEqual(comment_summary.as_json_string(), origin_json_data)
+        self.assertEqual(comment_summary.as_dict(), comment_summary_data)
+
+        self.assertEqual(comment_summary.total_count, 794)
