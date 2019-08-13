@@ -91,3 +91,20 @@ class FacebookModelTest(unittest.TestCase):
         self.assertTrue(isinstance(post_info.reactions, pyfacebook.ReactionSummary))
         self.assertTrue(isinstance(post_info.attachments[0], pyfacebook.Attachment))
         self.assertTrue(isinstance(post_info.like, pyfacebook.ReactionSummary))
+
+    def testComment(self):
+        with open(self.base_path + 'models/comment_info.json', 'rb') as f:
+            comment_data = json.loads(f.read().decode('utf-8'))
+
+        comment = pyfacebook.Comment.new_from_json_dict(comment_data)
+
+        try:
+            comment.__repr__()
+        except Exception as e:
+            self.fail(e)
+
+        origin_json_data = json.dumps(comment_data, sort_keys=True)
+        self.assertEqual(comment.as_json_string(), origin_json_data)
+        self.assertEqual(comment.as_dict(), comment_data)
+
+        self.assertEqual(comment.id, '10158658755326729_10158658760011729')

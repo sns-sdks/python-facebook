@@ -416,12 +416,15 @@ class Comment(BaseModel):
         BaseModel.__init__(self, **kwargs)
         self.param_defaults = {
             'id': None,
+            'attachment': None,
             'created_time': None,
-            'message': None,
             'like_count': None,
+            'can_comment': None,
+            'can_like': None,
+            'comment_count': None,
+            '_from': None,  # from is python keyword. so change field name.
+            'message': None,
             'permalink_url': None,
-            '_from': None,
-            'comment_count': None
         }
         for (param, default) in self.param_defaults.items():
             # handle from properties
@@ -431,7 +434,7 @@ class Comment(BaseModel):
             setattr(self, properties, kwargs.get(param, default))
 
     def __repr__(self):
-        return "Comment(ID={c_id},created_time={c_time})".format(
+        return "Comment(id={c_id},created_time={c_time})".format(
             c_id=self.id,
             c_time=self.created_time
         )

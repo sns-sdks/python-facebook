@@ -124,95 +124,22 @@ class ApiCallTest(unittest.TestCase):
 
     @responses.activate
     def testGetComments(self):
-        object_id = '123456789'
+        object_id = '20531316728_10158658756111729'
+
+        with open(self.base_path + 'comments.json', 'rb') as f:
+            comments_data = json.loads(f.read().decode('utf-8'))
         responses.add(
             method=responses.GET,
             url=DEFAULT_GRAPH_URL + DEFAULT_GRAPH_VERSION + '/' + object_id + '/' + 'comments',
-            json={
-                "data": [
-                    {
-                        "id": "123456789_123456789",
-                        "created_time": "2019-04-09T05:57:32+0000",
-                        "like_count": 0,
-                        "message": "comment1",
-                        "permalink_url": "permalink_url",
-                        "comment_count": 0
-                    },
-                    {
-                        "id": "123456789_12345678910",
-                        "created_time": "2019-04-09T05:58:23+0000",
-                        "like_count": 1,
-                        "message": "comment2",
-                        "permalink_url": "permalink_url",
-                        "comment_count": 0
-                    },
-                    {
-                        "id": "123456789_12345678911",
-                        "created_time": "2019-04-09T05:58:30+0000",
-                        "like_count": 5,
-                        "message": "comment3",
-                        "permalink_url": "permalink_url",
-                        "comment_count": 1
-                    },
-                ],
-                "paging": {
-                    "cursors": {
-                        "before": "before",
-                        "after": "before"
-                    },
-                    "next": "https://graph.facebook.com/{}/123456789/comments/next".format(DEFAULT_GRAPH_VERSION)
-                },
-                "summary": {
-                    "order": "chronological",
-                    "total_count": 108,
-                    "can_comment": True
-                }
-            }
+            json=comments_data
         )
 
+        with open(self.base_path + 'comments_next.json', 'rb') as f:
+            comments_data_next = json.loads(f.read().decode('utf-8'))
         responses.add(
             method=responses.GET,
             url=DEFAULT_GRAPH_URL + DEFAULT_GRAPH_VERSION + '/' + object_id + '/' + 'comments/next',
-            json={
-                "data": [
-                    {
-                        "id": "123456789_123456789",
-                        "created_time": "2019-04-09T05:57:32+0000",
-                        "like_count": 0,
-                        "message": "comment1",
-                        "permalink_url": "permalink_url",
-                        "comment_count": 0
-                    },
-                    {
-                        "id": "123456789_12345678910",
-                        "created_time": "2019-04-09T05:58:23+0000",
-                        "like_count": 1,
-                        "message": "comment2",
-                        "permalink_url": "permalink_url",
-                        "comment_count": 0
-                    },
-                    {
-                        "id": "123456789_12345678911",
-                        "created_time": "2019-04-09T05:58:30+0000",
-                        "like_count": 5,
-                        "message": "comment3",
-                        "permalink_url": "permalink_url",
-                        "comment_count": 1
-                    },
-                ],
-                "paging": {
-                    "cursors": {
-                        "before": "before",
-                        "after": "before"
-                    },
-                    # "next": "https://graph.facebook.com/v3.2/123456789/comments/next"
-                },
-                "summary": {
-                    "order": "chronological",
-                    "total_count": 108,
-                    "can_comment": True
-                }
-            }
+            json=comments_data_next
         )
 
         self.assertRaises(
@@ -222,13 +149,13 @@ class ApiCallTest(unittest.TestCase):
 
         comments, summary = self.api.get_comments(object_id=object_id, summary=True, count=4)
 
-        self.assertEqual(4, len(comments))
-        self.assertEqual('chronological', summary.order)
+        self.assertEqual(len(comments), 4)
+        self.assertEqual(summary.order, 'chronological')
 
-        comments, summary = self.api.get_comments(object_id=object_id, summary=True, count=5, return_json=True)
+        comments, summary = self.api.get_comments(object_id=object_id, summary=True, count=8, return_json=True)
 
-        self.assertEqual(5, len(comments))
-        self.assertEqual(108, summary['total_count'])
+        self.assertEqual(len(comments), 8)
+        self.assertEqual(summary['total_count'], 794)
 
     @responses.activate
     def testGetPicture(self):

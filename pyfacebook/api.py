@@ -461,7 +461,7 @@ class Api(BaseApi):
                      return_json=False):
         """
         To get point object's comments.
-        Doc refer: https://developers.facebook.com/docs/graph-api/reference/v3.2/object/comments.
+        Doc refer: https://developers.facebook.com/docs/graph-api/reference/v4.0/object/comments.
         Args:
              object_id (str)
                 The object id which you want to retrieve comments.
@@ -489,7 +489,7 @@ class Api(BaseApi):
             (Comments set, CommentSummary's data)
         """
         if object_id is None:
-            raise PyFacebookError({'message': "Must specify the post id"})
+            raise PyFacebookError({'message': "Must specify the object id"})
 
         args = {
             'fields': ','.join(constant.COMMENT_BASIC_FIELDS),
