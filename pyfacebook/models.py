@@ -115,6 +115,7 @@ class PageCategory(BaseModel):
         self.initial_param(kwargs)
 
     def __repr__(self):
+        # for py2
         if self.name is not None:
             name = self.name.encode('utf-8')
         else:
@@ -144,6 +145,7 @@ class PageEngagement(BaseModel):
         self.initial_param(kwargs)
 
     def __repr__(self):
+        # for py2
         if self.social_sentence is not None:
             social_sentence = self.social_sentence.encode('utf-8')
         else:
@@ -297,8 +299,13 @@ class Attachment(BaseModel):
             setattr(self, param, kwargs.get(param, default))
 
     def __repr__(self):
+        # for py2
+        if self.title is not None:
+            title = self.title.encode('utf-8')
+        else:
+            title = self.title
         return "Attachment(title={title},url={url})".format(
-            title=self.title, url=self.url
+            title=title, url=self.url
         )
 
 
@@ -337,7 +344,7 @@ class Post(BaseModel):
             setattr(self, param, kwargs.get(param, default))
 
     def __repr__(self):
-        return "Post(ID={pid}, permalink_url={permalink_url})".format(
+        return "Post(id={pid}, permalink_url={permalink_url})".format(
             pid=self.id,
             permalink_url=self.permalink_url
         )
