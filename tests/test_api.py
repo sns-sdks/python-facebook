@@ -158,6 +158,28 @@ class ApiCallTest(unittest.TestCase):
         self.assertEqual(summary['total_count'], 794)
 
     @responses.activate
+    def testGetCommentInfo(self):
+        comment_id = '10158658755326729_10158658760011729'
+
+        with open(self.base_path + 'models/comment_info.json', 'rb') as f:
+            comment_data = json.loads(f.read().decode('utf-8'))
+
+        responses.add(
+            method=responses.GET,
+            url=DEFAULT_GRAPH_URL + DEFAULT_GRAPH_VERSION + '/' + comment_id,
+            json=comment_data
+        )
+
+        with self.assertRaisesRegex(pyfacebook.PyFacebookError, 'comment'):
+            self.api.get_comment_info()
+
+        comment_info = self.api.get_comment_info(comment_id=comment_id)
+        self.assertEqual(comment_info.id, comment_id)
+
+        comment_info = self.api.get_comment_info(comment_id=comment_id, return_json=True)
+        self.assertEqual(comment_info['like_count'], 7)
+
+    @responses.activate
     def testGetPicture(self):
         page_id = '20531316728'
 

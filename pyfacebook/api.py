@@ -552,7 +552,7 @@ class Api(BaseApi):
         if return_json:
             return data
         else:
-            return CommentSummary.new_from_json_dict(data)
+            return Comment.new_from_json_dict(data)
 
     def get_picture(self,
                     page_id=None,
