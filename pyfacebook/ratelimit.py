@@ -1,5 +1,6 @@
 import json
 import logging
+from json import JSONDecodeError
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +21,7 @@ class RateLimit(object):
         if x_app_usage:
             try:
                 data = json.loads(x_app_usage)
-            except TypeError:
+            except (TypeError, JSONDecodeError):
                 data = {'call_count': 0, 'total_cputime': 0, 'total_time': 0}
             self.call_count = data['call_count']
             self.total_cputime = data['total_cputime']

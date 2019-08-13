@@ -19,6 +19,8 @@ class RateLimitTest(unittest.TestCase):
             'Current Limit is RateLimit(call_count=0,total_cputime=0,total_time=0)',
             info
         )
+        self.api.rate_limit.set_limit(headers={'x-app-usage': 'test'})
+        self.assertEqual(self.api.rate_limit.call_count, 0)
 
     @responses.activate
     def testSetRateLimit(self):

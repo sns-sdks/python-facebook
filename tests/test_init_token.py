@@ -22,7 +22,7 @@ class ApiTest(unittest.TestCase):
 
     def testApiNoAuthError(self):
         api = pyfacebook.Api(long_term_token='test', timeout=1)
-        with self.assertRaises(Timeout):
+        with self.assertRaises((pyfacebook.PyFacebookError, Timeout)):
             api.get_token_info()
 
     @responses.activate
@@ -56,6 +56,7 @@ class ApiTest(unittest.TestCase):
             long_term_token='testToken',
         )
         self.assertEqual(api.token, "testToken")
+        self.assertEqual(api.version, pyfacebook.Api.VALID_API_VERSIONS[-1])
 
         with open(self.base_path + 'access_token.json', 'rb') as f:
             token_data = json.loads(f.read().decode('utf-8'))
@@ -75,13 +76,14 @@ class ApiTest(unittest.TestCase):
             json={'access_token': 'testToken'}
         )
 
-        with self.assertRaises(pyfacebook.PyFacebookError):
+        with self.assertRaises(pyfacebook.PyFacebookError) as cm:
             pyfacebook.Api(
                 app_id='test',
                 app_secret='test',
                 short_token='test',
                 interval_between_request=0,
             )
+            self.assertEqual(cm.exception.message, 'Min interval is 1')
             pyfacebook.Api(
                 app_id='test',
                 app_secret='test',

@@ -175,6 +175,7 @@ class ApiCallTest(unittest.TestCase):
 
         comment_info = self.api.get_comment_info(comment_id=comment_id)
         self.assertEqual(comment_info.id, comment_id)
+        self.assertEqual(comment_info._from, None)
 
         comment_info = self.api.get_comment_info(comment_id=comment_id, return_json=True)
         self.assertEqual(comment_info['like_count'], 7)
