@@ -115,8 +115,12 @@ class PageCategory(BaseModel):
         self.initial_param(kwargs)
 
     def __repr__(self):
+        if self.name is not None:
+            name = self.name.encode('utf-8')
+        else:
+            name = self.name
         return "PageCategory(id={id},name={name})".format(
-            id=self.id, name=self.name
+            id=self.id, name=name
         )
 
 
@@ -140,8 +144,12 @@ class PageEngagement(BaseModel):
         self.initial_param(kwargs)
 
     def __repr__(self):
+        if self.social_sentence is not None:
+            social_sentence = self.social_sentence.encode('utf-8')
+        else:
+            social_sentence = self.social_sentence
         return "PageEngagement(count={count},social_sentence={so})".format(
-            count=self.count, so=self.social_sentence
+            count=self.count, so=social_sentence
         )
 
 
@@ -209,6 +217,7 @@ class PagePicture(BaseModel):
     A class representing the page picture structure.
     Refer: https://developers.facebook.com/docs/graph-api/reference/profile-picture-source/
     """
+
     def __init__(self, **kwargs):
         BaseModel.__init__(self, **kwargs)
         self.param_defaults = {
