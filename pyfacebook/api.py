@@ -21,7 +21,7 @@ from pyfacebook.utils import constant
 
 
 class BaseApi(object):
-    VALID_API_VERSIONS = ["v3.2", "v3.3"]
+    VALID_API_VERSIONS = ["v3.3", "v4.0"]
     GRAPH_URL = "https://graph.facebook.com/"
     INTERVAL_BETWEEN_REQUEST = 3  # seconds
 
@@ -56,16 +56,18 @@ class BaseApi(object):
             # default version is last new.
             self.version = Api.VALID_API_VERSIONS[-1]
         else:
-            version_regex = re.compile("^\\d.\\d{1,2}$")
+            version = str(version)
+            if not version.startswith('v'):
+                version = 'v' + version
+            version_regex = re.compile(r"^v\d.\d{1,2}$")
             match = version_regex.search(str(version))
             if match is not None:
-                target_version = "v" + str(version)
-                if target_version not in Api.VALID_API_VERSIONS:
+                if version not in Api.VALID_API_VERSIONS:
                     raise PyFacebookError({
                         "message": "Valid API version are {}".format(",".join(Api.VALID_API_VERSIONS))
                     })
                 else:
-                    self.version = target_version
+                    self.version = version
             else:
                 self.version = Api.VALID_API_VERSIONS[-1]
 

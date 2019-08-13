@@ -8,7 +8,7 @@ import pyfacebook
 import responses
 
 DEFAULT_GRAPH_URL = "https://graph.facebook.com/"
-DEFAULT_GRAPH_VERSION = 'v3.2'
+DEFAULT_GRAPH_VERSION = pyfacebook.InstagramApi.VALID_API_VERSIONS[-1]
 
 
 class InsApiTest(unittest.TestCase):
@@ -26,7 +26,7 @@ class InsApiTest(unittest.TestCase):
             app_id='test',
             app_secret='test',
             short_token='test',
-            version='3.2',
+            version=DEFAULT_GRAPH_VERSION,
             timeout=1,
             interval_between_request=1,
             sleep_on_rate_limit=True,

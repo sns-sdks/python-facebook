@@ -296,13 +296,13 @@ class ApiCallTest(unittest.TestCase):
                         'after': 'after',
                         'before': 'before'
                     },
-                    'next': 'https://graph.facebook.com/v3.2/123456789/posts/next'}
+                    'next': 'https://graph.facebook.com/{}/123456789/posts/next'.format(DEFAULT_GRAPH_VERSION)}
             }
         )
 
         responses.add(
             method=responses.GET,
-            url=DEFAULT_GRAPH_URL + DEFAULT_GRAPH_VERSION + '/' + page_id + '/' + 'posts/next?access_token=testToken',
+            url=DEFAULT_GRAPH_URL + DEFAULT_GRAPH_VERSION + '/' + page_id + '/' + 'posts/next',
             json={
                 'data': [
                     {
@@ -409,7 +409,6 @@ class ApiCallTest(unittest.TestCase):
                         'after': 'after',
                         'before': 'before'
                     },
-                    # 'next': 'https://graph.facebook.com/v3.2/123456789/posts/next'
                 }
             }
         )
@@ -466,7 +465,7 @@ class ApiCallTest(unittest.TestCase):
                         "before": "before",
                         "after": "before"
                     },
-                    "next": "https://graph.facebook.com/v3.2/123456789/comments/next"
+                    "next": "https://graph.facebook.com/{}/123456789/comments/next".format(DEFAULT_GRAPH_VERSION)
                 },
                 "summary": {
                     "order": "chronological",
