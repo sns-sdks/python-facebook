@@ -204,3 +204,30 @@ class ApiCallTest(unittest.TestCase):
         picture_info = self.api.get_picture(page_id=page_id, return_json=True)
 
         self.assertEqual(picture_info['height'], 100)
+
+    @responses.activate
+    def testExchangeToken(self):
+        page_id = '20531316728'
+        with open(self.base_path + 'page_access_token.json', 'rb') as f:
+            access_token_data = json.loads(f.read().decode('utf-8'))
+        # correct response mock
+        responses.add(
+            method=responses.GET,
+            url=DEFAULT_GRAPH_URL + DEFAULT_GRAPH_VERSION + '/' + page_id,
+            json=access_token_data
+        )
+        # error response mock
+        responses.add(
+            method=responses.GET,
+            url=DEFAULT_GRAPH_URL + DEFAULT_GRAPH_VERSION + '/' + page_id,
+            json={}
+        )
+        access_token = self.api.exchange_insights_token(token='token', page_id=page_id)
+        self.assertEqual(access_token, access_token_data['access_token'])
+
+        with self.assertRaises(pyfacebook.PyFacebookError):
+            self.api.exchange_insights_token(token='', page_id=page_id)
+            self.api.exchange_insights_token(token='token', page_id='')
+
+        access_token = self.api.exchange_insights_token(token='token', page_id=page_id)
+        self.assertTrue("the permission or your token" in access_token)

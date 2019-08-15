@@ -215,9 +215,9 @@ class Api(BaseApi):
         Returns:
             The page access token.
         """
-        if token is None:
+        if not token:
             raise PyFacebookError({"message": "Must provide the user access token."})
-        if page_id is None:
+        if not page_id:
             raise PyFacebookError({"message": "Must provide the page id."})
         args = {
             'access_token': token,
