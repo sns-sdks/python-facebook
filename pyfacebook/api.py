@@ -5,12 +5,6 @@ import time
 
 import requests
 
-try:
-    # python 3
-    from urllib.parse import urlparse, parse_qsl
-except ImportError:
-    from urlparse import urlparse, parse_qsl
-
 from pyfacebook.error import PyFacebookError
 from pyfacebook.models import (
     AccessToken, Comment, CommentSummary, Page, Post, PagePicture,
