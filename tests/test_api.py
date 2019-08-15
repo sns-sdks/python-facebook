@@ -47,10 +47,8 @@ class ApiCallTest(unittest.TestCase):
             json=page_data
         )
 
-        self.assertRaises(
-            pyfacebook.PyFacebookError,
-            lambda: self.api.get_page_info()
-        )
+        with self.assertRaises(pyfacebook.PyFacebookError):
+            self.api.get_page_info()
 
         page_info = self.api.get_page_info(page_id=page_id)
         self.assertEqual(page_info.id, page_id)
@@ -75,10 +73,8 @@ class ApiCallTest(unittest.TestCase):
             json=post_data
         )
 
-        self.assertRaises(
-            pyfacebook.PyFacebookError,
-            lambda: self.api.get_post_info()
-        )
+        with self.assertRaises(pyfacebook.PyFacebookError):
+            self.api.get_post_info()
 
         post_info = self.api.get_post_info(post_id=post_id)
 
@@ -108,10 +104,8 @@ class ApiCallTest(unittest.TestCase):
             json=posts_data_next
         )
 
-        self.assertRaises(
-            pyfacebook.PyFacebookError,
-            lambda: self.api.get_posts()
-        )
+        with self.assertRaises(pyfacebook.PyFacebookError):
+            self.api.get_posts()
 
         posts = self.api.get_posts(page_id=page_id, count=4)
 
@@ -142,10 +136,8 @@ class ApiCallTest(unittest.TestCase):
             json=comments_data_next
         )
 
-        self.assertRaises(
-            pyfacebook.PyFacebookError,
-            lambda: self.api.get_comments()
-        )
+        with self.assertRaises(pyfacebook.PyFacebookError):
+            self.api.get_comments()
 
         comments, summary = self.api.get_comments(object_id=object_id, summary=True, count=4)
 
@@ -192,10 +184,8 @@ class ApiCallTest(unittest.TestCase):
             json=picture_data
         )
 
-        self.assertRaises(
-            pyfacebook.PyFacebookError,
-            lambda: self.api.get_picture()
-        )
+        with self.assertRaises(pyfacebook.PyFacebookError):
+            self.api.get_picture()
 
         picture_info = self.api.get_picture(page_id=page_id)
 
@@ -231,3 +221,26 @@ class ApiCallTest(unittest.TestCase):
 
         access_token = self.api.exchange_insights_token(token='token', page_id=page_id)
         self.assertTrue("the permission or your token" in access_token)
+
+    @responses.activate
+    def testGetPublishedPosts(self):
+        page_id = '20531316728'
+        with open(self.base_path + 'posts_data.json', 'rb') as f:
+            posts_data = json.loads(f.read().decode('utf-8'))
+
+        responses.add(
+            method=responses.GET,
+            url=DEFAULT_GRAPH_URL + DEFAULT_GRAPH_VERSION + '/' + page_id + '/' + 'published_posts',
+            json=posts_data
+        )
+
+        with self.assertRaises(pyfacebook.PyFacebookError):
+            self.api.get_published_posts()
+
+        posts = self.api.get_published_posts(page_id=page_id, count=4)
+        self.assertEqual(len(posts), 4)
+        self.assertEqual(posts[0].id, '20531316728_10158658756111729')
+
+        posts = self.api.get_published_posts(page_id=page_id, count=8, return_json=True)
+        self.assertEqual(len(posts), 8)
+        self.assertEqual(posts[0]['id'], '20531316728_10158658756111729')

@@ -390,20 +390,20 @@ class Api(BaseApi):
         }
 
         posts = []
-        next_page = None
+        next_cursor = None
 
         while True:
-            next_page, previous_page, data = self.paged_by_next(
+            next_cursor, previous_cursor, data = self.paged_by_cursor(
                 resource='published_posts',
                 target=target,
-                next_page=next_page,
+                next_cursor=next_cursor,
                 args=args
             )
             if return_json:
                 posts += data.get('data', [])
             else:
                 posts += [Post.new_from_json_dict(item) for item in data['data']]
-            if next_page is None:
+            if next_cursor is None:
                 break
             if len(posts) >= count:
                 break
