@@ -412,6 +412,44 @@ class Api(BaseApi):
         else:
             return Post.new_from_json_dict(data)
 
+    def paged_by_cursor(self,
+                        target,
+                        resource,
+                        args,
+                        next_cursor=None):
+        """
+        Used cursor-based pagination.
+        Refer: https://developers.facebook.com/docs/graph-api/using-graph-api/#paging
+
+        Args:
+             target (str)
+                The id which target (page,user...) you want to retrieve data.
+            resource (str)
+                The resource string. just the connections (posts,comments and so on).
+            args (dict)
+                The params dict for the resource.
+            next_cursor (str, optional)
+                The paging cursor str. It will return from the graph api.
+        Returns:
+            The origin data return from the graph api.
+        """
+        if next_cursor is not None:
+            args['after'] = next_cursor
+        resp = self._request(
+            method='GET',
+            path='{version}/{target}/{resource}'.format(
+                version=self.version, target=target, resource=resource
+            ),
+            args=args
+        )
+        next_cursor, previous_cursor = None, None
+        data = self._parse_response(resp.content.decode('utf-8'))
+        if 'paging' in data:
+            cursors = data['paging'].get('cursors', {})
+            next_cursor = cursors.get('after')
+            previous_cursor = cursors.get('before')
+        return next_cursor, previous_cursor, data
+
     def paged_by_next(self,
                       resource,
                       target,
