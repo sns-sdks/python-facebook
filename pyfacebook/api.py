@@ -288,20 +288,20 @@ class Api(BaseApi):
         }
 
         posts = []
-        next_page = None
+        next_cursor = None
 
         while True:
-            next_page, previous_page, data = self.paged_by_next(
+            next_cursor, previous_cursor, data = self.paged_by_cursor(
                 resource='posts',
                 target=target,
-                next_page=next_page,
-                args=args
+                args=args,
+                next_cursor=next_cursor,
             )
             if return_json:
                 posts += data.get('data', [])
             else:
                 posts += [Post.new_from_json_dict(item) for item in data['data']]
-            if next_page is None:
+            if next_cursor is None:
                 break
             if len(posts) >= count:
                 break
@@ -450,50 +450,6 @@ class Api(BaseApi):
             previous_cursor = cursors.get('before')
         return next_cursor, previous_cursor, data
 
-    def paged_by_next(self,
-                      resource,
-                      target,
-                      next_page=None,
-                      args=None):
-        """
-        Use paged request by next method.
-
-        Args:
-            resource (str)
-                The resource you want to retrieve.
-                Now can posts, comments,
-            target:
-                The ID or username for which object you want to retrieve data.
-            next_page (str, optional):
-                The paging next page url. for begin it is None.
-            args:
-                Relative params you want to retrieve data. Now is pointed.
-        Returns:
-            next_page (str), previous_page (str), json data from api.
-        """
-        if next_page is None:
-            path = '{0}/{1}/{2}'.format(self.version, target, resource)
-        else:
-            parse_path = urlparse(next_page)
-            path = parse_path.path
-            # now the path has begin with /
-            if path.startswith('/'):
-                path = path[1:]
-            args = dict(parse_qsl(parse_path.query))
-
-        resp = self._request(
-            method='GET',
-            path=path,
-            args=args
-        )
-
-        next_page, previous_page = None, None
-        data = self._parse_response(resp.content.decode('utf-8'))
-        if 'paging' in data:
-            next_page = data['paging'].get('next')
-            previous_page = data['paging'].get('previous')
-        return next_page, previous_page, data
-
     def get_comments(self,
                      object_id=None,
                      summary=False,
@@ -543,14 +499,14 @@ class Api(BaseApi):
         }
 
         comments = []
-        next_page = None
+        next_cursor = None
 
         while True:
-            next_page, previous_page, data = self.paged_by_next(
+            next_cursor, previous_cursor, data = self.paged_by_cursor(
                 resource='comments',
                 target=object_id,
-                next_page=next_page,
-                args=args
+                args=args,
+                next_cursor=next_cursor
             )
             if return_json:
                 comments += data.get('data', [])
@@ -558,7 +514,7 @@ class Api(BaseApi):
             else:
                 comments += [Comment.new_from_json_dict(item) for item in data.get('data', [])]
                 comment_summary = CommentSummary.new_from_json_dict(data.get('summary', {}))
-            if next_page is None:
+            if next_cursor is None:
                 break
             if len(comments) >= count:
                 break
