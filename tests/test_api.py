@@ -95,12 +95,17 @@ class ApiCallTest(unittest.TestCase):
             url=DEFAULT_GRAPH_URL + DEFAULT_GRAPH_VERSION + '/' + page_id + '/' + 'posts',
             json=posts_data
         )
+        responses.add(
+            method=responses.GET,
+            url=DEFAULT_GRAPH_URL + DEFAULT_GRAPH_VERSION + '/' + page_id + '/' + 'posts',
+            json=posts_data
+        )
 
-        with open(self.base_path + 'posts_data.json', 'rb') as f:
+        with open(self.base_path + 'posts_data_next.json', 'rb') as f:
             posts_data_next = json.loads(f.read().decode('utf-8'))
         responses.add(
             method=responses.GET,
-            url=DEFAULT_GRAPH_URL + DEFAULT_GRAPH_VERSION + '/' + page_id + '/' + 'posts/next',
+            url=DEFAULT_GRAPH_URL + DEFAULT_GRAPH_VERSION + '/' + page_id + '/' + 'posts',
             json=posts_data_next
         )
 
@@ -132,7 +137,7 @@ class ApiCallTest(unittest.TestCase):
             comments_data_next = json.loads(f.read().decode('utf-8'))
         responses.add(
             method=responses.GET,
-            url=DEFAULT_GRAPH_URL + DEFAULT_GRAPH_VERSION + '/' + object_id + '/' + 'comments/next',
+            url=DEFAULT_GRAPH_URL + DEFAULT_GRAPH_VERSION + '/' + object_id + '/' + 'comments',
             json=comments_data_next
         )
 
@@ -225,13 +230,25 @@ class ApiCallTest(unittest.TestCase):
     @responses.activate
     def testGetPublishedPosts(self):
         page_id = '20531316728'
-        with open(self.base_path + 'posts_data.json', 'rb') as f:
+        with open(self.base_path + 'posts_published_data.json', 'rb') as f:
             posts_data = json.loads(f.read().decode('utf-8'))
-
         responses.add(
             method=responses.GET,
             url=DEFAULT_GRAPH_URL + DEFAULT_GRAPH_VERSION + '/' + page_id + '/' + 'published_posts',
             json=posts_data
+        )
+        responses.add(
+            method=responses.GET,
+            url=DEFAULT_GRAPH_URL + DEFAULT_GRAPH_VERSION + '/' + page_id + '/' + 'published_posts',
+            json=posts_data
+        )
+
+        with open(self.base_path + 'posts_published_data_next.json', 'rb') as f:
+            posts_data_next = json.loads(f.read().decode('utf-8'))
+        responses.add(
+            method=responses.GET,
+            url=DEFAULT_GRAPH_URL + DEFAULT_GRAPH_VERSION + '/' + page_id + '/' + 'published_posts',
+            json=posts_data_next
         )
 
         with self.assertRaises(pyfacebook.PyFacebookError):
@@ -243,4 +260,75 @@ class ApiCallTest(unittest.TestCase):
 
         posts = self.api.get_published_posts(page_id=page_id, count=8, return_json=True)
         self.assertEqual(len(posts), 8)
-        self.assertEqual(posts[0]['id'], '20531316728_10158658756111729')
+        self.assertEqual(posts[7]['id'], '20531316728_314949872489189')
+
+    @responses.activate
+    def testGetTaggedPosts(self):
+        page_id = '20531316728'
+        with open(self.base_path + 'posts_tagged_data.json', 'rb') as f:
+            posts_data = json.loads(f.read().decode('utf-8'))
+        responses.add(
+            method=responses.GET,
+            url=DEFAULT_GRAPH_URL + DEFAULT_GRAPH_VERSION + '/' + page_id + '/' + 'tagged',
+            json=posts_data
+        )
+        responses.add(
+            method=responses.GET,
+            url=DEFAULT_GRAPH_URL + DEFAULT_GRAPH_VERSION + '/' + page_id + '/' + 'tagged',
+            json=posts_data
+        )
+
+        with open(self.base_path + 'posts_tagged_data_next.json', 'rb') as f:
+            posts_data_next = json.loads(f.read().decode('utf-8'))
+        responses.add(
+            method=responses.GET,
+            url=DEFAULT_GRAPH_URL + DEFAULT_GRAPH_VERSION + '/' + page_id + '/' + 'tagged',
+            json=posts_data_next
+        )
+
+        with self.assertRaises(pyfacebook.PyFacebookError):
+            self.api.get_tagged_posts()
+
+        posts = self.api.get_tagged_posts(page_id=page_id, count=3)
+        self.assertEqual(len(posts), 3)
+        self.assertEqual(posts[0].id, '20531316728_10158658756111729')
+        self.assertEqual(posts[0].tagged_time, '2019-08-16T11:18:58+0000')
+
+        posts = self.api.get_tagged_posts(page_id=page_id, count=7, return_json=True)
+        self.assertEqual(len(posts), 7)
+        self.assertEqual(posts[6]['id'], '20531316728_381805782375907')
+
+    @responses.activate
+    def testGetFeedPosts(self):
+        page_id = '20531316728'
+        with open(self.base_path + 'posts_feeds_data.json', 'rb') as f:
+            posts_data = json.loads(f.read().decode('utf-8'))
+        responses.add(
+            method=responses.GET,
+            url=DEFAULT_GRAPH_URL + DEFAULT_GRAPH_VERSION + '/' + page_id + '/' + 'feed',
+            json=posts_data
+        )
+        responses.add(
+            method=responses.GET,
+            url=DEFAULT_GRAPH_URL + DEFAULT_GRAPH_VERSION + '/' + page_id + '/' + 'feed',
+            json=posts_data
+        )
+
+        with open(self.base_path + 'posts_feeds_data_next.json', 'rb') as f:
+            posts_data_next = json.loads(f.read().decode('utf-8'))
+        responses.add(
+            method=responses.GET,
+            url=DEFAULT_GRAPH_URL + DEFAULT_GRAPH_VERSION + '/' + page_id + '/' + 'feed',
+            json=posts_data_next
+        )
+
+        with self.assertRaises(pyfacebook.PyFacebookError):
+            self.api.get_feeds()
+
+        posts = self.api.get_feeds(page_id=page_id, count=2)
+        self.assertEqual(len(posts), 2)
+        self.assertEqual(posts[0].id, '20531316728_10158658756111729')
+
+        posts = self.api.get_feeds(page_id=page_id, count=6, return_json=True)
+        self.assertEqual(len(posts), 6)
+        self.assertEqual(posts[5]['id'], '20531316728_10158137001326729')
