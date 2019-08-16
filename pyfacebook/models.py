@@ -328,6 +328,7 @@ class Post(BaseModel):
             'picture': None,
             'shares': None,
             'status_type': None,
+            'tagged_time': None,  # if use tagged resource, this will return.
             'type': None,  # now  type change to attachments{media_type}
             'updated_time': None,
             'comments': None,

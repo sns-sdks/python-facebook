@@ -221,7 +221,6 @@ class Api(BaseApi):
             method='GET',
             path='{version}/{page_id}'.format(version=self.version, page_id=page_id),
             args=args,
-            enforce_auth=False,
         )
         data = self._parse_response(resp.content.decode('utf-8'))
 
@@ -303,6 +302,56 @@ class Api(BaseApi):
         Returns:
             posts info list.
         """
+        return self.get_feeds(
+            'posts', page_id, username,
+            since_time, until_time,
+            count, limit,
+            return_json=return_json
+        )
+
+    def get_feeds(self,
+                  resource=None,
+                  page_id=None,
+                  username=None,
+                  since_time=None,
+                  until_time=None,
+                  count=10,
+                  limit=10,
+                  access_token=None,
+                  return_json=False):
+        """
+        Obtain give page's posts info.
+        Refer: https://developers.facebook.com/docs/graph-api/reference/v4.0/page/feed
+        Args:
+            resource (str, optional)
+                The connection resource for you want to do.
+                Now have four: feed, posts, tagged, published_posts. if you not pointed. use feed.
+                Notice: the tagged and published_posts resource need page access_token.
+            page_id (int, optional)
+                The id for you want to retrieve data
+            username (str, optional)
+                The username (page username) for you want to retrieve data
+                Either page_id or username is required. if all given. use username.
+            since_time (str, optional)
+                The posts retrieve begin time.
+            until_time ()
+                The posts retrieve until time.
+                If neither since_time or until_time, it will by now time.
+            count (int, optional)
+                The count will retrieve posts.
+            limit (int, optional)
+                Each request retrieve posts count from api.
+                For posts it should no more than 100.
+            access_token (str, optional):
+                If you want use other token to get data. you can point this.
+            return_json (bool, optional):
+                If True JSON data will be returned, instead of pyfacebook.Post, or return origin data by facebook.
+        Returns:
+            posts info list.
+        :return:
+        """
+        if resource is None:
+            resource = 'feed'
         if page_id:
             target = page_id
         elif username:
@@ -316,13 +365,15 @@ class Api(BaseApi):
             'until': until_time,
             'limit': limit,
         }
+        if access_token is not None:
+            args['access_token'] = access_token
 
         posts = []
         next_cursor = None
 
         while True:
             next_cursor, previous_cursor, data = self.paged_by_cursor(
-                resource='posts',
+                resource=resource,
                 target=target,
                 args=args,
                 next_cursor=next_cursor,
@@ -337,31 +388,25 @@ class Api(BaseApi):
                 break
         return posts[:count]
 
-    def get_feeds(self,
-                  page_id=None,
-                  username=None,
-                  since_time=None,
-                  until_time=None,
-                  count=10,
-                  limit=10,
-                  return_json=False):
-        pass
-
     def get_published_posts(self,
                             page_id=None,
+                            username=None,
                             since_time=None,
                             until_time=None,
                             count=10,
                             limit=10,
+                            access_token=None,
                             return_json=False):
         """
-
-        Obtain give page's posts info. If token is authorized for app.
+        Obtain give page's all posts info. If token is authorized for app.
         This endpoint need the page token and has manage-pages.
 
         Args:
             page_id (int, optional)
                 The id for you want to retrieve data
+            username (str, optional)
+                The username (page username) for you want to retrieve data
+                Either page_id or username is required. if all given. use page_id.
             since_time (str, optional)
                 The posts retrieve begin time.
             until_time ()
@@ -372,42 +417,64 @@ class Api(BaseApi):
             limit (int, optional)
                 Each request retrieve posts count from api.
                 For posts it should no more than 100.
+            access_token (str, optional):
+                If you want use other token to get data. you can point this.
             return_json (bool, optional):
                 If True JSON data will be returned, instead of pyfacebook.Post, or return origin data by facebook.
         Returns:
             posts info list.
         """
-        if page_id:
-            target = page_id
-        else:
-            raise PyFacebookError({'message': "Specify at least one of page_id or username"})
+        return self.get_feeds(
+            'published_posts', page_id, username,
+            since_time, until_time,
+            count, limit,
+            access_token=access_token,
+            return_json=return_json
+        )
 
-        args = {
-            'fields': ','.join(set(constant.POST_BASIC_FIELDS + constant.POST_REACTIONS_FIELD)),
-            'since': since_time,
-            'until': until_time,
-            'limit': limit,
-        }
+    def get_tagged_posts(self,
+                         page_id=None,
+                         username=None,
+                         since_time=None,
+                         until_time=None,
+                         count=10,
+                         limit=10,
+                         access_token=None,
+                         return_json=False):
+        """
+        Obtain posts which tagged the given page. If token is authorized for app.
+        This endpoint need the page token and has manage-pages.
 
-        posts = []
-        next_cursor = None
-
-        while True:
-            next_cursor, previous_cursor, data = self.paged_by_cursor(
-                resource='published_posts',
-                target=target,
-                next_cursor=next_cursor,
-                args=args
-            )
-            if return_json:
-                posts += data.get('data', [])
-            else:
-                posts += [Post.new_from_json_dict(item) for item in data['data']]
-            if next_cursor is None:
-                break
-            if len(posts) >= count:
-                break
-        return posts[:count]
+        Args:
+            page_id (int, optional)
+                The id for you want to retrieve data
+            username (str, optional)
+                The username (page username) for you want to retrieve data
+                Either page_id or username is required. if all given. use page_id.
+            since_time (str, optional)
+                The posts retrieve begin time.
+            until_time ()
+                The posts retrieve until time.
+                If neither since_time or until_time, it will by now time.
+            count (int, optional)
+                The count will retrieve posts.
+            limit (int, optional)
+                Each request retrieve posts count from api.
+                For posts it should no more than 100.
+            access_token (str, optional):
+                If you want use other token to get data. you can point this.
+            return_json (bool, optional):
+                If True JSON data will be returned, instead of pyfacebook.Post, or return origin data by facebook.
+        Returns:
+            posts info list.
+        """
+        return self.get_feeds(
+            'tagged', page_id, username,
+            since_time, until_time,
+            count, limit,
+            access_token=access_token,
+            return_json=return_json
+        )
 
     def get_post_info(self,
                       post_id=None,
