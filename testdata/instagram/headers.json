@@ -1,0 +1,13 @@
+{
+  "x-business-use-case-usage": {
+    "17841400455970028": [
+      {
+        "type": "instagram",
+        "call_count": 12,
+        "total_cputime": 29,
+        "total_time": 10,
+        "estimated_time_to_regain_access": 0
+      }
+    ]
+  }
+}
