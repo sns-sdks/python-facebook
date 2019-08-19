@@ -10,7 +10,7 @@ from pyfacebook.models import (
     AccessToken, Comment, CommentSummary, Page, Post, PagePicture,
     InstagramUser, InstagramMedia
 )
-from pyfacebook.ratelimit import RateLimit
+from pyfacebook.ratelimit import RateLimit, InstagramRateLimit
 from pyfacebook.utils import constant
 
 
@@ -29,6 +29,7 @@ class BaseApi(object):
             interval_between_request=None,  # if loop get data. should use this.
             sleep_on_rate_limit=False,
             proxies=None,
+            is_instagram=False,
     ):
         self.app_id = app_id
         self.app_secret = app_secret
@@ -38,7 +39,12 @@ class BaseApi(object):
         self.proxies = proxies
         self.session = requests.Session()
         self.sleep_on_rate_limit = sleep_on_rate_limit
-        self.rate_limit = RateLimit()
+        self.is_instagram = is_instagram
+        self.instagram_business_id = None
+        if self.is_instagram:
+            self.rate_limit = InstagramRateLimit()
+        else:
+            self.rate_limit = RateLimit()
 
         self.interval_between_request = interval_between_request
         if self.interval_between_request is None:
@@ -119,7 +125,10 @@ class BaseApi(object):
             raise PyFacebookError(response)
         headers = response.headers
         # do update app rate limit
-        self.rate_limit.set_limit(headers)
+        if self.is_instagram:
+            self.rate_limit.set_limit(headers, self.instagram_business_id)
+        else:
+            self.rate_limit.set_limit(headers)
         return response
 
     def _parse_response(self, json_data):
@@ -193,6 +202,7 @@ class Api(BaseApi):
                          interval_between_request=interval_between_request,
                          sleep_on_rate_limit=sleep_on_rate_limit,
                          proxies=proxies)
+        self.rate_limit = RateLimit()
 
     def exchange_insights_token(self, token, page_id):
         """
@@ -715,7 +725,8 @@ class InstagramApi(BaseApi):
                          timeout=timeout,
                          interval_between_request=interval_between_request,
                          sleep_on_rate_limit=sleep_on_rate_limit,
-                         proxies=proxies)
+                         proxies=proxies,
+                         is_instagram=True)
 
         self.instagram_business_id = instagram_business_id
 

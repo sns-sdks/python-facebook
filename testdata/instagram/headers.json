@@ -1,13 +1,19 @@
 {
-  "x-business-use-case-usage": {
-    "17841400455970028": [
-      {
-        "type": "instagram",
-        "call_count": 12,
-        "total_cputime": 29,
-        "total_time": 10,
-        "estimated_time_to_regain_access": 0
-      }
-    ]
-  }
+  "Vary": "Accept-Encoding",
+  "ETag": "\"50b87264ff8dca8c3187ef38ba113f5b5a6c4a6a\"",
+  "x-business-use-case-usage": "{\"17841400455970028\":[{\"type\":\"instagram\",\"call_count\":12,\"total_cputime\":72,\"total_time\":10,\"estimated_time_to_regain_access\":20}]}",
+  "Content-Type": "application/json; charset=UTF-8",
+  "facebook-api-version": "v3.1",
+  "Strict-Transport-Security": "max-age=15552000; preload",
+  "Pragma": "no-cache",
+  "x-fb-rev": "1001072826",
+  "Access-Control-Allow-Origin": "*",
+  "Cache-Control": "private, no-cache, no-store, must-revalidate",
+  "x-fb-trace-id": "AmL5RZmvLD8",
+  "x-fb-request-id": "Arw--odX298Xoj7FmG-X-lc",
+  "Expires": "Sat, 01 Jan 2000 00:00:00 GMT",
+  "X-FB-Debug": "NRwNUJrLVBc0xQGPff1goPNkJ53d1zxEm8T0+a/LKKgB2y8sLuEUo4KIDXn+a07vBq9wEtfMEjyvE//vyQaLPA==",
+  "Date": "Mon, 19 Aug 2019 11:37:28 GMT",
+  "Connection": "keep-alive",
+  "Content-Length": "365"
 }

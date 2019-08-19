@@ -84,19 +84,17 @@ class InstagramRateLimit(object):
         self.reset_at = kwargs.get('reset_at', 0)
 
     def set_limit(self, headers, instagram_business_id):
+        default_usage = {'call_count': 0, 'total_cputime': 0, 'total_time': 0, 'estimated_time_to_regain_access': 0}
         x_business_use_case_usage = headers.get('x-business-use-case-usage')
         if x_business_use_case_usage:
             try:
                 usage_data = json.loads(x_business_use_case_usage)
-                if instagram_business_id in usage_data:
-                    data = usage_data[instagram_business_id]
-                else:
-                    data = {'call_count': 0, 'total_cputime': 0, 'total_time': 0}
+                data = usage_data.get(instagram_business_id, [default_usage])[0]
             except (TypeError, JSONDecodeError):
                 logging.debug("Can not get rate limit info for {0}. Usage: {1}".format(
                     instagram_business_id, x_business_use_case_usage
                 ))
-                data = {'call_count': 0, 'total_cputime': 0, 'total_time': 0}
+                data = default_usage
             self.call_count = data['call_count']
             self.total_cputime = data['total_cputime']
             self.total_time = data['total_time']
