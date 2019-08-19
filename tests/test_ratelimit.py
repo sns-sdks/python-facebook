@@ -88,7 +88,7 @@ class RateLimitTest(unittest.TestCase):
 
 
 class InstagramRateLimitTest(unittest.TestCase):
-    def setUp(self) -> None:
+    def setUp(self):
         self.base_path = 'testdata/instagram/'
         self.base_url = "https://graph.facebook.com/"
         self.version = pyfacebook.InstagramApi.VALID_API_VERSIONS[-1]
