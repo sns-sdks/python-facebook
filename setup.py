@@ -11,6 +11,11 @@ from shutil import rmtree
 
 from setuptools import find_packages, setup, Command
 
+try:
+    FileNotFoundError
+except NameError:
+    FileNotFoundError = IOError  # noqa
+
 # What packages are required for this module to be executed?
 REQUIRED = [
     'future', 'requests', 'requests-oauthlib'
