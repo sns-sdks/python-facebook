@@ -22,7 +22,7 @@ class ApiTest(unittest.TestCase):
 
     def testApiNoAuthError(self):
         api = pyfacebook.Api(long_term_token='test', timeout=1)
-        with self.assertRaises((pyfacebook.PyFacebookError, Timeout)):
+        with self.assertRaises((pyfacebook.PyFacebookError, Timeout, ConnectionError)):
             api.get_token_info()
 
     @responses.activate
