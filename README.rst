@@ -47,7 +47,7 @@ Installing
 You can install this lib from `pypi`::
 
     $pip install --upgrade python-facebook-api
-    ✨🍰✨✨🍰✨:sparkles: :cake: :sparkles:
+    ✨🍰✨✨🍰✨✨🍰✨✨🍰✨✨🍰✨
 
 This is name is ugly. but the `python-facebook` is exists and it not update long time.
 
