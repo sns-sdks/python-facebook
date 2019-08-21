@@ -97,10 +97,29 @@ To fetch one facebook page's public data::
     In [5]: api.get_page_info(page_id='20531316728')  # you can make return_json True to see more fields
     Out[5]: Page(ID=20531316728, username=facebook)
 
-To fetch a list facebook page's posts data::
+Because facebook graph api limit `Page Feed <https://developers.facebook.com/docs/graph-api/reference/v4.0/page/feed>`_.
+Use public token only can get approximately 600 ranked, published posts per year.
+If you want to get page's all posts. you need query the `/{page_id}/published_posts` endpoint with `page's access token`.
+First get page's access token (Must the page's administer give the permission `manage_pages`.)::
 
-    In [6]: api.get_posts(username='facebook')
-    Out[6]:
+    In [6]: access_token = api.exchange_insights_token(token='user token', page_id='page id')
+    Out[6]: 'page access token'
+
+Now. You can use page access token to get page's all posts::
+
+    In [7]: api.get_published_posts(username='facebook', access_token='page access token')
+    Out[7]: [Post...]
+
+Use the page access token, you can also get the posts who has tagged your page. Like this::
+
+    In [8]: api.get_tagged_posts(username='facebook', access_token='page access token')
+    Out[8]: [Post...]
+
+
+To fetch a list facebook page's public posts data (Not full)::
+
+    In [9]: api.get_posts(username='facebook')
+    Out[9]:
     [Post(ID=20531316728_10158033357426729, permalink_url=https://www.facebook.com/20531316728/posts/10158033357426729/),
      Post(ID=2031316728_10157806010111729, permalink_url=https://www.facebook.com/20531316728/posts/10157806010111729/),
      Post(ID=20531316728_1877006505687069, permalink_url=https://www.facebook.com/facebook/videos/1877006505687069/),
@@ -108,20 +127,20 @@ To fetch a list facebook page's posts data::
 
 To fetch point post info::
 
-    In [7]: res = api.get_post_info(post_id='20531316728_10157619579661729')
+    In [10]: res = api.get_post_info(post_id='20531316728_10157619579661729')
 
-    In [8]: res
-    Out[8]: Post(ID=20531316728_10157619579661729, permalink_url=https://www.facebook.com/20531316728/posts/10157619579661729/)
+    In [11]: res
+    Out[11]: Post(ID=20531316728_10157619579661729, permalink_url=https://www.facebook.com/20531316728/posts/10157619579661729/)
 
-    In [9]: res.comments
-    Out[9]: 1016
+    In [12]: res.comments
+    Out[12]: 1016
 
 
 To fetch pointed object(post,picture and so on)'s comments data::
 
-    In [10]: res = api.get_comments(object_id='20531316728_10157619579661729', summary=True)
-    In [11]: res
-    Out[11]:
+    In [13]: res = api.get_comments(object_id='20531316728_10157619579661729', summary=True)
+    In [14]: res
+    Out[14]:
     ([Comment(ID=10157619579661729_10157621841846729,created_time=2018-08-16T13:01:09+0000),
       Comment(ID=10157619579661729_10157621842496729,created_time=2018-08-16T13:01:31+0000),
       Comment(ID=10157619579661729_10157621842611729,created_time=2018-08-16T13:01:34+0000),
@@ -133,10 +152,10 @@ To fetch pointed object(post,picture and so on)'s comments data::
       Comment(ID=10157619579661729_10157621843771729,created_time=2018-08-16T13:02:13+0000),
       Comment(ID=10157619579661729_10157621843836729,created_time=2018-08-16T13:02:14+0000)],
      CommentSummary(order=chronological,total_count=987))
-    In [12]res[1]
-    Out[12]: CommentSummary(order=chronological,total_count=987)
-    res[13].as_json_string()
-    Out[13]: '{"can_comment": true, "order": "chronological", "total_count": 987}'
+    In [15]: res[1]
+    Out[15]: CommentSummary(order=chronological,total_count=987)
+    In [16]: res.as_json_string()
+    Out[16]: '{"can_comment": true, "order": "chronological", "total_count": 987}'
 
 
 -------------

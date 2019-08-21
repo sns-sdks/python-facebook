@@ -105,11 +105,29 @@ Facebook API
     In [5]: api.get_page_info(page_id='20531316728')  # 你可以指定参数 return_json 为 True, 返回 JSON 格式数据
     Out[5]: Page(ID=20531316728, username=facebook)
 
+因为脸书的图谱API的限制 `Page Feed <https://developers.facebook.com/docs/graph-api/reference/v4.0/page/feed>`_ ，
+使用普通的 `Token` 只能获取大约 600 个经排名的已发布帖子。如果你想要获取到某主页的所有发布贴文，需要使用 `/{page_id}/published_posts` 端点。
+使用此端点, 需要使用经过主页管理员授予 `manage_pages` 权限的主页授权 `Token` 。
+如果你有经过授权，可以使用如下操作获取到主页访问口令::
 
-批量获取某主页的贴文信息::
+    n [6]: access_token = api.exchange_insights_token(token='user token', page_id='page id')
+    Out[6]: 'page access token'
 
-    In [6]: api.get_posts(username='facebook')
-    Out[6]:
+获取到主页访问口令之后，就可以使用如下函数获取当前主页所发布的所有贴文::
+
+    In [7]: api.get_published_posts(username='facebook', access_token='page access token')
+    Out[7]: [Post...]
+
+使用主页访问口令，你还可以获取到那些在贴文中对该主页进行标记的贴文。如下::
+
+    In [8]: api.get_tagged_posts(username='facebook', access_token='page access token')
+    Out[8]: [Post...]
+
+
+批量获取某主页的贴文信息(不全)::
+
+    In [9]: api.get_posts(username='facebook')
+    Out[9]:
     [Post(ID=20531316728_10158033357426729, permalink_url=https://www.facebook.com/20531316728/posts/10158033357426729/),
      Post(ID=2031316728_10157806010111729, permalink_url=https://www.facebook.com/20531316728/posts/10157806010111729/),
      Post(ID=20531316728_1877006505687069, permalink_url=https://www.facebook.com/facebook/videos/1877006505687069/),
@@ -117,20 +135,20 @@ Facebook API
 
 获取指定的某个贴文的信息::
 
-    In [7]: res = api.get_post_info(post_id='20531316728_10157619579661729')
+    In [10]: res = api.get_post_info(post_id='20531316728_10157619579661729')
 
-    In [8]: res
-    Out[8]: Post(ID=20531316728_10157619579661729, permalink_url=https://www.facebook.com/20531316728/posts/10157619579661729/)
+    In [11]: res
+    Out[11]: Post(ID=20531316728_10157619579661729, permalink_url=https://www.facebook.com/20531316728/posts/10157619579661729/)
 
-    In [9]: res.comments
-    Out[9]: 1016
+    In [12]: res.comments
+    Out[12]: 1016
 
 
 获取某对象(贴文,图片等)的评论数据::
 
-    In [10]: res = api.get_comments(object_id='20531316728_10157619579661729', summary=True)
-    In [11]: res
-    Out[11]:
+    In [13]: res = api.get_comments(object_id='20531316728_10157619579661729', summary=True)
+    In [14]: res
+    Out[14]:
     ([Comment(ID=10157619579661729_10157621841846729,created_time=2018-08-16T13:01:09+0000),
       Comment(ID=10157619579661729_10157621842496729,created_time=2018-08-16T13:01:31+0000),
       Comment(ID=10157619579661729_10157621842611729,created_time=2018-08-16T13:01:34+0000),
@@ -142,10 +160,10 @@ Facebook API
       Comment(ID=10157619579661729_10157621843771729,created_time=2018-08-16T13:02:13+0000),
       Comment(ID=10157619579661729_10157621843836729,created_time=2018-08-16T13:02:14+0000)],
      CommentSummary(order=chronological,total_count=987))
-    In [12]res[1]
-    Out[12]: CommentSummary(order=chronological,total_count=987)
-    res[13].as_json_string()
-    Out[13]: '{"can_comment": true, "order": "chronological", "total_count": 987}'
+    In [15]: res[1]
+    Out[15]: CommentSummary(order=chronological,total_count=987)
+    In [16]: res.as_json_string()
+    Out[16]: '{"can_comment": true, "order": "chronological", "total_count": 987}'
 
 
 -------------
