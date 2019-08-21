@@ -13,7 +13,6 @@ responses = "*"
 pycodestyle = "*"
 sphinx = "*"
 sphinx-rtd-theme = "*"
-bdist-wheel = "*"
 wheel = "*"
 twine = "*"
 
