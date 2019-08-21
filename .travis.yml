@@ -19,5 +19,10 @@ script:
   - make test
   - make coverage
 
+# ignore tags build
+branches:
+  except:
+    - /^v?\d+\.\d+(\.\d+)?(-\S*)?$/
+
 after_success:
   - codecov

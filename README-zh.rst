@@ -35,7 +35,8 @@ README: `English <https://github.com/MerleLiuKun/python-facebook/blob/master/REA
 
 现在可以使用 `pip` 来安装这个包啦::
 
-    $pip install python-facebook-api
+    $pip install --upgrade python-facebook-api
+    :sparkles: :cake: :sparkles:
 
 由于 `python-facebook` 名称已经被占用，所以只能以这样的名字了。吐槽一波，好名字都被占用，并且好久都没有更新了！！
 
