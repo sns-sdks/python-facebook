@@ -47,7 +47,7 @@ Installing
 You can install this lib from `pypi`::
 
     $pip install --upgrade python-facebook-api
-    ✨🍰✨✨🍰✨✨🍰✨✨🍰✨✨🍰✨
+    ✨🍰✨
 
 This is name is ugly. but the `python-facebook` is exists and it not update long time.
 
@@ -244,10 +244,21 @@ Get information about a post(This API is available only for posts on the current
 TODO
 ----
 
-Now. You can Only get page info and page post info and object(post,picture)'s comment.
+Now features:
+
+Facebook Api:
+
+- Page Info.
+- Page Picture Info.
+- Feed Info (public posts, published posts, tagged posts).
+- Comment Info.
+
+Instagram Api:
+
+- Business user info.
+- Medias info
 
 TODO:
 
 - Acquisition of Insights Data
 - publish
-- more.
