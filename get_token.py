@@ -14,7 +14,7 @@ def cli():
     pass
 
 
-@cli.command()
+@cli.command(short_help='get long term access token by short token.')
 def long_term_token():
     app_id = click.prompt('Please input your app id', type=str)
     app_secret = click.prompt('Please input your app secret', hide_input=True, type=str)
@@ -39,6 +39,33 @@ def long_term_token():
             click.echo('\nYour long term token is: \n{}'.format(data.get('access_token', '')))
         else:
             click.echo('\nOps. Response error.\n Info: {}'.format(resp.text))
+    except Exception as e:
+        click.echo('\nOps. Error occurred.\n Info: {}'.format(e))
+
+
+@cli.command(short_help='get app access token by app info.')
+def app_token():
+    app_id = click.prompt('Please input your app id', type=str)
+    app_secret = click.prompt('Please input your app secret', hide_input=True, type=str)
+    click.echo('Begin to retrieve app access token...')
+    try:
+        resp = requests.get(
+            url=DEFAULT_GRAPH_URL + 'oauth/access_token',
+            params={
+                'grant_type': 'client_credentials',
+                'client_id': app_id,
+                'client_secret': app_secret,
+            },
+            timeout=5
+        )
+        if resp.status_code == 200:
+            data = resp.json()
+            if 'error' in data:
+                click.echo('\nOps. May you input error.\n Info: {}'.format(data['error']))
+            click.echo('\nYour app access token is: \n{}'.format(data.get('access_token', '')))
+        else:
+            click.echo('\nOps. Response error.\n Info: {}'.format(resp.text))
+
     except Exception as e:
         click.echo('\nOps. Error occurred.\n Info: {}'.format(e))
 
