@@ -2,11 +2,17 @@
     Utility to get your access tokens.
     Refer: https://developers.facebook.com/docs/facebook-login/access-tokens/refreshing
 """
+import webbrowser
 
 import click
 import requests
+from requests_oauthlib import OAuth2Session
+from requests_oauthlib.compliance_fixes import facebook_compliance_fix
 
 DEFAULT_GRAPH_URL = 'https://graph.facebook.com/v4.0/'
+DEFAULT_OAUTH_URL = 'https://www.facebook.com/v4.0/dialog/oauth'
+DEFAULT_TOKEN_URL = 'https://graph.facebook.com/v4.0/oauth/access_token'
+DEFAULT_REDIRECT_URL = 'https://localhost:5000/'
 
 
 @click.group()
@@ -68,6 +74,26 @@ def app_token():
 
     except Exception as e:
         click.echo('\nOps. Error occurred.\n Info: {}'.format(e))
+
+
+@cli.command(short_help='get user access token by login.')
+def user_access_token():
+    app_id = click.prompt('Please input your app id', type=str)
+    app_secret = click.prompt('Please input your app secret', hide_input=True, type=str)
+
+    facebook = OAuth2Session(client_id=app_id, redirect_uri=DEFAULT_REDIRECT_URL)
+    facebook = facebook_compliance_fix(facebook)
+
+    authorization_url, state = facebook.authorization_url(DEFAULT_OAUTH_URL)
+
+    webbrowser.open(authorization_url)
+
+    response = click.prompt('Please input full callback url', type=str)
+    facebook.fetch_token(
+        token_url=DEFAULT_TOKEN_URL, client_secret=app_secret,
+        authorization_response=response
+    )
+    click.echo("Your access token is: \n{}".format(facebook.access_token))
 
 
 if __name__ == '__main__':
