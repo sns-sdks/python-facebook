@@ -6,6 +6,10 @@ Python Facebook
     :target: https://travis-ci.org/MerleLiuKun/python-facebook
     :alt: Build Status
 
+.. image:: https://readthedocs.org/projects/python-facebook-api/badge/?version=latest
+    :target: https://python-facebook-api.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
+
 .. image:: https://codecov.io/gh/MerleLiuKun/python-facebook/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/MerleLiuKun/python-facebook
     :alt: Codecov
@@ -39,6 +43,15 @@ README: `English <https://github.com/MerleLiuKun/python-facebook/blob/master/REA
     ✨🍰✨
 
 由于 `python-facebook` 名称已经被占用，所以只能以这样的名字了。吐槽一波，好名字都被占用，并且好久都没有更新了！！
+
+
+====
+文档
+====
+
+你可以访问: https://python-facebook-api.readthedocs.io/en/latest/ 去查看相关文档 (Doing).
+
+所涉及的 ``Facebook Graph API`` 你都可以通过访问: https://developers.facebook.com/docs/graph-api/ 去查看
 
 ====
 说明
@@ -107,8 +120,8 @@ Facebook API
     Out[5]: Page(ID=20531316728, username=facebook)
 
 因为脸书的图谱API的限制 `Page Feed <https://developers.facebook.com/docs/graph-api/reference/v4.0/page/feed>`_ ，
-使用普通的 `Token` 只能获取大约 600 个经排名的已发布帖子。如果你想要获取到某主页的所有发布贴文，需要使用 `/{page_id}/published_posts` 端点。
-使用此端点, 需要使用经过主页管理员授予 `manage_pages` 权限的主页授权 `Token` 。
+使用普通的 ``User Access Token`` 只能获取大约 600 个经排名的已发布帖子。如果你想要获取到某主页的所有发布贴文，需要使用 ``/{page_id}/published_posts`` 端点。
+使用此端点, 需要使用经过主页管理员授予 ``manage_pages`` 权限的主页授权 ``Page Access Token`` 。
 如果你有经过授权，可以使用如下操作获取到主页访问口令::
 
     n [6]: access_token = api.exchange_insights_token(token='user token', page_id='page id')

@@ -6,6 +6,10 @@ A Python wrapper around for Facebook Common API.
     :target: https://travis-ci.org/MerleLiuKun/python-facebook
     :alt: Build Status
 
+.. image:: https://readthedocs.org/projects/python-facebook-api/badge/?version=latest
+    :target: https://python-facebook-api.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
+
 .. image:: https://codecov.io/gh/MerleLiuKun/python-facebook/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/MerleLiuKun/python-facebook
     :alt: Codecov
@@ -37,19 +41,27 @@ Introduction
 ============
 
 Library provides a service to easy use Facebook web api.
-
+https://github.com/bear/python-twitter#installing
 It currently includes the use of ``Facebook`` and ``Instagram Business`` product data.
 
 ==========
 Installing
 ==========
 
-You can install this lib from `pypi`::
+You can install this library from ``pypi``::
 
     $pip install --upgrade python-facebook-api
     ✨🍰✨
 
-This is name is ugly. but the `python-facebook` is exists and it not update long time.
+This is name is ugly. but the ``python-facebook`` is exists and it not update long time.
+
+=============
+Documentation
+=============
+
+You can view the latest ``python-facebook`` documentation at: https://python-facebook-api.readthedocs.io/en/latest/
+
+Also view the full ``Facebook Graph API`` docs at: https://developers.facebook.com/docs/graph-api/
 
 =====
 Using
@@ -100,8 +112,8 @@ To fetch one facebook page's public data::
 
 Because facebook graph api limit `Page Feed <https://developers.facebook.com/docs/graph-api/reference/v4.0/page/feed>`_.
 Use public token only can get approximately 600 ranked, published posts per year.
-If you want to get page's all posts. you need query the `/{page_id}/published_posts` endpoint with `page's access token`.
-First get page's access token (Must the page's administer give the permission `manage_pages`.)::
+If you want to get page's all posts. you need query the ``/{page_id}/published_posts`` endpoint with ``page's access token``.
+First get page's access token (Must the page's administer give the permission ``manage_pages``.)::
 
     In [6]: access_token = api.exchange_insights_token(token='user token', page_id='page id')
     Out[6]: 'page access token'
