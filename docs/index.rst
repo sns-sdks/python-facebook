@@ -15,6 +15,7 @@ Contents:
 .. toctree::
    :maxdepth: 1
 
+   installation.rst
    models.rst
    pyfacebook.rst
 
