@@ -1,53 +1,26 @@
-pyfacebook package
+Modules Documentation
 ==================
 
-Subpackages
------------
-
-.. toctree::
-
-    pyfacebook.utils
-
-Submodules
-----------
-
-pyfacebook.api module
----------------------
+API
+------------
 
 .. automodule:: pyfacebook.api
     :members:
     :undoc-members:
     :show-inheritance:
 
-pyfacebook.error module
+Models
 -----------------------
-
-.. automodule:: pyfacebook.error
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-pyfacebook.models module
-------------------------
 
 .. automodule:: pyfacebook.models
     :members:
     :undoc-members:
     :show-inheritance:
 
-pyfacebook.ratelimit module
----------------------------
+RateLimit
+------------------------
 
 .. automodule:: pyfacebook.ratelimit
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
-Module contents
----------------
-
-.. automodule:: pyfacebook
     :members:
     :undoc-members:
     :show-inheritance:

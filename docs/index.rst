@@ -6,17 +6,23 @@
 Welcome to Python-Facebook's documentation!
 ===========================================
 
-A Python wrapper around for Facebook Common API.
+**A Python wrapper around for Facebook Common API.**
 
+Author: IkarosKun <merle.liukun@gmail.com>
+
+Contents:
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   :maxdepth: 1
 
-   modules.rst
+   models.rst
    pyfacebook.rst
-   pyfacebook.utils.rst
 
+Introduction
+------------
+
+This library provides a Python interface for the `Facebook Graph API <https://developers.facebook.com/docs/graph-api>`_.
+Library could works on Python 2.7+ and Python 3.
 
 
 Indices and tables
