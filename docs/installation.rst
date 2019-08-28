@@ -1,8 +1,10 @@
 Installation
-======================
+------------
 
 Because the Python 2 will be soon not support by community.
+
 So recommend to use the latest version of Python 3.
+
 This library supports Python 3.5 and newer, Python 2.7.
 
 Dependencies
@@ -17,7 +19,7 @@ Installation
 
 You can install this library from **PyPI**::
 
-    ~ pip install python-facebook-api
+    ~ pip install --upgrade python-facebook-api
 
 
 Also you can build this library from source code::
