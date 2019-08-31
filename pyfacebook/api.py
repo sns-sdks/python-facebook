@@ -7,10 +7,11 @@ import requests
 
 from pyfacebook.error import PyFacebookError
 from pyfacebook.models import (
-    AccessToken, Comment, CommentSummary, Page, Post, PagePicture,
-    InstagramUser, InstagramMedia
+    AccessToken, Comment, CommentSummary,
+    InstagramMedia, InstagramUser, Page,
+    PagePicture, Post
 )
-from pyfacebook.ratelimit import RateLimit, InstagramRateLimit
+from pyfacebook.ratelimit import InstagramRateLimit, RateLimit
 from pyfacebook.utils import constant
 
 
