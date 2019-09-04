@@ -18,7 +18,7 @@ POST_ATTACHMENTS = [
 POST_BASIC_FIELDS = [
     'id', 'attachments{{{}}}'.format(','.join(POST_ATTACHMENTS)),
     'created_time', 'full_picture', 'icon', 'message',
-    'permalink_url', 'picture', 'shares', 'status_type', 'updated_time', 'tagged_time'
+    'permalink_url', 'picture', 'shares', 'status_type', 'updated_time', 'tagged_time',
     # filter stream return all comments count
     # refer: https://developers.facebook.com/docs/graph-api/reference/page-post/comments/
     'comments.filter(stream).summary(true).limit(0)',
