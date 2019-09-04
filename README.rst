@@ -40,8 +40,8 @@ Thanks a lot for Python-Twitter Developers.
 Introduction
 ============
 
-Library provides a service to easy use Facebook web api.
-https://github.com/bear/python-twitter#installing
+Library provides a service to easy use Facebook Graph API.
+
 It currently includes the use of ``Facebook`` and ``Instagram Business`` product data.
 
 ==========
