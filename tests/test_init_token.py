@@ -49,6 +49,8 @@ class ApiTest(unittest.TestCase):
 
         info = api.get_token_info()
         self.assertEqual(type(info), pyfacebook.AccessToken)
+        info_json = api.get_token_info(return_json=True)
+        self.assertEqual(info_json['data']['app_id'], '12345678910')
 
     @responses.activate
     def testApiOnlyLongTermToken(self):

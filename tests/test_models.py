@@ -8,6 +8,18 @@ class FacebookModelTest(unittest.TestCase):
     def setUp(self):
         self.base_path = 'testdata/facebook/'
 
+    def testAuthAccessToken(self):
+        with open(self.base_path + 'auth_access_token.json', 'rb') as f:
+            token_data = json.loads(f.read().decode('utf-8'))
+
+        access_token = pyfacebook.AuthAccessToken.new_from_json_dict(token_data)
+        try:
+            access_token.__repr__()
+        except Exception as e:
+            self.fail(e)
+
+        self.assertEqual(access_token.access_token, 'access_token')
+
     def testAccessToken(self):
         with open(self.base_path + 'access_token.json', 'rb') as f:
             token_data = json.loads(f.read().decode('utf-8'))

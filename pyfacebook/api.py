@@ -145,13 +145,8 @@ class BaseApi(object):
     @staticmethod
     def _check_graph_error(data):
         if 'error' in data:
-            try:
-                error = data['error']
-                raise PyFacebookError(error)
-            except (KeyError, TypeError):
-                raise PyFacebookError({
-                    'message': data
-                })
+            error = data['error']
+            raise PyFacebookError(error)
 
     def get_token_info(self, return_json=False):
         """

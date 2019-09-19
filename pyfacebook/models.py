@@ -141,7 +141,7 @@ class PageCategory(BaseModel):
         if self.name is not None:
             name = self.name.encode('utf-8')
         else:
-            name = self.name
+            name = self.name  # pragma: no cover
         return "PageCategory(id={id},name={name})".format(
             id=self.id, name=name
         )
@@ -171,7 +171,7 @@ class PageEngagement(BaseModel):
         if self.social_sentence is not None:
             social_sentence = self.social_sentence.encode('utf-8')
         else:
-            social_sentence = self.social_sentence
+            social_sentence = self.social_sentence  # pragma: no cover
         return "PageEngagement(count={count},social_sentence={so})".format(
             count=self.count, so=social_sentence
         )
@@ -325,7 +325,7 @@ class Attachment(BaseModel):
         if self.title is not None:
             title = self.title.encode('utf-8')
         else:
-            title = self.title
+            title = self.title  # pragma: no cover
         return "Attachment(title={title},url={url})".format(
             title=title, url=self.url
         )
@@ -458,7 +458,7 @@ class Comment(BaseModel):
             # handle from properties
             properties = param
             if param == 'from':
-                properties = '_form'
+                properties = '_form'  # pragma: no cover
             setattr(self, properties, kwargs.get(param, default))
 
     def __repr__(self):
