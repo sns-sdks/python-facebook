@@ -4,10 +4,12 @@ import re
 import time
 
 import requests
+from requests_oauthlib import OAuth2Session
+from requests_oauthlib.compliance_fixes import facebook_compliance_fix
 
 from pyfacebook.error import PyFacebookError
 from pyfacebook.models import (
-    AccessToken, Comment, CommentSummary,
+    AuthAccessToken, AccessToken, Comment, CommentSummary,
     InstagramMedia, InstagramUser, Page,
     PagePicture, Post
 )
@@ -182,6 +184,16 @@ class BaseApi(object):
 
 
 class Api(BaseApi):
+    AUTHORIZATION_URL = 'https://www.facebook.com/dialog/oauth'
+    EXCHANGE_ACCESS_TOKEN_URL = 'https://graph.facebook.com/oauth/access_token'
+    DEFAULT_REDIRECT_URI = 'https://localhost/'
+
+    DEFAULT_SCOPE = [
+        'email',
+    ]
+
+    DEFAULT_STATE = 'PyFacebook'
+
     def __init__(
             self, app_id=None,
             app_secret=None,
@@ -204,6 +216,66 @@ class Api(BaseApi):
                          sleep_on_rate_limit=sleep_on_rate_limit,
                          proxies=proxies)
         self.rate_limit = RateLimit()
+        self.auth_session = None
+
+    def get_authorization_url(self, redirect_uri=None, scope=None, **kwargs):
+        """
+        Build authorization url to do authorize.
+
+        Refer: https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow
+
+        Args:
+            redirect_uri (str, optional)
+                The URL that you want to redirect the person logging in back to.
+                Note. This url need to be set to `Valid OAuth redirect URIs` item in App Dashboard.
+            scope (str, optional)
+                A comma or space separated list of Permissions to request from the person using your app.
+
+        Returns:
+        """
+        if self.app_id is None or self.app_secret is None:
+            raise PyFacebookError({"message": "Authorization must use app credentials."})
+        if redirect_uri is None:
+            redirect_uri = self.DEFAULT_REDIRECT_URI
+        if scope is None:
+            scope = self.DEFAULT_SCOPE
+
+        session = OAuth2Session(
+            client_id=self.app_id, scope=scope, redirect_uri=redirect_uri,
+            state=self.DEFAULT_STATE, **kwargs
+        )
+        self.auth_session = facebook_compliance_fix(session)
+
+        authorization_url, state = self.auth_session.authorization_url(
+            url=self.AUTHORIZATION_URL
+        )
+
+        return authorization_url, state
+
+    def exchange_access_token(self, response, return_json=False):
+        """
+        Fetch the access token.
+
+        Args:
+            response (str)
+                The whole response url for you previous authorize step.
+            return_json (bool, optional):
+                If True JSON data will be returned, instead of pyfacebook.AccessToken.
+        Returns:
+            access token
+        """
+        if self.auth_session is None:
+            raise PyFacebookError({'message': "Should do authorize first."})
+
+        self.auth_session.fetch_token(
+            self.EXCHANGE_ACCESS_TOKEN_URL, client_secret=self.app_secret,
+            authorization_response=response
+        )
+
+        self.token = self.auth_session.access_token
+        if return_json:
+            return self.auth_session.token
+        return AuthAccessToken.new_from_json_dict(self.auth_session.token)
 
     def exchange_insights_token(self, token, page_id):
         """

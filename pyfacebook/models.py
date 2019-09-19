@@ -46,6 +46,28 @@ class BaseModel(object):
         return json.dumps(self.as_dict(), sort_keys=True)
 
 
+class AuthAccessToken(BaseModel):
+    """
+        A class representing the auth response access token structure.
+        Refer: https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow#confirm
+    """
+
+    def __init__(self, **kwargs):
+        BaseModel.__init__(self, **kwargs)
+        self.param_defaults = {
+            'access_token': None,
+            'token_type': None,
+            'expires_in': None,
+            'expires_at': None,
+        }
+        self.initial_param(kwargs)
+
+    def __repr__(self):
+        return "AuthAccessToken(token_type={token_type}, access_token={access_token})".format(
+            token_type=self.token_type, access_token=self.access_token,
+        )
+
+
 class AccessToken(BaseModel):
     """
     A class representing the access token structure.
@@ -417,6 +439,7 @@ class Comment(BaseModel):
     A class representing the comment structure.
     Refer: https://developers.facebook.com/docs/graph-api/reference/v4.0/comment
     """
+
     def __init__(self, **kwargs):
         BaseModel.__init__(self, **kwargs)
         self.param_defaults = {
@@ -450,6 +473,7 @@ class CommentSummary(BaseModel):
     A class representing the comment summary structure.
     Refer: https://developers.facebook.com/docs/graph-api/reference/v4.0/post/comments
     """
+
     def __init__(self, **kwargs):
         BaseModel.__init__(self, **kwargs)
         self.param_defaults = {
