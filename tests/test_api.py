@@ -9,6 +9,7 @@ import pyfacebook
 import responses
 
 DEFAULT_GRAPH_URL = "https://graph.facebook.com/"
+EXCHANGE_ACCESS_TOKEN_URL = pyfacebook.Api.EXCHANGE_ACCESS_TOKEN_URL
 DEFAULT_GRAPH_VERSION = pyfacebook.Api.VALID_API_VERSIONS[-1]
 
 
@@ -35,6 +36,54 @@ class ApiCallTest(unittest.TestCase):
             interval_between_request=1,
             sleep_on_rate_limit=True
         )
+
+    def testApiVersion(self):
+        with self.assertRaises(pyfacebook.PyFacebookError):
+            pyfacebook.Api(long_term_token='token', version='3.0')
+        pyfacebook.Api(long_term_token='token', version='77')
+
+    @responses.activate
+    def testAuth(self):
+        with self.assertRaises(pyfacebook.PyFacebookError):
+            self.api.exchange_access_token('')
+
+        with self.assertRaises(pyfacebook.PyFacebookError):
+            api = pyfacebook.Api(long_term_token='token')
+            api.get_authorization_url()
+
+        url, state = self.api.get_authorization_url()
+        self.assertEqual(state, 'PyFacebook')
+
+        with open(self.base_path + 'auth_access_token.json', 'rb') as f:
+            auth_access_token = json.loads(f.read().decode('utf-8'))
+        responses.add(
+            method=responses.POST,
+            url=EXCHANGE_ACCESS_TOKEN_URL, json=auth_access_token
+        )
+
+        redirect_response = (
+            'https://localhost/?code=code&state=PyFacebook'
+        )
+        access_token_data = self.api.exchange_access_token(redirect_response)
+        self.assertEqual(access_token_data.access_token, 'access_token')
+        access_token_json = self.api.exchange_access_token(redirect_response, return_json=True)
+        self.assertEqual(access_token_json["access_token"], 'access_token')
+
+    @responses.activate
+    def testResponse(self):
+        page_id = '20531316728'
+        responses.add(
+            url=DEFAULT_GRAPH_URL + DEFAULT_GRAPH_VERSION + '/' + page_id,
+            method=responses.GET, body=''
+        )
+        responses.add(
+            url=DEFAULT_GRAPH_URL + DEFAULT_GRAPH_VERSION + '/' + page_id,
+            method=responses.GET, json={'error': 'error'}
+        )
+        with self.assertRaises(pyfacebook.PyFacebookError):
+            self.api.get_page_info(page_id=page_id)
+        with self.assertRaises(pyfacebook.PyFacebookError):
+            self.api.get_page_info(page_id=page_id)
 
     @responses.activate
     def testGetPageInfo(self):
@@ -202,6 +251,9 @@ class ApiCallTest(unittest.TestCase):
 
     @responses.activate
     def testExchangeToken(self):
+        with self.assertRaises(pyfacebook.PyFacebookError):
+            self.api.exchange_insights_token(token='token', page_id='')
+
         page_id = '20531316728'
         with open(self.base_path + 'page_access_token.json', 'rb') as f:
             access_token_data = json.loads(f.read().decode('utf-8'))

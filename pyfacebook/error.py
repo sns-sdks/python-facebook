@@ -4,4 +4,4 @@ class PyFacebookError(Exception):
     @property
     def message(self):
         """ return the error's first arg """
-        return self.args[0]
+        return self.args[0]  # pragma: no cover

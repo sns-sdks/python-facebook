@@ -5,6 +5,7 @@ from __future__ import absolute_import
 from .api import Api, InstagramApi  # noqa
 from .error import PyFacebookError  # noqa
 from .models import (  # noqa
+    AuthAccessToken,
     AccessToken,
     Attachment,
     Comment,
