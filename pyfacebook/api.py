@@ -443,6 +443,9 @@ class Api(BaseApi):
             'until': until_time,
             'limit': limit,
         }
+        # Note: now tagged_time only support for tagged resource
+        if resource == 'tagged':
+            args['fields'] = args['fields'] + ',tagged_time'
         if access_token is not None:
             args['access_token'] = access_token
 
