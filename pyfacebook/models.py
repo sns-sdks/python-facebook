@@ -638,7 +638,7 @@ class InstagramComment(BaseModel):
 
         replies = data.get('replies')
         if replies is not None:
-            replies = [InstagramReply.new_from_json_dict(item) for item in replies]
+            replies = [InstagramReply.new_from_json_dict(item) for item in replies.get('data')]
 
         user = data.get('user')
         if user is not None:
@@ -650,16 +650,44 @@ class InstagramComment(BaseModel):
         )
 
 
-class InstagramReply(InstagramComment):
+class InstagramReply(BaseModel):
     """
     A class representing the Instagram comment replay structure.
     Just like comment but not have replies.
     Refer: https://developers.facebook.com/docs/instagram-api/reference/comment/replies
     """
 
+    def __init__(self, **kwargs):
+        BaseModel.__init__(self, **kwargs)
+        self.param_defaults = {
+            'hidden': None,
+            'id': None,
+            'like_count': None,
+            'media': None,
+            'text': None,
+            'timestamp': None,
+            'user': None,
+            'username': None
+        }
+        self.initial_param(kwargs)
+
     def __repr__(self):
         return "Reply(ID={c_id},timestamp={t})".format(
             c_id=self.id, t=self.timestamp
+        )
+
+    @classmethod
+    def new_from_json_dict(cls, data, **kwargs):
+        media = data.get('media')
+        if media is not None:
+            media = InstagramCommentMedia.new_from_json_dict(media)
+
+        user = data.get('user')
+        if user is not None:
+            user = InstagramCommentUser.new_from_json_dict(user)
+
+        return super(cls, cls).new_from_json_dict(
+            data=data, media=media, user=user
         )
 
 
@@ -697,7 +725,7 @@ class InstagramSimple(BaseModel):
         self.initial_param(kwargs)
 
     def __repr__(self):
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
 
 class InstagramMediaUser(InstagramSimple):
