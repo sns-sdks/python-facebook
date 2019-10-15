@@ -523,6 +523,34 @@ class InstagramUser(BaseModel):
         )
 
 
+class InstagramChildren(BaseModel):
+    """
+    A class representing the Instagram media children structure. this is subset for media
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/media
+    """
+
+    def __init__(self, **kwargs):
+        BaseModel.__init__(self, **kwargs)
+        self.param_defaults = {
+            'id': None,
+            'ig_id': None,
+            'media_type': None,
+            'media_url': None,
+            'owner': None,
+            'permalink': None,
+            'shortcode': None,
+            'thumbnail_url': None,
+            'timestamp': None,
+            'username': None,
+        }
+        self.initial_param(kwargs)
+
+    def __repr__(self):
+        return "MediaChildren(ID={mid}, link={link})".format(
+            mid=self.id, link=self.permalink
+        )
+
+
 class InstagramMedia(BaseModel):
     """
     A class representing the Instagram media structure.
@@ -556,6 +584,25 @@ class InstagramMedia(BaseModel):
             mid=self.id, link=self.permalink
         )
 
+    @classmethod
+    def new_from_json_dict(cls, data, **kwargs):
+        children = data.get('children')
+        if children is not None:
+            children = [InstagramChildren.new_from_json_dict(item) for item in children.get('data', [])]
+
+        comments = data.get('comments')
+        if comments is not None:
+            comments = [InstagramComment.new_from_json_dict(item) for item in comments.get('data', [])]
+
+        owner = data.get('owner')
+        if owner is not None:
+            owner = InstagramMediaUser.new_from_json_dict(owner)
+
+        return super(cls, cls).new_from_json_dict(
+            data=data, children=children,
+            comments=comments, owner=owner
+        )
+
 
 class InstagramComment(BaseModel):
     """
@@ -583,6 +630,38 @@ class InstagramComment(BaseModel):
             c_id=self.id, t=self.timestamp
         )
 
+    @classmethod
+    def new_from_json_dict(cls, data, **kwargs):
+        media = data.get('media')
+        if media is not None:
+            media = InstagramCommentMedia.new_from_json_dict(media)
+
+        replies = data.get('replies')
+        if replies is not None:
+            replies = [InstagramReply.new_from_json_dict(item) for item in replies]
+
+        user = data.get('user')
+        if user is not None:
+            user = InstagramCommentUser.new_from_json_dict(user)
+
+        return super(cls, cls).new_from_json_dict(
+            data=data, media=media,
+            replies=replies, user=user
+        )
+
+
+class InstagramReply(InstagramComment):
+    """
+    A class representing the Instagram comment replay structure.
+    Just like comment but not have replies.
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/comment/replies
+    """
+
+    def __repr__(self):
+        return "Reply(ID={c_id},timestamp={t})".format(
+            c_id=self.id, t=self.timestamp
+        )
+
 
 class InstagramHashtag(BaseModel):
     """
@@ -602,3 +681,35 @@ class InstagramHashtag(BaseModel):
         return "Hashtag(ID={h_id},name={name})".format(
             h_id=self.id, name=self.name
         )
+
+
+class InstagramSimple(BaseModel):
+    """
+    A base class representing the response field only have id.
+    Like comment's media field and user field.
+    """
+
+    def __init__(self, **kwargs):
+        BaseModel.__init__(self, **kwargs)
+        self.param_defaults = {
+            'id': None,
+        }
+        self.initial_param(kwargs)
+
+    def __repr__(self):
+        raise NotImplementedError
+
+
+class InstagramMediaUser(InstagramSimple):
+    def __repr__(self):
+        return "MediaBelongToUser(ID={})".format(self.id)
+
+
+class InstagramCommentMedia(InstagramSimple):
+    def __repr__(self):
+        return "CommentBelongToMedia(ID={})".format(self.id)
+
+
+class InstagramCommentUser(InstagramSimple):
+    def __repr__(self):
+        return "CommentBelongToUser(ID={})".format(self.id)
