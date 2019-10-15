@@ -490,11 +490,19 @@ class CommentSummary(BaseModel):
         )
 
 
+"""
+    Instagram Models
+"""
+
+
 class InstagramUser(BaseModel):
+    """
+    A class representing the Instagram user structure.
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/user
+    """
+
     def __init__(self, **kwargs):
         BaseModel.__init__(self, **kwargs)
-        self.id = None
-        self.username = None
         self.param_defaults = {
             'biography': None,
             'id': None,
@@ -507,21 +515,22 @@ class InstagramUser(BaseModel):
             'username': None,
             'website': None,
         }
-        for (param, default) in self.param_defaults.items():
-            setattr(self, param, kwargs.get(param, default))
+        self.initial_param(kwargs)
 
     def __repr__(self):
         return "User(ID={uid}, username={username})".format(
-            uid=self.id,
-            username=self.username
+            uid=self.id, username=self.username
         )
 
 
 class InstagramMedia(BaseModel):
+    """
+    A class representing the Instagram media structure.
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/media
+    """
+
     def __init__(self, **kwargs):
         BaseModel.__init__(self, **kwargs)
-        self.id = None
-        self.permalink = None
         self.param_defaults = {
             'caption': None,
             'children': None,
@@ -540,11 +549,56 @@ class InstagramMedia(BaseModel):
             'timestamp': None,
             'username': None,
         }
-        for (param, default) in self.param_defaults.items():
-            setattr(self, param, kwargs.get(param, default))
+        self.initial_param(kwargs)
 
     def __repr__(self):
         return "Media(ID={mid}, link={link})".format(
-            mid=self.id,
-            link=self.permalink
+            mid=self.id, link=self.permalink
+        )
+
+
+class InstagramComment(BaseModel):
+    """
+    A class representing the Instagram comment structure.
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/comment
+    """
+
+    def __init__(self, **kwargs):
+        BaseModel.__init__(self, **kwargs)
+        self.param_defaults = {
+            'hidden': None,
+            'id': None,
+            'like_count': None,
+            'media': None,
+            'replies': None,
+            'text': None,
+            'timestamp': None,
+            'user': None,
+            'username': None
+        }
+        self.initial_param(kwargs)
+
+    def __repr__(self):
+        return "Comment(ID={c_id},timestamp={t})".format(
+            c_id=self.id, t=self.timestamp
+        )
+
+
+class InstagramHashtag(BaseModel):
+    """
+    A class representing the Instagram hashtag structure.
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/hashtag
+    """
+
+    def __init__(self, **kwargs):
+        BaseModel.__init__(self, **kwargs)
+        self.param_defaults = {
+            'id': None,
+            'name': None
+        }
+        self.initial_param(kwargs)
+
+    def __repr__(self):
+        return "Hashtag(ID={h_id},name={name})".format(
+            h_id=self.id, name=self.name
         )
