@@ -104,21 +104,21 @@ class InstagramRateLimitTest(unittest.TestCase):
         self.api.rate_limit.set_limit({'x-business-use-case-usage': 'test'}, self.api.instagram_business_id)
         self.assertEqual(self.api.rate_limit.call_count, 0)
 
-    # @responses.activate
-    # def testSetRateLimit(self):
-    #     with open(self.base_path + 'headers.json', 'rb') as f:
-    #         headers = json.loads(f.read().decode('utf-8'))
-    #     with open(self.base_path + 'page_info.json', 'rb') as f:
-    #         page_data = json.loads(f.read().decode('utf-8'))
-    #     responses.add(
-    #         method=responses.GET,
-    #         url=self.base_url + '{0}/{1}'.format(self.version, self.api.instagram_business_id),
-    #         json=page_data,
-    #         adding_headers=headers
-    #     )
-    #     self.api.get_user_info(username='facebook')
-    #     self.assertEqual(12, self.api.rate_limit.call_count)
-    #     self.assertEqual(72, self.api.rate_limit.total_cputime)
-    #     self.assertEqual(10, self.api.rate_limit.total_time)
-    #     self.assertTrue(self.api.rate_limit.reset_at > 0)
-    #     self.assertEqual(20, self.api.rate_limit.get_sleep_interval())
+    @responses.activate
+    def testSetRateLimit(self):
+        with open(self.base_path + 'headers.json', 'rb') as f:
+            headers = json.loads(f.read().decode('utf-8'))
+        with open(self.base_path + 'page_info.json', 'rb') as f:
+            page_data = json.loads(f.read().decode('utf-8'))
+        responses.add(
+            method=responses.GET,
+            url=self.base_url + '{0}/{1}'.format(self.version, self.api.instagram_business_id),
+            json=page_data,
+            adding_headers=headers
+        )
+        self.api.discovery_user(username='facebook')
+        self.assertEqual(12, self.api.rate_limit.call_count)
+        self.assertEqual(72, self.api.rate_limit.total_cputime)
+        self.assertEqual(10, self.api.rate_limit.total_time)
+        self.assertTrue(self.api.rate_limit.reset_at > 0)
+        self.assertEqual(20, self.api.rate_limit.get_sleep_interval())

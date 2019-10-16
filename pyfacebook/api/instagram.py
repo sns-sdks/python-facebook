@@ -148,7 +148,7 @@ class InstagramApi(BaseApi):
                 break
             if len(medias) >= count:
                 break
-        return medias
+        return medias[:count]
 
     def paged_by_cursor(self,
                         target=None,
