@@ -116,7 +116,7 @@ class InstagramRateLimitTest(unittest.TestCase):
             json=page_data,
             adding_headers=headers
         )
-        self.api.get_user_info(username='facebook')
+        self.api.discovery_user(username='facebook')
         self.assertEqual(12, self.api.rate_limit.call_count)
         self.assertEqual(72, self.api.rate_limit.total_cputime)
         self.assertEqual(10, self.api.rate_limit.total_time)

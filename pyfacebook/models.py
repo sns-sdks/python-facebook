@@ -509,6 +509,7 @@ class InstagramUser(BaseModel):
             'ig_id': None,
             'followers_count': None,
             'follows_count': None,
+            'media': None,
             'media_count': None,
             'name': None,
             'profile_picture_url': None,
@@ -520,6 +521,15 @@ class InstagramUser(BaseModel):
     def __repr__(self):
         return "User(ID={uid}, username={username})".format(
             uid=self.id, username=self.username
+        )
+
+    @classmethod
+    def new_from_json_dict(cls, data, **kwargs):
+        media = data.get('media')
+        if media is not None:
+            media = [InstagramMedia.new_from_json_dict(item) for item in media.get('data', [])]
+        return super(cls, cls).new_from_json_dict(
+            data=data, media=media
         )
 
 

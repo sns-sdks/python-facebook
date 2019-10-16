@@ -2,23 +2,19 @@ Python Facebook
 
 使用 `Python` 封装的 `Facebook` 平台下的一些数据接口
 
-.. image:: https://travis-ci.org/MerleLiuKun/python-facebook.svg?branch=master
-    :target: https://travis-ci.org/MerleLiuKun/python-facebook
+.. image:: https://travis-ci.org/sns-sdks/python-facebook.svg?branch=master
+    :target: https://travis-ci.org/sns-sdks/python-facebook
     :alt: Build Status
 
 .. image:: https://readthedocs.org/projects/python-facebook-api/badge/?version=latest
     :target: https://python-facebook-api.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
-.. image:: https://codecov.io/gh/MerleLiuKun/python-facebook/branch/master/graph/badge.svg
-    :target: https://codecov.io/gh/MerleLiuKun/python-facebook
+.. image:: https://codecov.io/gh/sns-sdks/python-facebook/branch/master/graph/badge.svg
+    :target: https://codecov.io/gh/sns-sdks/python-facebook
     :alt: Codecov
 
 .. image:: https://img.shields.io/pypi/v/python-facebook-api.svg
-    :target: https://pypi.org/project/python-facebook-api
-    :alt: PyPI
-
-.. image:: https://img.shields.io/pypi/pyversions/python-facebook-api.svg
     :target: https://pypi.org/project/python-facebook-api
     :alt: PyPI
 
