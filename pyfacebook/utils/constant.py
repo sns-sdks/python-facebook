@@ -50,25 +50,46 @@ PAGE_PICTURE_TYPE = [
 # Follows is Instagram fields to get data
 # =======================================
 
-INSTAGRAM_USER_FIELD = [
-    'biography',
-    'id', 'ig_id',
-    'followers_count',
-    'follows_count',
-    'media_count',
-    'name',
-    'profile_picture_url',
-    'username',
-    'website',
-]
+INSTAGRAM_USER_FIELD = {
+    'biography', 'id', 'ig_id',
+    'followers_count', 'follows_count', 'media_count',
+    'name', 'profile_picture_url', 'username', 'website',
+}
 
-INSTAGRAM_MEDIA_PUBLIC_FIELD = [
+INSTAGRAM_MEDIA_CHILDREN_PUBLIC_FIELD = {
+    'id', 'media_type', 'media_url', 'permalink', 'timestamp', 'username'
+}
+
+INSTAGRAM_MEDIA_CHILDREN_OWNER_FIELD = {
+    'ig_id', 'owner', 'shortcode', 'thumbnail_url',
+}
+
+INSTAGRAM_MEDIA_FIELD = {
     'caption', 'comments_count', 'id',
     'like_count', 'media_type', 'media_url',
     'permalink', 'timestamp', 'username'
+}
+
+INSTAGRAM_MEDIA_PUBLIC_FIELD = INSTAGRAM_MEDIA_FIELD.union({
+    'children{{{}}}'.format(','.join(INSTAGRAM_MEDIA_CHILDREN_PUBLIC_FIELD))
+})
+
+INSTAGRAM_MEDIA_OWNER_FIELD = INSTAGRAM_MEDIA_FIELD.union({
+    'children{{{}}}'.format(','.join(INSTAGRAM_MEDIA_CHILDREN_OWNER_FIELD)),
+    'ig_id', 'is_comment_enabled',
+    'owner', 'shortcode', 'thumbnail_url'
+})
+
+INSTAGRAM_COMMENT_FIELD = [
+    'hidden', 'id', 'like_count', 'media',
+    'replies', 'text', 'timestamp', 'user', 'username'
 ]
 
-INSTAGRAM_MEDIA_OWNER_FIELD = [
-    'ig_id', 'is_comment_enabled', 'owner', 'shortcode',
-    'thumbnail_url'
+INSTAGRAM_REPLY_FIELD = [
+    'hidden', 'id', 'like_count', 'media',
+    'text', 'timestamp', 'user', 'username'
+]
+
+INSTAGRAM_HASHTAG_FIELD = [
+    'id', 'name'
 ]
