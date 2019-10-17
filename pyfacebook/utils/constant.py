@@ -60,9 +60,9 @@ INSTAGRAM_MEDIA_CHILDREN_PUBLIC_FIELD = {
     'id', 'media_type', 'media_url', 'permalink', 'timestamp', 'username'
 }
 
-INSTAGRAM_MEDIA_CHILDREN_OWNER_FIELD = {
+INSTAGRAM_MEDIA_CHILDREN_OWNER_FIELD = INSTAGRAM_MEDIA_CHILDREN_PUBLIC_FIELD.union({
     'ig_id', 'owner', 'shortcode', 'thumbnail_url',
-}
+})
 
 INSTAGRAM_MEDIA_FIELD = {
     'caption', 'comments_count', 'id',

@@ -211,3 +211,66 @@ class InstagramApi(BaseApi):
             next_cursor = cursors.get('after')
             previous_cursor = cursors.get('before')
         return next_cursor, previous_cursor, data
+
+    def get_user_info(self,
+                      user_id=None,
+                      include_media=False,
+                      access_token=None,
+                      return_json=False):
+        """
+        Obtain provide user info.
+
+        Args:
+            user_id (str, optional)
+                The id for instagram business user id which you want to get data.
+                Default is the api instagram business id.
+            include_media (bool, optional)
+                If provide this with True. Response will include 25 recently posted medias.
+            access_token (str, optional)
+                The user access token with authorization by point user.
+                Default is the api access token.
+            return_json (bool, optional)
+                If True origin data by facebook will be returned, or will return pyfacebook.InstagramUser
+        Returns:
+            IG business user full info.
+        """
+        if user_id is None:
+            user_id = self.instagram_business_id
+
+        metric = constant.INSTAGRAM_USER_FIELD
+        if include_media:
+            metric = metric.union({'media{{{}}}'.format(','.join(constant.INSTAGRAM_MEDIA_OWNER_FIELD))})
+
+        args = {
+            'fields': ','.join(metric),
+        }
+        if access_token:
+            args['access_token'] = access_token
+        resp = self._request(
+            path='{0}/{1}'.format(self.version, user_id),
+            args=args
+        )
+        data = self._parse_response(resp.content.decode('utf-8'))
+
+        if return_json:
+            return data
+        else:
+            return InstagramUser.new_from_json_dict(data)
+
+    def get_medias(self):
+        """"""
+
+    def get_media_info(self):
+        """"""
+
+    def get_comments(self):
+        """ """
+
+    def get_comment_info(self):
+        """"""
+
+    def get_replies(self):
+        """"""
+
+    def get_reply_info(self):
+        """"""
