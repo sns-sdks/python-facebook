@@ -80,16 +80,13 @@ INSTAGRAM_MEDIA_OWNER_FIELD = INSTAGRAM_MEDIA_FIELD.union({
     'owner', 'shortcode', 'thumbnail_url'
 })
 
-INSTAGRAM_COMMENT_FIELD = [
-    'hidden', 'id', 'like_count', 'media',
-    'replies', 'text', 'timestamp', 'user', 'username'
-]
-
-INSTAGRAM_REPLY_FIELD = [
+INSTAGRAM_COMMENT_FIELD = {
     'hidden', 'id', 'like_count', 'media',
     'text', 'timestamp', 'user', 'username'
-]
+}
 
-INSTAGRAM_HASHTAG_FIELD = [
+INSTAGRAM_REPLY_FIELD = INSTAGRAM_COMMENT_FIELD
+
+INSTAGRAM_HASHTAG_FIELD = {
     'id', 'name'
-]
+}
