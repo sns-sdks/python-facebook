@@ -185,14 +185,31 @@ Instagram API
 即 ``pyfacebook.InstagramApi`` 只能获取 Instagram 平台上的商家主页的数据信息。
 所谓的商家主页即是 将 ``Instagram`` 账号和 ``Facebook`` 主页进行关联的 ``Instagram`` 用户。
 
+如果你想要搜索其他的业务主页的数据，你可以使用如下方法::
+
+    - discovery_user: 获取基础数据
+    - discovery_user_medias: 获取贴文数据
+
+.. note::
+    使用 discovery 方法只支持通过主页用户名进行搜索.
+
+如果你拥有某个主页的相关权限的授权，你可以使用如下方法获取数据::
+
+    - get_user_info
+    - get_medias
+    - get_media_info
+    - get_comments
+    - get_comment_info
+    - get_replies
+    - get_reply_info
+
 
 初始化 ``pyfacebook.InstagramApi`` 实例需要提供带有 ``Instagram`` 权限的App的用户授权 ``Token``, 以及一个 可用的 ``Instagram`` 商业账号。
-
 
 详细文档请参阅：
 
 - `Instagram 平台 <https://developers.facebook.com/products/instagram/>`_
-- `Business Discovery API <https://developers.facebook.com/docs/instagram-api/business-discovery>`_
+- `Instagram Graph API <https://developers.facebook.com/docs/instagram-api>`_
 
 使用示例：
 
@@ -213,59 +230,90 @@ Instagram API
        ...:     instagram_business_id='你的 Instagram 业务账号ID')
 
 
-获取某用户的基本信息::
+获取其他业务主页用户的基本信息::
 
-    In [12]: api.get_user_info(username='jaychou')
-    Out[12]: User(ID=17841405792603923, username=jaychou)
+    In [3]: api.discovery_user(username='jaychou')
+    Out[3]: User(ID=17841405792603923, username=jaychou)
 
-    In [13]: api.get_user_info(username='jaychou', return_json=True)
-    Out[13]:
-    {'business_discovery': {'biography': 'https://www.facebook.com/jay/',
-      'id': '17841405792603923',
-      'ig_id': 5951385086,
-      'followers_count': 3303887,
-      'follows_count': 50,
-      'media_count': 319,
-      'name': 'Jay Chou 周杰倫',
-      'profile_picture_url': 'https://scontent.xx.fbcdn.net/v/t51.2885-15/21147825_124638651514445_4540910313213526016_a.jpg?_nc_cat=1&_nc_ht=scontent.xx&oh=9a84c5d93df1cf7fb600d21efc87f983&oe=5CE45FFA',
-      'username': 'jaychou',
-      'website': 'https://youtu.be/MAjY8mCTXWk'},
-      'id': '17841406338772941'}
+    In [4]: api.discovery_user(username='jaychou', return_json=True)
+    Out[4]:
+    {'website': 'https://youtu.be/HK7SPnGSxLM',
+     'biography': 'https://www.facebook.com/jay/',
+     'profile_picture_url': 'https://scontent.xx.fbcdn.net/v/t51.2885-15/21147825_124638651514445_4540910313213526016_a.jpg?_nc_cat=1&_nc_oc=AQl4VclkS9_O1iwa1KDetuR89g6yHkTHZOJZ2-kemhQcnFb1kIPzPBXsUydf1To2ZeM&_nc_ht=scontent.xx&oh=a86a0b98abb5294266d550095ecd7621&oe=5E20C7FA',
+     'ig_id': 5951385086,
+     'follows_count': 81,
+     'media_count': 516,
+     'username': 'jaychou',
+     'id': '17841405792603923',
+     'followers_count': 5237768,
+     'name': 'Jay Chou 周杰倫'}
 
-批量获取某用户的贴文(默认获取近50条)::
 
-    In [3]: api.get_medias(username='jaychou')
-    Out[3]:
-        [Media(ID=17852512102358859, link=https://www.instagram.com/p/BuKth42Hpsm/),
-         Media(ID=17914455160286660, link=https://www.instagram.com/p/BuILzrcnljS/),
-         Media(ID=18038180344016282, link=https://www.instagram.com/p/BuDAlT0n0kq/),
-         Media(ID=18000503476161727, link=https://www.instagram.com/p/Bt6SyHmnGyn/),
-         Media(ID=17863710898325821, link=https://www.instagram.com/p/Bt49wLUnTaO/),
-         Media(ID=17857272226339334, link=https://www.instagram.com/p/Bt4n5Q5ncKa/),
-         Media(ID=17854413100345353, link=https://www.instagram.com/p/Bt33bRznSNo/),
-         Media(ID=18033275821031206, link=https://www.instagram.com/p/Bt2bECmn0R_/),
-         Media(ID=18033135562032465, link=https://www.instagram.com/p/Bt1sedfnnqD/),
-         Media(ID=17933504032265945, link=https://www.instagram.com/p/BtzPPiGn2gE/),
-         Media(ID=18017672368106762, link=https://www.instagram.com/p/Btt-rKqHGLH/),
-         Media(ID=18033213532062450, link=https://www.instagram.com/p/BtkVolVnhXu/),
-         Media(ID=18031391875036047, link=https://www.instagram.com/p/BtjkEmxH7gR/),
-         Media(ID=18029417977062683, link=https://www.instagram.com/p/Btd5jPvHQUm/).....]
+获取其他业务主页的贴文数据(默认返回近10条)::
 
-获取某贴文的信息(此API只可以供给当前Instagram商业账号的贴文可用, 对他人无法获取)::
+    In [5]: api.discovery_user_medias(username='jaychou')
+    Out[5]:
+    [Media(ID=17871925513478048, link=https://www.instagram.com/p/B382ojgHemq/),
+     Media(ID=17861378536535135, link=https://www.instagram.com/p/B36TG8AHbGd/),
+     Media(ID=17862568840534713, link=https://www.instagram.com/p/B33k7llnd_S/),
+     Media(ID=18002681875267830, link=https://www.instagram.com/p/B319fbuHXIt/),
+     Media(ID=17873056222479764, link=https://www.instagram.com/p/B31duvoH26O/),
+     Media(ID=17906467621371226, link=https://www.instagram.com/p/B3xCYNonlqn/),
+     Media(ID=17850201154639505, link=https://www.instagram.com/p/B3ufD-JH3a5/),
+     Media(ID=17855908660588183, link=https://www.instagram.com/p/B3q-bMuHvnl/),
+     Media(ID=18108170392062569, link=https://www.instagram.com/p/B3olnLxnRsy/),
+     Media(ID=17900244466380038, link=https://www.instagram.com/p/B3oQVpEHM3Q/)]
 
-    In [5]: api.get_media_info(media_id='17861821972334188')
-    Out[5]: Media(ID=17861821972334188, link=https://www.instagram.com/p/BuGD8NmF4KI/)
+通过授权的 ``token`` 获取当前业务主页的基础信息::
 
+    In [6]: api.get_user_info(user_id='account id', access_token='access token')
+    Out[6]: User(ID=17841406338772941, username=ikroskun)
+
+通过授权的 ``token`` 获取当前业务主页的贴文信息::
+
+    In [7]: api.get_medias(user_id='account id', access_token='access token')
+    Out[7]:
+    [Media(ID=18075344632131157, link=https://www.instagram.com/p/B38X8BzHsDi/),
+     Media(ID=18027939643230671, link=https://www.instagram.com/p/B38Xyp6nqsS/),
+     Media(ID=17861821972334188, link=https://www.instagram.com/p/BuGD8NmF4KI/),
+     Media(ID=17864312515295083, link=https://www.instagram.com/p/BporjsCF6mt/),
+     Media(ID=17924095942208544, link=https://www.instagram.com/p/BoqBgsNl5qT/),
+     Media(ID=17896189813249754, link=https://www.instagram.com/p/Bop_Hz5FzyL/),
+     Media(ID=17955956875141196, link=https://www.instagram.com/p/Bn-35GGl7YM/),
+     Media(ID=17970645226046242, link=https://www.instagram.com/p/Bme0cU1giOH/)]
+
+通过授权的 ``token`` 获取当前业务主页的贴文评论信息::
+
+    In [8]: api.get_comments(media_id='media id', access_token='access token')
+    Out[8]: [Comment(ID=18008567518250255,timestamp=2019-10-23T02:10:32+0000)]
+
+等等...
 
 ====
 TODO
 ====
 
-现在只可以通过该``API`` 获取到主页基本信息以及主页的贴文数据以及对象(帖子,图片)的评论数据。
+当前的功能
+---------
 
-待做：
+Facebook：
+
+- 主页信息
+- 主页图片信息
+- 贴文数据
+- 评论数据
+
+Instagram：
+
+- 搜索其他业务主页的基础信息和贴文
+- 获取授权业务主页的基础信息
+- 获取授权业务主页的贴文信息
+- 获取授权业务主页的贴文评论数据
+- 获取授权业务主页的评论的回复数据
+
+待做
+----
 
 - Insights 数据的获取
 - 发布帖子
-- 更多....
 
