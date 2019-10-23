@@ -108,7 +108,7 @@ class InstagramRateLimitTest(unittest.TestCase):
     def testSetRateLimit(self):
         with open(self.base_path + 'headers.json', 'rb') as f:
             headers = json.loads(f.read().decode('utf-8'))
-        with open(self.base_path + 'page_info.json', 'rb') as f:
+        with open(self.base_path + 'business_user.json', 'rb') as f:
             page_data = json.loads(f.read().decode('utf-8'))
         responses.add(
             method=responses.GET,

@@ -177,13 +177,32 @@ That is ``pyfacebook.Instagram Api`` can only get data of the business Account o
 
 The business Account is the Account who associates ``Instagram`` account with ``Facebook`` page.
 
+If you want to search other's business account basic info and medias.
+You can use methods as follows::
+
+    - discovery_user: retrieve user basic data
+    - discovery_user_medias: retrieve user medias data
+
+.. note::
+   Use discovery only support search by instagram user name.
+
+If you have other business account's access token with relative permissions.
+You can use remain methods with the access token to retrieve this account's data::
+
+    - get_user_info
+    - get_medias
+    - get_media_info
+    - get_comments
+    - get_comment_info
+    - get_replies
+    - get_reply_info
 
 Initialization of the ``pyfacebook.InstagramApi`` instance requires the provision of user authorization ``Token`` for App with ``Instagram`` privileges, and also need an available ``Instagram`` business account.
 
 For detailed documentation, please consult:
 
 - `Instagram Developer <https://developers.facebook.com/products/instagram/>`_
-- `Business Discovery API <https://developers.facebook.com/docs/instagram-api/business-discovery>`_
+- `Instagram Graph API <https://developers.facebook.com/docs/instagram-api>`_
 
 Usage example:
 
@@ -204,55 +223,70 @@ Similar to ``Facebook Api``, the ``InstagramApi`` instance can also be initializ
        ...     instagram_business_id='your Instagram business id')
 
 
-Get basic information about a user::
+Get other account information by discovery::
 
-    In [12]: api.get_user_info(username='jaychou')
-    Out[12]: User(ID=17841405792603923, username=jaychou)
+    In [3]: api.discovery_user(username='jaychou')
+    Out[3]: User(ID=17841405792603923, username=jaychou)
 
-    In [13]: api.get_user_info(username='jaychou', return_json=True)
-    Out[13]:
-    {'business_discovery': {'biography': 'https://www.facebook.com/jay/',
-      'id': '17841405792603923',
-      'ig_id': 5951385086,
-      'followers_count': 3303887,
-      'follows_count': 50,
-      'media_count': 319,
-      'name': 'Jay Chou 周杰倫',
-      'profile_picture_url': 'https://scontent.xx.fbcdn.net/v/t51.2885-15/21147825_124638651514445_4540910313213526016_a.jpg?_nc_cat=1&_nc_ht=scontent.xx&oh=9a84c5d93df1cf7fb600d21efc87f983&oe=5CE45FFA',
-      'username': 'jaychou',
-      'website': 'https://youtu.be/MAjY8mCTXWk'},
-      'id': '17841406338772941'}
+    In [4]: api.discovery_user(username='jaychou', return_json=True)
+    Out[4]:
+    {'website': 'https://youtu.be/HK7SPnGSxLM',
+     'biography': 'https://www.facebook.com/jay/',
+     'profile_picture_url': 'https://scontent.xx.fbcdn.net/v/t51.2885-15/21147825_124638651514445_4540910313213526016_a.jpg?_nc_cat=1&_nc_oc=AQl4VclkS9_O1iwa1KDetuR89g6yHkTHZOJZ2-kemhQcnFb1kIPzPBXsUydf1To2ZeM&_nc_ht=scontent.xx&oh=a86a0b98abb5294266d550095ecd7621&oe=5E20C7FA',
+     'ig_id': 5951385086,
+     'follows_count': 81,
+     'media_count': 516,
+     'username': 'jaychou',
+     'id': '17841405792603923',
+     'followers_count': 5237768,
+     'name': 'Jay Chou 周杰倫'}
 
-Mass access to a user's posts(Get nearly 50 by default)::
+Get other account medias by discovery(default return 10)::
 
-    In [3]: api.get_medias(username='jaychou')
-    Out[3]:
-        [Media(ID=17852512102358859, link=https://www.instagram.com/p/BuKth42Hpsm/),
-         Media(ID=17914455160286660, link=https://www.instagram.com/p/BuILzrcnljS/),
-         Media(ID=18038180344016282, link=https://www.instagram.com/p/BuDAlT0n0kq/),
-         Media(ID=18000503476161727, link=https://www.instagram.com/p/Bt6SyHmnGyn/),
-         Media(ID=17863710898325821, link=https://www.instagram.com/p/Bt49wLUnTaO/),
-         Media(ID=17857272226339334, link=https://www.instagram.com/p/Bt4n5Q5ncKa/),
-         Media(ID=17854413100345353, link=https://www.instagram.com/p/Bt33bRznSNo/),
-         Media(ID=18033275821031206, link=https://www.instagram.com/p/Bt2bECmn0R_/),
-         Media(ID=18033135562032465, link=https://www.instagram.com/p/Bt1sedfnnqD/),
-         Media(ID=17933504032265945, link=https://www.instagram.com/p/BtzPPiGn2gE/),
-         Media(ID=18017672368106762, link=https://www.instagram.com/p/Btt-rKqHGLH/),
-         Media(ID=18033213532062450, link=https://www.instagram.com/p/BtkVolVnhXu/),
-         Media(ID=18031391875036047, link=https://www.instagram.com/p/BtjkEmxH7gR/),
-         Media(ID=18029417977062683, link=https://www.instagram.com/p/Btd5jPvHQUm/).....]
+    In [5]: api.discovery_user_medias(username='jaychou')
+    Out[5]:
+    [Media(ID=17871925513478048, link=https://www.instagram.com/p/B382ojgHemq/),
+     Media(ID=17861378536535135, link=https://www.instagram.com/p/B36TG8AHbGd/),
+     Media(ID=17862568840534713, link=https://www.instagram.com/p/B33k7llnd_S/),
+     Media(ID=18002681875267830, link=https://www.instagram.com/p/B319fbuHXIt/),
+     Media(ID=17873056222479764, link=https://www.instagram.com/p/B31duvoH26O/),
+     Media(ID=17906467621371226, link=https://www.instagram.com/p/B3xCYNonlqn/),
+     Media(ID=17850201154639505, link=https://www.instagram.com/p/B3ufD-JH3a5/),
+     Media(ID=17855908660588183, link=https://www.instagram.com/p/B3q-bMuHvnl/),
+     Media(ID=18108170392062569, link=https://www.instagram.com/p/B3olnLxnRsy/),
+     Media(ID=17900244466380038, link=https://www.instagram.com/p/B3oQVpEHM3Q/)]
 
+Get account information by his access token::
 
-Get information about a post(This API is available only for posts on the current Instagram business account and is not available to others)::
+    In [6]: api.get_user_info(user_id='account id', access_token='access token')
+    Out[6]: User(ID=17841406338772941, username=ikroskun)
 
-    In [5]: api.get_media_info(media_id='17861821972334188')
-    Out[5]: Media(ID=17861821972334188, link=https://www.instagram.com/p/BuGD8NmF4KI/)
+Get account medias by his access token::
 
-----
+    In [7]: api.get_medias(user_id='account id', access_token='access token')
+    Out[7]:
+    [Media(ID=18075344632131157, link=https://www.instagram.com/p/B38X8BzHsDi/),
+     Media(ID=18027939643230671, link=https://www.instagram.com/p/B38Xyp6nqsS/),
+     Media(ID=17861821972334188, link=https://www.instagram.com/p/BuGD8NmF4KI/),
+     Media(ID=17864312515295083, link=https://www.instagram.com/p/BporjsCF6mt/),
+     Media(ID=17924095942208544, link=https://www.instagram.com/p/BoqBgsNl5qT/),
+     Media(ID=17896189813249754, link=https://www.instagram.com/p/Bop_Hz5FzyL/),
+     Media(ID=17955956875141196, link=https://www.instagram.com/p/Bn-35GGl7YM/),
+     Media(ID=17970645226046242, link=https://www.instagram.com/p/Bme0cU1giOH/)]
+
+Get account media comments by his access token::
+
+    In [8]: api.get_comments(media_id='media id', access_token='access token')
+    Out[8]: [Comment(ID=18008567518250255,timestamp=2019-10-23T02:10:32+0000)]
+
+And so on...
+
+====
 TODO
-----
+====
 
-Now features:
+Now features
+------------
 
 Facebook Api:
 
@@ -263,10 +297,14 @@ Facebook Api:
 
 Instagram Api:
 
-- Business user info.
-- Medias info
+- Other business account info and media.
+- Authorized business account info
+- Authorized account medias
+- Authorized account comments
+- Authorized account replies
 
-TODO:
+TODO
+----
 
 - Acquisition of Insights Data
 - publish
