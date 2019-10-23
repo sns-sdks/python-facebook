@@ -285,6 +285,7 @@ And so on...
 TODO
 ====
 
+------------
 Now features
 ------------
 
@@ -303,6 +304,7 @@ Instagram Api:
 - Authorized account comments
 - Authorized account replies
 
+----
 TODO
 ----
 
