@@ -203,6 +203,7 @@ class Page(BaseModel):
             'link': None,
             'name': None,
             'phone': None,
+            'picture': None,
             'rating_count': None,
             'single_line_address': None,
             'username': None,
@@ -230,9 +231,12 @@ class Page(BaseModel):
         engagement = data.get('engagement')
         if engagement:
             engagement = PageEngagement.new_from_json_dict(engagement)
+        picture = data.get('picture', {}).get('data')
+        if picture:
+            picture = PagePicture.new_from_json_dict(picture)
         return super(cls, cls).new_from_json_dict(
             data=data, category_list=category_list,
-            cover=cover, engagement=engagement
+            cover=cover, engagement=engagement, picture=picture
         )
 
 
