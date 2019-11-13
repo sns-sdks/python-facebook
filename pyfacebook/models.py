@@ -200,6 +200,7 @@ class Page(BaseModel):
             'fan_count': None,
             'founded': None,  # only for category_list has company
             'global_brand_root_id': None,
+            'global_brand_page_name': None,
             'link': None,
             'name': None,
             'phone': None,
