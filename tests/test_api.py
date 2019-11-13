@@ -108,6 +108,7 @@ class ApiCallTest(unittest.TestCase):
 
         page_info_by_name = self.api.get_page_info(username=page_id)
         self.assertEqual(page_info_by_name.name, 'Facebook')
+        self.assertEqual(page_info_by_name.picture.height, 50)
 
     @responses.activate
     def testGetPostInfo(self):

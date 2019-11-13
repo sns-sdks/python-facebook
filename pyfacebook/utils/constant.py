@@ -6,7 +6,8 @@ PAGE_FIELDS = [
     'id', 'about', 'category', 'category_list', 'checkins', 'cover',
     'description', 'description_html', 'display_subtext', 'emails',
     'engagement', 'fan_count', 'founded',
-    'global_brand_root_id', 'link', 'name', 'phone', 'rating_count',
+    'global_brand_root_id', 'global_brand_page_name',
+    'link', 'name', 'phone', 'picture', 'rating_count',
     'single_line_address', 'username', 'verification_status', 'website'
 ]
 

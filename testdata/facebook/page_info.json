@@ -28,8 +28,17 @@
   "fan_count": 214429223,
   "founded": "February 4, 2004",
   "global_brand_root_id": "1499730620315598",
+  "global_brand_page_name": "Facebook",
   "link": "https://www.facebook.com/facebook/",
   "name": "Facebook",
+  "picture": {
+    "data": {
+      "height": 50,
+      "is_silhouette": false,
+      "url": "https://scontent.xx.fbcdn.net/v/t1.0-1/p50x50/58978526_10158354585751729_7411073224387067904_o.png?_nc_cat=1&_nc_oc=AQmujTzzsF5lAivKLKTFJhGi5e65dMKAp33aDIEB9AGZQ7TeoCc_frVd5h4z0PqDv4Q&_nc_ht=scontent.xx&oh=a36f52c88fbe9e69c4890b09016a11a0&oe=5E585F54",
+      "width": 50
+    }
+  },
   "username": "facebook",
   "verification_status": "blue_verified",
   "website": "http://www.facebook.com"

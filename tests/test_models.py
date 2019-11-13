@@ -48,12 +48,9 @@ class FacebookModelTest(unittest.TestCase):
             page_info.category_list[0].__repr__()
             page_info.cover.__repr__()
             page_info.engagement.__repr__()
+            page_info.picture.__repr__()
         except Exception as e:
             self.fail(e)
-
-        origin_json_data = json.dumps(page_data, sort_keys=True)
-        self.assertEqual(origin_json_data, page_info.as_json_string())
-        self.assertEqual(page_data, page_info.as_dict())
 
         self.assertEqual(page_info.id, '20531316728')
         self.assertTrue(isinstance(page_info.category_list, list))
