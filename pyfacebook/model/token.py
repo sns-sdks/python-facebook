@@ -4,9 +4,11 @@
 from typing import List, Optional
 from attr import attrs, attrib
 
+from .base import BaseModel
+
 
 @attrs
-class AuthAccessToken(object):
+class AuthAccessToken(BaseModel):
     """
     A class representing the auth access token response.
 
@@ -20,7 +22,7 @@ class AuthAccessToken(object):
 
 
 @attrs
-class TokenError(object):
+class TokenError(BaseModel):
     """
     A class representing the access token error.
 
@@ -32,7 +34,7 @@ class TokenError(object):
 
 
 @attrs
-class Metadata(object):
+class Metadata(BaseModel):
     """
     A class representing the access token metadata.
 
@@ -44,7 +46,7 @@ class Metadata(object):
 
 
 @attrs
-class GranularScope(object):
+class GranularScope(BaseModel):
     """
     A class representing the access token granular scope.
 
@@ -55,7 +57,7 @@ class GranularScope(object):
 
 
 @attrs
-class AccessToken(object):
+class AccessToken(BaseModel):
     """
     A class representing the access token.
 

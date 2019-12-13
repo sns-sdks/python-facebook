@@ -18,7 +18,7 @@ except NameError:
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-    'attrs', 'cattrs', 'future', 'requests', 'requests-oauthlib', 'typing'
+    'attrs', 'cattrs', 'future', 'requests', 'requests-oauthlib', 'typing', 'six'
 ]
 
 # The rest you shouldn't have to touch too much :)
