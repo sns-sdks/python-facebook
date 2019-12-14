@@ -65,7 +65,7 @@ class AccessToken(BaseModel):
     """
 
     app_id = attrib(default=None, type=Optional[str])
-    application = attrib(default=None, type=Optional[str], repr=False)
+    application = attrib(default=None, type=Optional[str])
     type = attrib(default=None, type=Optional[str], repr=False)
     error = attrib(default=None, type=Optional[TokenError], repr=False)
     expires_at = attrib(default=None, type=Optional[int], repr=False)
@@ -75,5 +75,5 @@ class AccessToken(BaseModel):
     metadata = attrib(default=None, type=Optional[Metadata], repr=False)
     profile_id = attrib(default=None, type=Optional[str], repr=False)
     scopes = attrib(default=None, type=Optional[List[str]], repr=False)
-    granular_scopes = attrib(default=None, type=Optional[List[GranularScope]])
-    user_id = attrib(default=None, type=Optional[str], repr=False)
+    granular_scopes = attrib(default=None, type=Optional[List[GranularScope]], repr=False)
+    user_id = attrib(default=None, type=Optional[str])

@@ -31,8 +31,6 @@ class PageCategory(BaseModel):
         """
         if isinstance(self.fb_page_categories, (list, tuple)):
             self.fb_page_categories = [cattr.structure(item, PageCategory) for item in self.fb_page_categories]
-        elif isinstance(self.fb_page_categories, dict):
-            self.fb_page_categories = cattr.structure(self.fb_page_categories, PageCategory)
         else:
             pass
 
@@ -120,6 +118,7 @@ class Page(BaseModel):
     can_checkin = attrib(default=None, type=Optional[bool], repr=False)
     category = attrib(default=None, type=Optional[str], repr=False)
     category_list = attrib(default=None, type=Optional[List[PageCategory]], repr=False)
+    checkins = attrib(default=None, type=Optional[int], repr=False)
     contact_address = attrib(default=None, type=Optional[ContactAddress], repr=False)
     cover = attrib(default=None, type=Optional[CoverPhoto], repr=False)
     current_location = attrib(default=None, type=Optional[str], repr=False)
@@ -135,7 +134,7 @@ class Page(BaseModel):
     global_brand_root_id = attrib(default=None, type=Optional[str], repr=False)
     link = attrib(default=None, type=Optional[str], repr=False)
     name = attrib(default=None, type=Optional[str])
-    name_with_location_descriptor = attrib(default=None, type=Optional[str], repr=False)
+    # name_with_location_descriptor = attrib(default=None, type=Optional[str], repr=False)
     phone = attrib(default=None, type=Optional[str], repr=False)
     rating_count = attrib(default=None, type=Optional[str], repr=False)
     start_info = attrib(default=None, type=Optional[PageStartInfo], repr=False)
