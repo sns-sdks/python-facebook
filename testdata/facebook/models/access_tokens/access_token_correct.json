@@ -1,0 +1,40 @@
+{
+  "app_id": "1234567890",
+  "type": "USER",
+  "application": "FacebookApp",
+  "data_access_expires_at": 1584111699,
+  "expires_at": 1576342800,
+  "is_valid": true,
+  "scopes": [
+    "email",
+    "read_insights",
+    "manage_pages",
+    "pages_show_list",
+    "ads_management",
+    "instagram_basic",
+    "instagram_manage_insights",
+    "public_profile"
+  ],
+  "granular_scopes": [
+    {
+      "scope": "manage_pages"
+    },
+    {
+      "scope": "pages_show_list"
+    },
+    {
+      "scope": "ads_management"
+    },
+    {
+      "scope": "instagram_basic",
+      "target_ids": [
+        "123456789"
+      ]
+    },
+    {
+      "scope": "instagram_manage_insights"
+    }
+  ],
+  "user_id": "12345678910"
+}
+
