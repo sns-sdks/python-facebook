@@ -10,7 +10,7 @@ class PageModelTest(unittest.TestCase):
     with open(BASE_PATH + 'page_categories.json', 'rb') as f:
         PAGE_CATEGORIES = json.loads(f.read().decode('utf-8'))
     with open(BASE_PATH + 'pages.json', 'rb') as f:
-        PAGE_INFO = json.loads(f.read().decode('utf-8'))
+        PAGE_INFO = json.loads(f.read().decode("utf-8"))
 
     def testPageCategories(self):
         m = models.PageCategory.new_from_json_dict(self.PAGE_CATEGORIES)
