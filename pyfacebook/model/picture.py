@@ -34,3 +34,15 @@ class ProfilePictureSource(BaseModel):
     height = attrib(default=None, type=Optional[int])
     width = attrib(default=None, type=Optional[int])
     is_silhouette = attrib(default=None, type=Optional[bool], repr=False)
+
+
+@attrs
+class ImageSource(BaseModel):
+    """
+    A class representing the image source info.
+
+    Structure will be {"height": 10, "width": 10, "src": "https://xxxx"}
+    """
+    height = attrib(default=None, type=Optional[int], repr=False)
+    width = attrib(default=None, type=Optional[int], repr=False)
+    src = attrib(default=None, type=Optional[str])
