@@ -6,7 +6,8 @@ from attr import attrs, attrib
 from typing import Optional, List, Union
 
 from .base import BaseModel
-from .picture import ImageSource
+from .comment import CommentSummary
+from .common import StoryAttachment
 
 
 @attrs
@@ -17,73 +18,6 @@ class PostShares(BaseModel):
     structure is {"count": 12}
     """
     count = attrib(default=None, type=Optional[int])
-
-
-@attrs
-class EntityAtTextRange(BaseModel):
-    """
-    A class representing the entity at text range info.
-
-    Refer: https://developers.facebook.com/docs/graph-api/reference/entity-at-text-range/
-    """
-    id = attrib(default=None, type=Optional[str])
-    length = attrib(default=None, type=Optional[int], repr=False)
-    name = attrib(default=None, type=Optional[str])
-    offset = attrib(default=None, type=Optional[int], repr=False)
-    type = attrib(default=None, type=Optional[str])
-
-
-@attrs
-class StoryAttachmentMedia(BaseModel):
-    """
-    A class representing the post attachment media info.
-
-    Refer: https://developers.facebook.com/docs/graph-api/reference/story-attachment-media/
-    """
-    image = attrib(default=None, type=Optional[ImageSource])
-    source = attrib(default=None, type=Optional[str], repr=False)
-
-
-@attrs
-class StoryAttachmentTarget(BaseModel):
-    """
-    A class representing the post attachment target info.
-
-    Refer: https://developers.facebook.com/docs/graph-api/reference/story-attachment-target/
-    """
-    id = attrib(default=None, type=Optional[str])
-    unshimmed_url = attrib(default=None, type=Optional[str], repr=False)
-    url = attrib(default=None, type=Optional[str], repr=False)
-
-
-@attrs
-class StoryAttachment(BaseModel):
-    """
-    A class representing the post attachment info.
-
-    Refer: https://developers.facebook.com/docs/graph-api/reference/story-attachment/
-    """
-    description = attrib(default=None, type=Optional[str])
-    description_tags = attrib(default=None, type=Optional[List[EntityAtTextRange]], repr=False)
-    media = attrib(default=None, type=Optional[StoryAttachmentMedia], repr=False)
-    media_type = attrib(default=None, type=Optional[str])
-    target = attrib(default=None, type=Optional[StoryAttachmentTarget], repr=False)
-    title = attrib(default=None, type=Optional[str], repr=False)
-    type = attrib(default=None, type=Optional[str])
-    unshimmed_url = attrib(default=None, type=Optional[str], repr=False)
-    url = attrib(default=None, type=Optional[str], repr=False)
-
-
-@attrs
-class CommentSummary(BaseModel):
-    """
-    A class representing the comment summary info.
-
-    Refer: https://developers.facebook.com/docs/graph-api/reference/post/comments/
-    """
-    order = attrib(default=None, type=Optional[str], repr=False)
-    total_count = attrib(default=None, type=Optional[int])
-    can_comment = attrib(default=None, type=Optional[bool])
 
 
 @attrs
