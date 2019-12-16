@@ -6,7 +6,7 @@ python:
   - '3.7'
   - '3.8'
 
-jobs:
+matrix:
   allow_failures:
     # now the cattr not support python 3.8
     - python: 3.8
