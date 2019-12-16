@@ -9,6 +9,7 @@ from typing import Optional, List
 from attr import attrs, attrib
 
 from .base import BaseModel
+from .picture import CoverPhoto, ProfilePictureSource
 
 
 @attrs
@@ -49,20 +50,6 @@ class ContactAddress(BaseModel):
     region = attrib(default=None, type=Optional[str], repr=False)
     street1 = attrib(default=None, type=Optional[str], repr=False)
     street2 = attrib(default=None, type=Optional[str], repr=False)
-
-
-@attrs
-class CoverPhoto(BaseModel):
-    """
-    A class representing the cover photo info.
-
-    Refer: https://developers.facebook.com/docs/graph-api/reference/cover-photo/
-    """
-    id = attrib(default=None, type=Optional[str])
-    cover_id = attrib(default=None, type=Optional[str], repr=False)
-    offset_x = attrib(default=None, type=Optional[float], repr=False)
-    offset_y = attrib(default=None, type=Optional[float], repr=False)
-    source = attrib(default=None, type=Optional[str])
 
 
 @attrs
@@ -136,6 +123,7 @@ class Page(BaseModel):
     name = attrib(default=None, type=Optional[str])
     # name_with_location_descriptor = attrib(default=None, type=Optional[str], repr=False)
     phone = attrib(default=None, type=Optional[str], repr=False)
+    picture = attrib(default=None, type=Optional[ProfilePictureSource], repr=False)
     rating_count = attrib(default=None, type=Optional[str], repr=False)
     start_info = attrib(default=None, type=Optional[PageStartInfo], repr=False)
     talking_about_count = attrib(default=None, type=Optional[int], repr=False)
