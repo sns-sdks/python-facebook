@@ -3,7 +3,7 @@
 """
 
 from attr import attrs, attrib
-from typing import Dict, List, Optional
+from typing import Dict, Optional
 
 from .base import BaseModel
 
@@ -62,6 +62,10 @@ class IgProBaseComment(BaseModel):
     user = attrib(default=None, type=Optional[IgProUser], repr=False)
     username = attrib(default=None, type=Optional[str], repr=False)
 
+    def __attrs_post_init__(self):
+        if self.media is not None and isinstance(self.media, dict):
+            self.media = IgProMedia.new_from_json_dict(self.media)
+
 
 @attrs
 class IgProReply(IgProBaseComment):
@@ -79,7 +83,13 @@ class IgProComment(IgProBaseComment):
 
     Refer: https://developers.facebook.com/docs/instagram-api/reference/comment
     """
-    replies = attrib(default=None, type=Optional[List[IgProReply]], repr=False)
+    replies = attrib(default=None, type=Optional[Dict], repr=False)
+
+    def __attrs_post_init__(self):
+        IgProBaseComment.__attrs_post_init__(self)
+        if self.replies is not None and isinstance(self.replies, dict):
+            replies = self.replies.get("data", [])
+            self.replies = [IgProReply.new_from_json_dict(item) for item in replies]
 
 
 @attrs
@@ -90,8 +100,8 @@ class IgProMedia(BaseModel):
     Refer: https://developers.facebook.com/docs/instagram-api/reference/media
     """
     caption = attrib(default=None, type=Optional[str], repr=False)
-    children = attrib(default=None, type=Optional[List[IgProMediaChildren]], repr=False)
-    comments = attrib(default=None, type=Optional[List[IgProComment]])
+    children = attrib(default=None, type=Optional[Dict], repr=False)
+    comments = attrib(default=None, type=Optional[Dict])
     comments_count = attrib(default=None, type=Optional[int], repr=False)
     id = attrib(default=None, type=Optional[str])
     ig_id = attrib(default=None, type=Optional[int], repr=False)
@@ -105,6 +115,14 @@ class IgProMedia(BaseModel):
     thumbnail_url = attrib(default=None, type=Optional[str], repr=False)
     timestamp = attrib(default=None, type=Optional[str], repr=False)
     username = attrib(default=None, type=Optional[str], repr=False)
+
+    def __attrs_post_init__(self):
+        if self.children is not None and isinstance(self.children, dict):
+            children = self.children.get("data", [])
+            self.children = [IgProMediaChildren.new_from_json_dict(item) for item in children]
+        if self.comments is not None and isinstance(self.comments, dict):
+            comments = self.comments.get("data", [])
+            self.comments = [IgProComment.new_from_json_dict(item) for item in comments]
 
 
 @attrs
