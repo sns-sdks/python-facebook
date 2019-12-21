@@ -6,6 +6,7 @@ from attr import attrs, attrib
 from typing import Dict, Optional
 
 from .base import BaseModel
+from .._compat import str
 
 
 @attrs
