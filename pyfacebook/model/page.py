@@ -10,6 +10,7 @@ from attr import attrs, attrib
 
 from .base import BaseModel
 from .picture import CoverPhoto, ProfilePictureSource
+from .._compat import str
 
 
 @attrs

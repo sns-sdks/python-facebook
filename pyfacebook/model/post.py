@@ -8,6 +8,7 @@ from typing import Optional, Dict
 from .base import BaseModel
 from .comment import CommentSummary
 from .common import StoryAttachment
+from .._compat import str
 
 
 @attrs

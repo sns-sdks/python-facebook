@@ -7,6 +7,7 @@ from typing import Optional
 
 from .base import BaseModel
 from .common import StoryAttachment
+from .._compat import str
 
 
 @attrs

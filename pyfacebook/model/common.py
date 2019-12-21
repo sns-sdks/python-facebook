@@ -6,6 +6,7 @@ from typing import Optional, List
 
 from .base import BaseModel
 from .picture import ImageSource
+from .._compat import str
 
 
 @attrs

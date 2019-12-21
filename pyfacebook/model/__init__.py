@@ -3,6 +3,7 @@ from .base import BaseModel
 from .comment import Comment
 from .page import Page, PageCategory
 from .post import Post
+from .ig_pro_models import IgProUser, IgProMedia, IgProComment, IgProReply, IgProHashtag
 
 __all__ = [
     "AccessToken",
@@ -12,4 +13,10 @@ __all__ = [
     "Page",
     "PageCategory",
     "Post",
+    # Instagram Professional
+    "IgProUser",
+    "IgProMedia",
+    "IgProComment",
+    "IgProReply",
+    "IgProHashtag",
 ]

@@ -5,6 +5,7 @@ from typing import List, Optional
 from attr import attrs, attrib
 
 from .base import BaseModel
+from .._compat import str
 
 
 @attrs
