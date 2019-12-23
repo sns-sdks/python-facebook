@@ -14,7 +14,7 @@ is_py2 = (_ver.major == 2)
 is_py3 = (_ver.major == 3)
 
 if is_py2:
-    str = unicode  # pragma: no cover
+    str = unicode  # pragma: no cover # noqa
 
 elif is_py3:
     str = str  # pragma: no cover
