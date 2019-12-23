@@ -7,6 +7,8 @@ from typing import Optional, Union
 
 import pyfacebook
 
+logger = logging.getLogger(__name__)
+
 
 def enf_comma_separated(
         field,  # type: str
@@ -28,15 +30,26 @@ def enf_comma_separated(
     """
     try:
         if isinstance(value, str):
-            return value
-        elif isinstance(value, (list, tuple, set)):
-            if isinstance(value, set):
-                logging.warning("Note: The order of the set is unreliable.")
-            return ",".join(value)
+            value = value.split(",")
+        elif isinstance(value, (list, tuple)):
+            pass
+        elif isinstance(value, set):
+            logger.warning("Note: The order of the set is unreliable.")
+            pass
         else:
             raise pyfacebook.PyFacebookError({
                 "message": "Parameter ({0}) must be single str,comma-separated str,list,tuple or set".format(field),
             })
+
+        # loop value list and remove repeat item
+        seen = {}
+        res = []
+        for item in value:
+            if item in seen:
+                continue
+            seen[item] = 1
+            res.append(item)
+        return ",".join(res)
     except (TypeError, ValueError):
         raise pyfacebook.PyFacebookError({
             "message": "Parameter ({0}) must be single str,comma-separated str,list,tuple or set".format(field),
