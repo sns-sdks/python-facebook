@@ -13,9 +13,8 @@ from pyfacebook.ratelimit import InstagramRateLimit, RateLimit
 
 
 class BaseApi(object):
-    VALID_API_VERSIONS = ["v3.3", "v4.0"]
+    VALID_API_VERSIONS = ["v3.3", "v4.0", "v5.0"]
     GRAPH_URL = "https://graph.facebook.com/"
-    INTERVAL_BETWEEN_REQUEST = 1  # seconds
 
     def __init__(
             self, app_id=None,
@@ -24,7 +23,6 @@ class BaseApi(object):
             long_term_token=None,
             version=None,
             timeout=None,
-            interval_between_request=None,  # if loop get data. should use this.
             sleep_on_rate_limit=False,
             proxies=None,
             is_instagram=False,
@@ -43,12 +41,6 @@ class BaseApi(object):
             self.rate_limit = InstagramRateLimit()
         else:
             self.rate_limit = RateLimit()
-
-        self.interval_between_request = interval_between_request
-        if self.interval_between_request is None:
-            self.interval_between_request = self.INTERVAL_BETWEEN_REQUEST
-        if self.interval_between_request < 1:
-            raise PyFacebookError({"message": "Min interval is 1"})
 
         if version is None:
             # default version is last new.
@@ -105,11 +97,6 @@ class BaseApi(object):
             elif "access_token" not in args:
                 args["access_token"] = self.token
         try:
-            if self.sleep_on_rate_limit:
-                interval = self.rate_limit.get_sleep_interval()
-                time.sleep(interval)
-            else:
-                time.sleep(self.interval_between_request)
             response = self.session.request(
                 method,
                 self.base_url + path,
