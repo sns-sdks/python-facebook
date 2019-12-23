@@ -1,17 +1,20 @@
 """
     Facebook Graph Api impl
 """
+from typing import Optional, Union, List, Tuple, Set
 from requests_oauthlib import OAuth2Session
 from requests_oauthlib.compliance_fixes import facebook_compliance_fix
 
 from pyfacebook.error import PyFacebookError
+from pyfacebook.model import Page
 from pyfacebook.models import (
     AuthAccessToken, Comment, CommentSummary,
-    Page, PagePicture, Post
+    PagePicture, Post
 )
 from .base import BaseApi
 from pyfacebook.ratelimit import RateLimit
 from pyfacebook.utils import constant
+from pyfacebook.utils.param_validation import enf_comma_separated
 
 
 class Api(BaseApi):
@@ -143,22 +146,28 @@ class Api(BaseApi):
             return "Check the app has the permission or your token."
         return access_token
 
-    def get_page_info(self,
-                      page_id=None,
-                      username=None,
-                      return_json=False):
+    def get_page_info(
+            self,
+            *,
+            page_id=None,  # type: Optional[str]
+            username=None,  # type: Optional[str]
+            fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+            return_json=False,  # type: bool
+    ):
         """
         Obtain give page's basic info.
 
         Args:
-            page_id (int, optional)
+            page_id (int, optional):
                 The id for you want to retrieve data
-            username (str, optional)
+            username (str, optional):
                 The username (page username) for you want to retrieve data
                 Either page_id or username is required. if all given. use username.
+            fields ((str,list,tuple,set), optional):
+                Which fields you want to get.
+                If not provide, will use default field in constant.
             return_json (bool, optional):
                 If True JSON data will be returned, instead of pyfacebook.Page
-
         Returns:
             Page info, pyfacebook.Page instance or json str.
         """
@@ -168,9 +177,11 @@ class Api(BaseApi):
             target = username
         else:
             raise PyFacebookError({'message': "Specify at least one of page_id or username"})
+        if fields is None:
+            fields = constant.FB_PAGE_FIELDS
 
         args = {
-            'fields': ','.join(constant.PAGE_FIELDS)
+            "fields": enf_comma_separated("fields", fields)
         }
 
         resp = self._request(
@@ -178,6 +189,7 @@ class Api(BaseApi):
             path='{0}/{1}'.format(self.version, target),
             args=args
         )
+
         data = self._parse_response(resp.content.decode('utf-8'))
         if return_json:
             return data

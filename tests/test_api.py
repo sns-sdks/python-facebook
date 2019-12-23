@@ -33,7 +33,7 @@ class ApiCallTest(unittest.TestCase):
             short_token='test',
             version=DEFAULT_GRAPH_VERSION,
             timeout=1,
-            interval_between_request=1,
+            # interval_between_request=1,
             sleep_on_rate_limit=True
         )
 
