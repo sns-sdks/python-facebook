@@ -126,6 +126,7 @@ class Page(BaseModel):
     phone = attrib(default=None, type=Optional[str], repr=False)
     picture = attrib(default=None, type=Optional[ProfilePictureSource], repr=False)
     rating_count = attrib(default=None, type=Optional[str], repr=False)
+    single_line_address = attrib(default=None, type=Optional[str], repr=False)
     start_info = attrib(default=None, type=Optional[PageStartInfo], repr=False)
     talking_about_count = attrib(default=None, type=Optional[int], repr=False)
     username = attrib(default=None, type=Optional[str])
