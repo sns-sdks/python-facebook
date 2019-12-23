@@ -1,0 +1,8 @@
+{
+  "error": {
+    "message": "(#100) Pages Public Content Access requires either app secret proof or an app token",
+    "type": "OAuthException",
+    "code": 100,
+    "fbtrace_id": "A1m6KK6iBqvjzPeQd4DYbKM"
+  }
+}
