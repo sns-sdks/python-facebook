@@ -1,13 +1,14 @@
 """
     Base Api Impl
 """
-import json
+import six
+import logging
 import re
-import time
 
 import requests
+from requests import Response
 
-from pyfacebook.error import PyFacebookError
+from pyfacebook.error import PyFacebookError, PyFacebookException, ErrorMessage, ErrorCode
 from pyfacebook.models import AccessToken
 from pyfacebook.ratelimit import InstagramRateLimit, RateLimit
 
@@ -26,6 +27,7 @@ class BaseApi(object):
             sleep_on_rate_limit=False,
             proxies=None,
             is_instagram=False,
+            debug_http=False,
     ):
         self.app_id = app_id
         self.app_secret = app_secret
@@ -41,6 +43,7 @@ class BaseApi(object):
             self.rate_limit = InstagramRateLimit()
         else:
             self.rate_limit = RateLimit()
+        self._debug_http = debug_http
 
         if version is None:
             # default version is last new.
@@ -69,6 +72,16 @@ class BaseApi(object):
         else:
             self.set_token(app_id=self.app_id, app_secret=self.app_secret, short_token=self.short_token)
 
+        if debug_http:
+            from six.moves import http_client
+            http_client.HTTPConnection.debuglevel = 1
+
+            logging.basicConfig()  # you need to initialize logging, otherwise you will not see anything from requests
+            logging.getLogger().setLevel(logging.DEBUG)
+            requests_log = logging.getLogger("requests.packages.urllib3")
+            requests_log.setLevel(logging.DEBUG)
+            requests_log.propagate = True
+
     def set_token(self, app_id, app_secret, short_token):
         response = self._request(
             method='GET',
@@ -81,7 +94,7 @@ class BaseApi(object):
             },
             enforce_auth=False
         )
-        data = self._parse_response(response.content.decode('utf-8'))
+        data = self._parse_response(response)
         self.token = data['access_token']
 
     def _request(self, path, method=None, args=None, post_args=None, enforce_auth=True):
@@ -106,8 +119,7 @@ class BaseApi(object):
                 proxies=self.proxies
             )
         except requests.HTTPError as e:
-            response = json.loads(e.read())
-            raise PyFacebookError(response)
+            raise PyFacebookException(ErrorMessage(code=ErrorCode.HTTP_ERROR, message=e.args[0]))
         headers = response.headers
         # do update app rate limit
         if self.is_instagram:
@@ -116,19 +128,23 @@ class BaseApi(object):
             self.rate_limit.set_limit(headers)
         return response
 
-    def _parse_response(self, json_data):
-        try:
-            data = json.loads(json_data)
-        except ValueError:
-            raise PyFacebookError(json_data)
+    def _parse_response(self, response):
+        # type: (Response) -> dict
+        data = response.json()
         self._check_graph_error(data)
         return data
 
     @staticmethod
     def _check_graph_error(data):
+        # type: (dict) -> None
+        """
+        Check the facebook response data. If have error raise a PyFacebookException.
+        :param data: The data return by facebook.
+        :return: None
+        """
         if 'error' in data:
-            error = data['error']
-            raise PyFacebookError(error)
+            error_data = data['error']
+            raise PyFacebookException(error_data)
 
     def get_token_info(self, return_json=False):
         """
