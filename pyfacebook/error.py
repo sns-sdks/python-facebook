@@ -20,7 +20,7 @@ class ErrorCode:
 
 
 @attrs
-class ErrorMessage:
+class ErrorMessage(object):
     code = attrib(default=None, type=Optional[str])
     message = attrib(default=None, type=Optional[str])
     error_type = attrib(default="PyFacebookException", type=Optional[str])

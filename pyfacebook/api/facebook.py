@@ -148,7 +148,6 @@ class Api(BaseApi):
 
     def get_page_info(
             self,
-            *,
             page_id=None,  # type: Optional[str]
             username=None,  # type: Optional[str]
             fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
