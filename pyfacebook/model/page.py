@@ -5,7 +5,7 @@
         Some field which not common used has not include.
 """
 import cattr
-from typing import Optional, List
+from typing import Dict, Optional, List
 from attr import attrs, attrib
 
 from .base import BaseModel
@@ -124,8 +124,9 @@ class Page(BaseModel):
     name = attrib(default=None, type=Optional[str])
     # name_with_location_descriptor = attrib(default=None, type=Optional[str], repr=False)
     phone = attrib(default=None, type=Optional[str], repr=False)
-    picture = attrib(default=None, type=Optional[ProfilePictureSource], repr=False)
+    picture = attrib(default=None, type=Optional[Dict], repr=False)
     rating_count = attrib(default=None, type=Optional[str], repr=False)
+    single_line_address = attrib(default=None, type=Optional[str], repr=False)
     start_info = attrib(default=None, type=Optional[PageStartInfo], repr=False)
     talking_about_count = attrib(default=None, type=Optional[int], repr=False)
     username = attrib(default=None, type=Optional[str])
@@ -133,3 +134,8 @@ class Page(BaseModel):
     website = attrib(default=None, type=Optional[str], repr=False)
     were_here_count = attrib(default=None, type=Optional[int], repr=False)
     whatsapp_number = attrib(default=None, type=Optional[str], repr=False)
+
+    def __attrs_post_init__(self):
+        if self.picture is not None and isinstance(self.picture, dict):
+            picture = self.picture.get("data", {})
+            self.picture = ProfilePictureSource.new_from_json_dict(picture)

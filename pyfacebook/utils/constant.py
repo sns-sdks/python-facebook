@@ -1,15 +1,18 @@
 """
-    This is different fields for to retrieve data from Facebook graph API.
+    This is default fields for to retrieve data from Facebook graph API.
+
+    Updated at: v5.0
 """
 
-PAGE_FIELDS = [
-    'id', 'about', 'category', 'category_list', 'checkins', 'cover',
-    'description', 'description_html', 'display_subtext', 'emails',
-    'engagement', 'fan_count', 'founded',
-    'global_brand_root_id', 'global_brand_page_name',
-    'link', 'name', 'phone', 'picture', 'rating_count',
-    'single_line_address', 'username', 'verification_status', 'website'
-]
+FB_PAGE_FIELDS = {
+    "id", "about", "can_checkin", "category", "category_list", "checkins",
+    "contact_address", "cover", "current_location", "description", "description_html",
+    "display_subtext", "emails", "engagement", "fan_count", "founded", "general_info",
+    "global_brand_page_name", "global_brand_root_id", "link", "name",
+    "phone", "picture", "rating_count", "single_line_address", "start_info",
+    "talking_about_count", "username", "verification_status", "website",
+    "were_here_count", "whatsapp_number",
+}
 
 POST_ATTACHMENTS = [
     'description', 'description_tags', 'media', 'media_type', 'target', 'title',
