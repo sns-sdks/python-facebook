@@ -4,12 +4,13 @@
 import six
 import logging
 import re
+from typing import Dict, Optional, Union
 
 import requests
 from requests import Response
 
 from pyfacebook.error import PyFacebookError, PyFacebookException, ErrorMessage, ErrorCode
-from pyfacebook.models import AccessToken
+from pyfacebook.model import AccessToken, AuthAccessToken
 from pyfacebook.ratelimit import InstagramRateLimit, RateLimit
 
 
@@ -17,18 +18,33 @@ class BaseApi(object):
     VALID_API_VERSIONS = ["v3.3", "v4.0", "v5.0"]
     GRAPH_URL = "https://graph.facebook.com/"
 
-    def __init__(
-            self, app_id=None,
-            app_secret=None,
-            short_token=None,
-            long_term_token=None,
-            version=None,
-            timeout=None,
-            sleep_on_rate_limit=False,
-            proxies=None,
-            is_instagram=False,
-            debug_http=False,
-    ):
+    def __init__(self,
+                 app_id=None,
+                 app_secret=None,
+                 short_token=None,
+                 long_term_token=None,
+                 application_only_auth=False,
+                 version=None,
+                 timeout=None,
+                 sleep_on_rate_limit=False,
+                 proxies=None,
+                 is_instagram=False,
+                 debug_http=False):
+        """
+
+        :param app_id: Your app id.
+        :param app_secret: Your app secret.
+        :param short_token: short-lived token
+        :param long_term_token: long-lived token.
+        :param application_only_auth: Use the `App Access Token` only.
+        :param version: The version for the graph api.
+        :param timeout: Request time out
+        :param sleep_on_rate_limit: Use this will sleep between two request.
+        :param proxies: Your proxies config.
+        :param is_instagram:
+        :param debug_http: Set to True to enable debug output from urllib when performing
+        any HTTP requests.  Defaults to False.
+        """
         self.app_id = app_id
         self.app_secret = app_secret
         self.short_token = short_token
@@ -36,13 +52,8 @@ class BaseApi(object):
         self.base_url = self.GRAPH_URL
         self.proxies = proxies
         self.session = requests.Session()
-        self.sleep_on_rate_limit = sleep_on_rate_limit
-        self.is_instagram = is_instagram
+        self.sleep_on_rate_limit = sleep_on_rate_limit  # TODO
         self.instagram_business_id = None
-        if self.is_instagram:
-            self.rate_limit = InstagramRateLimit()
-        else:
-            self.rate_limit = RateLimit()
         self._debug_http = debug_http
 
         if version is None:
@@ -64,13 +75,25 @@ class BaseApi(object):
             else:
                 self.version = self.VALID_API_VERSIONS[-1]
 
-        if not (long_term_token or all([self.app_id, self.app_secret, self.short_token])):
-            raise PyFacebookError({'message': 'Missing long term token or app account'})
-
         if long_term_token:
-            self.token = long_term_token
+            self._access_token = long_term_token
+        elif short_token and all([self.app_id, self.app_secret]):
+            token = self.get_long_token(app_id=self.app_id, app_secret=self.app_secret, short_token=self.short_token)
+            self._access_token = token.access_token
+        elif application_only_auth and all([self.app_id, app_secret]):
+            token = self.get_app_token()
+            self._access_token = token.access_token
         else:
-            self.set_token(app_id=self.app_id, app_secret=self.app_secret, short_token=self.short_token)
+            raise PyFacebookException(ErrorMessage(
+                code=ErrorCode.MISSING_PARAMS,
+                message=(
+                    "You can initial api with three methods: \n"
+                    "1. Just provide long(short) lived token or app access token with param `long_term_token`.\n"
+                    "2. Provide a short lived token and app credentials. Api will auto exchange long term token.\n"
+                    "3. Provide app credentials and with application_only_auth set to true."
+                    "Api will auto get and use app access token."
+                )
+            ))
 
         if debug_http:
             from six.moves import http_client
@@ -82,21 +105,6 @@ class BaseApi(object):
             requests_log.setLevel(logging.DEBUG)
             requests_log.propagate = True
 
-    def set_token(self, app_id, app_secret, short_token):
-        response = self._request(
-            method='GET',
-            path='{}/oauth/access_token'.format(self.version),
-            args={
-                'grant_type': 'fb_exchange_token',
-                'client_id': app_id,
-                'client_secret': app_secret,
-                'fb_exchange_token': short_token
-            },
-            enforce_auth=False
-        )
-        data = self._parse_response(response)
-        self.token = data['access_token']
-
     def _request(self, path, method=None, args=None, post_args=None, enforce_auth=True):
         if method is None:
             method = 'GET'
@@ -106,9 +114,9 @@ class BaseApi(object):
             method = "POST"
         if enforce_auth:
             if post_args and "access_token" not in post_args:
-                post_args["access_token"] = self.token
+                post_args["access_token"] = self._access_token
             elif "access_token" not in args:
-                args["access_token"] = self.token
+                args["access_token"] = self._access_token
         try:
             response = self.session.request(
                 method,
@@ -122,10 +130,10 @@ class BaseApi(object):
             raise PyFacebookException(ErrorMessage(code=ErrorCode.HTTP_ERROR, message=e.args[0]))
         headers = response.headers
         # do update app rate limit
-        if self.is_instagram:
-            self.rate_limit.set_limit(headers, self.instagram_business_id)
-        else:
-            self.rate_limit.set_limit(headers)
+        # if self.is_instagram:
+        #     self.rate_limit.set_limit(headers, self.instagram_business_id)
+        # else:
+        #     self.rate_limit.set_limit(headers)
         return response
 
     def _parse_response(self, response):
@@ -146,31 +154,88 @@ class BaseApi(object):
             error_data = data['error']
             raise PyFacebookException(error_data)
 
-    def get_token_info(self, return_json=False):
+    def get_long_token(self, short_token, app_id=None, app_secret=None, return_json=False):
+        # type: (str, Optional[str], Optional[str], bool) -> Optional[Union[AuthAccessToken, Dict]]
+        """
+        Generate a long-lived token from a short-lived User access token.
+        A long-lived token generally lasts about 60 days.
+        :param app_id: Your app id.
+        :param app_secret: Your app secret.
+        :param short_token: short-lived token from the app.
+        :param return_json: Set to false will return instance of AuthAccessToken.
+        Or return json data. Default is false.
+        """
+        if app_id is None:
+            app_id = self.app_id
+            app_secret = self.app_secret
+
+        response = self._request(
+            method='GET',
+            path='{}/oauth/access_token'.format(self.version),
+            args={
+                'grant_type': 'fb_exchange_token',
+                'client_id': app_id,
+                'client_secret': app_secret,
+                'fb_exchange_token': short_token
+            },
+            enforce_auth=False
+        )
+        data = self._parse_response(response)
+        if return_json:
+            return data
+        else:
+            return AuthAccessToken.new_from_json_dict(data)
+
+    def get_app_token(self, return_json=False):
+        # type: (bool)-> Optional[Union[Dict, AuthAccessToken]]
+        """
+        Use app credentials to generate an app access token.
+        :param return_json: Set to false will return instance of AuthAccessToken.
+        Or return json data. Default is false.
+        """
+        resp = self._request(
+            method="GET",
+            path="{}/oauth/access_token".format(self.version),
+            args={
+                'grant_type': 'client_credentials',
+                'client_id': self.app_secret,
+                'client_secret': self.app_secret,
+            },
+            enforce_auth=False
+        )
+        data = self._parse_response(resp)
+        if return_json:
+            return data
+        else:
+            return AuthAccessToken.new_from_json_dict(data)
+
+    def get_token_info(self, input_token=None, return_json=False):
+        # type: (Optional[str], bool) -> Optional[Union[Dict, AccessToken]]
         """
         Obtain the current access token info if provide the app_id and app_secret.
-
-        Args:
-            return_json (bool, optional):
-                If True JSON data will be returned, instead of pyfacebook.AccessToken
-        Returns:
-            Current access token's info,  pyfacebook.AccessToken instance.
+        :param input_token:
+        :param return_json: Set to false will return instance of AccessToken.
+        Or return json data. Default is false.
         """
+        if input_token is None:
+            input_token = self._access_token
+
         if all([self.app_id, self.app_secret]):
             access_token = "{0}|{1}".format(self.app_id, self.app_secret)
         else:
-            access_token = self.token
+            access_token = self._access_token
+
         args = {
-            "input_token": self.token,
+            "input_token": input_token,
             "access_token": access_token,
         }
         resp = self._request(
             '{0}/debug_token'.format(self.version),
             args=args
         )
-        data = self._parse_response(resp.content.decode('utf-8'))
+        data = self._parse_response(resp)
 
         if return_json:
-            return data
+            return data["data"]
         else:
             return AccessToken.new_from_json_dict(data['data'])
