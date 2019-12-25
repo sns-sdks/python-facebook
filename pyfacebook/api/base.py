@@ -4,10 +4,12 @@
 import six
 import logging
 import re
-from typing import Dict, Optional, Union
+from typing import Dict, Optional, Union, List
 
 import requests
 from requests import Response
+from requests_oauthlib import OAuth2Session
+from requests_oauthlib.compliance_fixes.facebook import facebook_compliance_fix
 
 from pyfacebook.error import PyFacebookError, PyFacebookException, ErrorMessage, ErrorCode
 from pyfacebook.model import AccessToken, AuthAccessToken
@@ -17,6 +19,11 @@ from pyfacebook.ratelimit import InstagramRateLimit, RateLimit
 class BaseApi(object):
     VALID_API_VERSIONS = ["v3.3", "v4.0", "v5.0"]
     GRAPH_URL = "https://graph.facebook.com/"
+    DEFAULT_AUTHORIZATION_URL = 'https://www.facebook.com/dialog/oauth'
+    DEFAULT_EXCHANGE_ACCESS_TOKEN_URL = 'https://graph.facebook.com/oauth/access_token'
+    DEFAULT_REDIRECT_URI = 'https://localhost/'
+    DEFAULT_SCOPE = []
+    DEFAULT_STATE = 'PyFacebook'
 
     def __init__(self,
                  app_id=None,
@@ -55,6 +62,11 @@ class BaseApi(object):
         self.sleep_on_rate_limit = sleep_on_rate_limit  # TODO
         self.instagram_business_id = None
         self._debug_http = debug_http
+        self.authorization_url = self.DEFAULT_AUTHORIZATION_URL
+        self.exchange_access_token_url = self.DEFAULT_EXCHANGE_ACCESS_TOKEN_URL
+        self.redirect_uri = self.DEFAULT_REDIRECT_URI
+        self.scope = self.DEFAULT_SCOPE
+        self.auth_session = None  # Authorization session
 
         if version is None:
             # default version is last new.
@@ -198,7 +210,7 @@ class BaseApi(object):
             path="{}/oauth/access_token".format(self.version),
             args={
                 'grant_type': 'client_credentials',
-                'client_id': self.app_secret,
+                'client_id': self.app_id,
                 'client_secret': self.app_secret,
             },
             enforce_auth=False
@@ -239,3 +251,66 @@ class BaseApi(object):
             return data["data"]
         else:
             return AccessToken.new_from_json_dict(data['data'])
+
+    def get_authorization_url(self, redirect_uri=None, scope=None, **kwargs):
+        # type: (str, List, Dict) -> (str, str)
+        """
+        Build authorization url to do authorize.
+
+        Refer: https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow
+
+        :param redirect_uri: The URL that you want to redirect the person logging in back to.
+        Note: Your redirect uri need be set to `Valid OAuth redirect URIs` items in App Dashboard.
+        :param scope: A list of Permissions to request from the person using your app.
+        :param kwargs: Extend args for oauth.
+        :return: Authorization url and state.
+        """
+        if not all([self.app_id, self.app_secret]):
+            raise PyFacebookException(ErrorMessage(
+                code=ErrorCode.MISSING_PARAMS,
+                message="To do authorization need your app credentials"
+            ))
+
+        if redirect_uri is None:
+            redirect_uri = self.redirect_uri
+
+        if scope is None:
+            scope = self.scope
+
+        session = OAuth2Session(
+            client_id=self.app_id, scope=scope, redirect_uri=redirect_uri,
+            state=self.DEFAULT_STATE, **kwargs
+        )
+        self.auth_session = facebook_compliance_fix(session)
+
+        authorization_url, state = self.auth_session.authorization_url(
+            url=self.authorization_url
+        )
+
+        return authorization_url, state
+
+    def exchange_access_token(self, response, return_json=False):
+        # type: (str, bool) -> Union[AuthAccessToken, Dict]
+        """
+        :param response: The whole response url for your previous authorize step.
+        :param return_json: Set to false will return instance of AuthAccessToken.
+        Or return json data. Default is false.
+        :return:
+        """
+        if self.auth_session is None:
+            raise PyFacebookException(ErrorMessage(
+                code=ErrorCode.MISSING_PARAMS,
+                message="exchange token should do authorize first"
+            ))
+
+        self.auth_session.fetch_token(
+            self.exchange_access_token_url, client_secret=self.app_secret,
+            authorization_response=response
+        )
+
+        self._access_token = self.auth_session.access_token
+
+        if return_json:
+            return self.auth_session.token
+        else:
+            return AuthAccessToken.new_from_json_dict(self.auth_session.token)
