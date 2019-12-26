@@ -16,6 +16,8 @@ class BaseApiTest(unittest.TestCase):
         APP_ACCESS_TOKEN = json.loads(f.read().decode("utf-8"))
     with open(BASE_PATH + "long_term_token.json", "rb") as f:
         LONG_TERM_TOKEN = json.loads(f.read().decode("utf-8"))
+    with open(BASE_PATH + "token_info.json", "rb") as f:
+        TOKEN_INFO = json.loads(f.read().decode("utf-8"))
 
     def testApiVersion(self):
         with self.assertRaises(pyfacebook.PyFacebookException):
@@ -100,3 +102,47 @@ class BaseApiTest(unittest.TestCase):
             token = api.get_app_token(return_json=True)
 
             self.assertEqual(token["access_token"], "123456789|fvYq7ORmqKa2IDCijArPOYKB0")
+
+    def testGetTokenInfo(self):
+        debug_token_utl = "https://graph.facebook.com/v5.0/debug_token"
+        with responses.RequestsMock() as m:
+            m.add("GET", debug_token_utl, json=self.TOKEN_INFO)
+
+            api = BaseApi(long_term_token="long-live token")
+            info = api.get_token_info(return_json=True)
+            self.assertEqual(info["type"], "USER")
+
+            api = BaseApi(app_id="appId", app_secret="Secret", long_term_token="long-live token")
+            info = api.get_token_info(input_token="NeedToken")
+            self.assertEqual(info.is_valid, True)
+
+    def testGetAuthorizationUrl(self):
+        with self.assertRaises(pyfacebook.PyFacebookException):
+            api = BaseApi(long_term_token="token")
+            api.get_authorization_url()
+
+        api = BaseApi(app_id="appId", app_secret="appSecret", long_term_token="token")
+
+        url, state = api.get_authorization_url()
+        self.assertEqual(state, "PyFacebook")
+        self.assertTrue(url)
+        self.assertIsNotNone(api.auth_session)
+
+    def testExchangeAccessToken(self):
+        with self.assertRaises(pyfacebook.PyFacebookException):
+            api = BaseApi(long_term_token="token")
+            api.exchange_access_token(response="")
+
+        api = BaseApi(app_id="appId", app_secret="appSecret", long_term_token="token")
+        _, state = api.get_authorization_url()
+
+        response = "https://localhost/?code=code&state=PyFacebook#_=_"
+        with responses.RequestsMock() as m:
+            m.add("POST", api.exchange_access_token_url, json=self.LONG_TERM_TOKEN)
+
+            r1 = api.exchange_access_token(response=response, return_json=True)
+            self.assertEqual(r1["access_token"], "token")
+
+            r2 = api.exchange_access_token(response=response)
+            self.assertEqual(r2.access_token, "token")
+            self.assertEqual(r2.token_type, "bearer")
