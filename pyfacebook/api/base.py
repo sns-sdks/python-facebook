@@ -10,8 +10,8 @@ from requests import Response
 from requests_oauthlib import OAuth2Session
 from requests_oauthlib.compliance_fixes.facebook import facebook_compliance_fix
 
-from pyfacebook.error import PyFacebookError, PyFacebookException, ErrorMessage, ErrorCode
-from pyfacebook.model import AccessToken, AuthAccessToken
+from pyfacebook.error import PyFacebookException, ErrorMessage, ErrorCode
+from pyfacebook.models import AccessToken, AuthAccessToken
 from pyfacebook.ratelimit import RateLimit
 
 
@@ -78,13 +78,17 @@ class BaseApi(object):
             match = version_regex.search(str(version))
             if match is not None:
                 if version not in self.VALID_API_VERSIONS:
-                    raise PyFacebookError({
-                        "message": "Valid API version are {}".format(",".join(self.VALID_API_VERSIONS))
-                    })
+                    raise PyFacebookException(ErrorMessage(
+                        code=ErrorCode.INVALID_PARAMS,
+                        message="Valid API version are {}".format(",".join(self.VALID_API_VERSIONS))
+                    ))
                 else:
                     self.version = version
             else:
-                self.version = self.VALID_API_VERSIONS[-1]
+                raise PyFacebookException(ErrorMessage(
+                    code=ErrorCode.INVALID_PARAMS,
+                    message="Version string is invalid for {0}. You can provide with like: 5.0 or v5.0".format(version),
+                ))
 
         if long_term_token:
             self._access_token = long_term_token
@@ -116,7 +120,7 @@ class BaseApi(object):
             requests_log.setLevel(logging.DEBUG)
             requests_log.propagate = True
 
-    def _request(self, path, method=None, args=None, post_args=None, enforce_auth=True):
+    def _request(self, path, method="GET", args=None, post_args=None, enforce_auth=True):
         # type: (str, str, Optional[dict], Optional[dict], bool) -> Response
         """
         Build the request and send request to Facebook.
@@ -127,8 +131,6 @@ class BaseApi(object):
         :param enforce_auth: Set to True mean this request need access token.
         :return: The Response instance.
         """
-        if method is None:
-            method = 'GET'
         if args is None:
             args = dict()
         if post_args is not None:

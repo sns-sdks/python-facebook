@@ -4,10 +4,10 @@
 from typing import Optional, Union, List, Tuple, Set
 
 from pyfacebook.error import PyFacebookError
-from pyfacebook.model import Page
+
 from pyfacebook.models import (
-    Comment, CommentSummary,
-    PagePicture, Post
+    Page, Comment, CommentSummary,
+    ProfilePictureSource, Post
 )
 from .base import BaseApi
 from pyfacebook.utils import constant
@@ -27,7 +27,7 @@ class Api(BaseApi):
                  proxies=None,
                  debug_http=False
                  ):
-        super(BaseApi, self).__init__(
+        BaseApi.__init__(
             self,
             app_id=app_id,
             app_secret=app_secret,
@@ -118,7 +118,7 @@ class Api(BaseApi):
             args=args
         )
 
-        data = self._parse_response(resp.content.decode('utf-8'))
+        data = self._parse_response(resp)
         if return_json:
             return data
         else:
@@ -549,4 +549,4 @@ class Api(BaseApi):
         if return_json:
             return data['data']
         else:
-            return PagePicture.new_from_json_dict(data['data'])
+            return ProfilePictureSource.new_from_json_dict(data['data'])

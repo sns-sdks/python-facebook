@@ -5,7 +5,7 @@ import datetime
 
 from pyfacebook.error import PyFacebookError
 from pyfacebook.models import (
-    InstagramMedia, InstagramUser, InstagramComment, InstagramReply
+    IgProMedia, IgProUser, IgProComment, IgProReply
 )
 
 from .base import BaseApi
@@ -74,7 +74,7 @@ class InstagramApi(BaseApi):
         if return_json:
             return data['business_discovery']
         else:
-            return InstagramUser.new_from_json_dict(data['business_discovery'])
+            return IgProUser.new_from_json_dict(data['business_discovery'])
 
     def discovery_user_medias(self,
                               username,
@@ -140,7 +140,7 @@ class InstagramApi(BaseApi):
                     if return_json:
                         medias.append(item)
                     else:
-                        medias.append(InstagramMedia.new_from_json_dict(item))
+                        medias.append(IgProMedia.new_from_json_dict(item))
                 if not begin_flag:
                     next_cursor = None
                     break
@@ -255,7 +255,7 @@ class InstagramApi(BaseApi):
         if return_json:
             return data
         else:
-            return InstagramUser.new_from_json_dict(data)
+            return IgProUser.new_from_json_dict(data)
 
     def get_medias(self,
                    user_id=None,
@@ -341,7 +341,7 @@ class InstagramApi(BaseApi):
                     if return_json:
                         medias.append(item)
                     else:
-                        medias.append(InstagramMedia.new_from_json_dict(item))
+                        medias.append(IgProMedia.new_from_json_dict(item))
                 if not begin_flag:
                     next_cursor = None
                     break
@@ -390,7 +390,7 @@ class InstagramApi(BaseApi):
         if return_json:
             return data
         else:
-            return InstagramMedia.new_from_json_dict(data)
+            return IgProMedia.new_from_json_dict(data)
 
     def get_comments(self,
                      media_id,
@@ -449,7 +449,7 @@ class InstagramApi(BaseApi):
             if return_json:
                 comments += data
             else:
-                comments += [InstagramComment.new_from_json_dict(item) for item in data]
+                comments += [IgProComment.new_from_json_dict(item) for item in data]
             if next_cursor is None:
                 break
             if len(comments) >= count:
@@ -498,7 +498,7 @@ class InstagramApi(BaseApi):
         if return_json:
             return data
         else:
-            return InstagramComment.new_from_json_dict(data)
+            return IgProComment.new_from_json_dict(data)
 
     def get_replies(self,
                     comment_id,
@@ -551,7 +551,7 @@ class InstagramApi(BaseApi):
             if return_json:
                 replies += data
             else:
-                replies += [InstagramReply.new_from_json_dict(item) for item in data]
+                replies += [IgProReply.new_from_json_dict(item) for item in data]
             if next_cursor is None:
                 break
             if len(replies) >= count:
@@ -593,4 +593,4 @@ class InstagramApi(BaseApi):
         if return_json:
             return data
         else:
-            return InstagramReply.new_from_json_dict(data)
+            return IgProReply.new_from_json_dict(data)

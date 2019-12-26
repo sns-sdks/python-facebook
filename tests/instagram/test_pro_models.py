@@ -1,7 +1,7 @@
 import json
 import unittest
 
-import pyfacebook.model as models
+import pyfacebook.models as models
 
 
 class IgProModelTest(unittest.TestCase):
