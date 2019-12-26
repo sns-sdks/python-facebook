@@ -2,12 +2,28 @@ import json
 import logging
 import time
 
+from attr import attrs, attrib
+from typing import Optional
+
 try:
     from json.decoder import JSONDecodeError
 except ImportError:
     JSONDecodeError = ValueError
 
 logger = logging.getLogger(__name__)
+
+
+@attrs
+class RateLimitData(object):
+    """
+    ThisA class representing the rate limit data.
+    Refer: https://developers.facebook.com/docs/graph-api/overview/rate-limiting#headers
+    """
+    call_count = attrib(default=0, type=int)
+    total_cputime = attrib(default=0, type=int)
+    total_time = attrib(default=0, type=int)
+    type = attrib(default=None, type=Optional[str])
+    estimated_time_to_regain_access = attrib(default=None, type=Optional[str])
 
 
 def get_interval(usage_count):
@@ -38,21 +54,31 @@ class RateLimit(object):
     """
     DEFAULT_TIME_WINDOW = 60 * 60
 
-    def __init__(self, **kwargs):
-        self.call_count = kwargs.get('call_count', 0)
-        self.total_cputime = kwargs.get('total_cputime', 0)
-        self.total_time = kwargs.get('total_time', 0)
+    def __init__(self, rate_type="app"):
+        self.__dict__["resources"] = {}
+        self._type = rate_type
+
+    @staticmethod
+    def parse_headers(headers, key):
+        usage = headers.get(key)
+        if usage:
+            try:
+                data = json.loads(usage)
+                return data
+            except (TypeError, JSONDecodeError) as ex:
+                logger.error("Exception in parse {0} data error. Usage is: {1}. errors: {2}".format(key, usage, ex))
+                return None
+        return None
 
     def set_limit(self, headers):
-        x_app_usage = headers.get('x-app-usage')
-        if x_app_usage:
-            try:
-                data = json.loads(x_app_usage)
-            except (TypeError, JSONDecodeError):
-                data = {'call_count': 0, 'total_cputime': 0, 'total_time': 0}
-            self.call_count = data['call_count']
-            self.total_cputime = data['total_cputime']
-            self.total_time = data['total_time']
+        app_usage = self.parse_headers(headers, "x-app-usage")
+        if app_usage is not None:
+            self.__dict__["resources"]["app"] = RateLimitData(**app_usage)
+
+        business_usage = self.parse_headers(headers, "x-business-use-case-usage")
+        if business_usage is not None:
+            for business_id, items in business_usage.items():
+                self.__dict__["resources"] = [RateLimitData(**item) for item in items]
 
     def get_sleep_interval(self):
         usage_count = max(
