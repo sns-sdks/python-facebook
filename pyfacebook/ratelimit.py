@@ -1,6 +1,7 @@
 import json
 import logging
-import time
+from collections import defaultdict
+from six import iteritems
 
 from attr import attrs, attrib
 from typing import Optional
@@ -55,11 +56,54 @@ class RateLimit(object):
     DEFAULT_TIME_WINDOW = 60 * 60
 
     def __init__(self, rate_type="app"):
-        self.__dict__["resources"] = {}
+        # type: (str) -> None
+        """
+        Instantiates the RateLimitObject. Takes a json dict as
+        kwargs and maps to the object's dictionary. So for something like:
+
+        {
+            "app": {
+                "call_count": 10,
+                "total_cputime": 5,
+                "total_time": 4,
+            },
+            "business: {
+                "business-object-id": {
+                    "rate-limit-type": {
+                        "call_count": 10,
+                        "total_cputime": 5,
+                        "total_time": 4,
+                        "type": "pages",
+                        "estimated_time_to_regain_access": 0
+                    }
+                }
+            }
+        }
+
+        The RateLimit object will have an attribute 'resources' from which you
+        can perform a lookup like:
+            api.rate_limit.get_limit()
+        or:
+            api.rate_limit.get_limit(object_id="123456", endpoint="pages")
+        and a RateLimitData instance will be returned.
+
+        :param rate_type: rate limit type for app or business
+        """
+        self.resources = {
+            "app": RateLimitData(),
+            "business": defaultdict(lambda: defaultdict(RateLimitData))
+        }
         self._type = rate_type
 
     @staticmethod
     def parse_headers(headers, key):
+        # type: (dict, str) -> Optional[dict]
+        """
+        Get rate limit information from header for key.
+        :param headers: Response headers
+        :param key: rate limit key
+        :return:
+        """
         usage = headers.get(key)
         if usage:
             try:
@@ -71,77 +115,31 @@ class RateLimit(object):
         return None
 
     def set_limit(self, headers):
+        # type: (dict) -> None
+        """
+        Get rate limit data from response headers. And update to instance.
+        :param headers: Response headers
+        :return: None
+        """
         app_usage = self.parse_headers(headers, "x-app-usage")
         if app_usage is not None:
-            self.__dict__["resources"]["app"] = RateLimitData(**app_usage)
+            self.resources["app"] = RateLimitData(**app_usage)
 
         business_usage = self.parse_headers(headers, "x-business-use-case-usage")
         if business_usage is not None:
-            for business_id, items in business_usage.items():
-                self.__dict__["resources"] = [RateLimitData(**item) for item in items]
+            for business_id, items in iteritems(business_usage):
+                for item in items:
+                    self.resources["business"][business_id][item["type"]] = RateLimitData(**item)
 
-    def get_sleep_interval(self):
-        usage_count = max(
-            self.call_count,
-            self.total_time,
-            self.total_cputime
-        )
-        return get_interval(usage_count)
+    def get_limit(self, object_id=None, endpoint=None):
+        # type: (Optional[str], Optional[str]) -> RateLimitData
+        """
+        Get a RateLimitData object for given type.
+        :param object_id: business object id
+        :param endpoint: rate limit type
+        :return: RateLimitData object containing rate limit information.
+        """
+        if all([object_id, endpoint]):
+            return self.resources["business"][object_id][endpoint]
 
-    @property
-    def info(self):
-        return "Current Limit is RateLimit(call_count={0},total_cputime={1},total_time={2})".format(
-            self.call_count, self.total_cputime, self.total_time
-        )
-
-
-class InstagramRateLimit(object):
-    """
-    Simple RateLimit check.
-    Refer: https://developers.facebook.com/docs/graph-api/overview/rate-limiting#instagram-rate-limiting
-    """
-    DEFAULT_TIME_WINDOW = 60 * 60
-
-    def __init__(self, **kwargs):
-        self.type = 'instagram'
-        self.call_count = kwargs.get('call_count', 0)
-        self.total_cputime = kwargs.get('total_cputime', 0)
-        self.total_time = kwargs.get('total_time', 0)
-        self.reset_at = kwargs.get('reset_at', 0)
-
-    def set_limit(self, headers, instagram_business_id):
-        default_usage = {'call_count': 0, 'total_cputime': 0, 'total_time': 0, 'estimated_time_to_regain_access': 0}
-        x_business_use_case_usage = headers.get('x-business-use-case-usage')
-        if x_business_use_case_usage:
-            try:
-                usage_data = json.loads(x_business_use_case_usage)
-                data = usage_data.get(instagram_business_id, [default_usage])[0]
-            except (TypeError, JSONDecodeError):
-                logging.debug("Can not get rate limit info for {0}. Usage: {1}".format(
-                    instagram_business_id, x_business_use_case_usage
-                ))
-                data = default_usage
-            self.call_count = data['call_count']
-            self.total_cputime = data['total_cputime']
-            self.total_time = data['total_time']
-            now = int(time.time())
-            self.reset_at = now + data['estimated_time_to_regain_access']
-
-    def get_sleep_interval(self):
-        now = int(time.time())
-        if self.reset_at > now:
-            need_sleep = self.reset_at - now
-            logging.debug("Api call still limited. Maybe remain {} seconds".format(need_sleep))
-            return need_sleep
-        usage_count = max(
-            self.call_count,
-            self.total_time,
-            self.total_cputime
-        )
-        return get_interval(usage_count)
-
-    @property
-    def info(self):
-        return "Current Limit is RateLimit(call_count={0},total_cputime={1},total_time={2},reset_at={3})".format(
-            self.call_count, self.total_cputime, self.total_time, self.reset_at
-        )
+        return self.resources["app"]
