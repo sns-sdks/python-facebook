@@ -117,6 +117,16 @@ class BaseApi(object):
             requests_log.propagate = True
 
     def _request(self, path, method=None, args=None, post_args=None, enforce_auth=True):
+        # type: (str, str, Optional[dict], Optional[dict], bool) -> Response
+        """
+        Build the request and send request to Facebook.
+        :param path: The path for resource on facebook.
+        :param method: Http methods.
+        :param args: GET parameters.
+        :param post_args: POST parameters.
+        :param enforce_auth: Set to True mean this request need access token.
+        :return: The Response instance.
+        """
         if method is None:
             method = 'GET'
         if args is None:
