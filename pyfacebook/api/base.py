@@ -1,7 +1,6 @@
 """
     Base Api Impl
 """
-import six
 import logging
 import re
 from typing import Dict, Optional, Union, List
@@ -13,7 +12,7 @@ from requests_oauthlib.compliance_fixes.facebook import facebook_compliance_fix
 
 from pyfacebook.error import PyFacebookError, PyFacebookException, ErrorMessage, ErrorCode
 from pyfacebook.model import AccessToken, AuthAccessToken
-from pyfacebook.ratelimit import InstagramRateLimit, RateLimit
+from pyfacebook.ratelimit import RateLimit
 
 
 class BaseApi(object):
@@ -26,19 +25,19 @@ class BaseApi(object):
     DEFAULT_STATE = 'PyFacebook'
 
     def __init__(self,
-                 app_id=None,
-                 app_secret=None,
-                 short_token=None,
-                 long_term_token=None,
-                 application_only_auth=False,
-                 version=None,
-                 timeout=None,
-                 sleep_on_rate_limit=False,
-                 proxies=None,
-                 is_instagram=False,
-                 debug_http=False):
+                 app_id=None,  # type: Optional[str]
+                 app_secret=None,  # type: Optional[str]
+                 short_token=None,  # type: Optional[str]
+                 long_term_token=None,  # type: Optional[str]
+                 application_only_auth=False,  # type: bool
+                 version=None,  # type: Optional[str]
+                 timeout=None,  # type: Optional[int]
+                 sleep_on_rate_limit=False,  # type: bool
+                 proxies=None,  # type: Optional[int]
+                 debug_http=False  # type: bool
+                 ):
+        # type: (...) -> None
         """
-
         :param app_id: Your app id.
         :param app_secret: Your app secret.
         :param short_token: short-lived token
@@ -48,7 +47,6 @@ class BaseApi(object):
         :param timeout: Request time out
         :param sleep_on_rate_limit: Use this will sleep between two request.
         :param proxies: Your proxies config.
-        :param is_instagram:
         :param debug_http: Set to True to enable debug output from urllib when performing
         any HTTP requests.  Defaults to False.
         """
@@ -67,6 +65,7 @@ class BaseApi(object):
         self.redirect_uri = self.DEFAULT_REDIRECT_URI
         self.scope = self.DEFAULT_SCOPE
         self.auth_session = None  # Authorization session
+        self.rate_limit = RateLimit()
 
         if version is None:
             # default version is last new.
@@ -140,7 +139,7 @@ class BaseApi(object):
             )
         except requests.HTTPError as e:
             raise PyFacebookException(ErrorMessage(code=ErrorCode.HTTP_ERROR, message=e.args[0]))
-        headers = response.headers
+        # headers = response.headers
         # do update app rate limit
         # if self.is_instagram:
         #     self.rate_limit.set_limit(headers, self.instagram_business_id)
