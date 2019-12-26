@@ -7,9 +7,9 @@ from attr import attrs, attrib
 from typing import Optional
 
 try:
-    from json.decoder import JSONDecodeError
-except ImportError:
-    JSONDecodeError = ValueError
+    from json.decoder import JSONDecodeError  # pragma: no cover
+except ImportError:  # pragma: no cover
+    JSONDecodeError = ValueError  # pragma: no cover
 
 logger = logging.getLogger(__name__)
 
@@ -27,27 +27,6 @@ class RateLimitData(object):
     estimated_time_to_regain_access = attrib(default=None, type=Optional[str])
 
 
-def get_interval(usage_count):
-    interval = 1
-    if usage_count < 20:
-        interval = 1
-    elif usage_count < 50:
-        interval = 3
-    elif usage_count < 80:
-        interval = 5
-    elif usage_count < 90:
-        interval = 60 * 5
-        logging.debug("App usage is arrive {0}%, need sleep {1} seconds".format(usage_count, interval))
-    elif usage_count < 100:
-        interval = 60 * 10
-        logging.debug("App usage is arrive {0}%, need sleep {1} seconds".format(usage_count, interval))
-    elif usage_count > 100:
-        interval = 60 * 20
-        logging.debug("App usage is arrive {0}%, need sleep {1} seconds".format(usage_count, interval))
-
-    return interval
-
-
 class RateLimit(object):
     """
     app's rate limit message.
@@ -55,8 +34,7 @@ class RateLimit(object):
     """
     DEFAULT_TIME_WINDOW = 60 * 60
 
-    def __init__(self, rate_type="app"):
-        # type: (str) -> None
+    def __init__(self):
         """
         Instantiates the RateLimitObject. Takes a json dict as
         kwargs and maps to the object's dictionary. So for something like:
@@ -93,7 +71,6 @@ class RateLimit(object):
             "app": RateLimitData(),
             "business": defaultdict(lambda: defaultdict(RateLimitData))
         }
-        self._type = rate_type
 
     @staticmethod
     def parse_headers(headers, key):
