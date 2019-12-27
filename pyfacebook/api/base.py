@@ -176,12 +176,8 @@ class BaseApi(object):
             )
         except requests.HTTPError as e:
             raise PyFacebookException(ErrorMessage(code=ErrorCode.HTTP_ERROR, message=e.args[0]))
-        # headers = response.headers
-        # do update app rate limit
-        # if self.is_instagram:
-        #     self.rate_limit.set_limit(headers, self.instagram_business_id)
-        # else:
-        #     self.rate_limit.set_limit(headers)
+        headers = response.headers
+        self.rate_limit.set_limit(headers)
         return response
 
     def _parse_response(self, response):
