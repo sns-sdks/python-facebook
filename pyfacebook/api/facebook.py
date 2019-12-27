@@ -129,7 +129,7 @@ class Api(BaseApi):
                   ):
         # type: (...) -> dict
         """
-        Retrieve multi pages info by one requests.
+        Retrieve multi pages info by one request.
 
         :param ids: Comma-separated id(username) string for page which you want to get.
         You can also pass this with an id list, tuple, set.
@@ -156,6 +156,47 @@ class Api(BaseApi):
             return data
         else:
             return {_id: Page.new_from_json_dict(p_data) for _id, p_data in iteritems(data)}
+
+    def paged_by_cursor(self,
+                        target,
+                        resource,
+                        args,
+                        next_cursor=None):
+        """
+        Used cursor-based pagination.
+        Refer: https://developers.facebook.com/docs/graph-api/using-graph-api/#paging
+
+        Args:
+             target (str)
+                The id which target (page,user...) you want to retrieve data.
+            resource (str)
+                The resource string. just the connections (posts,comments and so on).
+            args (dict)
+                The params dict for the resource.
+            next_cursor (str, optional)
+                The paging cursor str. It will return from the graph api.
+        Returns:
+            The origin data return from the graph api.
+        """
+        if next_cursor is not None:
+            resp = self._request(
+                method='GET',
+                path=next_cursor
+            )
+        else:
+            resp = self._request(
+                method='GET',
+                path='{version}/{target}/{resource}'.format(
+                    version=self.version, target=target, resource=resource
+                ),
+                args=args
+            )
+        _next, previous = None, None
+        data = self._parse_response(resp)
+        if 'paging' in data:
+            _next = data['paging'].get('next')
+            previous = data['paging'].get('previous')
+        return _next, previous, data
 
     def get_page_feeds(self,
                        page_id,  # type: str
@@ -324,25 +365,24 @@ class Api(BaseApi):
         )
 
     def get_post_info(self,
-                      post_id=None,
-                      return_json=False):
+                      post_id,  # type: str
+                      fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                      return_json=False  # type: bool
+                      ):
+        # type: (...) -> Optional[Post, dict]
         """
-        Obtain give page's basic info.
-
-        Args:
-            post_id (str)
-                The id for you want to retrieve post.
-            return_json (bool, optional):
-                If True JSON data will be returned, instead of pyfacebook.Post, or return origin data by facebook.
-
-        Returns:
-            post info.
+        Obtain give post's basic info.
+        :param post_id: The id for post you want to retrieve data.
+        :param fields: Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return a list of Post instances.
+        Or return json data. Default is false.
         """
-        if post_id is None:
-            raise PyFacebookError({'message': "Must specify the post id"})
+        if fields is None:
+            fields = constant.FB_POST_BASIC_FIELDS.union(constant.FB_POST_REACTIONS_FIELD)
 
         args = {
-            'fields': ','.join(set(constant.POST_BASIC_FIELDS + constant.POST_REACTIONS_FIELD))
+            'fields': enf_comma_separated("fields", fields)
         }
         resp = self._request(
             method='GET',
@@ -356,46 +396,39 @@ class Api(BaseApi):
         else:
             return Post.new_from_json_dict(data)
 
-    def paged_by_cursor(self,
-                        target,
-                        resource,
-                        args,
-                        next_cursor=None):
+    def get_posts(self,
+                  ids,  # type: Optional[Union[str, List, Tuple, Set]]
+                  fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                  return_json=False  # type: bool
+                  ):
+        # type: (...) -> dict
         """
-        Used cursor-based pagination.
-        Refer: https://developers.facebook.com/docs/graph-api/using-graph-api/#paging
+        Retrieve multi posts info by one request.
+        :param ids: Comma-separated id(username) string for page which you want to get.
+        You can also pass this with an id list, tuple, set.
+        :param fields:Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return a dict of Page instances.
+        Or return json data. Default is false.
+        """
+        if fields is None:
+            fields = constant.FB_POST_BASIC_FIELDS.union(constant.FB_POST_REACTIONS_FIELD)
 
-        Args:
-             target (str)
-                The id which target (page,user...) you want to retrieve data.
-            resource (str)
-                The resource string. just the connections (posts,comments and so on).
-            args (dict)
-                The params dict for the resource.
-            next_cursor (str, optional)
-                The paging cursor str. It will return from the graph api.
-        Returns:
-            The origin data return from the graph api.
-        """
-        if next_cursor is not None:
-            resp = self._request(
-                method='GET',
-                path=next_cursor
-            )
-        else:
-            resp = self._request(
-                method='GET',
-                path='{version}/{target}/{resource}'.format(
-                    version=self.version, target=target, resource=resource
-                ),
-                args=args
-            )
-        _next, previous = None, None
+        args = {
+            "ids": enf_comma_separated("ids", ids),
+            "fields": enf_comma_separated("fields", fields)
+        }
+        resp = self._request(
+            method='GET',
+            path='{0}/'.format(self.version),
+            args=args
+        )
+
         data = self._parse_response(resp)
-        if 'paging' in data:
-            _next = data['paging'].get('next')
-            previous = data['paging'].get('previous')
-        return _next, previous, data
+        if return_json:
+            return data
+        else:
+            return {_id: Post.new_from_json_dict(p_data) for _id, p_data in iteritems(data)}
 
     def get_comments(self,
                      object_id=None,
