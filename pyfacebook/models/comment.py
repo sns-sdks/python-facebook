@@ -32,10 +32,13 @@ class Comment(BaseModel):
 
     # base fields
     id = attrib(default=None, type=Optional[str])
+    can_like = attrib(default=None, type=Optional[bool])
+    can_comment = attrib(default=None, type=Optional[bool])
     comment_count = attrib(default=None, type=Optional[int])
     created_time = attrib(default=None, type=Optional[str], repr=False)
     like_count = attrib(default=None, type=Optional[int])
     message = attrib(default=None, type=Optional[str], repr=False)
     permalink_url = attrib(default=None, type=Optional[str], repr=False)
+
     # connections fields
     attachment = attrib(default=None, type=Optional[StoryAttachment], repr=False)

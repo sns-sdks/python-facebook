@@ -40,7 +40,7 @@ FB_POST_REACTIONS_FIELD = {
     'reactions.type(THANKFUL).limit(0).summary(total_count).as(thankful)'
 }
 
-COMMENT_BASIC_FIELDS = {
+FB_COMMENT_BASIC_FIELDS = {
     'id', 'attachment', 'created_time', 'like_count',
     'can_comment', 'can_like', 'comment_count',
     'from', 'message', 'permalink_url',

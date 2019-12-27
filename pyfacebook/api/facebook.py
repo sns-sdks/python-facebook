@@ -430,52 +430,50 @@ class Api(BaseApi):
         else:
             return {_id: Post.new_from_json_dict(p_data) for _id, p_data in iteritems(data)}
 
-    def get_comments(self,
-                     object_id=None,
-                     summary=False,
-                     filter_type='toplevel',
-                     order_type='chronological',
-                     count=10,
-                     limit=50,
-                     return_json=False):
+    def get_comments_by_parent(self,
+                               object_id,  # type: str
+                               summary=True,  # type: bool
+                               fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                               filter_type='toplevel',  # type: str
+                               order_type='chronological',  # type: str
+                               count=10,  # type: Optional[int]
+                               limit=50,  # type: int
+                               return_json=False  # type: bool
+                               ):
+        # type: (...) -> (List[Union[Comment, dict]], Union[CommentSummary, dict])
         """
-        To get point object's comments.
-        Doc refer: https://developers.facebook.com/docs/graph-api/reference/v4.0/object/comments.
-        Args:
-             object_id (str)
-                The object id which you want to retrieve comments.
-                object can be post picture and so on.
-            summary (bool, optional)
-                If True will return comments summary of metadata.
-            filter_type (enum, optional)
-                Valid params are toplevel/stream,
+        Retrieve object's comments.
+
+        Refer: https://developers.facebook.com/docs/graph-api/reference/v4.0/object/comments.
+
+        :param object_id: The id for object(post, photo..)
+        :param summary: The summary for comments
+        :param fields: Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param filter_type: Valid params are toplevel/stream,
                 If you chose toplevel only return top level comment.
                 stream will return parent and child comment.
                 default is toplevel
-            order_type (enum, optional)
-                Valid params are chronological/reverse_chronological,
+        :param order_type: Valid params are chronological/reverse_chronological,
                 If chronological, will return comments sorted by the oldest comments first.
                 If reverse_chronological, will return comments sorted by the newest comments first.
-            count (int, optional)
-                The count will retrieve comments.
-            limit (int, optional)
-                Each request retrieve comments count from api.
-                For comments. Should not more than 100.
-            return_json (bool, optional):
-                If True JSON data will be returned, instead of pyfacebook.Comment, or return origin data by facebook.
-        Returns:
-            This will return tuple.
-            (Comments set, CommentSummary's data)
+        :param count: The count will retrieve posts. If you want to get all data. Set it to None.
+        :param limit: Each request retrieve posts count from api. For posts it should no more than 100.
+        :param return_json: Set to false will return a list of Comment instances.
+        Or return json data. Default is false.
         """
-        if object_id is None:
-            raise PyFacebookError({'message': "Must specify the object id"})
+        if fields is None:
+            fields = constant.FB_COMMENT_BASIC_FIELDS
+
+        if count is not None:
+            limit = min(count, limit)
 
         args = {
-            'fields': ','.join(constant.COMMENT_BASIC_FIELDS),
+            'fields': enf_comma_separated("fields", fields),
             'summary': summary,
             'filter': filter_type,
             'order': order_type,
-            'limit': min(count, limit),
+            'limit': limit,
         }
 
         comments = []
@@ -494,11 +492,13 @@ class Api(BaseApi):
             else:
                 comments += [Comment.new_from_json_dict(item) for item in data.get('data', [])]
                 comment_summary = CommentSummary.new_from_json_dict(data.get('summary', {}))
+            if count is not None:
+                if len(comments) >= count:
+                    comments = comments[:count]
+                    break
             if next_cursor is None:
                 break
-            if len(comments) >= count:
-                break
-        return comments[:count], comment_summary
+        return comments, comment_summary
 
     def get_comment_info(self,
                          comment_id=None,
