@@ -86,13 +86,13 @@ class Api(BaseApi):
         # type: (...) -> Union[Page, dict]
         """
         Retrieve the given page's basic info.
+
         :param page_id: The id for page.
         :param username: The username for page.
         :param fields:Comma-separated id string for data fields which you want.
         You can also pass this with an id list, tuple, set.
         :param return_json: Set to false will return instance of Page.
         Or return json data. Default is false.
-        :return:
         """
         if page_id:
             target = page_id
@@ -130,6 +130,7 @@ class Api(BaseApi):
         # type: (...) -> dict
         """
         Retrieve multi pages info by one requests.
+
         :param ids: Comma-separated id(username) string for page which you want to get.
         You can also pass this with an id list, tuple, set.
         :param fields:Comma-separated id string for data fields which you want.
@@ -137,6 +138,9 @@ class Api(BaseApi):
         :param return_json: Set to false will return a dict of Page instances.
         Or return json data. Default is false.
         """
+        if fields is None:
+            fields = constant.FB_PAGE_FIELDS
+
         args = {
             "ids": enf_comma_separated("ids", ids),
             "fields": enf_comma_separated("fields", fields)
@@ -153,104 +157,78 @@ class Api(BaseApi):
         else:
             return {_id: Page.new_from_json_dict(p_data) for _id, p_data in iteritems(data)}
 
-    def get_posts(self,
-                  page_id=None,
-                  username=None,
-                  since_time=None,
-                  until_time=None,
-                  count=10,
-                  limit=10,
-                  return_json=False):
+    def get_page_posts(self,
+                       page_id,  # type: str
+                       fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                       since_time=None,  # type: str
+                       until_time=None,  # type: str
+                       count=10,  # type: Optional[int]
+                       limit=10,  # type: int
+                       return_json=False  # type: bool
+                       ):
+        # type: (...) -> List[Optional[Post, dict]]
         """
-        Obtain give page's posts info.
+        Retrieve the give page's posts info.
 
-        Args:
-            page_id (int, optional)
-                The id for you want to retrieve data
-            username (str, optional)
-                The username (page username) for you want to retrieve data
-                Either page_id or username is required. if all given. use username.
-            since_time (str, optional)
-                The posts retrieve begin time.
-            until_time ()
-                The posts retrieve until time.
-                If neither since_time or until_time, it will by now time.
-            count (int, optional)
-                The count will retrieve posts.
-            limit (int, optional)
-                Each request retrieve posts count from api.
-                For posts it should no more than 100.
-            return_json (bool, optional):
-                If True JSON data will be returned, instead of pyfacebook.Post, or return origin data by facebook.
-        Returns:
-            posts info list.
+        :param page_id: The id(username) for page you want to retrieve data.
+        :param fields: Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param since_time: A Unix timestamp that points to the start of the range of time-based data.
+        :param until_time: A Unix timestamp that points to the end of the range of time-based data.
+        :param count: The count will retrieve posts. If you want to get all data. Set it to None.
+        :param limit: Each request retrieve posts count from api. For posts it should no more than 100.
+        :param return_json: Set to false will return a list of Post instances.
+        Or return json data. Default is false.
         """
-        return self.get_feeds(
-            'posts', page_id, username,
+        return self.get_page_feeds(
+            page_id, fields, 'posts',
             since_time, until_time,
             count, limit,
             return_json=return_json
         )
 
-    def get_feeds(self,
-                  resource=None,
-                  page_id=None,
-                  username=None,
-                  since_time=None,
-                  until_time=None,
-                  count=10,
-                  limit=10,
-                  access_token=None,
-                  return_json=False):
+    def get_page_feeds(self,
+                       page_id,  # type: str
+                       fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                       resource=None,  # type: Optional[str]
+                       since_time=None,  # type: str
+                       until_time=None,  # type: str
+                       count=10,  # type: Optional[int]
+                       limit=10,  # type: int
+                       access_token=None,  # type: str
+                       return_json=False  # type: bool
+                       ):
+        # type: (...) -> List[Union[Post, dict]]
         """
-        Obtain give page's posts info.
+        Retrieve data for give page's posts info.
+
         Refer: https://developers.facebook.com/docs/graph-api/reference/v4.0/page/feed
-        Args:
-            resource (str, optional)
-                The connection resource for you want to do.
-                Now have four: feed, posts, tagged, published_posts. if you not pointed. use feed.
-                Notice: the tagged and published_posts resource need page access_token.
-            page_id (int, optional)
-                The id for you want to retrieve data
-            username (str, optional)
-                The username (page username) for you want to retrieve data
-                Either page_id or username is required. if all given. use username.
-            since_time (str, optional)
-                The posts retrieve begin time.
-            until_time ()
-                The posts retrieve until time.
-                If neither since_time or until_time, it will by now time.
-            count (int, optional)
-                The count will retrieve posts.
-            limit (int, optional)
-                Each request retrieve posts count from api.
-                For posts it should no more than 100.
-            access_token (str, optional):
-                If you want use other token to get data. you can point this.
-            return_json (bool, optional):
-                If True JSON data will be returned, instead of pyfacebook.Post, or return origin data by facebook.
-        Returns:
-            posts info list.
+
+        :param page_id: The id(username) for page you want to retrieve data.
+        :param fields: Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param resource: The data endpoint type
+        :param since_time:
+        :param until_time:
+        :param count:
+        :param limit:
+        :param access_token:
+        :param return_json:
         :return:
         """
         if resource is None:
             resource = 'feed'
-        if page_id:
-            target = page_id
-        elif username:
-            target = username
-        else:
-            raise PyFacebookError({'message': "Specify at least one of page_id or username"})
+
+        if fields is None:
+            fields = constant.POST_BASIC_FIELDS + constant.POST_REACTIONS_FIELD
 
         args = {
-            'fields': ','.join(set(constant.POST_BASIC_FIELDS + constant.POST_REACTIONS_FIELD)),
+            'fields': enf_comma_separated("fields", fields),
             'since': since_time,
             'until': until_time,
             'limit': limit,
         }
-        # Note: now tagged_time only support for tagged resource
-        if resource == 'tagged':
-            args['fields'] = args['fields'] + ',tagged_time'
+
         if access_token is not None:
             args['access_token'] = access_token
 
@@ -260,7 +238,7 @@ class Api(BaseApi):
         while True:
             next_cursor, previous_cursor, data = self.paged_by_cursor(
                 resource=resource,
-                target=target,
+                target=page_id,
                 args=args,
                 next_cursor=next_cursor,
             )
@@ -270,92 +248,74 @@ class Api(BaseApi):
                 posts += [Post.new_from_json_dict(item) for item in data['data']]
             if next_cursor is None:
                 break
-            if len(posts) >= count:
-                break
-        return posts[:count]
+            if count is not None:
+                if len(posts) >= count:
+                    posts = posts[:count]
+                    break
+        return posts
 
-    def get_published_posts(self,
-                            page_id=None,
-                            username=None,
-                            since_time=None,
-                            until_time=None,
-                            count=10,
-                            limit=10,
-                            access_token=None,
-                            return_json=False):
+    def get_page_published_posts(self,
+                                 page_id,  # type: str
+                                 fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                                 since_time=None,  # type: str
+                                 until_time=None,  # type: str
+                                 count=10,  # type: Optional[int]
+                                 limit=10,  # type: int
+                                 access_token=None,  # type: str
+                                 return_json=False  # type: bool
+                                 ):
+        # type: (...) -> List[Union[Post, dict]]
         """
-        Obtain give page's all posts info. If token is authorized for app.
-        This endpoint need the page token and has manage-pages.
+        Retrieve the give page's all posts info.
+        Note: This need a page access token with manage_pages permissions.
 
-        Args:
-            page_id (int, optional)
-                The id for you want to retrieve data
-            username (str, optional)
-                The username (page username) for you want to retrieve data
-                Either page_id or username is required. if all given. use page_id.
-            since_time (str, optional)
-                The posts retrieve begin time.
-            until_time ()
-                The posts retrieve until time.
-                If neither since_time or until_time, it will by now time.
-            count (int, optional)
-                The count will retrieve posts.
-            limit (int, optional)
-                Each request retrieve posts count from api.
-                For posts it should no more than 100.
-            access_token (str, optional):
-                If you want use other token to get data. you can point this.
-            return_json (bool, optional):
-                If True JSON data will be returned, instead of pyfacebook.Post, or return origin data by facebook.
-        Returns:
-            posts info list.
+        :param page_id: The id for page you want to retrieve data.
+        :param fields: Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param since_time: A Unix timestamp that points to the start of the range of time-based data.
+        :param until_time: A Unix timestamp that points to the end of the range of time-based data.
+        :param count: The count will retrieve posts. If you want to get all data. Set it to None.
+        :param limit: Each request retrieve posts count from api. For posts it should no more than 100.
+        :param access_token: If you want use other token to get data. you can provide with this.
+        :param return_json: Set to false will return a list of Post instances.
+        Or return json data. Default is false.
         """
-        return self.get_feeds(
-            'published_posts', page_id, username,
+        return self.get_page_feeds(
+            page_id, fields, 'published_posts',
             since_time, until_time,
             count, limit,
             access_token=access_token,
             return_json=return_json
         )
 
-    def get_tagged_posts(self,
-                         page_id=None,
-                         username=None,
-                         since_time=None,
-                         until_time=None,
-                         count=10,
-                         limit=10,
-                         access_token=None,
-                         return_json=False):
+    def get_page_tagged_posts(self,
+                              page_id,  # type: str
+                              fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                              since_time=None,  # type: str
+                              until_time=None,  # type: str
+                              count=10,  # type: Optional[int]
+                              limit=10,  # type: int
+                              access_token=None,  # type: str
+                              return_json=False  # type: bool
+                              ):
+        # type: (...) -> List[Union[Post, dict]]
         """
         Obtain posts which tagged the given page. If token is authorized for app.
         This endpoint need the page token and has manage-pages.
 
-        Args:
-            page_id (int, optional)
-                The id for you want to retrieve data
-            username (str, optional)
-                The username (page username) for you want to retrieve data
-                Either page_id or username is required. if all given. use page_id.
-            since_time (str, optional)
-                The posts retrieve begin time.
-            until_time ()
-                The posts retrieve until time.
-                If neither since_time or until_time, it will by now time.
-            count (int, optional)
-                The count will retrieve posts.
-            limit (int, optional)
-                Each request retrieve posts count from api.
-                For posts it should no more than 100.
-            access_token (str, optional):
-                If you want use other token to get data. you can point this.
-            return_json (bool, optional):
-                If True JSON data will be returned, instead of pyfacebook.Post, or return origin data by facebook.
-        Returns:
-            posts info list.
+        :param page_id: The id for page you want to retrieve data.
+        :param fields: Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param since_time: A Unix timestamp that points to the start of the range of time-based data.
+        :param until_time: A Unix timestamp that points to the end of the range of time-based data.
+        :param count: The count will retrieve posts. If you want to get all data. Set it to None.
+        :param limit: Each request retrieve posts count from api. For posts it should no more than 100.
+        :param access_token: If you want use other token to get data. you can provide with this.
+        :param return_json: Set to false will return a list of Post instances.
+        Or return json data. Default is false.
         """
-        return self.get_feeds(
-            'tagged', page_id, username,
+        return self.get_page_feeds(
+            page_id, fields, 'tagged',
             since_time, until_time,
             count, limit,
             access_token=access_token,

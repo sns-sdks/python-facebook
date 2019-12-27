@@ -52,6 +52,7 @@ class Post(BaseModel):
     status_type = attrib(default=None, type=Optional[str], repr=False)
     story = attrib(default=None, type=Optional[str], repr=False)
     updated_time = attrib(default=None, type=Optional[str], repr=False)
+    tagged_time = attrib(default=None, type=Optional[str], repr=False)  # This only for the tagged endpoint.
     # connections fields
     attachments = attrib(default=None, type=Optional[Dict], repr=False)
     comments = attrib(default=None, type=Optional[Dict], repr=False)
