@@ -70,7 +70,7 @@ class Api(BaseApi):
             path='{version}/{page_id}'.format(version=self.version, page_id=page_id),
             args=args,
         )
-        data = self._parse_response(resp.content.decode('utf-8'))
+        data = self._parse_response(resp)
 
         access_token = data.get('access_token')
         if access_token is None:
@@ -349,7 +349,7 @@ class Api(BaseApi):
             args=args
         )
 
-        data = self._parse_response(resp.content.decode('utf-8'))
+        data = self._parse_response(resp)
         if return_json:
             return data
         else:
@@ -386,7 +386,7 @@ class Api(BaseApi):
             args=args
         )
         next_cursor, previous_cursor = None, None
-        data = self._parse_response(resp.content.decode('utf-8'))
+        data = self._parse_response(resp)
         if 'paging' in data:
             cursors = data['paging'].get('cursors', {})
             next_cursor = cursors.get('after')
@@ -490,7 +490,7 @@ class Api(BaseApi):
             args=args
         )
 
-        data = self._parse_response(resp.content.decode('utf-8'))
+        data = self._parse_response(resp)
         if return_json:
             return data
         else:
@@ -534,7 +534,7 @@ class Api(BaseApi):
             args=args
         )
 
-        data = self._parse_response(resp.content.decode('utf-8'))
+        data = self._parse_response(resp)
         if return_json:
             return data['data']
         else:

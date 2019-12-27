@@ -1,6 +1,8 @@
 """
     Base Api Impl
 """
+import hashlib
+import hmac
 import logging
 import re
 from typing import Dict, Optional, Union, List
@@ -120,6 +122,17 @@ class BaseApi(object):
             requests_log.setLevel(logging.DEBUG)
             requests_log.propagate = True
 
+    @staticmethod
+    def _generate_secret_proof(secret, access_token):
+        # type: (str, str) -> Optional[str]
+        if secret is None:
+            logging.warning(
+                "Calls from a server can be better secured by adding a parameter called appsecret_proof."
+                "And need your app secret."
+            )
+            return None
+        return hmac.new(secret.encode("utf-8"), msg=access_token.encode("utf-8"), digestmod=hashlib.sha256).hexdigest()
+
     def _request(self, path, method="GET", args=None, post_args=None, enforce_auth=True):
         # type: (str, str, Optional[dict], Optional[dict], bool) -> Response
         """
@@ -136,10 +149,22 @@ class BaseApi(object):
         if post_args is not None:
             method = "POST"
         if enforce_auth:
-            if post_args and "access_token" not in post_args:
+            if method == "POST" and "access_token" not in post_args:
                 post_args["access_token"] = self._access_token
-            elif "access_token" not in args:
+            elif method == "GET" and "access_token" not in args:
                 args["access_token"] = self._access_token
+
+            # add appsecret_proof parameter
+            # Refer: https://developers.facebook.com/docs/graph-api/securing-requests/
+            if method == "POST" and "appsecret_proof" not in post_args:
+                secret_proof = self._generate_secret_proof(self.app_secret, post_args["access_token"])
+                if secret_proof is not None:
+                    post_args["appsecret_proof"] = secret_proof
+            elif method == "GET" and "appsecret_proof" not in args:
+                secret_proof = self._generate_secret_proof(self.app_secret, args["access_token"])
+                if secret_proof is not None:
+                    args["appsecret_proof"] = secret_proof
+
         try:
             response = self.session.request(
                 method,
