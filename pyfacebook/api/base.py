@@ -165,10 +165,13 @@ class BaseApi(object):
                 if secret_proof is not None:
                     args["appsecret_proof"] = secret_proof
 
+        # check path
+        if not path.startswith("https"):
+            path = self.base_url + path
         try:
             response = self.session.request(
                 method,
-                self.base_url + path,
+                path,
                 timeout=self.__timeout,
                 params=args,
                 data=post_args,

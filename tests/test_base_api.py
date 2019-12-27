@@ -53,7 +53,7 @@ class BaseApiTest(unittest.TestCase):
             self.assertEqual(api._access_token, "token")
 
     def testRequest(self):
-        api = BaseApi(long_term_token="token")
+        api = BaseApi(app_id="12345678", app_secret="secret", long_term_token="token")
         with responses.RequestsMock() as m:
             m.add("GET", "https://graph.facebook.com/", json={"message": "message"})
 

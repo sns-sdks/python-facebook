@@ -14,22 +14,22 @@ FB_PAGE_FIELDS = {
     "were_here_count", "whatsapp_number",
 }
 
-POST_ATTACHMENTS = [
+FB_POST_ATTACHMENTS = {
     'description', 'description_tags', 'media', 'media_type', 'target', 'title',
     'type', 'unshimmed_url', 'url',
-]
+}
 
-POST_BASIC_FIELDS = [
-    'id', 'attachments{{{}}}'.format(','.join(POST_ATTACHMENTS)),
+FB_POST_BASIC_FIELDS = {
+    'id', 'attachments{{{}}}'.format(','.join(FB_POST_ATTACHMENTS)),
     'created_time', 'full_picture', 'icon', 'message',
     'permalink_url', 'picture', 'shares', 'status_type', 'updated_time',
     # filter stream return all comments count
     # refer: https://developers.facebook.com/docs/graph-api/reference/page-post/comments/
     'comments.filter(stream).summary(true).limit(0)',
     'reactions.summary(true).limit(0)',
-]
+}
 
-POST_REACTIONS_FIELD = [
+FB_POST_REACTIONS_FIELD = {
     'reactions.summary(true).limit(0)',
     'reactions.type(LIKE).limit(0).summary(total_count).as(like)',
     'reactions.type(LOVE).limit(0).summary(total_count).as(love)',
@@ -38,17 +38,17 @@ POST_REACTIONS_FIELD = [
     'reactions.type(SAD).limit(0).summary(total_count).as(sad)',
     'reactions.type(ANGRY).limit(0).summary(total_count).as(angry)',
     'reactions.type(THANKFUL).limit(0).summary(total_count).as(thankful)'
-]
+}
 
-COMMENT_BASIC_FIELDS = [
+COMMENT_BASIC_FIELDS = {
     'id', 'attachment', 'created_time', 'like_count',
     'can_comment', 'can_like', 'comment_count',
     'from', 'message', 'permalink_url',
-]
+}
 
-PAGE_PICTURE_TYPE = [
+PAGE_PICTURE_TYPE = {
     'small', 'normal', 'album', 'large', 'square'
-]
+}
 
 # =======================================
 # Follows is Instagram fields to get data

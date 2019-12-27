@@ -17,6 +17,8 @@ class ApiPageTest(unittest.TestCase):
         SINGLE_PAGE_INFO_2 = json.loads(f.read().decode("utf-8"))
     with open(BASE_PATH + "multi_pages.json", "rb") as f:
         MULTI_PAGE_INFO = json.loads(f.read().decode("utf-8"))
+    with open(BASE_PATH + "multi_default_fields.json", "rb") as f:
+        MULTI_PAGE_INFO_2 = json.loads(f.read().decode("utf-8"))
 
     def setUp(self):
         self.api = pyfacebook.Api(
@@ -58,6 +60,7 @@ class ApiPageTest(unittest.TestCase):
 
         with responses.RequestsMock() as m:
             m.add("GET", self.BASE_URL, json=self.MULTI_PAGE_INFO)
+            m.add("GET", self.BASE_URL, json=self.MULTI_PAGE_INFO_2)
 
             res1 = self.api.get_pages(
                 ids=ids,
@@ -70,7 +73,6 @@ class ApiPageTest(unittest.TestCase):
 
             res2 = self.api.get_pages(
                 ids=",".join(ids),
-                fields=["id", "username", "name", "fan_count"],
                 return_json=True
             )
             for _id, data in iteritems(res2):

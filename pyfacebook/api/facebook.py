@@ -207,20 +207,21 @@ class Api(BaseApi):
         :param page_id: The id(username) for page you want to retrieve data.
         :param fields: Comma-separated id string for data fields which you want.
         You can also pass this with an id list, tuple, set.
-        :param resource: The data endpoint type
-        :param since_time:
-        :param until_time:
-        :param count:
-        :param limit:
-        :param access_token:
-        :param return_json:
+        :param resource: The data endpoint type, may have posts,feed,tagged,published_posts.
+        :param since_time: A Unix timestamp that points to the start of the range of time-based data.
+        :param until_time: A Unix timestamp that points to the end of the range of time-based data.
+        :param count: The count will retrieve posts. If you want to get all data. Set it to None.
+        :param limit: Each request retrieve posts count from api. For posts it should no more than 100.
+        :param access_token: If you want to pass with own access token, can with this parameter.
+        :param return_json: Set to false will return a list of Post instances.
+        Or return json data. Default is false.
         :return:
         """
         if resource is None:
             resource = 'feed'
 
         if fields is None:
-            fields = constant.POST_BASIC_FIELDS + constant.POST_REACTIONS_FIELD
+            fields = constant.FB_POST_BASIC_FIELDS.union(constant.FB_POST_REACTIONS_FIELD)
 
         args = {
             'fields': enf_comma_separated("fields", fields),
@@ -246,12 +247,12 @@ class Api(BaseApi):
                 posts += data.get('data', [])
             else:
                 posts += [Post.new_from_json_dict(item) for item in data['data']]
-            if next_cursor is None:
-                break
             if count is not None:
                 if len(posts) >= count:
                     posts = posts[:count]
                     break
+            if next_cursor is None:
+                break
         return posts
 
     def get_page_published_posts(self,
@@ -377,21 +378,24 @@ class Api(BaseApi):
             The origin data return from the graph api.
         """
         if next_cursor is not None:
-            args['after'] = next_cursor
-        resp = self._request(
-            method='GET',
-            path='{version}/{target}/{resource}'.format(
-                version=self.version, target=target, resource=resource
-            ),
-            args=args
-        )
-        next_cursor, previous_cursor = None, None
+            resp = self._request(
+                method='GET',
+                path=next_cursor
+            )
+        else:
+            resp = self._request(
+                method='GET',
+                path='{version}/{target}/{resource}'.format(
+                    version=self.version, target=target, resource=resource
+                ),
+                args=args
+            )
+        _next, previous = None, None
         data = self._parse_response(resp)
         if 'paging' in data:
-            cursors = data['paging'].get('cursors', {})
-            next_cursor = cursors.get('after')
-            previous_cursor = cursors.get('before')
-        return next_cursor, previous_cursor, data
+            _next = data['paging'].get('next')
+            previous = data['paging'].get('previous')
+        return _next, previous, data
 
     def get_comments(self,
                      object_id=None,
