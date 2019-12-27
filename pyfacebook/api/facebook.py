@@ -501,24 +501,24 @@ class Api(BaseApi):
         return comments, comment_summary
 
     def get_comment_info(self,
-                         comment_id=None,
-                         return_json=False):
+                         comment_id,  # type: str
+                         fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                         return_json=False  # type: bool
+                         ):
+        # type: (...) -> Union[Comment, dict]
         """
-        Obtain point comment info.
-        Refer: https://developers.facebook.com/docs/graph-api/reference/v4.0/comment
-        Args:
-            comment_id (str)
-                The comment id you want to retrieve data.
-            return_json (bool, optional):
-                If True JSON data will be returned, instead of pyfacebook.Comment
-        Returns:
-            Comment info, pyfacebook.Comment instance or json str.
+        Retrieve given comment's basic info.
+        :param comment_id: The id for comment you want to retrieve data.
+        :param fields: Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return a list of Post instances.
+        Or return json data. Default is false.
         """
-        if comment_id is None:
-            raise PyFacebookError({'message': "Must specify comment id."})
+        if fields is None:
+            fields = constant.FB_COMMENT_BASIC_FIELDS
 
         args = {
-            'fields': ','.join(constant.COMMENT_BASIC_FIELDS)
+            'fields': enf_comma_separated("fields", fields)
         }
 
         resp = self._request(
@@ -532,6 +532,40 @@ class Api(BaseApi):
             return data
         else:
             return Comment.new_from_json_dict(data)
+
+    def get_comments(self,
+                     ids,  # type: Optional[Union[str, List, Tuple, Set]]
+                     fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                     return_json=False  # type: bool
+                     ):
+        # type: (...) -> dict
+        """
+        Retrieve multi comments info by one request.
+        :param ids: Comma-separated id(username) string for page which you want to get.
+        You can also pass this with an id list, tuple, set.
+        :param fields:Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return a dict of Comment instances.
+        Or return json data. Default is false.
+        """
+        if fields is None:
+            fields = constant.FB_POST_BASIC_FIELDS.union(constant.FB_POST_REACTIONS_FIELD)
+
+        args = {
+            "ids": enf_comma_separated("ids", ids),
+            "fields": enf_comma_separated("fields", fields)
+        }
+        resp = self._request(
+            method='GET',
+            path='{0}/'.format(self.version),
+            args=args
+        )
+
+        data = self._parse_response(resp)
+        if return_json:
+            return data
+        else:
+            return {_id: Comment.new_from_json_dict(p_data) for _id, p_data in iteritems(data)}
 
     def get_picture(self,
                     page_id=None,
