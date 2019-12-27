@@ -1,5 +1,6 @@
 import json
 import unittest
+from six import iteritems
 
 import responses
 
@@ -14,6 +15,8 @@ class ApiPageTest(unittest.TestCase):
         SINGLE_PAGE_INFO_1 = json.loads(f.read().decode("utf-8"))
     with open(BASE_PATH + "single_fields_page.json", "rb") as f:
         SINGLE_PAGE_INFO_2 = json.loads(f.read().decode("utf-8"))
+    with open(BASE_PATH + "multi_pages.json", "rb") as f:
+        MULTI_PAGE_INFO = json.loads(f.read().decode("utf-8"))
 
     def setUp(self):
         self.api = pyfacebook.Api(
@@ -21,6 +24,10 @@ class ApiPageTest(unittest.TestCase):
         )
 
     def testPage(self):
+
+        with self.assertRaises(pyfacebook.PyFacebookException):
+            self.api.get_page_info()
+
         page_id = "20531316728"
         with responses.RequestsMock() as m:
             m.add("GET", self.BASE_URL + page_id, json=self.SINGLE_PAGE_INFO_1)
@@ -45,3 +52,27 @@ class ApiPageTest(unittest.TestCase):
 
             self.assertEqual(page["username"], page_username)
             self.assertEqual(page["fan_count"], 214507731)
+
+    def testMultiPage(self):
+        ids = ["20531316728", "ikaroskunlife"]
+
+        with responses.RequestsMock() as m:
+            m.add("GET", self.BASE_URL, json=self.MULTI_PAGE_INFO)
+
+            res1 = self.api.get_pages(
+                ids=ids,
+                fields=["id", "username", "name", "fan_count"]
+            )
+
+            for _id, data in iteritems(res1):
+                self.assertIn(_id, ids)
+                self.assertIn(_id.lower(), [data.id, data.username.lower()])
+
+            res2 = self.api.get_pages(
+                ids=",".join(ids),
+                fields=["id", "username", "name", "fan_count"],
+                return_json=True
+            )
+            for _id, data in iteritems(res2):
+                self.assertIn(_id, ids)
+                self.assertIn(_id.lower(), [data["id"], data["username"].lower()])
