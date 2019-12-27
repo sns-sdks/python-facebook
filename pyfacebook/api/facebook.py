@@ -1,9 +1,10 @@
 """
     Facebook Graph Api impl
 """
+from six import iteritems
 from typing import Optional, Union, List, Tuple, Set
 
-from pyfacebook.error import PyFacebookError
+from pyfacebook.error import PyFacebookError, PyFacebookException, ErrorMessage, ErrorCode
 
 from pyfacebook.models import (
     Page, Comment, CommentSummary,
@@ -80,31 +81,28 @@ class Api(BaseApi):
                       page_id=None,  # type: Optional[str]
                       username=None,  # type: Optional[str]
                       fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
-                      return_json=False,  # type: bool
+                      return_json=False  # type: bool
                       ):
+        # type: (...) -> Union[Page, dict]
         """
-        Obtain give page's basic info.
-
-        Args:
-            page_id (int, optional):
-                The id for you want to retrieve data
-            username (str, optional):
-                The username (page username) for you want to retrieve data
-                Either page_id or username is required. if all given. use username.
-            fields ((str,list,tuple,set), optional):
-                Which fields you want to get.
-                If not provide, will use default field in constant.
-            return_json (bool, optional):
-                If True JSON data will be returned, instead of pyfacebook.Page
-        Returns:
-            Page info, pyfacebook.Page instance or json str.
+        Retrieve the given page's basic info.
+        :param page_id: The id for page.
+        :param username: The username for page.
+        :param fields:Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return instance of Page.
+        Or return json data. Default is false.
+        :return:
         """
         if page_id:
             target = page_id
         elif username:
             target = username
         else:
-            raise PyFacebookError({'message': "Specify at least one of page_id or username"})
+            raise PyFacebookException(ErrorMessage(
+                code=ErrorCode.MISSING_PARAMS,
+                message="Specify at least one of page_id or username",
+            ))
         if fields is None:
             fields = constant.FB_PAGE_FIELDS
 
@@ -123,6 +121,37 @@ class Api(BaseApi):
             return data
         else:
             return Page.new_from_json_dict(data)
+
+    def get_pages(self,
+                  ids,  # type: Optional[Union[str, List, Tuple, Set]]
+                  fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                  return_json=False  # type: bool
+                  ):
+        # type: (...) -> dict
+        """
+        Retrieve multi pages info by one requests.
+        :param ids: Comma-separated id(username) string for page which you want to get.
+        You can also pass this with an id list, tuple, set.
+        :param fields:Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return a dict of Page instances.
+        Or return json data. Default is false.
+        """
+        args = {
+            "ids": enf_comma_separated("ids", ids),
+            "fields": enf_comma_separated("fields", fields)
+        }
+        resp = self._request(
+            method='GET',
+            path='{0}/'.format(self.version),
+            args=args
+        )
+
+        data = self._parse_response(resp)
+        if return_json:
+            return data
+        else:
+            return {_id: Page.new_from_json_dict(p_data) for _id, p_data in iteritems(data)}
 
     def get_posts(self,
                   page_id=None,

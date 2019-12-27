@@ -64,8 +64,6 @@ class RateLimit(object):
         or:
             api.rate_limit.get_limit(object_id="123456", endpoint="pages")
         and a RateLimitData instance will be returned.
-
-        :param rate_type: rate limit type for app or business
         """
         self.resources = {
             "app": RateLimitData(),
