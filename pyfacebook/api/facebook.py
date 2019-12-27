@@ -157,36 +157,6 @@ class Api(BaseApi):
         else:
             return {_id: Page.new_from_json_dict(p_data) for _id, p_data in iteritems(data)}
 
-    def get_page_posts(self,
-                       page_id,  # type: str
-                       fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
-                       since_time=None,  # type: str
-                       until_time=None,  # type: str
-                       count=10,  # type: Optional[int]
-                       limit=10,  # type: int
-                       return_json=False  # type: bool
-                       ):
-        # type: (...) -> List[Optional[Post, dict]]
-        """
-        Retrieve the give page's posts info.
-
-        :param page_id: The id(username) for page you want to retrieve data.
-        :param fields: Comma-separated id string for data fields which you want.
-        You can also pass this with an id list, tuple, set.
-        :param since_time: A Unix timestamp that points to the start of the range of time-based data.
-        :param until_time: A Unix timestamp that points to the end of the range of time-based data.
-        :param count: The count will retrieve posts. If you want to get all data. Set it to None.
-        :param limit: Each request retrieve posts count from api. For posts it should no more than 100.
-        :param return_json: Set to false will return a list of Post instances.
-        Or return json data. Default is false.
-        """
-        return self.get_page_feeds(
-            page_id, fields, 'posts',
-            since_time, until_time,
-            count, limit,
-            return_json=return_json
-        )
-
     def get_page_feeds(self,
                        page_id,  # type: str
                        fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
@@ -254,6 +224,36 @@ class Api(BaseApi):
             if next_cursor is None:
                 break
         return posts
+
+    def get_page_posts(self,
+                       page_id,  # type: str
+                       fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                       since_time=None,  # type: str
+                       until_time=None,  # type: str
+                       count=10,  # type: Optional[int]
+                       limit=10,  # type: int
+                       return_json=False  # type: bool
+                       ):
+        # type: (...) -> List[Optional[Post, dict]]
+        """
+        Retrieve the give page's posts info.
+
+        :param page_id: The id(username) for page you want to retrieve data.
+        :param fields: Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param since_time: A Unix timestamp that points to the start of the range of time-based data.
+        :param until_time: A Unix timestamp that points to the end of the range of time-based data.
+        :param count: The count will retrieve posts. If you want to get all data. Set it to None.
+        :param limit: Each request retrieve posts count from api. For posts it should no more than 100.
+        :param return_json: Set to false will return a list of Post instances.
+        Or return json data. Default is false.
+        """
+        return self.get_page_feeds(
+            page_id, fields, 'posts',
+            since_time, until_time,
+            count, limit,
+            return_json=return_json
+        )
 
     def get_page_published_posts(self,
                                  page_id,  # type: str
