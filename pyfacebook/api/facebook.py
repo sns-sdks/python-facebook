@@ -1,115 +1,46 @@
 """
     Facebook Graph Api impl
 """
+from six import iteritems
 from typing import Optional, Union, List, Tuple, Set
-from requests_oauthlib import OAuth2Session
-from requests_oauthlib.compliance_fixes import facebook_compliance_fix
 
-from pyfacebook.error import PyFacebookError
-from pyfacebook.model import Page
+from pyfacebook.error import PyFacebookError, PyFacebookException, ErrorMessage, ErrorCode
+
 from pyfacebook.models import (
-    AuthAccessToken, Comment, CommentSummary,
-    PagePicture, Post
+    Page, Comment, CommentSummary,
+    ProfilePictureSource, Post
 )
 from .base import BaseApi
-from pyfacebook.ratelimit import RateLimit
 from pyfacebook.utils import constant
 from pyfacebook.utils.param_validation import enf_comma_separated
 
 
 class Api(BaseApi):
-    AUTHORIZATION_URL = 'https://www.facebook.com/dialog/oauth'
-    EXCHANGE_ACCESS_TOKEN_URL = 'https://graph.facebook.com/oauth/access_token'
-    DEFAULT_REDIRECT_URI = 'https://localhost/'
-
-    DEFAULT_SCOPE = [
-        'email',
-    ]
-
-    DEFAULT_STATE = 'PyFacebook'
-
-    def __init__(
-            self, app_id=None,
-            app_secret=None,
-            short_token=None,
-            long_term_token=None,
-            version=None,
-            timeout=None,
-            interval_between_request=None,  # if loop get data. should use this.
-            sleep_on_rate_limit=False,
-            proxies=None,
-    ):
-        BaseApi.__init__(self,
-                         app_id=app_id,
-                         app_secret=app_secret,
-                         short_token=short_token,
-                         long_term_token=long_term_token,
-                         version=version,
-                         timeout=timeout,
-                         interval_between_request=interval_between_request,
-                         sleep_on_rate_limit=sleep_on_rate_limit,
-                         proxies=proxies)
-        self.rate_limit = RateLimit()
-        self.auth_session = None
-
-    def get_authorization_url(self, redirect_uri=None, scope=None, **kwargs):
-        """
-        Build authorization url to do authorize.
-
-        Refer: https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow
-
-        Args:
-            redirect_uri (str, optional)
-                The URL that you want to redirect the person logging in back to.
-                Note. This url need to be set to `Valid OAuth redirect URIs` item in App Dashboard.
-            scope (str, optional)
-                A comma or space separated list of Permissions to request from the person using your app.
-
-        Returns:
-        """
-        if self.app_id is None or self.app_secret is None:
-            raise PyFacebookError({"message": "Authorization must use app credentials."})
-        if redirect_uri is None:
-            redirect_uri = self.DEFAULT_REDIRECT_URI
-        if scope is None:
-            scope = self.DEFAULT_SCOPE
-
-        session = OAuth2Session(
-            client_id=self.app_id, scope=scope, redirect_uri=redirect_uri,
-            state=self.DEFAULT_STATE, **kwargs
+    def __init__(self,
+                 app_id=None,
+                 app_secret=None,
+                 short_token=None,
+                 long_term_token=None,
+                 application_only_auth=False,
+                 version=None,
+                 timeout=None,
+                 sleep_on_rate_limit=False,
+                 proxies=None,
+                 debug_http=False
+                 ):
+        BaseApi.__init__(
+            self,
+            app_id=app_id,
+            app_secret=app_secret,
+            short_token=short_token,
+            long_term_token=long_term_token,
+            application_only_auth=application_only_auth,
+            version=version,
+            timeout=timeout,
+            sleep_on_rate_limit=sleep_on_rate_limit,
+            proxies=proxies,
+            debug_http=debug_http
         )
-        self.auth_session = facebook_compliance_fix(session)
-
-        authorization_url, state = self.auth_session.authorization_url(
-            url=self.AUTHORIZATION_URL
-        )
-
-        return authorization_url, state
-
-    def exchange_access_token(self, response, return_json=False):
-        """
-        Fetch the access token.
-
-        Args:
-            response (str)
-                The whole response url for you previous authorize step.
-            return_json (bool, optional):
-                If True JSON data will be returned, instead of pyfacebook.AccessToken.
-        Returns:
-            access token
-        """
-        if self.auth_session is None:
-            raise PyFacebookError({'message': "Should do authorize first."})
-
-        self.auth_session.fetch_token(
-            self.EXCHANGE_ACCESS_TOKEN_URL, client_secret=self.app_secret,
-            authorization_response=response
-        )
-
-        self.token = self.auth_session.access_token
-        if return_json:
-            return self.auth_session.token
-        return AuthAccessToken.new_from_json_dict(self.auth_session.token)
 
     def exchange_insights_token(self, token, page_id):
         """
@@ -139,43 +70,39 @@ class Api(BaseApi):
             path='{version}/{page_id}'.format(version=self.version, page_id=page_id),
             args=args,
         )
-        data = self._parse_response(resp.content.decode('utf-8'))
+        data = self._parse_response(resp)
 
         access_token = data.get('access_token')
         if access_token is None:
             return "Check the app has the permission or your token."
         return access_token
 
-    def get_page_info(
-            self,
-            page_id=None,  # type: Optional[str]
-            username=None,  # type: Optional[str]
-            fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
-            return_json=False,  # type: bool
-    ):
+    def get_page_info(self,
+                      page_id=None,  # type: Optional[str]
+                      username=None,  # type: Optional[str]
+                      fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                      return_json=False  # type: bool
+                      ):
+        # type: (...) -> Union[Page, dict]
         """
-        Obtain give page's basic info.
+        Retrieve the given page's basic info.
 
-        Args:
-            page_id (int, optional):
-                The id for you want to retrieve data
-            username (str, optional):
-                The username (page username) for you want to retrieve data
-                Either page_id or username is required. if all given. use username.
-            fields ((str,list,tuple,set), optional):
-                Which fields you want to get.
-                If not provide, will use default field in constant.
-            return_json (bool, optional):
-                If True JSON data will be returned, instead of pyfacebook.Page
-        Returns:
-            Page info, pyfacebook.Page instance or json str.
+        :param page_id: The id for page.
+        :param username: The username for page.
+        :param fields:Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return instance of Page.
+        Or return json data. Default is false.
         """
         if page_id:
             target = page_id
         elif username:
             target = username
         else:
-            raise PyFacebookError({'message': "Specify at least one of page_id or username"})
+            raise PyFacebookException(ErrorMessage(
+                code=ErrorCode.MISSING_PARAMS,
+                message="Specify at least one of page_id or username",
+            ))
         if fields is None:
             fields = constant.FB_PAGE_FIELDS
 
@@ -189,253 +116,46 @@ class Api(BaseApi):
             args=args
         )
 
-        data = self._parse_response(resp.content.decode('utf-8'))
+        data = self._parse_response(resp)
         if return_json:
             return data
         else:
             return Page.new_from_json_dict(data)
 
-    def get_posts(self,
-                  page_id=None,
-                  username=None,
-                  since_time=None,
-                  until_time=None,
-                  count=10,
-                  limit=10,
-                  return_json=False):
+    def get_pages(self,
+                  ids,  # type: Optional[Union[str, List, Tuple, Set]]
+                  fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                  return_json=False  # type: bool
+                  ):
+        # type: (...) -> dict
         """
-        Obtain give page's posts info.
+        Retrieve multi pages info by one request.
 
-        Args:
-            page_id (int, optional)
-                The id for you want to retrieve data
-            username (str, optional)
-                The username (page username) for you want to retrieve data
-                Either page_id or username is required. if all given. use username.
-            since_time (str, optional)
-                The posts retrieve begin time.
-            until_time ()
-                The posts retrieve until time.
-                If neither since_time or until_time, it will by now time.
-            count (int, optional)
-                The count will retrieve posts.
-            limit (int, optional)
-                Each request retrieve posts count from api.
-                For posts it should no more than 100.
-            return_json (bool, optional):
-                If True JSON data will be returned, instead of pyfacebook.Post, or return origin data by facebook.
-        Returns:
-            posts info list.
+        :param ids: Comma-separated id(username) string for page which you want to get.
+        You can also pass this with an id list, tuple, set.
+        :param fields:Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return a dict of Page instances.
+        Or return json data. Default is false.
         """
-        return self.get_feeds(
-            'posts', page_id, username,
-            since_time, until_time,
-            count, limit,
-            return_json=return_json
-        )
-
-    def get_feeds(self,
-                  resource=None,
-                  page_id=None,
-                  username=None,
-                  since_time=None,
-                  until_time=None,
-                  count=10,
-                  limit=10,
-                  access_token=None,
-                  return_json=False):
-        """
-        Obtain give page's posts info.
-        Refer: https://developers.facebook.com/docs/graph-api/reference/v4.0/page/feed
-        Args:
-            resource (str, optional)
-                The connection resource for you want to do.
-                Now have four: feed, posts, tagged, published_posts. if you not pointed. use feed.
-                Notice: the tagged and published_posts resource need page access_token.
-            page_id (int, optional)
-                The id for you want to retrieve data
-            username (str, optional)
-                The username (page username) for you want to retrieve data
-                Either page_id or username is required. if all given. use username.
-            since_time (str, optional)
-                The posts retrieve begin time.
-            until_time ()
-                The posts retrieve until time.
-                If neither since_time or until_time, it will by now time.
-            count (int, optional)
-                The count will retrieve posts.
-            limit (int, optional)
-                Each request retrieve posts count from api.
-                For posts it should no more than 100.
-            access_token (str, optional):
-                If you want use other token to get data. you can point this.
-            return_json (bool, optional):
-                If True JSON data will be returned, instead of pyfacebook.Post, or return origin data by facebook.
-        Returns:
-            posts info list.
-        :return:
-        """
-        if resource is None:
-            resource = 'feed'
-        if page_id:
-            target = page_id
-        elif username:
-            target = username
-        else:
-            raise PyFacebookError({'message': "Specify at least one of page_id or username"})
+        if fields is None:
+            fields = constant.FB_PAGE_FIELDS
 
         args = {
-            'fields': ','.join(set(constant.POST_BASIC_FIELDS + constant.POST_REACTIONS_FIELD)),
-            'since': since_time,
-            'until': until_time,
-            'limit': limit,
-        }
-        # Note: now tagged_time only support for tagged resource
-        if resource == 'tagged':
-            args['fields'] = args['fields'] + ',tagged_time'
-        if access_token is not None:
-            args['access_token'] = access_token
-
-        posts = []
-        next_cursor = None
-
-        while True:
-            next_cursor, previous_cursor, data = self.paged_by_cursor(
-                resource=resource,
-                target=target,
-                args=args,
-                next_cursor=next_cursor,
-            )
-            if return_json:
-                posts += data.get('data', [])
-            else:
-                posts += [Post.new_from_json_dict(item) for item in data['data']]
-            if next_cursor is None:
-                break
-            if len(posts) >= count:
-                break
-        return posts[:count]
-
-    def get_published_posts(self,
-                            page_id=None,
-                            username=None,
-                            since_time=None,
-                            until_time=None,
-                            count=10,
-                            limit=10,
-                            access_token=None,
-                            return_json=False):
-        """
-        Obtain give page's all posts info. If token is authorized for app.
-        This endpoint need the page token and has manage-pages.
-
-        Args:
-            page_id (int, optional)
-                The id for you want to retrieve data
-            username (str, optional)
-                The username (page username) for you want to retrieve data
-                Either page_id or username is required. if all given. use page_id.
-            since_time (str, optional)
-                The posts retrieve begin time.
-            until_time ()
-                The posts retrieve until time.
-                If neither since_time or until_time, it will by now time.
-            count (int, optional)
-                The count will retrieve posts.
-            limit (int, optional)
-                Each request retrieve posts count from api.
-                For posts it should no more than 100.
-            access_token (str, optional):
-                If you want use other token to get data. you can point this.
-            return_json (bool, optional):
-                If True JSON data will be returned, instead of pyfacebook.Post, or return origin data by facebook.
-        Returns:
-            posts info list.
-        """
-        return self.get_feeds(
-            'published_posts', page_id, username,
-            since_time, until_time,
-            count, limit,
-            access_token=access_token,
-            return_json=return_json
-        )
-
-    def get_tagged_posts(self,
-                         page_id=None,
-                         username=None,
-                         since_time=None,
-                         until_time=None,
-                         count=10,
-                         limit=10,
-                         access_token=None,
-                         return_json=False):
-        """
-        Obtain posts which tagged the given page. If token is authorized for app.
-        This endpoint need the page token and has manage-pages.
-
-        Args:
-            page_id (int, optional)
-                The id for you want to retrieve data
-            username (str, optional)
-                The username (page username) for you want to retrieve data
-                Either page_id or username is required. if all given. use page_id.
-            since_time (str, optional)
-                The posts retrieve begin time.
-            until_time ()
-                The posts retrieve until time.
-                If neither since_time or until_time, it will by now time.
-            count (int, optional)
-                The count will retrieve posts.
-            limit (int, optional)
-                Each request retrieve posts count from api.
-                For posts it should no more than 100.
-            access_token (str, optional):
-                If you want use other token to get data. you can point this.
-            return_json (bool, optional):
-                If True JSON data will be returned, instead of pyfacebook.Post, or return origin data by facebook.
-        Returns:
-            posts info list.
-        """
-        return self.get_feeds(
-            'tagged', page_id, username,
-            since_time, until_time,
-            count, limit,
-            access_token=access_token,
-            return_json=return_json
-        )
-
-    def get_post_info(self,
-                      post_id=None,
-                      return_json=False):
-        """
-        Obtain give page's basic info.
-
-        Args:
-            post_id (str)
-                The id for you want to retrieve post.
-            return_json (bool, optional):
-                If True JSON data will be returned, instead of pyfacebook.Post, or return origin data by facebook.
-
-        Returns:
-            post info.
-        """
-        if post_id is None:
-            raise PyFacebookError({'message': "Must specify the post id"})
-
-        args = {
-            'fields': ','.join(set(constant.POST_BASIC_FIELDS + constant.POST_REACTIONS_FIELD))
+            "ids": enf_comma_separated("ids", ids),
+            "fields": enf_comma_separated("fields", fields)
         }
         resp = self._request(
             method='GET',
-            path='{0}/{1}'.format(self.version, post_id),
+            path='{0}/'.format(self.version),
             args=args
         )
 
-        data = self._parse_response(resp.content.decode('utf-8'))
+        data = self._parse_response(resp)
         if return_json:
             return data
         else:
-            return Post.new_from_json_dict(data)
+            return {_id: Page.new_from_json_dict(p_data) for _id, p_data in iteritems(data)}
 
     def paged_by_cursor(self,
                         target,
@@ -459,68 +179,301 @@ class Api(BaseApi):
             The origin data return from the graph api.
         """
         if next_cursor is not None:
-            args['after'] = next_cursor
+            resp = self._request(
+                method='GET',
+                path=next_cursor
+            )
+        else:
+            resp = self._request(
+                method='GET',
+                path='{version}/{target}/{resource}'.format(
+                    version=self.version, target=target, resource=resource
+                ),
+                args=args
+            )
+        _next, previous = None, None
+        data = self._parse_response(resp)
+        if 'paging' in data:
+            _next = data['paging'].get('next')
+            previous = data['paging'].get('previous')
+        return _next, previous, data
+
+    def get_page_feeds(self,
+                       page_id,  # type: str
+                       fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                       resource=None,  # type: Optional[str]
+                       since_time=None,  # type: str
+                       until_time=None,  # type: str
+                       count=10,  # type: Optional[int]
+                       limit=10,  # type: int
+                       access_token=None,  # type: str
+                       return_json=False  # type: bool
+                       ):
+        # type: (...) -> List[Union[Post, dict]]
+        """
+        Retrieve data for give page's posts info.
+
+        Refer: https://developers.facebook.com/docs/graph-api/reference/v4.0/page/feed
+
+        :param page_id: The id(username) for page you want to retrieve data.
+        :param fields: Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param resource: The data endpoint type, may have posts,feed,tagged,published_posts.
+        :param since_time: A Unix timestamp that points to the start of the range of time-based data.
+        :param until_time: A Unix timestamp that points to the end of the range of time-based data.
+        :param count: The count will retrieve posts. If you want to get all data. Set it to None.
+        :param limit: Each request retrieve posts count from api. For posts it should no more than 100.
+        :param access_token: If you want to pass with own access token, can with this parameter.
+        :param return_json: Set to false will return a list of Post instances.
+        Or return json data. Default is false.
+        :return:
+        """
+        if resource is None:
+            resource = 'feed'
+
+        if fields is None:
+            fields = constant.FB_POST_BASIC_FIELDS.union(constant.FB_POST_REACTIONS_FIELD)
+
+        args = {
+            'fields': enf_comma_separated("fields", fields),
+            'since': since_time,
+            'until': until_time,
+            'limit': limit,
+        }
+
+        if access_token is not None:
+            args['access_token'] = access_token
+
+        posts = []
+        next_cursor = None
+
+        while True:
+            next_cursor, previous_cursor, data = self.paged_by_cursor(
+                resource=resource,
+                target=page_id,
+                args=args,
+                next_cursor=next_cursor,
+            )
+            if return_json:
+                posts += data.get('data', [])
+            else:
+                posts += [Post.new_from_json_dict(item) for item in data['data']]
+            if count is not None:
+                if len(posts) >= count:
+                    posts = posts[:count]
+                    break
+            if next_cursor is None:
+                break
+        return posts
+
+    def get_page_posts(self,
+                       page_id,  # type: str
+                       fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                       since_time=None,  # type: str
+                       until_time=None,  # type: str
+                       count=10,  # type: Optional[int]
+                       limit=10,  # type: int
+                       return_json=False  # type: bool
+                       ):
+        # type: (...) -> List[Optional[Post, dict]]
+        """
+        Retrieve the give page's posts info.
+
+        :param page_id: The id(username) for page you want to retrieve data.
+        :param fields: Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param since_time: A Unix timestamp that points to the start of the range of time-based data.
+        :param until_time: A Unix timestamp that points to the end of the range of time-based data.
+        :param count: The count will retrieve posts. If you want to get all data. Set it to None.
+        :param limit: Each request retrieve posts count from api. For posts it should no more than 100.
+        :param return_json: Set to false will return a list of Post instances.
+        Or return json data. Default is false.
+        """
+        return self.get_page_feeds(
+            page_id, fields, 'posts',
+            since_time, until_time,
+            count, limit,
+            return_json=return_json
+        )
+
+    def get_page_published_posts(self,
+                                 page_id,  # type: str
+                                 fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                                 since_time=None,  # type: str
+                                 until_time=None,  # type: str
+                                 count=10,  # type: Optional[int]
+                                 limit=10,  # type: int
+                                 access_token=None,  # type: str
+                                 return_json=False  # type: bool
+                                 ):
+        # type: (...) -> List[Union[Post, dict]]
+        """
+        Retrieve the give page's all posts info.
+        Note: This need a page access token with manage_pages permissions.
+
+        :param page_id: The id for page you want to retrieve data.
+        :param fields: Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param since_time: A Unix timestamp that points to the start of the range of time-based data.
+        :param until_time: A Unix timestamp that points to the end of the range of time-based data.
+        :param count: The count will retrieve posts. If you want to get all data. Set it to None.
+        :param limit: Each request retrieve posts count from api. For posts it should no more than 100.
+        :param access_token: If you want use other token to get data. you can provide with this.
+        :param return_json: Set to false will return a list of Post instances.
+        Or return json data. Default is false.
+        """
+        return self.get_page_feeds(
+            page_id, fields, 'published_posts',
+            since_time, until_time,
+            count, limit,
+            access_token=access_token,
+            return_json=return_json
+        )
+
+    def get_page_tagged_posts(self,
+                              page_id,  # type: str
+                              fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                              since_time=None,  # type: str
+                              until_time=None,  # type: str
+                              count=10,  # type: Optional[int]
+                              limit=10,  # type: int
+                              access_token=None,  # type: str
+                              return_json=False  # type: bool
+                              ):
+        # type: (...) -> List[Union[Post, dict]]
+        """
+        Obtain posts which tagged the given page. If token is authorized for app.
+        This endpoint need the page token and has manage-pages.
+
+        :param page_id: The id for page you want to retrieve data.
+        :param fields: Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param since_time: A Unix timestamp that points to the start of the range of time-based data.
+        :param until_time: A Unix timestamp that points to the end of the range of time-based data.
+        :param count: The count will retrieve posts. If you want to get all data. Set it to None.
+        :param limit: Each request retrieve posts count from api. For posts it should no more than 100.
+        :param access_token: If you want use other token to get data. you can provide with this.
+        :param return_json: Set to false will return a list of Post instances.
+        Or return json data. Default is false.
+        """
+        return self.get_page_feeds(
+            page_id, fields, 'tagged',
+            since_time, until_time,
+            count, limit,
+            access_token=access_token,
+            return_json=return_json
+        )
+
+    def get_post_info(self,
+                      post_id,  # type: str
+                      fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                      return_json=False  # type: bool
+                      ):
+        # type: (...) -> Optional[Post, dict]
+        """
+        Obtain give post's basic info.
+        :param post_id: The id for post you want to retrieve data.
+        :param fields: Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return a list of Post instances.
+        Or return json data. Default is false.
+        """
+        if fields is None:
+            fields = constant.FB_POST_BASIC_FIELDS.union(constant.FB_POST_REACTIONS_FIELD)
+
+        args = {
+            'fields': enf_comma_separated("fields", fields)
+        }
         resp = self._request(
             method='GET',
-            path='{version}/{target}/{resource}'.format(
-                version=self.version, target=target, resource=resource
-            ),
+            path='{0}/{1}'.format(self.version, post_id),
             args=args
         )
-        next_cursor, previous_cursor = None, None
-        data = self._parse_response(resp.content.decode('utf-8'))
-        if 'paging' in data:
-            cursors = data['paging'].get('cursors', {})
-            next_cursor = cursors.get('after')
-            previous_cursor = cursors.get('before')
-        return next_cursor, previous_cursor, data
 
-    def get_comments(self,
-                     object_id=None,
-                     summary=False,
-                     filter_type='toplevel',
-                     order_type='chronological',
-                     count=10,
-                     limit=50,
-                     return_json=False):
+        data = self._parse_response(resp)
+        if return_json:
+            return data
+        else:
+            return Post.new_from_json_dict(data)
+
+    def get_posts(self,
+                  ids,  # type: Optional[Union[str, List, Tuple, Set]]
+                  fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                  return_json=False  # type: bool
+                  ):
+        # type: (...) -> dict
         """
-        To get point object's comments.
-        Doc refer: https://developers.facebook.com/docs/graph-api/reference/v4.0/object/comments.
-        Args:
-             object_id (str)
-                The object id which you want to retrieve comments.
-                object can be post picture and so on.
-            summary (bool, optional)
-                If True will return comments summary of metadata.
-            filter_type (enum, optional)
-                Valid params are toplevel/stream,
+        Retrieve multi posts info by one request.
+        :param ids: Comma-separated id(username) string for page which you want to get.
+        You can also pass this with an id list, tuple, set.
+        :param fields:Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return a dict of Page instances.
+        Or return json data. Default is false.
+        """
+        if fields is None:
+            fields = constant.FB_POST_BASIC_FIELDS.union(constant.FB_POST_REACTIONS_FIELD)
+
+        args = {
+            "ids": enf_comma_separated("ids", ids),
+            "fields": enf_comma_separated("fields", fields)
+        }
+        resp = self._request(
+            method='GET',
+            path='{0}/'.format(self.version),
+            args=args
+        )
+
+        data = self._parse_response(resp)
+        if return_json:
+            return data
+        else:
+            return {_id: Post.new_from_json_dict(p_data) for _id, p_data in iteritems(data)}
+
+    def get_comments_by_parent(self,
+                               object_id,  # type: str
+                               summary=True,  # type: bool
+                               fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                               filter_type='toplevel',  # type: str
+                               order_type='chronological',  # type: str
+                               count=10,  # type: Optional[int]
+                               limit=50,  # type: int
+                               return_json=False  # type: bool
+                               ):
+        # type: (...) -> (List[Union[Comment, dict]], Union[CommentSummary, dict])
+        """
+        Retrieve object's comments.
+
+        Refer: https://developers.facebook.com/docs/graph-api/reference/v4.0/object/comments.
+
+        :param object_id: The id for object(post, photo..)
+        :param summary: The summary for comments
+        :param fields: Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param filter_type: Valid params are toplevel/stream,
                 If you chose toplevel only return top level comment.
                 stream will return parent and child comment.
                 default is toplevel
-            order_type (enum, optional)
-                Valid params are chronological/reverse_chronological,
+        :param order_type: Valid params are chronological/reverse_chronological,
                 If chronological, will return comments sorted by the oldest comments first.
                 If reverse_chronological, will return comments sorted by the newest comments first.
-            count (int, optional)
-                The count will retrieve comments.
-            limit (int, optional)
-                Each request retrieve comments count from api.
-                For comments. Should not more than 100.
-            return_json (bool, optional):
-                If True JSON data will be returned, instead of pyfacebook.Comment, or return origin data by facebook.
-        Returns:
-            This will return tuple.
-            (Comments set, CommentSummary's data)
+        :param count: The count will retrieve posts. If you want to get all data. Set it to None.
+        :param limit: Each request retrieve posts count from api. For posts it should no more than 100.
+        :param return_json: Set to false will return a list of Comment instances.
+        Or return json data. Default is false.
         """
-        if object_id is None:
-            raise PyFacebookError({'message': "Must specify the object id"})
+        if fields is None:
+            fields = constant.FB_COMMENT_BASIC_FIELDS
+
+        if count is not None:
+            limit = min(count, limit)
 
         args = {
-            'fields': ','.join(constant.COMMENT_BASIC_FIELDS),
+            'fields': enf_comma_separated("fields", fields),
             'summary': summary,
             'filter': filter_type,
             'order': order_type,
-            'limit': min(count, limit),
+            'limit': limit,
         }
 
         comments = []
@@ -539,31 +492,33 @@ class Api(BaseApi):
             else:
                 comments += [Comment.new_from_json_dict(item) for item in data.get('data', [])]
                 comment_summary = CommentSummary.new_from_json_dict(data.get('summary', {}))
+            if count is not None:
+                if len(comments) >= count:
+                    comments = comments[:count]
+                    break
             if next_cursor is None:
                 break
-            if len(comments) >= count:
-                break
-        return comments[:count], comment_summary
+        return comments, comment_summary
 
     def get_comment_info(self,
-                         comment_id=None,
-                         return_json=False):
+                         comment_id,  # type: str
+                         fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                         return_json=False  # type: bool
+                         ):
+        # type: (...) -> Union[Comment, dict]
         """
-        Obtain point comment info.
-        Refer: https://developers.facebook.com/docs/graph-api/reference/v4.0/comment
-        Args:
-            comment_id (str)
-                The comment id you want to retrieve data.
-            return_json (bool, optional):
-                If True JSON data will be returned, instead of pyfacebook.Comment
-        Returns:
-            Comment info, pyfacebook.Comment instance or json str.
+        Retrieve given comment's basic info.
+        :param comment_id: The id for comment you want to retrieve data.
+        :param fields: Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return a list of Post instances.
+        Or return json data. Default is false.
         """
-        if comment_id is None:
-            raise PyFacebookError({'message': "Must specify comment id."})
+        if fields is None:
+            fields = constant.FB_COMMENT_BASIC_FIELDS
 
         args = {
-            'fields': ','.join(constant.COMMENT_BASIC_FIELDS)
+            'fields': enf_comma_separated("fields", fields)
         }
 
         resp = self._request(
@@ -572,38 +527,67 @@ class Api(BaseApi):
             args=args
         )
 
-        data = self._parse_response(resp.content.decode('utf-8'))
+        data = self._parse_response(resp)
         if return_json:
             return data
         else:
             return Comment.new_from_json_dict(data)
 
-    def get_picture(self,
-                    page_id=None,
-                    pic_type=None,
-                    return_json=False):
+    def get_comments(self,
+                     ids,  # type: Optional[Union[str, List, Tuple, Set]]
+                     fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                     return_json=False  # type: bool
+                     ):
+        # type: (...) -> dict
         """
-        Obtain the point page's picture.
+        Retrieve multi comments info by one request.
+        :param ids: Comma-separated id(username) string for page which you want to get.
+        You can also pass this with an id list, tuple, set.
+        :param fields:Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return a dict of Comment instances.
+        Or return json data. Default is false.
+        """
+        if fields is None:
+            fields = constant.FB_POST_BASIC_FIELDS.union(constant.FB_POST_REACTIONS_FIELD)
 
-        Args:
-            page_id (int, optional)
-                The id for you want to retrieve data
-            pic_type (str, optional)
-                The picture you want to get, It can be one of the following values: small, normal, large, square.
-                If not provide, default is small.
-            return_json (bool, optional):
-                If True JSON data will be returned, instead of pyfacebook.PagePicture
-        Returns:
-            Page picture info, pyfacebook.PagePicture instance or json str.
+        args = {
+            "ids": enf_comma_separated("ids", ids),
+            "fields": enf_comma_separated("fields", fields)
+        }
+        resp = self._request(
+            method='GET',
+            path='{0}/'.format(self.version),
+            args=args
+        )
+
+        data = self._parse_response(resp)
+        if return_json:
+            return data
+        else:
+            return {_id: Comment.new_from_json_dict(p_data) for _id, p_data in iteritems(data)}
+
+    def get_picture(self,
+                    page_id,  # type: str
+                    pic_type=None,  # type: Optional[str]
+                    return_json=False  # type: bool
+                    ):
+        # type: (...) -> Union[ProfilePictureSource, dict]
         """
-        if page_id is None:
-            raise PyFacebookError({'message': "Must specify page id"})
-        if pic_type is not None and pic_type not in constant.PAGE_PICTURE_TYPE:
-            raise PyFacebookError({
-                'message': "For field picture: pic_type must be one of the following values: {}".format(
-                    ', '.join(constant.PAGE_PICTURE_TYPE)
-                )
-            })
+        Retrieve the page's picture.
+
+        :param page_id: The id for picture you want to retrieve data.
+        :param pic_type: The picture type.
+        :param return_json: Set to false will return a dict of Comment instances.
+        Or return json data. Default is false.
+        """
+
+        if pic_type is not None and pic_type not in constant.FB_PAGE_PICTURE_TYPE:
+            raise PyFacebookException(ErrorMessage(
+                code=ErrorCode.INVALID_PARAMS,
+                message="For field picture: pic_type must be one of the following values: {}".format(
+                    ', '.join(constant.FB_PAGE_PICTURE_TYPE)
+                )))
 
         args = {
             'redirect': 0,  # if set 0 the api will return json response.
@@ -616,8 +600,50 @@ class Api(BaseApi):
             args=args
         )
 
-        data = self._parse_response(resp.content.decode('utf-8'))
+        data = self._parse_response(resp)
         if return_json:
             return data['data']
         else:
-            return PagePicture.new_from_json_dict(data['data'])
+            return ProfilePictureSource.new_from_json_dict(data['data'])
+
+    def get_pictures(self,
+                     ids,  # type: Optional[Union[str, List, Tuple, Set]]
+                     pic_type=None,  # type: Optional[str]
+                     return_json=False  # type: bool
+                     ):
+        # type: (...) -> dict
+        """
+        :param ids: Comma-separated id(username) string for page which you want to get.
+        You can also pass this with an id list, tuple, set.
+        :param pic_type: The picture type.
+        :param return_json: Set to false will return a dict of Comment instances.
+        Or return json data. Default is false.
+        """
+        if pic_type is not None and pic_type not in constant.FB_PAGE_PICTURE_TYPE:
+            raise PyFacebookException(ErrorMessage(
+                code=ErrorCode.INVALID_PARAMS,
+                message="For field picture: pic_type must be one of the following values: {}".format(
+                    ', '.join(constant.FB_PAGE_PICTURE_TYPE)
+                )))
+
+        args = {
+            "ids": enf_comma_separated("ids", ids),
+            'redirect': 0,  # if set 0 the api will return json response.
+            'type': 'normal' if pic_type is None else pic_type,
+        }
+        resp = self._request(
+            method='GET',
+            path='{0}/picture'.format(self.version),
+            args=args
+        )
+
+        data = self._parse_response(resp)
+
+        res = {}
+        for _id, p_data in iteritems(data):
+            picture_data = p_data["data"]
+            if return_json:
+                res[_id] = picture_data
+            else:
+                res[_id] = ProfilePictureSource.new_from_json_dict(picture_data)
+        return res
