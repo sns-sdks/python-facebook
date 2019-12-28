@@ -568,31 +568,26 @@ class Api(BaseApi):
             return {_id: Comment.new_from_json_dict(p_data) for _id, p_data in iteritems(data)}
 
     def get_picture(self,
-                    page_id=None,
-                    pic_type=None,
-                    return_json=False):
+                    page_id,  # type: str
+                    pic_type=None,  # type: Optional[str]
+                    return_json=False  # type: bool
+                    ):
+        # type: (...) -> Union[ProfilePictureSource, dict]
         """
-        Obtain the point page's picture.
+        Retrieve the page's picture.
 
-        Args:
-            page_id (int, optional)
-                The id for you want to retrieve data
-            pic_type (str, optional)
-                The picture you want to get, It can be one of the following values: small, normal, large, square.
-                If not provide, default is small.
-            return_json (bool, optional):
-                If True JSON data will be returned, instead of pyfacebook.PagePicture
-        Returns:
-            Page picture info, pyfacebook.PagePicture instance or json str.
+        :param page_id: The id for picture you want to retrieve data.
+        :param pic_type: The picture type.
+        :param return_json: Set to false will return a dict of Comment instances.
+        Or return json data. Default is false.
         """
-        if page_id is None:
-            raise PyFacebookError({'message': "Must specify page id"})
+
         if pic_type is not None and pic_type not in constant.PAGE_PICTURE_TYPE:
-            raise PyFacebookError({
-                'message': "For field picture: pic_type must be one of the following values: {}".format(
+            raise PyFacebookException(ErrorMessage(
+                code=ErrorCode.INVALID_PARAMS,
+                message="For field picture: pic_type must be one of the following values: {}".format(
                     ', '.join(constant.PAGE_PICTURE_TYPE)
-                )
-            })
+                )))
 
         args = {
             'redirect': 0,  # if set 0 the api will return json response.
@@ -610,3 +605,45 @@ class Api(BaseApi):
             return data['data']
         else:
             return ProfilePictureSource.new_from_json_dict(data['data'])
+
+    def get_pictures(self,
+                     ids,  # type: Optional[Union[str, List, Tuple, Set]]
+                     pic_type=None,  # type: Optional[str]
+                     return_json=False  # type: bool
+                     ):
+        # type: (...) -> dict
+        """
+        :param ids: Comma-separated id(username) string for page which you want to get.
+        You can also pass this with an id list, tuple, set.
+        :param pic_type: The picture type.
+        :param return_json: Set to false will return a dict of Comment instances.
+        Or return json data. Default is false.
+        """
+        if pic_type is not None and pic_type not in constant.PAGE_PICTURE_TYPE:
+            raise PyFacebookException(ErrorMessage(
+                code=ErrorCode.INVALID_PARAMS,
+                message="For field picture: pic_type must be one of the following values: {}".format(
+                    ', '.join(constant.PAGE_PICTURE_TYPE)
+                )))
+
+        args = {
+            "ids": enf_comma_separated("ids", ids),
+            'redirect': 0,  # if set 0 the api will return json response.
+            'type': 'normal' if pic_type is None else pic_type,
+        }
+        resp = self._request(
+            method='GET',
+            path='{0}/picture'.format(self.version),
+            args=args
+        )
+
+        data = self._parse_response(resp)
+
+        res = {}
+        for _id, p_data in iteritems(data):
+            picture_data = p_data["data"]
+            if return_json:
+                res[_id] = picture_data
+            else:
+                res[_id] = ProfilePictureSource.new_from_json_dict(picture_data)
+        return res
