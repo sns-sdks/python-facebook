@@ -582,11 +582,11 @@ class Api(BaseApi):
         Or return json data. Default is false.
         """
 
-        if pic_type is not None and pic_type not in constant.PAGE_PICTURE_TYPE:
+        if pic_type is not None and pic_type not in constant.FB_PAGE_PICTURE_TYPE:
             raise PyFacebookException(ErrorMessage(
                 code=ErrorCode.INVALID_PARAMS,
                 message="For field picture: pic_type must be one of the following values: {}".format(
-                    ', '.join(constant.PAGE_PICTURE_TYPE)
+                    ', '.join(constant.FB_PAGE_PICTURE_TYPE)
                 )))
 
         args = {
@@ -619,11 +619,11 @@ class Api(BaseApi):
         :param return_json: Set to false will return a dict of Comment instances.
         Or return json data. Default is false.
         """
-        if pic_type is not None and pic_type not in constant.PAGE_PICTURE_TYPE:
+        if pic_type is not None and pic_type not in constant.FB_PAGE_PICTURE_TYPE:
             raise PyFacebookException(ErrorMessage(
                 code=ErrorCode.INVALID_PARAMS,
                 message="For field picture: pic_type must be one of the following values: {}".format(
-                    ', '.join(constant.PAGE_PICTURE_TYPE)
+                    ', '.join(constant.FB_PAGE_PICTURE_TYPE)
                 )))
 
         args = {

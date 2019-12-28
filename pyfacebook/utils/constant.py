@@ -46,7 +46,7 @@ FB_COMMENT_BASIC_FIELDS = {
     'from', 'message', 'permalink_url',
 }
 
-PAGE_PICTURE_TYPE = {
+FB_PAGE_PICTURE_TYPE = {
     'small', 'normal', 'album', 'large', 'square'
 }
 
