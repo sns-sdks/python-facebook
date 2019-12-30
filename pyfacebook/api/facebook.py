@@ -4,7 +4,7 @@
 from six import iteritems
 from typing import Optional, Union, List, Tuple, Set
 
-from pyfacebook.error import PyFacebookError, PyFacebookException, ErrorMessage, ErrorCode
+from pyfacebook.error import PyFacebookException, ErrorMessage, ErrorCode
 
 from pyfacebook.models import (
     Page, Comment, CommentSummary,
@@ -41,41 +41,6 @@ class Api(BaseApi):
             proxies=proxies,
             debug_http=debug_http
         )
-
-    def exchange_insights_token(self, token, page_id):
-        """
-        Use user token to exchange page access token.
-        Notice: you must given the manage_pages permission.
-        Refer:
-            https://developers.facebook.com/docs/pages/access-tokens
-            https://developers.facebook.com/docs/facebook-login/access-tokens
-        Args:
-            token (str)
-                Your user access token.
-            page_id (str)
-                Your page id which you want to change token.
-        Returns:
-            The page access token.
-        """
-        if not token:
-            raise PyFacebookError({"message": "Must provide the user access token."})
-        if not page_id:
-            raise PyFacebookError({"message": "Must provide the page id."})
-        args = {
-            'access_token': token,
-            'fields': 'id,access_token'
-        }
-        resp = self._request(
-            method='GET',
-            path='{version}/{page_id}'.format(version=self.version, page_id=page_id),
-            args=args,
-        )
-        data = self._parse_response(resp)
-
-        access_token = data.get('access_token')
-        if access_token is None:
-            return "Check the app has the permission or your token."
-        return access_token
 
     def get_page_info(self,
                       page_id=None,  # type: Optional[str]
