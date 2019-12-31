@@ -349,3 +349,41 @@ class BaseApi(object):
             return self.auth_session.token
         else:
             return AuthAccessToken.new_from_json_dict(self.auth_session.token)
+
+    def exchange_insights_token(self, page_id, access_token=None):
+        # type: (str, Optional[str]) -> str
+        """
+        Use user access token to exchange page(managed by that user) access token.
+
+        Refer:
+            1. https://developers.facebook.com/docs/pages/access-tokens
+            2. https://developers.facebook.com/docs/facebook-login/access-tokens
+
+        :param page_id: The id for page
+        :param access_token: user access token
+        """
+        if access_token is None:
+            access_token = self._access_token
+
+        args = {
+            "access_token": access_token,
+            "fields": "access_token"
+        }
+        resp = self._request(
+            method="GET",
+            path="{version}/{page_id}".format(version=self.version, page_id=page_id),
+            args=args,
+            enforce_auth=False
+        )
+
+        data = self._parse_response(resp)
+        if "access_token" not in data:
+            raise PyFacebookException(ErrorMessage(
+                code=ErrorCode.INVALID_PARAMS,
+                message=(
+                    "Can not change page access token. Confirm: \n"
+                    "1. Your user access token has `page_show_list` or `manage_pages` permission.\n"
+                    "2. You have the target page's manage permission."
+                )
+            ))
+        return data["access_token"]

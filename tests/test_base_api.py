@@ -10,7 +10,8 @@ from pyfacebook.api.base import BaseApi
 
 class BaseApiTest(unittest.TestCase):
     BASE_PATH = "testdata/base/"
-    ACCESS_TOKEN_URL = "https://graph.facebook.com/v5.0/oauth/access_token"
+    BASE_URL = "https://graph.facebook.com/v5.0/"
+    ACCESS_TOKEN_URL = BASE_URL + "oauth/access_token"
 
     with open(BASE_PATH + "app_token.json", "rb") as f:
         APP_ACCESS_TOKEN = json.loads(f.read().decode("utf-8"))
@@ -18,6 +19,10 @@ class BaseApiTest(unittest.TestCase):
         LONG_TERM_TOKEN = json.loads(f.read().decode("utf-8"))
     with open(BASE_PATH + "token_info.json", "rb") as f:
         TOKEN_INFO = json.loads(f.read().decode("utf-8"))
+    with open(BASE_PATH + "insights_token.json", "rb") as f:
+        INSIGHTS_TOKEN = json.loads(f.read().decode("utf-8"))
+    with open(BASE_PATH + "insights_token_none.json", "rb") as f:
+        INSIGHTS_TOKEN_NONE = json.loads(f.read().decode("utf-8"))
 
     def testApiVersion(self):
         with self.assertRaises(pyfacebook.PyFacebookException):
@@ -146,3 +151,20 @@ class BaseApiTest(unittest.TestCase):
             r2 = api.exchange_access_token(response=response)
             self.assertEqual(r2.access_token, "token")
             self.assertEqual(r2.token_type, "bearer")
+
+    def testExchangeInsightsToken(self):
+        page_id = "123456"
+        api = pyfacebook.Api(long_term_token="token")
+        with responses.RequestsMock() as m:
+            m.add("GET", self.BASE_URL + page_id, json=self.INSIGHTS_TOKEN_NONE)
+            with self.assertRaises(pyfacebook.PyFacebookException):
+                api.exchange_insights_token(page_id=page_id)
+
+        with responses.RequestsMock() as m:
+            m.add("GET", self.BASE_URL + page_id, json=self.INSIGHTS_TOKEN)
+
+            token = api.exchange_insights_token(page_id=page_id, access_token="token")
+            self.assertEqual(token, "token")
+
+            token = api.exchange_insights_token(page_id=page_id)
+            self.assertEqual(token, "token")

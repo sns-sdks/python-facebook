@@ -1,28 +1,32 @@
 """
-    Instagram Api impl
+    Instagram Professional Api impl
 """
 import datetime
+from typing import List, Optional, Set, Tuple, Union
 
-from pyfacebook.error import PyFacebookError
+from pyfacebook.error import PyFacebookError, PyFacebookException, ErrorCode, ErrorMessage
 from pyfacebook.models import (
     IgProMedia, IgProUser, IgProComment, IgProReply
 )
 
 from .base import BaseApi
 from pyfacebook.utils import constant
+from pyfacebook.utils.param_validation import enf_comma_separated
 
 
-class InstagramApi(BaseApi):
-    def __init__(self, app_id=None,
+class IgProApi(BaseApi):
+    def __init__(self,
+                 app_id=None,
                  app_secret=None,
                  short_token=None,
                  long_term_token=None,
                  instagram_business_id=None,
                  version=None,
                  timeout=None,
-                 interval_between_request=None,  # if loop get data. should use this.
                  sleep_on_rate_limit=False,
-                 proxies=None):
+                 proxies=None,
+                 debug_http=False
+                 ):
         BaseApi.__init__(self,
                          app_id=app_id,
                          app_secret=app_secret,
@@ -30,94 +34,108 @@ class InstagramApi(BaseApi):
                          long_term_token=long_term_token,
                          version=version,
                          timeout=timeout,
-                         interval_between_request=interval_between_request,
                          sleep_on_rate_limit=sleep_on_rate_limit,
                          proxies=proxies,
-                         is_instagram=True)
+                         debug_http=debug_http
+                         )
 
         self.instagram_business_id = instagram_business_id
 
-        if self.instagram_business_id is None:
-            raise PyFacebookError({"message": "Must provide your instagram business id"})
-
     def discovery_user(self,
-                       username,
-                       include_media=False,
-                       return_json=False):
+                       username,  # type: str
+                       fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                       return_json=False  # type: bool
+                       ):
+        # type: (...) -> Union[IgProUser, dict]
         """
-        Obtain the Instagram Business user info. If user not belong to business.
-        This will return not found.
-        Args:
-            username (str)
-                The username for you want to retrieve data. Business discovery only for username.
-            include_media (bool, optional)
-                If you want get recent media by this. Provide this with True
-            return_json (bool, optional)
-                If True JSON data will be returned, instead of pyfacebook.InstagramUser.
-        Returns:
-            IG business user public info.
+        Retrieve other business user basic info by username.
+
+        Note:
+            Business discovery only for username and need your business id.
+
+        :param username: The username for you want to retrieve data.
+        :param fields:Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return instance of IgProUser.
+        Or return json data. Default is false.
+        :return:
         """
-        metric = constant.INSTAGRAM_USER_FIELD
-        if include_media:
-            metric = metric.union({'media{{{}}}'.format(','.join(constant.INSTAGRAM_MEDIA_PUBLIC_FIELD))})
-        fields = 'business_discovery.username({username}){{{metric}}}'.format(
+        if fields is None:
+            fields = constant.INSTAGRAM_USER_FIELD
+        param = 'business_discovery.username({username}){{{metric}}}'.format(
             username=username,
-            metric=','.join(metric)
+            metric=enf_comma_separated("fields", fields)
         )
         resp = self._request(
             path='{0}/{1}'.format(self.version, self.instagram_business_id),
             args={
-                'fields': fields
+                'fields': param
             }
         )
-        data = self._parse_response(resp.content.decode('utf-8'))
+        data = self._parse_response(resp)
         if return_json:
             return data['business_discovery']
         else:
             return IgProUser.new_from_json_dict(data['business_discovery'])
 
     def discovery_user_medias(self,
-                              username,
-                              since_time=None,
-                              until_time=None,
-                              count=10,
-                              limit=10,
-                              return_json=False):
+                              username,  # type: str
+                              fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                              since_time=None,  # type: Optional[str]
+                              until_time=None,  # type: Optional[str]
+                              count=10,  # type: Optional[int]
+                              limit=10,  # type: int
+                              return_json=False  # type: bool
+                              ):
+        # type: (...) -> List[Union[IgProMedia, dict]]
         """
-        Obtain given user's media by business discovery method.
+        Retrieve other business user's public medias.
 
-        Args:
-            username (str)
-                the username which business account you want to retrieve data.
-            since_time (str, optional)
-                Lower bound of the time range to the medias publish time.
+        :param username: The username for other business user.
+        :param fields: Comma-separated id string for data fields which you want.
+                You can also pass this with an id list, tuple, set.
+        :param since_time: Lower bound of the time range to the medias publish time.
                 Format is %Y-%m-%d. If not provide, will not limit by this.
-            until_time (str, optional)
-                Upper bound of the time range to the medias publish time.
+        :param until_time: Upper bound of the time range to the medias publish time.
                 Format is %Y-%m-%d. If not provide, will not limit by this.
-            count (int, optional)
-                The count is you want to retrieve medias. Default is 10.
+        :param count: The count is you want to retrieve medias. Default is 10.
+                If you want to get all data. Set it to None.
                 For now This may be not more than 10K.
-            limit (int, optional)
-                The count each request get the result count. Default is 10.
-            return_json (bool, optional):
-                If True origin data by facebook will be returned, or will return pyfacebook.InstagramMedia list
-
-        Returns:
-            media data list.
+        :param limit: Each request retrieve posts count from api.
+                For medias it should no more than 500.
+        :param return_json: Set to false will return instance of IgProUser.
+        Or return json data. Default is false.
         """
+
         try:
             if since_time is not None:
                 since_time = datetime.datetime.strptime(since_time, '%Y-%m-%d')
             if until_time is not None:
                 until_time = datetime.datetime.strptime(until_time, '%Y-%m-%d')
         except (ValueError, TypeError):
-            raise PyFacebookError({'message': 'since_time or until_time must format as %Y-%m-%d'})
+            raise PyFacebookException(ErrorMessage(
+                code=ErrorCode.INVALID_PARAMS,
+                message="since_time or until_time must format as %Y-%m-%d"
+            ))
+
+        if count is not None:
+            limit = min(limit, count)
+
+        if fields is None:
+            fields = constant.INSTAGRAM_MEDIA_PUBLIC_FIELD
+        fields = enf_comma_separated("fields", fields)
+
+        if (since_time is not None or until_time is not None) and "timestamp" not in fields:
+            raise PyFacebookException(ErrorMessage(
+                code=ErrorCode.MISSING_PARAMS,
+                message="Use the since and until must give `timestamp` field"
+            ))
 
         args = {
             'path': '{0}/{1}'.format(self.version, self.instagram_business_id),
             'username': username,
-            'limit': min(limit, count)
+            'limit': limit,
+            "metric": enf_comma_separated("fields", fields),
         }
 
         medias = []
@@ -132,9 +150,14 @@ class InstagramApi(BaseApi):
             data = data.get('data', [])
             # check if the media meet the request.
             for item in data:
-                timestamp = datetime.datetime.strptime(item['timestamp'][:-5], '%Y-%m-%dT%H:%M:%S')
-                begin_flag = True if since_time is None else since_time < timestamp
-                end_flag = True if until_time is None else until_time > timestamp
+                begin_flag, end_flag = True, True
+
+                if "timestamp" in item:
+                    timestamp = datetime.datetime.strptime(item['timestamp'][:-5], '%Y-%m-%dT%H:%M:%S')
+                    if since_time is not None:
+                        begin_flag = since_time < timestamp
+                    if until_time is not None:
+                        end_flag = until_time > timestamp
 
                 if all([begin_flag, end_flag]):
                     if return_json:
@@ -144,11 +167,14 @@ class InstagramApi(BaseApi):
                 if not begin_flag:
                     next_cursor = None
                     break
+
+            if count is not None:
+                if len(medias) >= count:
+                    medias = medias[:count]
+                    break
             if next_cursor is None:
                 break
-            if len(medias) >= count:
-                break
-        return medias[:count]
+        return medias
 
     def paged_by_cursor(self,
                         target=None,
@@ -181,13 +207,13 @@ class InstagramApi(BaseApi):
                     username=args['username'],
                     limit=args['limit'],
                     after=next_cursor,
-                    fields=','.join(constant.INSTAGRAM_MEDIA_PUBLIC_FIELD)
+                    fields=args["metric"]
                 )
             else:
                 fields = 'business_discovery.username({username}){{media.limit({limit}){{{fields}}}}}'.format(
                     username=args['username'],
                     limit=args['limit'],
-                    fields=','.join(constant.INSTAGRAM_MEDIA_PUBLIC_FIELD)
+                    fields=args["metric"]
                 )
             path = args['path']
             args = {'fields': fields}
@@ -202,7 +228,7 @@ class InstagramApi(BaseApi):
         )
 
         next_cursor, previous_cursor = None, None
-        data = self._parse_response(resp.content.decode('utf-8'))
+        data = self._parse_response(resp)
         # Note: business discover only support for media.
         if business_discovery:
             data = data['business_discovery']['media']
