@@ -3,8 +3,9 @@
 """
 import datetime
 from typing import List, Optional, Set, Tuple, Union
+from six import iteritems
 
-from pyfacebook.error import PyFacebookError, PyFacebookException, ErrorCode, ErrorMessage
+from pyfacebook.error import PyFacebookException, ErrorCode, ErrorMessage
 from pyfacebook.models import (
     IgProMedia, IgProUser, IgProComment, IgProReply
 )
@@ -268,15 +269,15 @@ class IgProApi(BaseApi):
         else:
             return IgProUser.new_from_json_dict(data)
 
-    def get_medias(self,
-                   user_id,  # type: str
-                   fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
-                   since_time=None,  # type: Optional[str]
-                   until_time=None,  # type: Optional[str]
-                   count=10,  # type: Optional[int]
-                   limit=10,  # type: int
-                   return_json=False  # type: bool
-                   ):
+    def get_user_medias(self,
+                        user_id,  # type: str
+                        fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                        since_time=None,  # type: Optional[str]
+                        until_time=None,  # type: Optional[str]
+                        count=10,  # type: Optional[int]
+                        limit=10,  # type: int
+                        return_json=False  # type: bool
+                        ):
         # type: (...) -> List[Union[IgProMedia, dict]]
         """
         Retrieve
@@ -357,45 +358,68 @@ class IgProApi(BaseApi):
         return medias
 
     def get_media_info(self,
-                       media_id,
-                       access_token=None,
-                       include_comment=False,
-                       return_json=False):
+                       media_id,  # type: str
+                       fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                       return_json=False  # type: bool
+                       ):
+        # type: (...) -> Union[IgProMedia, dict]
         """
-        Obtain media info by media id.
-
-        Args:
-            media_id (str)
-                The media id for which you want to get data.
-            access_token (str, optional)
-                The user access token with authorization by point user.
-                Default is the api access token.
-            include_comment (bool, optional)
-                If provide this with True, will return recently comments.
-            return_json (bool, optional)
-                If True origin data by facebook will be returned,
-                or will return pyfacebook.InstagramMedia.
-        Returns:
-            InstagramMedia instance or media json data.
+        Retrieve the media info by media id.
+        :param media_id: The media id for which you want to get data.
+        :param fields: Comma-separated id string for data fields which you want.
+                You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return instance of IgProUser.
+                Or return json data. Default is false.
         """
-        metric = constant.INSTAGRAM_MEDIA_OWNER_FIELD
-        if include_comment:
-            metric = metric.union({'comments{{{}}}'.format(','.join(constant.INSTAGRAM_COMMENT_FIELD))})
+        if fields is None:
+            fields = constant.INSTAGRAM_MEDIA_OWNER_FIELD
 
-        args = {'fields': ','.join(metric)}
-        if access_token:
-            args['access_token'] = access_token
+        args = {'fields': enf_comma_separated("fields", fields)}
 
         resp = self._request(
             path='{0}/{1}'.format(self.version, media_id),
             args=args
         )
 
-        data = self._parse_response(resp.content.decode('utf-8'))
+        data = self._parse_response(resp)
         if return_json:
             return data
         else:
             return IgProMedia.new_from_json_dict(data)
+
+    def get_medias_info(self,
+                        media_ids,  # type: Union[str, List, Tuple, Set]
+                        fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                        return_json=False  # type: bool
+                        ):
+        # type: (...) -> dict
+        """
+        Retrieve the media info by media id.
+        :param media_ids: Comma-separated id string for media which you want.
+                You can also pass this with an id list, tuple, set.
+        :param fields: Comma-separated id string for data fields which you want.
+                You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return instance of IgProUser.
+                Or return json data. Default is false.
+        """
+        if fields is None:
+            fields = constant.INSTAGRAM_MEDIA_OWNER_FIELD
+
+        args = {
+            "fields": enf_comma_separated("fields", fields),
+            "ids": enf_comma_separated("media_ids", media_ids)
+        }
+
+        resp = self._request(
+            path='{0}/'.format(self.version),
+            args=args
+        )
+
+        data = self._parse_response(resp)
+        if return_json:
+            return data
+        else:
+            return {_id: IgProMedia.new_from_json_dict(p_data) for _id, p_data in iteritems(data)}
 
     def get_comments(self,
                      media_id,
