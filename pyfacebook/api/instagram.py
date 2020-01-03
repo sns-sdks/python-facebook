@@ -103,7 +103,7 @@ class IgProApi(BaseApi):
                 For now This may be not more than 10K.
         :param limit: Each request retrieve posts count from api.
                 For medias it should no more than 500.
-        :param return_json: Set to false will return instance of IgProUser.
+        :param return_json: Set to false will return a list instance of IgProMedia.
         Or return json data. Default is false.
         """
 
@@ -239,44 +239,32 @@ class IgProApi(BaseApi):
         return next_cursor, previous_cursor, data
 
     def get_user_info(self,
-                      user_id=None,
-                      include_media=False,
-                      access_token=None,
-                      return_json=False):
+                      user_id,  # type: str
+                      fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                      return_json=False  # type: bool
+                      ):
+        # type: (...) -> Optional[IgProUser, dict]
         """
-        Obtain provide user's info.
-
-        Args:
-            user_id (str, optional)
-                The id for instagram business user id which you want to get data.
-                Default is the api instagram business id.
-            include_media (bool, optional)
-                If provide this with True. Response will include 25 recently posted medias.
-            access_token (str, optional)
-                The user access token with authorization by point user.
-                Default is the api access token.
-            return_json (bool, optional)
-                If True origin data by facebook will be returned, or will return pyfacebook.InstagramUser
-        Returns:
-            IG business user full info.
+        Retrieve ig user data by user id.
+        :param user_id: The id for instagram business user id which you want to get data.
+        :param fields: Comma-separated id string for data fields which you want.
+                You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return instance of IgProUser.
+                Or return json data. Default is false.
         """
-        if user_id is None:
-            user_id = self.instagram_business_id
 
-        metric = constant.INSTAGRAM_USER_FIELD
-        if include_media:
-            metric = metric.union({'media{{{}}}'.format(','.join(constant.INSTAGRAM_MEDIA_OWNER_FIELD))})
+        if fields is None:
+            fields = constant.INSTAGRAM_USER_FIELD
 
         args = {
-            'fields': ','.join(metric),
+            'fields': enf_comma_separated("fields", fields),
         }
-        if access_token:
-            args['access_token'] = access_token
+
         resp = self._request(
             path='{0}/{1}'.format(self.version, user_id),
             args=args
         )
-        data = self._parse_response(resp.content.decode('utf-8'))
+        data = self._parse_response(resp)
 
         if return_json:
             return data
