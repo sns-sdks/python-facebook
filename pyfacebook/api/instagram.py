@@ -202,19 +202,16 @@ class IgProApi(BaseApi):
             The origin data return from the graph api.
         """
         if business_discovery:
+            query = "business_discovery.username({username}){{media{after}.limit({limit}){{{fields}}}}}"
+            after = ""
             if next_cursor is not None:
-                fields = 'business_discovery.username({username}){{media.after({after}).limit({limit}){{{fields}}}}}'.format(
-                    username=args['username'],
-                    limit=args['limit'],
-                    after=next_cursor,
-                    fields=args["metric"]
-                )
-            else:
-                fields = 'business_discovery.username({username}){{media.limit({limit}){{{fields}}}}}'.format(
-                    username=args['username'],
-                    limit=args['limit'],
-                    fields=args["metric"]
-                )
+                after = ".after({after})".format(after=next_cursor)
+            fields = query.format(
+                username=args['username'],
+                limit=args['limit'],
+                after=after,
+                fields=args["metric"]
+            )
             path = args['path']
             args = {'fields': fields}
         else:
@@ -246,7 +243,7 @@ class IgProApi(BaseApi):
         # type: (...) -> Optional[IgProUser, dict]
         """
         Retrieve ig user data by user id.
-        :param user_id: The id for instagram business user id which you want to get data.
+        :param user_id: The id for instagram business user which you want to get data.
         :param fields: Comma-separated id string for data fields which you want.
                 You can also pass this with an id list, tuple, set.
         :param return_json: Set to false will return instance of IgProUser.
@@ -272,47 +269,32 @@ class IgProApi(BaseApi):
             return IgProUser.new_from_json_dict(data)
 
     def get_medias(self,
-                   user_id=None,
-                   access_token=None,
-                   since_time=None,
-                   until_time=None,
-                   count=10,
-                   limit=10,
-                   include_comment=False,
-                   return_json=False):
+                   user_id,  # type: str
+                   fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                   since_time=None,  # type: Optional[str]
+                   until_time=None,  # type: Optional[str]
+                   count=10,  # type: Optional[int]
+                   limit=10,  # type: int
+                   return_json=False  # type: bool
+                   ):
+        # type: (...) -> List[Union[IgProMedia, dict]]
         """
-        Obtain provide user's medias.
-
-        Args:
-            user_id (str, optional)
-                The id for instagram business user id which you want to get data.
-                Default is the api instagram business id.
-            access_token (str, optional)
-                The user access token with authorization by point user.
-                Default is the api access token.
-            since_time (str, optional)
-                Lower bound of the time range to the medias publish time.
+        Retrieve
+        :param user_id: The id for instagram business user which you want to get data.
+        :param fields: Comma-separated id string for data fields which you want.
+                You can also pass this with an id list, tuple, set.
+        :param since_time: Lower bound of the time range to the medias publish time.
                 Format is %Y-%m-%d. If not provide, will not limit by this.
-            until_time (str, optional)
-                Upper bound of the time range to the medias publish time.
+        :param until_time: Upper bound of the time range to the medias publish time.
                 Format is %Y-%m-%d. If not provide, will not limit by this.
-            count (int, optional)
-                The count for you want to get medias.
+        :param count: The count for you want to get medias.
                 Default is 10.
-            limit (int, optional)
-                The count each request get the result count.
-                Default is 10.
-            include_comment (bool, optional)
-                If provide this with True, will return recently comments.
-            return_json (bool, optional)
-                If True origin data by facebook will be returned,
-                or will return pyfacebook.InstagramMedia list
-        Returns:
-            [InstagramMedia...] Or media json data.
+                If need get all, set this with None.
+        :param limit: Each request retrieve medias count from api.
+                For medias it should no more than 500.
+        :param return_json: Set to false will return instance of IgProUser.
+                Or return json data. Default is false.
         """
-
-        if user_id is None:
-            user_id = self.instagram_business_id
 
         try:
             if since_time is not None:
@@ -320,20 +302,21 @@ class IgProApi(BaseApi):
             if until_time is not None:
                 until_time = datetime.datetime.strptime(until_time, '%Y-%m-%d')
         except (ValueError, TypeError):
-            raise PyFacebookError({'message': 'since_time or until_time must format as %Y-%m-%d'})
+            raise PyFacebookException(ErrorMessage(
+                code=ErrorCode.INVALID_PARAMS,
+                message="since_time or until_time must format as %Y-%m-%d",
+            ))
 
-        metric = constant.INSTAGRAM_MEDIA_OWNER_FIELD
+        if fields is None:
+            fields = constant.INSTAGRAM_MEDIA_OWNER_FIELD
 
-        if include_comment:
-            metric = metric.union({'comments{{{}}}'.format(','.join(constant.INSTAGRAM_COMMENT_FIELD))})
+        if count is not None:
+            limit = min(limit, count)
 
         args = {
-            'fields': ','.join(metric),
-            'limit': min(count, limit)
+            'fields': enf_comma_separated("fields", fields),
+            'limit': limit
         }
-
-        if access_token:
-            args['access_token'] = access_token
 
         medias = []
         next_cursor = None
@@ -347,9 +330,14 @@ class IgProApi(BaseApi):
             )
             data = data.get('data', [])
             for item in data:
-                timestamp = datetime.datetime.strptime(item['timestamp'][:-5], '%Y-%m-%dT%H:%M:%S')
-                begin_flag = True if since_time is None else since_time < timestamp
-                end_flag = True if until_time is None else until_time > timestamp
+                begin_flag, end_flag = True, True
+
+                if "timestamp" in item:
+                    timestamp = datetime.datetime.strptime(item['timestamp'][:-5], '%Y-%m-%dT%H:%M:%S')
+                    if since_time is not None:
+                        begin_flag = since_time < timestamp
+                    if until_time is not None:
+                        end_flag = until_time > timestamp
 
                 if all([begin_flag, end_flag]):
                     if return_json:
@@ -359,11 +347,14 @@ class IgProApi(BaseApi):
                 if not begin_flag:
                     next_cursor = None
                     break
+
+            if count is not None:
+                if len(medias) >= count:
+                    medias = medias[:count]
+                    break
             if next_cursor is None:
                 break
-            if len(medias) >= count:
-                break
-        return medias[:count]
+        return medias
 
     def get_media_info(self,
                        media_id,
