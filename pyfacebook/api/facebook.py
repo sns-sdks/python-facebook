@@ -87,11 +87,11 @@ class Api(BaseApi):
         else:
             return Page.new_from_json_dict(data)
 
-    def get_pages(self,
-                  ids,  # type: Optional[Union[str, List, Tuple, Set]]
-                  fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
-                  return_json=False  # type: bool
-                  ):
+    def get_pages_info(self,
+                       ids,  # type: Optional[Union[str, List, Tuple, Set]]
+                       fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                       return_json=False  # type: bool
+                       ):
         # type: (...) -> dict
         """
         Retrieve multi pages info by one request.
@@ -395,7 +395,7 @@ class Api(BaseApi):
         else:
             return {_id: Post.new_from_json_dict(p_data) for _id, p_data in iteritems(data)}
 
-    def get_comments_by_parent(self,
+    def get_comments_by_object(self,
                                object_id,  # type: str
                                summary=True,  # type: bool
                                fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
@@ -514,7 +514,7 @@ class Api(BaseApi):
         Or return json data. Default is false.
         """
         if fields is None:
-            fields = constant.FB_POST_BASIC_FIELDS.union(constant.FB_POST_REACTIONS_FIELD)
+            fields = constant.FB_COMMENT_BASIC_FIELDS.union(constant.FB_POST_REACTIONS_FIELD)
 
         args = {
             "ids": enf_comma_separated("ids", ids),

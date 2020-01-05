@@ -28,14 +28,14 @@ class CommentTestApi(unittest.TestCase):
             long_term_token="token"
         )
 
-    def testGetCommentByParent(self):
+    def testGetCommentByObject(self):
         post_id = "2121008874780932_2498613793687103"
         # test all comments
         with responses.RequestsMock() as m:
             m.add("GET", self.BASE_URL + post_id + "/comments", json=self.COMMENTS_PAGED_1)
             m.add("GET", self.BASE_URL + post_id + "/comments", json=self.COMMENTS_PAGED_2)
 
-            comments, comment_summary = self.api.get_comments_by_parent(
+            comments, comment_summary = self.api.get_comments_by_object(
                 object_id=post_id,
                 count=None,
                 limit=5
@@ -48,7 +48,7 @@ class CommentTestApi(unittest.TestCase):
         with responses.RequestsMock() as m:
             m.add("GET", self.BASE_URL + post_id + "/comments", json=self.COMMENTS_PAGED_1)
 
-            comments, comment_summary = self.api.get_comments_by_parent(
+            comments, comment_summary = self.api.get_comments_by_object(
                 object_id=post_id,
                 count=5,
                 limit=5,

@@ -32,8 +32,8 @@ class Comment(BaseModel):
 
     # base fields
     id = attrib(default=None, type=Optional[str])
-    can_like = attrib(default=None, type=Optional[bool])
-    can_comment = attrib(default=None, type=Optional[bool])
+    can_like = attrib(default=None, type=Optional[bool], repr=False)
+    can_comment = attrib(default=None, type=Optional[bool], repr=False)
     comment_count = attrib(default=None, type=Optional[int])
     created_time = attrib(default=None, type=Optional[str], repr=False)
     like_count = attrib(default=None, type=Optional[int])
