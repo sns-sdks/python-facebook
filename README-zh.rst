@@ -18,16 +18,21 @@ Python Facebook
     :target: https://pypi.org/project/python-facebook-api
     :alt: PyPI
 
-README: `English <https://github.com/MerleLiuKun/python-facebook/blob/master/README.rst>`_ | `中文 <https://github.com/MerleLiuKun/python-facebook/blob/master/README-zh.rst>`_
+README: `English <README.rst>`_ | `中文 <README-zh.rst>`_
 
 ====
 致谢
 ====
 
-项目的结构基于 `Python-Twitter <https://github.com/bear/python-twitter>`_.
+灵感来自 `Python-Twitter <https://github.com/bear/python-twitter>`_.
 
-感谢 `Python-Twitter` 项目组的大佬.
+====
+说明
+====
 
+该库提供一种更加简单的方式去使用 ``Facebook`` 平台的数据接口。 注意，当你使用时，由于一些原因，需要在外网环境下才可以使用。
+
+目前包括了 ``Facebook``, ``Instagram Business`` 产品数据的使用。
 
 ====
 安装
@@ -38,143 +43,173 @@ README: `English <https://github.com/MerleLiuKun/python-facebook/blob/master/REA
     $pip install --upgrade python-facebook-api
     ✨🍰✨
 
-由于 `python-facebook` 名称已经被占用，所以只能以这样的名字了。吐槽一波，好名字都被占用，并且好久都没有更新了！！
-
-
 ====
 文档
 ====
 
 你可以访问: https://python-facebook-api.readthedocs.io/en/latest/ 去查看相关文档 (Doing).
 
-所涉及的 ``Facebook Graph API`` 你都可以通过访问: https://developers.facebook.com/docs/graph-api/ 去查看
+涉及的 ``Facebook Graph API`` 你都可以通过访问: https://developers.facebook.com/docs/graph-api/ 去查看
+涉及的 ``Instagram Graph API`` 你都可以通过访问: https://developers.facebook.com/docs/instagram-api/ 去查看
 
-====
-说明
-====
+=======================
+使用 Facebook Graph API
+=======================
 
-该库提供一种更加简单的方式去使用 ``Facebook`` 平台的数据接口。 注意，当你使用时，由于一些原因，需要在外网环境下才可以使用。
+API 通过 ``pyfacebook.Api`` 类公开访问。
 
-目前包括了 ``Facebook``, ``Instagram Business`` 产品数据的使用。
+为了获取对应的数据，你首先需要一个 Facebook App。
+你可以访问 `App docs <https://developers.facebook.com/docs/apps>`_ 去获取更多关于如何创建 App 和 如何为 App 申请相关的权限的信息。
+
+----------
+初始化 API
+----------
+
+Facebook 存在不同类型的访问口令。使用不同的访问口令可以获取不同类型的数据。
+
+1. 用户访问口令
+#. 应用访问口令
+#. 主页访问口令
+#. 客户端访问口令 (由于用到该口令的地方很少，此库不提供)
+
+你可以阅读有关 `访问口令`_ 的文档去获取更多的信息。
+
+如果你想要通过用户进行授权来获取用户的访问口令，你可以按照 `手动授权`_ 的文档来初始化 Api。
+
+如果你只是想通过应用访问口令来获取一些公开数据，你可以通过如下方式初始化 Api::
+
+    In [2]: api = Api(app_id="your app id", app_secret="your app secret", application_only_auth=True)
+    In [3]: api.get_token_info()  # 获取当前口令的信息
+    Out[3]: AccessToken(app_id='id', application='app name', user_id=None)
+
+如果你已经有了一个短期的访问口令，你可以通过如下方式初始化 Api::
+
+    In [4]: api = Api(app_id="your app id", app_secret="your app secret", short_token="short-lived token")
+    In [5]: api.get_token_info()
+    Out[5]: AccessToken(app_id='id', application='app name', user_id='token user id')
+
+如果你已经有了一个长期的访问口令，你可以通过如下方式初始化 Api
+(注意，只提供一个 ``long_term_token``参数已经足以初始化，当时为了安全器件，最好还是提供一下 app 的认证数据)::
+
+    In [6]: api = Api(app_id="your app id", app_secret="your app secret", long_term_token="long-term token")
+    In [7]: api.get_token_info()
+    Out[7]: AccessToken(app_id='id', application='app name', user_id='token user id')
+
+    #  只使用 ``long_term_token`` 参数时，需要该口令具有 ``manage_pages`` 的权限
+    In [8]: api = Api(long_term_token="long-term token")
 
 
-========
-如何使用
-========
+使用短期口令和长期口令初始化的区别在于，使用短期口令时，库会自动获取到 长期的口令。
 
-------------
-Facebook API
-------------
+--------
+获取数据
+--------
 
-``Facebook API`` 提供了对于 ``Facebook`` 应用下的主页的相关数据的访问。核心层是 ``pyfacebook.Api`` .
+你可以通过如下的方式来获取一个主页的公开数据。
 
-在初始化 ``pyfacebook.Api`` 实例时，需要提供脸书平台的 ``App`` 的授权代码，此授权依据获取不同数据需要不同的权限。具体请参阅脸书开发文档的相关权限信息。
-最基础的权限是 ``public_content``. 可以获取主页的一些公开数据。
+获取单个主页的公开数据::
 
-如果你没有相应的 ``App``，需要在 ``Facebook`` 开发者平台下进行申请。
+    In [3]: api.get_page_info(username='facebookapp')
+    Out[3]: Page(id='20531316728', name='Facebook', username='facebookapp')
 
-相关文档如下：
+仅通过一次请求来获取多个主页的公开数据(参数 ``ids`` 可以是主页 ID 和主页用户名混用的列表)::
 
-- `Facebook 开发者官网 <https://developers.facebook.com/>`_
-- `Facebook 授权 <https://developers.facebook.com/docs/facebook-login/access-tokens/#usertokens>`_
-
-使用示例：
-
-可以使用两种方式创建 ``Api`` 实例::
-
-    # 使用临时令牌和App密钥
-    In [1]: import pyfacebook
-
-    In [2]: api = pyfacebook.Api(app_id='your app id',   # use the second method.
-       ...:                      app_secret='your app secret',
-       ...:                      short_token='your short token')
-
-    # 使用长期令牌
-    In [3]: api = pyfacebook.Api(long_term_token='your long term access token')
-
-
-初始化完毕之后可以使用该 ``Api`` 实例获取数据信息.
-
-获取当前Token的关联信息::
-
-    In [4]: api.get_token_info(return_json=True)
+    In [4]: api.get_pages_info(ids=["20531316728", "nba"])
     Out[4]:
-    {'data': {'app_id': 'xxx',
-    'type': 'USER',
-    'application': 'xxx',
-    'data_access_expires_at': 1555231532,
-    'expires_at': 1553244944,
-    'is_valid': True,
-    'issued_at': 1548060944,
-    'scopes': ['public_profile'],
-    'user_id': 'xxx'}}
+    {'20531316728': Page(id='20531316728', name='Facebook', username='facebookapp'),
+     'nba': Page(id='8245623462', name='NBA', username='nba')}
 
+存在多种方法来获取主页的贴文数据。
 
-获取某个 ``Facebook`` 主页的公开数据信息::
+>>> api.get_page_feeds()
+>>> api.get_page_posts()
+>>> api.get_page_published_posts()
+>>> api.get_page_tagged_posts()
 
-    In [5]: api.get_page_info(page_id='20531316728')  # 你可以指定参数 return_json 为 True, 返回 JSON 格式数据
-    Out[5]: Page(ID=20531316728, username=facebook)
+主页 feeds 可以获取主页或者由此主页上的其他人发布的帖子动态(包括状态更新)和链接::
 
-因为脸书的图谱API的限制 `Page Feed <https://developers.facebook.com/docs/graph-api/reference/v4.0/page/feed>`_ ，
-使用普通的 ``User Access Token`` 只能获取大约 600 个经排名的已发布帖子。如果你想要获取到某主页的所有发布贴文，需要使用 ``/{page_id}/published_posts`` 端点。
-使用此端点, 需要使用经过主页管理员授予 ``manage_pages`` 权限的主页授权 ``Page Access Token`` 。
-如果你有经过授权，可以使用如下操作获取到主页访问口令::
+    In [5]: api.get_page_feeds(page_id="20531316728",count=2)
+    Out[5]:
+    [Post(id='20531316728_587455038708591', permalink_url='https://www.facebook.com/facebookapp/videos/587455038708591/'),
+     Post(id='20531316728_10159023836696729', permalink_url='https://www.facebook.com/20531316728/posts/10159023836696729/')]
 
-    n [6]: access_token = api.exchange_insights_token(token='user token', page_id='page id')
-    Out[6]: 'page access token'
+主页 posts 只能获取到由该主页发布的帖子::
 
-获取到主页访问口令之后，就可以使用如下函数获取当前主页所发布的所有贴文::
+    In [6]: api.get_page_posts(page_id="20531316728",count=2)
+    Out[6]:
+    [Post(id='20531316728_587455038708591', permalink_url='https://www.facebook.com/facebookapp/videos/587455038708591/'),
+     Post(id='20531316728_10159023836696729', permalink_url='https://www.facebook.com/20531316728/posts/10159023836696729/')]
 
-    In [7]: api.get_published_posts(username='facebook', access_token='page access token')
+因为图谱 API 的限制. `动态 <https://developers.facebook.com/docs/graph-api/reference/v5.0/page/feed>`_。
+API 每年返回大约 600 个经排名的帖子。
+
+所以如果你想要获取主页的所有帖子或者标记该主页的帖子。你需要使用 ``get_page_published_posts`` 方法，该方法需要你的访问口令带有 ``manage_pages`` 的权限。
+
+你可以通过授权来得到这样的访问口令，按照 `手动授权`_ 的文档即可。
+
+之后你可以获取到主页所有帖子::
+
+    In [7]: api.get_published_posts(username='facebookapp', access_token='page access token')
     Out[7]: [Post...]
 
-使用主页访问口令，你还可以获取到那些在贴文中对该主页进行标记的贴文。如下::
+获取标记该主页的帖子::
 
-    In [8]: api.get_tagged_posts(username='facebook', access_token='page access token')
+    In [8]: api.get_tagged_posts(username='facebookapp', access_token='page access token')
     Out[8]: [Post...]
 
 
-批量获取某主页的贴文信息(不全)::
+如果你已经有了贴文的 ID，你可以通过如下方法来获取贴文的详情数据。
 
-    In [9]: api.get_posts(username='facebook')
-    Out[9]:
-    [Post(ID=20531316728_10158033357426729, permalink_url=https://www.facebook.com/20531316728/posts/10158033357426729/),
-     Post(ID=2031316728_10157806010111729, permalink_url=https://www.facebook.com/20531316728/posts/10157806010111729/),
-     Post(ID=20531316728_1877006505687069, permalink_url=https://www.facebook.com/facebook/videos/1877006505687069/),
-     Post(ID=20531316728_267444427196392, permalink_url=https://www.facebook.com/facebook/videos/267444427196392/)]
+获取单个贴子的数据::
 
-获取指定的某个贴文的信息::
+    In [9]: api.get_post_info(post_id="20531316728_587455038708591")
+    Out[9]: Post(id='20531316728_587455038708591', permalink_url='https://www.facebook.com/facebookapp/videos/587455038708591/')
 
-    In [10]: res = api.get_post_info(post_id='20531316728_10157619579661729')
+单请求获取多个贴子的数据::
 
-    In [11]: res
-    Out[11]: Post(ID=20531316728_10157619579661729, permalink_url=https://www.facebook.com/20531316728/posts/10157619579661729/)
-
-    In [12]: res.comments
-    Out[12]: 1016
+    In [10]: api.get_posts_info(ids=["20531316728_587455038708591", "20531316728_10159023836696729"])
+    Out[10]:
+    {'20531316728_587455038708591': Post(id='20531316728_587455038708591', permalink_url='https://www.facebook.com/facebookapp/videos/587455038708591/'),
+     '20531316728_10159023836696729': Post(id='20531316728_10159023836696729', permalink_url='https://www.facebook.com/20531316728/posts/10159023836696729/')}
 
 
-获取某对象(贴文,图片等)的评论数据::
+你可以通过资源对象(帖子，图片等)的 ID 来获取对应的评论数据::
 
-    In [13]: res = api.get_comments(object_id='20531316728_10157619579661729', summary=True)
-    In [14]: res
-    Out[14]:
-    ([Comment(ID=10157619579661729_10157621841846729,created_time=2018-08-16T13:01:09+0000),
-      Comment(ID=10157619579661729_10157621842496729,created_time=2018-08-16T13:01:31+0000),
-      Comment(ID=10157619579661729_10157621842611729,created_time=2018-08-16T13:01:34+0000),
-      Comment(ID=10157619579661729_10157621842701729,created_time=2018-08-16T13:01:37+0000),
-      Comment(ID=10157619579661729_10157621843186729,created_time=2018-08-16T13:01:52+0000),
-      Comment(ID=10157619579661729_10157621843316729,created_time=2018-08-16T13:01:55+0000),
-      Comment(ID=10157619579661729_10157621843376729,created_time=2018-08-16T13:01:58+0000),
-      Comment(ID=10157619579661729_10157621843721729,created_time=2018-08-16T13:02:11+0000),
-      Comment(ID=10157619579661729_10157621843771729,created_time=2018-08-16T13:02:13+0000),
-      Comment(ID=10157619579661729_10157621843836729,created_time=2018-08-16T13:02:14+0000)],
-     CommentSummary(order=chronological,total_count=987))
-    In [15]: res[1]
-    Out[15]: CommentSummary(order=chronological,total_count=987)
-    In [16]: res.as_json_string()
-    Out[16]: '{"can_comment": true, "order": "chronological", "total_count": 987}'
+    In [11]: api.get_comments_by_object(object_id="20531316728_587455038708591", count=2)
+    Out[11]:
+    ([Comment(id='587455038708591_587460942041334', can_like=True, can_comment=True, comment_count=2, like_count=1),
+      Comment(id='587455038708591_587464298707665', can_like=True, can_comment=True, comment_count=2, like_count=14)],
+     CommentSummary(total_count=392, can_comment=True))
 
+如果你已经有了评论的 ID，你可以通过如下方式来获取评论的详情数据::
+
+获取单个评论的数据::
+
+    In [12]: api.get_comment_info(comment_id="587455038708591_587460942041334")
+    Out[12]: Comment(id='587455038708591_587460942041334', comment_count=2, like_count=1)
+
+单请求获取多个评论的数据::
+
+    In [13]: api.get_comments_info(ids=["587455038708591_587460942041334", "587455038708591_587464298707665"])
+    Out[13]:
+    {'587455038708591_587460942041334': Comment(id='587455038708591_587460942041334', comment_count=2, like_count=1),
+     '587455038708591_587464298707665': Comment(id='587455038708591_587464298707665', comment_count=2, like_count=14)}
+
+
+你可以通过如下方式来获取主页的头像。
+
+获取单个主页的头像数据::
+
+    In [14]: api.get_picture(page_id="20531316728")
+    Out[14]: ProfilePictureSource(url='https://scontent.xx.fbcdn.net/v/t1.0-1/p100x100/58978526_10158354585751729_7411073224387067904_o.png?_nc_cat=1&_nc_oc=AQmaFO7eND-DVRoArrQLUZVDpmemw8nMPmHJWvoCyXId_MKLLHQdsS8UbTOX4oaEfeQ&_nc_ht=scontent.xx&oh=128f57c4dc65608993af62b562d92d84&oe=5E942420', height=100, width=100)
+
+
+单请求获取多个主页的头像数据::
+
+    In [15]: api.get_pictures(ids=["20531316728", "nba"])
+    Out[15]:
+    {'20531316728': ProfilePictureSource(url='https://scontent.xx.fbcdn.net/v/t1.0-1/p100x100/58978526_10158354585751729_7411073224387067904_o.png?_nc_cat=1&_nc_oc=AQmaFO7eND-DVRoArrQLUZVDpmemw8nMPmHJWvoCyXId_MKLLHQdsS8UbTOX4oaEfeQ&_nc_ht=scontent.xx&oh=128f57c4dc65608993af62b562d92d84&oe=5E942420', height=100, width=100),
+     'nba': ProfilePictureSource(url='https://scontent.xx.fbcdn.net/v/t1.0-1/p100x100/81204460_10158199356848463_5727214464013434880_n.jpg?_nc_cat=1&_nc_oc=AQmcent57E-a-923C_VVpiX26nGqKDodImY1gsiu7h1czDmcpLHXR8D5hIh9g9Ao3wY&_nc_ht=scontent.xx&oh=1656771e6c11bd03147b69ee643238ba&oe=5E66450C', height=100, width=100)}
 
 -------------
 Instagram API
@@ -319,3 +354,6 @@ Instagram：
 - Insights 数据的获取
 - 发布帖子
 
+
+.. _访问口令: https://developers.facebook.com/docs/facebook-login/access-tokens
+.. _手动授权: https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow

@@ -62,7 +62,7 @@ class ApiPageTest(unittest.TestCase):
             m.add("GET", self.BASE_URL, json=self.MULTI_PAGE_INFO)
             m.add("GET", self.BASE_URL, json=self.MULTI_PAGE_INFO_2)
 
-            res1 = self.api.get_pages(
+            res1 = self.api.get_pages_info(
                 ids=ids,
                 fields=["id", "username", "name", "fan_count"]
             )
@@ -71,7 +71,7 @@ class ApiPageTest(unittest.TestCase):
                 self.assertIn(_id, ids)
                 self.assertIn(_id.lower(), [data.id, data.username.lower()])
 
-            res2 = self.api.get_pages(
+            res2 = self.api.get_pages_info(
                 ids=",".join(ids),
                 return_json=True
             )
