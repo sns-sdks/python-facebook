@@ -426,6 +426,7 @@ class IgProApi(BaseApi):
                               fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
                               count=10,  # type: Optional[int]
                               limit=10,  # type: int
+                              include_reply=True,  # type: bool
                               return_json=False  # type: bool
                               ):
         # type: (...) -> List[Union[IgProComment, dict]]
@@ -439,17 +440,24 @@ class IgProApi(BaseApi):
                 If need get all, set this with None.
         :param limit: Each request retrieve medias count from api.
                 For comments it should no more than 50.
+        :param include_reply: Set to True will include the replies to the comment.
+                Default is True.
         :param return_json: Set to false will return instance of IgProComment.
                 Or return json data. Default is false.
         """
         if fields is None:
             fields = constant.INSTAGRAM_COMMENT_FIELD
 
-        if count is not None:
+        if count is None:
+            limit = 50  # Each query will return a maximum of 50 comments.
+        else:
             limit = min(count, limit)
 
+        fields = enf_comma_separated("fields", fields)
+        if include_reply:
+            fields = fields + ",replies{{{}}}".format(','.join(constant.INSTAGRAM_REPLY_FIELD))
         args = {
-            'fields': enf_comma_separated("fields", fields),
+            'fields': fields,
             'limit': limit
         }
 
