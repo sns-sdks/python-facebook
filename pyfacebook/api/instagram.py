@@ -626,38 +626,67 @@ class IgProApi(BaseApi):
         return replies
 
     def get_reply_info(self,
-                       reply_id,
-                       access_token=None,
-                       return_json=False):
+                       reply_id,  # type: str
+                       fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                       return_json=False  # type: bool
+                       ):
+        # type: (...) -> Union[IgProReply, dict]
         """
-        Obtain reply info by reply id
-
-        Args:
-            reply_id (str)
-                The reply id for which you want to get reply data.
-            access_token (str, optional)
-                The user access token with authorization by point user.
-                Default is the api access token.
-            return_json (bool, optional)
-                If True origin data by facebook will be returned,
-                or will return pyfacebook.InstagramReply.
-        Return:
-            InstagramReply instance or reply json data.
+        Retrieve reply info by reply id.
+        :param reply_id: The reply id for which you want to get reply data.
+        :param fields: Comma-separated id string for data fields which you want.
+                You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return instance of IgProComment.
+                Or return json data. Default is false.
         """
+        if fields is None:
+            fields = constant.INSTAGRAM_REPLY_FIELD
 
         args = {
-            'fields': ','.join(constant.INSTAGRAM_REPLY_FIELD),
+            'fields': enf_comma_separated("fields", fields),
         }
-        if access_token:
-            args['access_token'] = access_token
 
         resp = self._request(
             path='{0}/{1}'.format(self.version, reply_id),
             args=args
         )
-        data = self._parse_response(resp.content.decode('utf-8'))
+        data = self._parse_response(resp)
 
         if return_json:
             return data
         else:
             return IgProReply.new_from_json_dict(data)
+
+    def get_replies_info(self,
+                         reply_ids,  # type: Union[str, List, Tuple, Set]
+                         fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                         return_json=False  # type: bool
+                         ):
+        # type: (...) -> dict
+        """
+        Retrieve reply info by reply id.
+        :param reply_ids: Comma-separated id string for reply which you want.
+                You can also pass this with an id list, tuple, set.
+        :param fields: Comma-separated id string for data fields which you want.
+                You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return a dict of values are instance of IgProComment.
+                Or return json data. Default is false.
+        """
+        if fields is None:
+            fields = constant.INSTAGRAM_REPLY_FIELD
+
+        args = {
+            'fields': enf_comma_separated("fields", fields),
+            "ids": enf_comma_separated("reply_ids", reply_ids)
+        }
+
+        resp = self._request(
+            path='{0}/'.format(self.version),
+            args=args
+        )
+        data = self._parse_response(resp)
+
+        if return_json:
+            return data
+        else:
+            return {_id: IgProReply.new_from_json_dict(p_data) for _id, p_data in iteritems(data)}
