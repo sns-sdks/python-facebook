@@ -105,4 +105,3 @@ class ApiRepliesTest(unittest.TestCase):
             for _id, data in iteritems(res_fields):
                 self.assertIn(_id, reply_ids)
                 self.assertIn(_id, data["id"])
-
