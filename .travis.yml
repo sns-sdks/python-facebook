@@ -3,13 +3,7 @@ python:
   - '2.7'
   - '3.6'
   - '3.7'
-
-matrix:
-  allow_failures:
-    # now the cattr not support python 3.8
-    - python: '3.8'
-  include:
-    - python: '3.8'
+  - '3.8'
 
 install:
   - pip install pipenv
