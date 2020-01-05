@@ -3,8 +3,9 @@
 """
 import datetime
 from typing import List, Optional, Set, Tuple, Union
+from six import iteritems
 
-from pyfacebook.error import PyFacebookError, PyFacebookException, ErrorCode, ErrorMessage
+from pyfacebook.error import PyFacebookException, ErrorCode, ErrorMessage
 from pyfacebook.models import (
     IgProMedia, IgProUser, IgProComment, IgProReply
 )
@@ -103,7 +104,7 @@ class IgProApi(BaseApi):
                 For now This may be not more than 10K.
         :param limit: Each request retrieve posts count from api.
                 For medias it should no more than 500.
-        :param return_json: Set to false will return instance of IgProUser.
+        :param return_json: Set to false will return a list instance of IgProMedia.
         Or return json data. Default is false.
         """
 
@@ -202,19 +203,16 @@ class IgProApi(BaseApi):
             The origin data return from the graph api.
         """
         if business_discovery:
+            query = "business_discovery.username({username}){{media{after}.limit({limit}){{{fields}}}}}"
+            after = ""
             if next_cursor is not None:
-                fields = 'business_discovery.username({username}){{media.after({after}).limit({limit}){{{fields}}}}}'.format(
-                    username=args['username'],
-                    limit=args['limit'],
-                    after=next_cursor,
-                    fields=args["metric"]
-                )
-            else:
-                fields = 'business_discovery.username({username}){{media.limit({limit}){{{fields}}}}}'.format(
-                    username=args['username'],
-                    limit=args['limit'],
-                    fields=args["metric"]
-                )
+                after = ".after({after})".format(after=next_cursor)
+            fields = query.format(
+                username=args['username'],
+                limit=args['limit'],
+                after=after,
+                fields=args["metric"]
+            )
             path = args['path']
             args = {'fields': fields}
         else:
@@ -239,92 +237,65 @@ class IgProApi(BaseApi):
         return next_cursor, previous_cursor, data
 
     def get_user_info(self,
-                      user_id=None,
-                      include_media=False,
-                      access_token=None,
-                      return_json=False):
+                      user_id,  # type: str
+                      fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                      return_json=False  # type: bool
+                      ):
+        # type: (...) -> Optional[IgProUser, dict]
         """
-        Obtain provide user's info.
-
-        Args:
-            user_id (str, optional)
-                The id for instagram business user id which you want to get data.
-                Default is the api instagram business id.
-            include_media (bool, optional)
-                If provide this with True. Response will include 25 recently posted medias.
-            access_token (str, optional)
-                The user access token with authorization by point user.
-                Default is the api access token.
-            return_json (bool, optional)
-                If True origin data by facebook will be returned, or will return pyfacebook.InstagramUser
-        Returns:
-            IG business user full info.
+        Retrieve ig user data by user id.
+        :param user_id: The id for instagram business user which you want to get data.
+        :param fields: Comma-separated id string for data fields which you want.
+                You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return instance of IgProUser.
+                Or return json data. Default is false.
         """
-        if user_id is None:
-            user_id = self.instagram_business_id
 
-        metric = constant.INSTAGRAM_USER_FIELD
-        if include_media:
-            metric = metric.union({'media{{{}}}'.format(','.join(constant.INSTAGRAM_MEDIA_OWNER_FIELD))})
+        if fields is None:
+            fields = constant.INSTAGRAM_USER_FIELD
 
         args = {
-            'fields': ','.join(metric),
+            'fields': enf_comma_separated("fields", fields),
         }
-        if access_token:
-            args['access_token'] = access_token
+
         resp = self._request(
             path='{0}/{1}'.format(self.version, user_id),
             args=args
         )
-        data = self._parse_response(resp.content.decode('utf-8'))
+        data = self._parse_response(resp)
 
         if return_json:
             return data
         else:
             return IgProUser.new_from_json_dict(data)
 
-    def get_medias(self,
-                   user_id=None,
-                   access_token=None,
-                   since_time=None,
-                   until_time=None,
-                   count=10,
-                   limit=10,
-                   include_comment=False,
-                   return_json=False):
+    def get_user_medias(self,
+                        user_id,  # type: str
+                        fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                        since_time=None,  # type: Optional[str]
+                        until_time=None,  # type: Optional[str]
+                        count=10,  # type: Optional[int]
+                        limit=10,  # type: int
+                        return_json=False  # type: bool
+                        ):
+        # type: (...) -> List[Union[IgProMedia, dict]]
         """
-        Obtain provide user's medias.
-
-        Args:
-            user_id (str, optional)
-                The id for instagram business user id which you want to get data.
-                Default is the api instagram business id.
-            access_token (str, optional)
-                The user access token with authorization by point user.
-                Default is the api access token.
-            since_time (str, optional)
-                Lower bound of the time range to the medias publish time.
+        Retrieve
+        :param user_id: The id for instagram business user which you want to get data.
+        :param fields: Comma-separated id string for data fields which you want.
+                You can also pass this with an id list, tuple, set.
+        :param since_time: Lower bound of the time range to the medias publish time.
                 Format is %Y-%m-%d. If not provide, will not limit by this.
-            until_time (str, optional)
-                Upper bound of the time range to the medias publish time.
+        :param until_time: Upper bound of the time range to the medias publish time.
                 Format is %Y-%m-%d. If not provide, will not limit by this.
-            count (int, optional)
-                The count for you want to get medias.
+        :param count: The count for you want to get medias.
                 Default is 10.
-            limit (int, optional)
-                The count each request get the result count.
-                Default is 10.
-            include_comment (bool, optional)
-                If provide this with True, will return recently comments.
-            return_json (bool, optional)
-                If True origin data by facebook will be returned,
-                or will return pyfacebook.InstagramMedia list
-        Returns:
-            [InstagramMedia...] Or media json data.
+                If need get all, set this with None.
+        :param limit: Each request retrieve medias count from api.
+                For medias it should no more than 500.
+        :param return_json: Set to false will return instance of IgProUser.
+                Or return json data. Default is false.
         """
-
-        if user_id is None:
-            user_id = self.instagram_business_id
 
         try:
             if since_time is not None:
@@ -332,20 +303,21 @@ class IgProApi(BaseApi):
             if until_time is not None:
                 until_time = datetime.datetime.strptime(until_time, '%Y-%m-%d')
         except (ValueError, TypeError):
-            raise PyFacebookError({'message': 'since_time or until_time must format as %Y-%m-%d'})
+            raise PyFacebookException(ErrorMessage(
+                code=ErrorCode.INVALID_PARAMS,
+                message="since_time or until_time must format as %Y-%m-%d",
+            ))
 
-        metric = constant.INSTAGRAM_MEDIA_OWNER_FIELD
+        if fields is None:
+            fields = constant.INSTAGRAM_MEDIA_OWNER_FIELD
 
-        if include_comment:
-            metric = metric.union({'comments{{{}}}'.format(','.join(constant.INSTAGRAM_COMMENT_FIELD))})
+        if count is not None:
+            limit = min(limit, count)
 
         args = {
-            'fields': ','.join(metric),
-            'limit': min(count, limit)
+            'fields': enf_comma_separated("fields", fields),
+            'limit': limit
         }
-
-        if access_token:
-            args['access_token'] = access_token
 
         medias = []
         next_cursor = None
@@ -359,9 +331,14 @@ class IgProApi(BaseApi):
             )
             data = data.get('data', [])
             for item in data:
-                timestamp = datetime.datetime.strptime(item['timestamp'][:-5], '%Y-%m-%dT%H:%M:%S')
-                begin_flag = True if since_time is None else since_time < timestamp
-                end_flag = True if until_time is None else until_time > timestamp
+                begin_flag, end_flag = True, True
+
+                if "timestamp" in item:
+                    timestamp = datetime.datetime.strptime(item['timestamp'][:-5], '%Y-%m-%dT%H:%M:%S')
+                    if since_time is not None:
+                        begin_flag = since_time < timestamp
+                    if until_time is not None:
+                        end_flag = until_time > timestamp
 
                 if all([begin_flag, end_flag]):
                     if return_json:
@@ -371,94 +348,118 @@ class IgProApi(BaseApi):
                 if not begin_flag:
                     next_cursor = None
                     break
+
+            if count is not None:
+                if len(medias) >= count:
+                    medias = medias[:count]
+                    break
             if next_cursor is None:
                 break
-            if len(medias) >= count:
-                break
-        return medias[:count]
+        return medias
 
     def get_media_info(self,
-                       media_id,
-                       access_token=None,
-                       include_comment=False,
-                       return_json=False):
+                       media_id,  # type: str
+                       fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                       return_json=False  # type: bool
+                       ):
+        # type: (...) -> Union[IgProMedia, dict]
         """
-        Obtain media info by media id.
-
-        Args:
-            media_id (str)
-                The media id for which you want to get data.
-            access_token (str, optional)
-                The user access token with authorization by point user.
-                Default is the api access token.
-            include_comment (bool, optional)
-                If provide this with True, will return recently comments.
-            return_json (bool, optional)
-                If True origin data by facebook will be returned,
-                or will return pyfacebook.InstagramMedia.
-        Returns:
-            InstagramMedia instance or media json data.
+        Retrieve the media info by media id.
+        :param media_id: The media id for which you want to get data.
+        :param fields: Comma-separated id string for data fields which you want.
+                You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return instance of IgProUser.
+                Or return json data. Default is false.
         """
-        metric = constant.INSTAGRAM_MEDIA_OWNER_FIELD
-        if include_comment:
-            metric = metric.union({'comments{{{}}}'.format(','.join(constant.INSTAGRAM_COMMENT_FIELD))})
+        if fields is None:
+            fields = constant.INSTAGRAM_MEDIA_OWNER_FIELD
 
-        args = {'fields': ','.join(metric)}
-        if access_token:
-            args['access_token'] = access_token
+        args = {'fields': enf_comma_separated("fields", fields)}
 
         resp = self._request(
             path='{0}/{1}'.format(self.version, media_id),
             args=args
         )
 
-        data = self._parse_response(resp.content.decode('utf-8'))
+        data = self._parse_response(resp)
         if return_json:
             return data
         else:
             return IgProMedia.new_from_json_dict(data)
 
-    def get_comments(self,
-                     media_id,
-                     access_token=None,
-                     count=10,
-                     limit=10,
-                     include_replies=False,
-                     return_json=False):
+    def get_medias_info(self,
+                        media_ids,  # type: Union[str, List, Tuple, Set]
+                        fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                        return_json=False  # type: bool
+                        ):
+        # type: (...) -> dict
         """
-        Obtain comments info by media id.
-
-        Args:
-            media_id (str)
-                The media id for which you want to get comment data.
-            access_token (str, optional)
-                The user access token with authorization by point user.
-                Default is the api access token.
-            count (int, optional)
-                The count for you want to get media's comments.
-                Default is 10.
-            limit (int, optional)
-                The count for each request get the result count.
-                Default is 10.
-            include_replies (bool, optional)
-                If provide this with True, will return recently comment's replies.
-            return_json (bool, optional)
-                If True origin data by facebook will be returned,
-                or will return pyfacebook.InstagramComment list.
-        Returns:
-            [InstagramComment...] Or comments json data.
+        Retrieve the media info by media id.
+        :param media_ids: Comma-separated id string for media which you want.
+                You can also pass this with an id list, tuple, set.
+        :param fields: Comma-separated id string for data fields which you want.
+                You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return a dict values are instance of IgProUser.
+                Or return json data. Default is false.
         """
-
-        metric = constant.INSTAGRAM_COMMENT_FIELD
-        if include_replies:
-            metric = metric.union({"replies{{{}}}".format(','.join(constant.INSTAGRAM_REPLY_FIELD))})
+        if fields is None:
+            fields = constant.INSTAGRAM_MEDIA_OWNER_FIELD
 
         args = {
-            'fields': ','.join(metric),
-            'limit': min(count, limit)
+            "fields": enf_comma_separated("fields", fields),
+            "ids": enf_comma_separated("media_ids", media_ids)
         }
-        if access_token:
-            args['access_token'] = access_token
+
+        resp = self._request(
+            path='{0}/'.format(self.version),
+            args=args
+        )
+
+        data = self._parse_response(resp)
+        if return_json:
+            return data
+        else:
+            return {_id: IgProMedia.new_from_json_dict(p_data) for _id, p_data in iteritems(data)}
+
+    def get_comments_by_media(self,
+                              media_id,  # type: str
+                              fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                              count=10,  # type: Optional[int]
+                              limit=10,  # type: int
+                              include_reply=True,  # type: bool
+                              return_json=False  # type: bool
+                              ):
+        # type: (...) -> List[Union[IgProComment, dict]]
+        """
+        Retrieve comments data for given media id.
+        :param media_id: The media id for which you want to get comment data.
+        :param fields: Comma-separated id string for data fields which you want.
+                You can also pass this with an id list, tuple, set.
+        :param count: The count for you want to get comments.
+                Default is 10.
+                If need get all, set this with None.
+        :param limit: Each request retrieve comments count from api.
+                For comments it should no more than 50.
+        :param include_reply: Set to True will include the replies to the comment.
+                Default is True.
+        :param return_json: Set to false will return instance of IgProComment.
+                Or return json data. Default is false.
+        """
+        if fields is None:
+            fields = constant.INSTAGRAM_COMMENT_FIELD
+
+        if count is None:
+            limit = 50  # Each query will return a maximum of 50 comments.
+        else:
+            limit = min(count, limit)
+
+        fields = enf_comma_separated("fields", fields)
+        if include_reply:
+            fields = fields + ",replies{{{}}}".format(','.join(constant.INSTAGRAM_REPLY_FIELD))
+        args = {
+            'fields': fields,
+            'limit': limit
+        }
 
         comments = []
         next_cursor = None
@@ -476,91 +477,129 @@ class IgProApi(BaseApi):
                 comments += data
             else:
                 comments += [IgProComment.new_from_json_dict(item) for item in data]
+
+            if count is not None:
+                if len(comments) >= count:
+                    comments = comments[:count]
+                    break
             if next_cursor is None:
                 break
-            if len(comments) >= count:
-                break
-        return comments[:count]
+
+        return comments
 
     def get_comment_info(self,
-                         comment_id,
-                         access_token=None,
-                         include_replies=False,
-                         return_json=False):
+                         comment_id,  # type: str
+                         fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                         include_reply=True,  # type: bool
+                         return_json=False  # type: bool
+                         ):
+        # type: (...) -> Union[IgProComment, dict]
         """
-        Obtain comment info by comment id.
-
-        Args:
-            comment_id (str)
-                The comment id for which you want to get comment data.
-            access_token (str, optional)
-                The user access token with authorization by point user.
-                Default is the api access token.
-            include_replies (bool, optional)
-                If provide this with True, will return recently comment's replies.
-            return_json (bool, optional)
-                If True origin data by facebook will be returned,
-                or will return pyfacebook.InstagramComment.
-        Returns:
-            InstagramComment or comment json info.
+        Retrieve comment info by the comment id.
+        :param comment_id: The comment id for which you want to get comment data.
+        :param fields: Comma-separated id string for data fields which you want.
+                You can also pass this with an id list, tuple, set.
+        :param include_reply: Set to True will include the replies to the comment.
+                Default is True.
+        :param return_json: Set to false will return instance of IgProComment.
+                Or return json data. Default is false.
         """
+        if fields is None:
+            fields = constant.INSTAGRAM_COMMENT_FIELD
 
-        metric = constant.INSTAGRAM_COMMENT_FIELD
-        if include_replies:
-            metric = metric.union({"replies{{{}}}".format(','.join(constant.INSTAGRAM_REPLY_FIELD))})
+        fields = enf_comma_separated("fields", fields)
 
-        args = {'fields': ','.join(metric)}
+        if include_reply:
+            fields = fields + ",replies{{{}}}".format(','.join(constant.INSTAGRAM_REPLY_FIELD))
 
-        if access_token:
-            args['access_token'] = access_token
+        args = {'fields': fields}
 
         resp = self._request(
             path='{0}/{1}'.format(self.version, comment_id),
             args=args
         )
 
-        data = self._parse_response(resp.content.decode('utf-8'))
+        data = self._parse_response(resp)
 
         if return_json:
             return data
         else:
             return IgProComment.new_from_json_dict(data)
 
-    def get_replies(self,
-                    comment_id,
-                    access_token=None,
-                    count=10,
-                    limit=10,
-                    return_json=False):
+    def get_comments_info(self,
+                          comment_ids,  # type: Union[str, List, Tuple, Set]
+                          fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                          include_reply=True,  # type: bool
+                          return_json=False  # type: bool
+                          ):
+        # type: (...) -> dict
         """
-        Obtain replies info by comment id.
+        Retrieve comment info by the comment id.
+        :param comment_ids: Comma-separated id string for comment which you want.
+                You can also pass this with an id list, tuple, set.
+        :param fields: Comma-separated id string for data fields which you want.
+                You can also pass this with an id list, tuple, set.
+        :param include_reply: Set to True will include the replies to the comment.
+                Default is True.
+        :param return_json: Set to false will return a dict values are instance of IgProComment.
+                Or return json data. Default is false.
+        """
+        if fields is None:
+            fields = constant.INSTAGRAM_COMMENT_FIELD
 
-        Args:
-            comment_id (str)
-                The comment id for which you want to get replies data.
-            access_token (str, optional)
-                The user access token with authorization by point user.
-                Default is the api access token.
-            count (int, optional)
-                The count for you want to get medias.
-                Default is 10.
-            limit (int, optional)
-                The count each request get the result count.
-                Default is 10.
-            return_json (bool, optional)
-                If True origin data by facebook will be returned,
-                or will return pyfacebook.InstagramReply list.
-        Returns:
-            [InstagramReply...] or reply json data
-        """
+        fields = enf_comma_separated("fields", fields)
+
+        if include_reply:
+            fields = fields + ",replies{{{}}}".format(','.join(constant.INSTAGRAM_REPLY_FIELD))
 
         args = {
-            'fields': ','.join(constant.INSTAGRAM_REPLY_FIELD),
-            'limit': min(count, limit)
+            'fields': fields,
+            "ids": enf_comma_separated("comment_ids", comment_ids)
         }
 
-        if access_token:
-            args['access_token'] = access_token
+        resp = self._request(
+            path='{0}/'.format(self.version),
+            args=args
+        )
+
+        data = self._parse_response(resp)
+
+        if return_json:
+            return data
+        else:
+            return {_id: IgProComment.new_from_json_dict(p_data) for _id, p_data in iteritems(data)}
+
+    def get_replies_by_comment(self,
+                               comment_id,  # type: str
+                               fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                               count=10,  # type: Optional[int]
+                               limit=10,  # type: int
+                               return_json=False  # type: bool
+                               ):
+        # type: (...) -> List[Union[IgProReply, dict]]
+        """
+        Retrieve replies for the given comment.
+        :param comment_id: The comment id for which you want to get replies data.
+        :param fields: Comma-separated id string for data fields which you want.
+                You can also pass this with an id list, tuple, set.
+        :param count: The count for you want to get replies.
+                Default is 10.
+                If need get all, set this with None.
+        :param limit: Each request retrieve replies count from api.
+                For replies it should no more than 100.
+        :param return_json: Set to false will return a list of instance of IgProReply.
+                Or return json data. Default is false.
+        """
+        if fields is None:
+            fields = constant.INSTAGRAM_REPLY_FIELD
+
+        if count is not None:
+            limit = min(count, limit)
+
+        args = {
+            'fields': enf_comma_separated("fields", fields),
+            'limit': limit
+        }
 
         replies = []
         next_cursor = None
@@ -580,43 +619,74 @@ class IgProApi(BaseApi):
                 replies += [IgProReply.new_from_json_dict(item) for item in data]
             if next_cursor is None:
                 break
-            if len(replies) >= count:
-                break
-        return replies[:count]
+            if count is not None:
+                if len(replies) >= count:
+                    replies = replies[:count]
+                    break
+        return replies
 
     def get_reply_info(self,
-                       reply_id,
-                       access_token=None,
-                       return_json=False):
+                       reply_id,  # type: str
+                       fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                       return_json=False  # type: bool
+                       ):
+        # type: (...) -> Union[IgProReply, dict]
         """
-        Obtain reply info by reply id
-
-        Args:
-            reply_id (str)
-                The reply id for which you want to get reply data.
-            access_token (str, optional)
-                The user access token with authorization by point user.
-                Default is the api access token.
-            return_json (bool, optional)
-                If True origin data by facebook will be returned,
-                or will return pyfacebook.InstagramReply.
-        Return:
-            InstagramReply instance or reply json data.
+        Retrieve reply info by reply id.
+        :param reply_id: The reply id for which you want to get reply data.
+        :param fields: Comma-separated id string for data fields which you want.
+                You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return instance of IgProComment.
+                Or return json data. Default is false.
         """
+        if fields is None:
+            fields = constant.INSTAGRAM_REPLY_FIELD
 
         args = {
-            'fields': ','.join(constant.INSTAGRAM_REPLY_FIELD),
+            'fields': enf_comma_separated("fields", fields),
         }
-        if access_token:
-            args['access_token'] = access_token
 
         resp = self._request(
             path='{0}/{1}'.format(self.version, reply_id),
             args=args
         )
-        data = self._parse_response(resp.content.decode('utf-8'))
+        data = self._parse_response(resp)
 
         if return_json:
             return data
         else:
             return IgProReply.new_from_json_dict(data)
+
+    def get_replies_info(self,
+                         reply_ids,  # type: Union[str, List, Tuple, Set]
+                         fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                         return_json=False  # type: bool
+                         ):
+        # type: (...) -> dict
+        """
+        Retrieve reply info by reply id.
+        :param reply_ids: Comma-separated id string for reply which you want.
+                You can also pass this with an id list, tuple, set.
+        :param fields: Comma-separated id string for data fields which you want.
+                You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return a dict of values are instance of IgProComment.
+                Or return json data. Default is false.
+        """
+        if fields is None:
+            fields = constant.INSTAGRAM_REPLY_FIELD
+
+        args = {
+            'fields': enf_comma_separated("fields", fields),
+            "ids": enf_comma_separated("reply_ids", reply_ids)
+        }
+
+        resp = self._request(
+            path='{0}/'.format(self.version),
+            args=args
+        )
+        data = self._parse_response(resp)
+
+        if return_json:
+            return data
+        else:
+            return {_id: IgProReply.new_from_json_dict(p_data) for _id, p_data in iteritems(data)}
