@@ -435,10 +435,10 @@ class IgProApi(BaseApi):
         :param media_id: The media id for which you want to get comment data.
         :param fields: Comma-separated id string for data fields which you want.
                 You can also pass this with an id list, tuple, set.
-        :param count: The count for you want to get medias.
+        :param count: The count for you want to get comments.
                 Default is 10.
                 If need get all, set this with None.
-        :param limit: Each request retrieve medias count from api.
+        :param limit: Each request retrieve comments count from api.
                 For comments it should no more than 50.
         :param include_reply: Set to True will include the replies to the comment.
                 Default is True.
@@ -569,41 +569,37 @@ class IgProApi(BaseApi):
         else:
             return {_id: IgProComment.new_from_json_dict(p_data) for _id, p_data in iteritems(data)}
 
-    def get_replies(self,
-                    comment_id,
-                    access_token=None,
-                    count=10,
-                    limit=10,
-                    return_json=False):
+    def get_replies_by_comment(self,
+                               comment_id,  # type: str
+                               fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                               count=10,  # type: Optional[int]
+                               limit=10,  # type: int
+                               return_json=False  # type: bool
+                               ):
+        # type: (...) -> List[Union[IgProReply, dict]]
         """
-        Obtain replies info by comment id.
+        Retrieve replies for the given comment.
+        :param comment_id: The comment id for which you want to get replies data.
+        :param fields: Comma-separated id string for data fields which you want.
+                You can also pass this with an id list, tuple, set.
+        :param count: The count for you want to get replies.
+                Default is 10.
+                If need get all, set this with None.
+        :param limit: Each request retrieve replies count from api.
+                For replies it should no more than 100.
+        :param return_json: Set to false will return a list of instance of IgProReply.
+                Or return json data. Default is false.
+        """
+        if fields is None:
+            fields = constant.INSTAGRAM_REPLY_FIELD
 
-        Args:
-            comment_id (str)
-                The comment id for which you want to get replies data.
-            access_token (str, optional)
-                The user access token with authorization by point user.
-                Default is the api access token.
-            count (int, optional)
-                The count for you want to get medias.
-                Default is 10.
-            limit (int, optional)
-                The count each request get the result count.
-                Default is 10.
-            return_json (bool, optional)
-                If True origin data by facebook will be returned,
-                or will return pyfacebook.InstagramReply list.
-        Returns:
-            [InstagramReply...] or reply json data
-        """
+        if count is not None:
+            limit = min(count, limit)
 
         args = {
-            'fields': ','.join(constant.INSTAGRAM_REPLY_FIELD),
-            'limit': min(count, limit)
+            'fields': enf_comma_separated("fields", fields),
+            'limit': limit
         }
-
-        if access_token:
-            args['access_token'] = access_token
 
         replies = []
         next_cursor = None
@@ -623,9 +619,11 @@ class IgProApi(BaseApi):
                 replies += [IgProReply.new_from_json_dict(item) for item in data]
             if next_cursor is None:
                 break
-            if len(replies) >= count:
-                break
-        return replies[:count]
+            if count is not None:
+                if len(replies) >= count:
+                    replies = replies[:count]
+                    break
+        return replies
 
     def get_reply_info(self,
                        reply_id,
