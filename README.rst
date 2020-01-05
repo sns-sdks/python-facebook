@@ -77,7 +77,7 @@ Facebook has different type access tokens. You can use different access token to
 
 You can see the docs `access-token`_ to get more information.
 
-If you get user access token by authorize. You can follows the docs `authorization-manually`_ to initial the api.
+If you want to get user access token by authorize. You can follows the docs `authorization-manually`_ to initial the api.
 
 If you just want to use app access token to get some public data. You can initial an api as follows::
 
@@ -215,15 +215,35 @@ To fetch multi page picture::
 
 
 
--------------
-Instagram API
--------------
+==============================
+Base-Usage-Instagram Graph API
+==============================
 
-At present, the business Account of Instagram can be accessed through the API provided by Facebook.
+Instagram Graph API allows to get `instagram Professional accounts <https://help.instagram.com/502981923235522>`_ data.
 
-That is ``pyfacebook.Instagram Api`` can only get data of the business Account on Instagram platform.
+-----------
+Initial Api
+-----------
 
-The business Account is the Account who associates ``Instagram`` account with ``Facebook`` page.
+As similar to facebook graph api. This api can initial by multi methods. But only can use user access token, and need your instagram business id.
+
+If you want to get user access token by authorize. You can follows the docs `authorization-manually`_ to initial the api.
+
+If you have a short-lived token you can initial an api as follows::
+
+    In [2]: api = IgProApi(app_id="your app id", app_secret="your app secret", short_token="short-lived token", instagram_business_id="17841406338772941")
+    In [3]: api.get_token_info()
+    Out[3]: AccessToken(app_id='id', application='app name', user_id="token user id")
+
+If you have a long term token you can initial an api as follows(Just provide only ``long_term_token`` parameter enough. but for security need provide with app credentials)::
+
+    In [4]: api = IgProApi(app_id="your app id", app_secret="your app secret", long_term_token="long-lived token")
+    In [5]: api.get_token_info()
+    Out[5]: AccessToken(app_id='id', application='app name', user_id='token user id')
+
+--------
+Get Data
+--------
 
 If you want to search other's business account basic info and medias.
 You can use methods as follows::
@@ -234,100 +254,92 @@ You can use methods as follows::
 .. note::
    Use discovery only support search by instagram user name.
 
-If you have other business account's access token with relative permissions.
-You can use remain methods with the access token to retrieve this account's data::
+Retrieve other user info by username::
 
-    - get_user_info
-    - get_medias
-    - get_media_info
-    - get_comments
-    - get_comment_info
-    - get_replies
-    - get_reply_info
+    In [6]: api.discovery_user(username="facebook")
+    Out[6]: IgProUser(id='17841400455970028', name='Facebook', username='facebook')
 
-Initialization of the ``pyfacebook.InstagramApi`` instance requires the provision of user authorization ``Token`` for App with ``Instagram`` privileges, and also need an available ``Instagram`` business account.
+Retrieve other user medias by username::
 
-For detailed documentation, please consult:
-
-- `Instagram Developer <https://developers.facebook.com/products/instagram/>`_
-- `Instagram Graph API <https://developers.facebook.com/docs/instagram-api>`_
-
-Usage example:
-
-Similar to ``Facebook Api``, the ``InstagramApi`` instance can also be initialized in two ways, but requires an additional ``instagram_business_id`` parameter::
-
-    # Use temporary tokens and App secret
-    In [1] import pyfacebook
-
-    In [2] api = pyfacebook.InstagramApi(
-       ...     app_id = 'App ID',
-       ...     app_secret='App secret',
-       ...     short_token='your temporary token',
-       ...     instagram_business_id='your Instagram business id')
-
-    # Use long-term tokens
-    In [3] api = pyfacebook.InstagramApi(
-       ...     long_term_token='your long term access token',
-       ...     instagram_business_id='your Instagram business id')
-
-
-Get other account information by discovery::
-
-    In [3]: api.discovery_user(username='jaychou')
-    Out[3]: User(ID=17841405792603923, username=jaychou)
-
-    In [4]: api.discovery_user(username='jaychou', return_json=True)
-    Out[4]:
-    {'website': 'https://youtu.be/HK7SPnGSxLM',
-     'biography': 'https://www.facebook.com/jay/',
-     'profile_picture_url': 'https://scontent.xx.fbcdn.net/v/t51.2885-15/21147825_124638651514445_4540910313213526016_a.jpg?_nc_cat=1&_nc_oc=AQl4VclkS9_O1iwa1KDetuR89g6yHkTHZOJZ2-kemhQcnFb1kIPzPBXsUydf1To2ZeM&_nc_ht=scontent.xx&oh=a86a0b98abb5294266d550095ecd7621&oe=5E20C7FA',
-     'ig_id': 5951385086,
-     'follows_count': 81,
-     'media_count': 516,
-     'username': 'jaychou',
-     'id': '17841405792603923',
-     'followers_count': 5237768,
-     'name': 'Jay Chou 周杰倫'}
-
-Get other account medias by discovery(default return 10)::
-
-    In [5]: api.discovery_user_medias(username='jaychou')
-    Out[5]:
-    [Media(ID=17871925513478048, link=https://www.instagram.com/p/B382ojgHemq/),
-     Media(ID=17861378536535135, link=https://www.instagram.com/p/B36TG8AHbGd/),
-     Media(ID=17862568840534713, link=https://www.instagram.com/p/B33k7llnd_S/),
-     Media(ID=18002681875267830, link=https://www.instagram.com/p/B319fbuHXIt/),
-     Media(ID=17873056222479764, link=https://www.instagram.com/p/B31duvoH26O/),
-     Media(ID=17906467621371226, link=https://www.instagram.com/p/B3xCYNonlqn/),
-     Media(ID=17850201154639505, link=https://www.instagram.com/p/B3ufD-JH3a5/),
-     Media(ID=17855908660588183, link=https://www.instagram.com/p/B3q-bMuHvnl/),
-     Media(ID=18108170392062569, link=https://www.instagram.com/p/B3olnLxnRsy/),
-     Media(ID=17900244466380038, link=https://www.instagram.com/p/B3oQVpEHM3Q/)]
-
-Get account information by his access token::
-
-    In [6]: api.get_user_info(user_id='account id', access_token='access token')
-    Out[6]: User(ID=17841406338772941, username=ikroskun)
-
-Get account medias by his access token::
-
-    In [7]: api.get_medias(user_id='account id', access_token='access token')
+    In [7]: api.discovery_user_medias(username="facebook", count=2)
     Out[7]:
-    [Media(ID=18075344632131157, link=https://www.instagram.com/p/B38X8BzHsDi/),
-     Media(ID=18027939643230671, link=https://www.instagram.com/p/B38Xyp6nqsS/),
-     Media(ID=17861821972334188, link=https://www.instagram.com/p/BuGD8NmF4KI/),
-     Media(ID=17864312515295083, link=https://www.instagram.com/p/BporjsCF6mt/),
-     Media(ID=17924095942208544, link=https://www.instagram.com/p/BoqBgsNl5qT/),
-     Media(ID=17896189813249754, link=https://www.instagram.com/p/Bop_Hz5FzyL/),
-     Media(ID=17955956875141196, link=https://www.instagram.com/p/Bn-35GGl7YM/),
-     Media(ID=17970645226046242, link=https://www.instagram.com/p/Bme0cU1giOH/)]
+    [IgProMedia(comments=None, id='17859633232647524', permalink='https://www.instagram.com/p/B6jje2UnoH8/'),
+     IgProMedia(comments=None, id='18076151185161297', permalink='https://www.instagram.com/p/B6ji-PZH2V1/')]
 
-Get account media comments by his access token::
 
-    In [8]: api.get_comments(media_id='media id', access_token='access token')
-    Out[8]: [Comment(ID=18008567518250255,timestamp=2019-10-23T02:10:32+0000)]
+Get your account info::
 
-And so on...
+    In [10]: api.get_user_info(user_id="your instagram business id")
+    Out[10]: IgProUser(id='17841406338772941', name='LiuKun', username='ikroskun')
+
+
+Get your medias::
+
+    In [11]: api.get_user_medias(user_id=api.instagram_business_id, count=2)
+    Out[11]:
+    [IgProMedia(comments=None, id='18075344632131157', permalink='https://www.instagram.com/p/B38X8BzHsDi/'),
+     IgProMedia(comments=None, id='18027939643230671', permalink='https://www.instagram.com/p/B38Xyp6nqsS/')]
+
+
+If you already have some medias id, you can get media info as follows methods.
+
+To fetch a post info::
+
+    In [12]: api.get_media_info(media_id="18075344632131157")
+    Out[12]: IgProMedia(comments=None, id='18075344632131157', permalink='https://www.instagram.com/p/B38X8BzHsDi/')
+
+
+To fetch multi medias by one requests::
+
+    In [13]: api.get_medias_info(media_ids=["18075344632131157", "18027939643230671"])
+    Out[13]:
+    {'18075344632131157': IgProMedia(comments=None, id='18075344632131157', permalink='https://www.instagram.com/p/B38X8BzHsDi/'),
+     '18027939643230671': IgProMedia(comments=None, id='18027939643230671', permalink='https://www.instagram.com/p/B38Xyp6nqsS/')}
+
+Get comments for media::
+
+    In [16]: api.get_comments_by_media(media_id="17955956875141196", count=2)
+    Out[16]:
+    [IgProComment(id='17862949873623188', timestamp='2020-01-05T05:58:47+0000'),
+     IgProComment(id='17844360649889631', timestamp='2020-01-05T05:58:42+0000')]
+
+
+If you already have some comments id, you can get comment details info as follows methods.
+
+To fetch a comment info::
+
+    In [17]: api.get_comment_info(comment_id="17862949873623188")
+    Out[17]: IgProComment(id='17862949873623188', timestamp='2020-01-05T05:58:47+0000')
+
+To fetch multi comments by one requests::
+
+    In [18]: api.get_comments_info(comment_ids=["17862949873623188", "17844360649889631"
+    ...: ])
+    Out[18]:
+    {'17862949873623188': IgProComment(id='17862949873623188', timestamp='2020-01-05T05:58:47+0000'),
+     '17844360649889631': IgProComment(id='17844360649889631', timestamp='2020-01-05T05:58:42+0000')}
+
+Get replies for a comments::
+
+    In [19]: api.get_replies_by_comment("17984127178281340", count=2)
+    Out[19]:
+    [IgProReply(id='18107567341036926', timestamp='2019-10-15T07:06:09+0000'),
+     IgProReply(id='17846106427692294', timestamp='2019-10-15T07:05:17+0000')]
+
+If you already have some replies id, you can get replies details info as follows methods.
+
+To fetch a reply info::
+
+    In [20]: api.get_reply_info(reply_id="18107567341036926")
+    Out[20]: IgProReply(id='18107567341036926', timestamp='2019-10-15T07:06:09+0000')
+
+To fetch multi replies info by one requests::
+
+    In [21]: api.get_replies_info(reply_ids=["18107567341036926", "17846106427692294"])
+    Out[21]:
+    {'18107567341036926': IgProReply(id='18107567341036926', timestamp='2019-10-15T07:06:09+0000'),
+     '17846106427692294': IgProReply(id='17846106427692294', timestamp='2019-10-15T07:05:17+0000')}
+
 
 ====
 TODO

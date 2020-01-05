@@ -211,118 +211,129 @@ API 每年返回大约 600 个经排名的帖子。
     {'20531316728': ProfilePictureSource(url='https://scontent.xx.fbcdn.net/v/t1.0-1/p100x100/58978526_10158354585751729_7411073224387067904_o.png?_nc_cat=1&_nc_oc=AQmaFO7eND-DVRoArrQLUZVDpmemw8nMPmHJWvoCyXId_MKLLHQdsS8UbTOX4oaEfeQ&_nc_ht=scontent.xx&oh=128f57c4dc65608993af62b562d92d84&oe=5E942420', height=100, width=100),
      'nba': ProfilePictureSource(url='https://scontent.xx.fbcdn.net/v/t1.0-1/p100x100/81204460_10158199356848463_5727214464013434880_n.jpg?_nc_cat=1&_nc_oc=AQmcent57E-a-923C_VVpiX26nGqKDodImY1gsiu7h1czDmcpLHXR8D5hIh9g9Ao3wY&_nc_ht=scontent.xx&oh=1656771e6c11bd03147b69ee643238ba&oe=5E66450C', height=100, width=100)}
 
--------------
-Instagram API
--------------
+========================
+使用 Instagram Graph API
+========================
 
-目前，Instagram的商家主页可以通过 Facebook 提供的 API 进行数据获取。
+Instagram 图谱 API 可以 `instagram Professional accounts <https://help.instagram.com/502981923235522>`_ (商家和创作者) 的数据。
 
-即 ``pyfacebook.InstagramApi`` 只能获取 Instagram 平台上的商家主页的数据信息。
-所谓的商家主页即是 将 ``Instagram`` 账号和 ``Facebook`` 主页进行关联的 ``Instagram`` 用户。
+----------
+初始化 Api
+----------
 
-如果你想要搜索其他的业务主页的数据，你可以使用如下方法::
+和 Facebook 的图谱 API 的类似，你可以通过多种方式来初始化 Api。但是你只能使用用户访问口令，并且需要你的商务帐号 ID。
 
-    - discovery_user: 获取基础数据
-    - discovery_user_medias: 获取贴文数据
+如果你想要通过授权来获取用户的访问口令，你可以按照 `手动授权`_ 来初始化 api。
+
+如果你已经有了一个短期的访问口令，你可以通过如下方式初始化 Api::
+
+    In [2]: api = IgProApi(app_id="your app id", app_secret="your app secret", short_token="short-lived token", instagram_business_id="17841406338772941")
+    In [3]: api.get_token_info()
+    Out[3]: AccessToken(app_id='id', application='app name', user_id="token user id")
+
+如果你已经有了一个长期的访问口令，你可以通过如下方式初始化 Api
+(注意，只提供一个 ``long_term_token``参数已经足以初始化，当时为了安全器件，最好还是提供一下 app 的认证数据)::
+
+    In [4]: api = IgProApi(app_id="your app id", app_secret="your app secret", long_term_token="long-lived token")
+    In [5]: api.get_token_info()
+    Out[5]: AccessToken(app_id='id', application='app name', user_id='token user id')
+
+--------
+获取数据
+--------
+
+如果你想要搜索其他商家帐号的基础数据和帖子。你可以使用如下的方法::
+
+    - discovery_user: 获取用户的基础数据
+    - discovery_user_medias: 获取用户的贴文
 
 .. note::
-    使用 discovery 方法只支持通过主页用户名进行搜索.
+   使用 discovery 方法进行搜索只支持使用用户名
 
-如果你拥有某个主页的相关权限的授权，你可以使用如下方法获取数据::
+通过其他商家用户的用户名来获取基础数据::
 
-    - get_user_info
-    - get_medias
-    - get_media_info
-    - get_comments
-    - get_comment_info
-    - get_replies
-    - get_reply_info
+    In [6]: api.discovery_user(username="facebook")
+    Out[6]: IgProUser(id='17841400455970028', name='Facebook', username='facebook')
 
+通过其他商家用户的用户名来获取贴文数据::
 
-初始化 ``pyfacebook.InstagramApi`` 实例需要提供带有 ``Instagram`` 权限的App的用户授权 ``Token``, 以及一个 可用的 ``Instagram`` 商业账号。
-
-详细文档请参阅：
-
-- `Instagram 平台 <https://developers.facebook.com/products/instagram/>`_
-- `Instagram Graph API <https://developers.facebook.com/docs/instagram-api>`_
-
-使用示例：
-
-与 ``Facebook Api`` 类似，同样可以使用两种方式初始化 ``InstagramApi`` 实例, 但需要多一个 ``instagram_business_id`` 参数::
-
-    # 使用临时令牌和App密钥
-    In [1]: import pyfacebook
-
-    In [2]: api = pyfacebook.InstagramApi(
-       ...:     app_id = 'App ID',
-       ...:     app_secret='App密钥',
-       ...:     short_token='临时令牌',
-       ...:     instagram_business_id='你的 Instagram 业务账号ID')
-
-    # 使用长期令牌
-    In [3]: api = pyfacebook.InstagramApi(
-       ...:     long_term_token='your long term access token',
-       ...:     instagram_business_id='你的 Instagram 业务账号ID')
-
-
-获取其他业务主页用户的基本信息::
-
-    In [3]: api.discovery_user(username='jaychou')
-    Out[3]: User(ID=17841405792603923, username=jaychou)
-
-    In [4]: api.discovery_user(username='jaychou', return_json=True)
-    Out[4]:
-    {'website': 'https://youtu.be/HK7SPnGSxLM',
-     'biography': 'https://www.facebook.com/jay/',
-     'profile_picture_url': 'https://scontent.xx.fbcdn.net/v/t51.2885-15/21147825_124638651514445_4540910313213526016_a.jpg?_nc_cat=1&_nc_oc=AQl4VclkS9_O1iwa1KDetuR89g6yHkTHZOJZ2-kemhQcnFb1kIPzPBXsUydf1To2ZeM&_nc_ht=scontent.xx&oh=a86a0b98abb5294266d550095ecd7621&oe=5E20C7FA',
-     'ig_id': 5951385086,
-     'follows_count': 81,
-     'media_count': 516,
-     'username': 'jaychou',
-     'id': '17841405792603923',
-     'followers_count': 5237768,
-     'name': 'Jay Chou 周杰倫'}
-
-
-获取其他业务主页的贴文数据(默认返回近10条)::
-
-    In [5]: api.discovery_user_medias(username='jaychou')
-    Out[5]:
-    [Media(ID=17871925513478048, link=https://www.instagram.com/p/B382ojgHemq/),
-     Media(ID=17861378536535135, link=https://www.instagram.com/p/B36TG8AHbGd/),
-     Media(ID=17862568840534713, link=https://www.instagram.com/p/B33k7llnd_S/),
-     Media(ID=18002681875267830, link=https://www.instagram.com/p/B319fbuHXIt/),
-     Media(ID=17873056222479764, link=https://www.instagram.com/p/B31duvoH26O/),
-     Media(ID=17906467621371226, link=https://www.instagram.com/p/B3xCYNonlqn/),
-     Media(ID=17850201154639505, link=https://www.instagram.com/p/B3ufD-JH3a5/),
-     Media(ID=17855908660588183, link=https://www.instagram.com/p/B3q-bMuHvnl/),
-     Media(ID=18108170392062569, link=https://www.instagram.com/p/B3olnLxnRsy/),
-     Media(ID=17900244466380038, link=https://www.instagram.com/p/B3oQVpEHM3Q/)]
-
-通过授权的 ``token`` 获取当前业务主页的基础信息::
-
-    In [6]: api.get_user_info(user_id='account id', access_token='access token')
-    Out[6]: User(ID=17841406338772941, username=ikroskun)
-
-通过授权的 ``token`` 获取当前业务主页的贴文信息::
-
-    In [7]: api.get_medias(user_id='account id', access_token='access token')
+    In [7]: api.discovery_user_medias(username="facebook", count=2)
     Out[7]:
-    [Media(ID=18075344632131157, link=https://www.instagram.com/p/B38X8BzHsDi/),
-     Media(ID=18027939643230671, link=https://www.instagram.com/p/B38Xyp6nqsS/),
-     Media(ID=17861821972334188, link=https://www.instagram.com/p/BuGD8NmF4KI/),
-     Media(ID=17864312515295083, link=https://www.instagram.com/p/BporjsCF6mt/),
-     Media(ID=17924095942208544, link=https://www.instagram.com/p/BoqBgsNl5qT/),
-     Media(ID=17896189813249754, link=https://www.instagram.com/p/Bop_Hz5FzyL/),
-     Media(ID=17955956875141196, link=https://www.instagram.com/p/Bn-35GGl7YM/),
-     Media(ID=17970645226046242, link=https://www.instagram.com/p/Bme0cU1giOH/)]
+    [IgProMedia(comments=None, id='17859633232647524', permalink='https://www.instagram.com/p/B6jje2UnoH8/'),
+     IgProMedia(comments=None, id='18076151185161297', permalink='https://www.instagram.com/p/B6ji-PZH2V1/')]
 
-通过授权的 ``token`` 获取当前业务主页的贴文评论信息::
+获取你的帐号的信息::
 
-    In [8]: api.get_comments(media_id='media id', access_token='access token')
-    Out[8]: [Comment(ID=18008567518250255,timestamp=2019-10-23T02:10:32+0000)]
+    In [10]: api.get_user_info(user_id="your instagram business id")
+    Out[10]: IgProUser(id='17841406338772941', name='LiuKun', username='ikroskun')
 
-等等...
+获取你的贴文::
+
+    In [11]: api.get_user_medias(user_id=api.instagram_business_id, count=2)
+    Out[11]:
+    [IgProMedia(comments=None, id='18075344632131157', permalink='https://www.instagram.com/p/B38X8BzHsDi/'),
+     IgProMedia(comments=None, id='18027939643230671', permalink='https://www.instagram.com/p/B38Xyp6nqsS/')]
+
+如果你已经有了一些贴文的 ID 你可以通过如下方式获取贴文的详情数据。
+
+获取单个贴文的详情信息::
+
+    In [12]: api.get_media_info(media_id="18075344632131157")
+    Out[12]: IgProMedia(comments=None, id='18075344632131157', permalink='https://www.instagram.com/p/B38X8BzHsDi/')
+
+
+通过单个请求获取多个贴文的详情数据::
+
+    In [13]: api.get_medias_info(media_ids=["18075344632131157", "18027939643230671"])
+    Out[13]:
+    {'18075344632131157': IgProMedia(comments=None, id='18075344632131157', permalink='https://www.instagram.com/p/B38X8BzHsDi/'),
+     '18027939643230671': IgProMedia(comments=None, id='18027939643230671', permalink='https://www.instagram.com/p/B38Xyp6nqsS/')}
+
+
+获取某个贴文的评论数据::
+
+    In [16]: api.get_comments_by_media(media_id="17955956875141196", count=2)
+    Out[16]:
+    [IgProComment(id='17862949873623188', timestamp='2020-01-05T05:58:47+0000'),
+     IgProComment(id='17844360649889631', timestamp='2020-01-05T05:58:42+0000')]
+
+
+如果你已经有了一些评论的的 ID，你可以通过如下方式来获取评论详情。
+
+获取单个评论的详情::
+
+    In [17]: api.get_comment_info(comment_id="17862949873623188")
+    Out[17]: IgProComment(id='17862949873623188', timestamp='2020-01-05T05:58:47+0000')
+
+通过单个请求获取多个评论的详情::
+
+    In [18]: api.get_comments_info(comment_ids=["17862949873623188", "17844360649889631"
+    ...: ])
+    Out[18]:
+    {'17862949873623188': IgProComment(id='17862949873623188', timestamp='2020-01-05T05:58:47+0000'),
+     '17844360649889631': IgProComment(id='17844360649889631', timestamp='2020-01-05T05:58:42+0000')}
+
+获取某个评论的回复::
+
+    In [19]: api.get_replies_by_comment("17984127178281340", count=2)
+    Out[19]:
+    [IgProReply(id='18107567341036926', timestamp='2019-10-15T07:06:09+0000'),
+     IgProReply(id='17846106427692294', timestamp='2019-10-15T07:05:17+0000')]
+
+如果你已经有了一些评论的 ID，你可以通过如下方法来获取回复详情。
+
+获取单个评论的详情::
+
+    In [20]: api.get_reply_info(reply_id="18107567341036926")
+    Out[20]: IgProReply(id='18107567341036926', timestamp='2019-10-15T07:06:09+0000')
+
+通过单个请求获取多个回复的详情::
+
+    In [21]: api.get_replies_info(reply_ids=["18107567341036926", "17846106427692294"])
+    Out[21]:
+    {'18107567341036926': IgProReply(id='18107567341036926', timestamp='2019-10-15T07:06:09+0000'),
+     '17846106427692294': IgProReply(id='17846106427692294', timestamp='2019-10-15T07:05:17+0000')}
+
 
 ====
 TODO
