@@ -17,7 +17,6 @@ install:
 script:
   - make lint
   - make test
-  - make coverage
 
 # ignore tags build
 branches:

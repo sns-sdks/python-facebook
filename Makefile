@@ -8,7 +8,6 @@ help:
 	@echo "  docs        build documentation"
 	@echo "  lint        check style with flake8"
 	@echo "  test        run tests"
-	@echo "  coverage    run tests with coverage"
 
 env:
 	pip install pipenv
@@ -31,14 +30,7 @@ lint:
 
 
 test:
-	pytest -s tests
-	#python setup.py test
-
-
-coverage: clean
-	coverage run --source=pyfacebook setup.py test
-	coverage html
-	coverage report
+	pytest -s
 
 
 build: clean
