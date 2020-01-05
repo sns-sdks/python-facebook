@@ -17,6 +17,14 @@ class ApiCommentTest(unittest.TestCase):
         COMMENTS_DEFAULT_p2 = json.loads(f.read().decode("utf-8"))
     with open(BASE_PATH + "comment_fields.json", "rb") as f:
         COMMENTS_FIELDS = json.loads(f.read().decode("utf-8"))
+    with open(BASE_PATH + "comment_single_default.json", "rb") as f:
+        COMMENT_SINGLE_DEFAULT = json.loads(f.read().decode("utf-8"))
+    with open(BASE_PATH + "comment_single_fields.json", "rb") as f:
+        COMMENT_SINGLE_FIELDS = json.loads(f.read().decode("utf-8"))
+    with open(BASE_PATH + "comments_multi_default.json", "rb") as f:
+        COMMENTS_MULTI_DEFAULT = json.loads(f.read().decode("utf-8"))
+    with open(BASE_PATH + "comments_multi_fields.json", "rb") as f:
+        COMMENTS_MULTI_FIELDS = json.loads(f.read().decode("utf-8"))
 
     def setUp(self):
         self.api = pyfacebook.IgProApi(
@@ -64,4 +72,47 @@ class ApiCommentTest(unittest.TestCase):
             self.assertEqual(len(res), 4)
             self.assertEqual(res[0].id, "17862949873623188")
 
+    def testGetCommentInfo(self):
+        comment_id = "17862949873623188"
 
+        with responses.RequestsMock() as m:
+            m.add("GET", self.BASE_URL + comment_id, json=self.COMMENT_SINGLE_DEFAULT)
+            m.add("GET", self.BASE_URL + comment_id, json=self.COMMENT_SINGLE_DEFAULT)
+
+            res_default_with_reply = self.api.get_comment_info(
+                comment_id=comment_id
+            )
+            self.assertEqual(res_default_with_reply.id, comment_id)
+            self.assertEqual(res_default_with_reply.replies[0].id, "17850033184810160")
+
+            res_fields = self.api.get_comment_info(
+                comment_id=comment_id,
+                fields=["id", "like_count", "timestamp", "text"],
+                include_reply=False,
+                return_json=True
+            )
+            self.assertEqual(res_fields["id"], comment_id)
+
+    def testGetCommentsInfo(self):
+        comment_ids = ["17862949873623188", "17844360649889631"]
+
+        with responses.RequestsMock() as m:
+            m.add("GET", self.BASE_URL, json=self.COMMENTS_MULTI_DEFAULT)
+            m.add("GET", self.BASE_URL, json=self.COMMENTS_MULTI_FIELDS)
+
+            res_default_with_reply = self.api.get_comments_info(
+                comment_ids=comment_ids
+            )
+            for _id, data in iteritems(res_default_with_reply):
+                self.assertIn(_id, comment_ids)
+                self.assertIn(_id, data.id)
+
+            res_fields = self.api.get_comments_info(
+                comment_ids=comment_ids,
+                fields=["id", "like_count", "timestamp", "text"],
+                include_reply=False,
+                return_json=True,
+            )
+            for _id, data in iteritems(res_fields):
+                self.assertIn(_id, comment_ids)
+                self.assertIn(_id, data["id"])

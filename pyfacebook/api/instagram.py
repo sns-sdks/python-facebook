@@ -399,7 +399,7 @@ class IgProApi(BaseApi):
                 You can also pass this with an id list, tuple, set.
         :param fields: Comma-separated id string for data fields which you want.
                 You can also pass this with an id list, tuple, set.
-        :param return_json: Set to false will return instance of IgProUser.
+        :param return_json: Set to false will return a dict values are instance of IgProUser.
                 Or return json data. Default is false.
         """
         if fields is None:
@@ -490,6 +490,7 @@ class IgProApi(BaseApi):
     def get_comment_info(self,
                          comment_id,  # type: str
                          fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                         include_reply=True,  # type: bool
                          return_json=False  # type: bool
                          ):
         # type: (...) -> Union[IgProComment, dict]
@@ -498,13 +499,20 @@ class IgProApi(BaseApi):
         :param comment_id: The comment id for which you want to get comment data.
         :param fields: Comma-separated id string for data fields which you want.
                 You can also pass this with an id list, tuple, set.
+        :param include_reply: Set to True will include the replies to the comment.
+                Default is True.
         :param return_json: Set to false will return instance of IgProComment.
                 Or return json data. Default is false.
         """
         if fields is None:
             fields = constant.INSTAGRAM_COMMENT_FIELD
 
-        args = {'fields': enf_comma_separated("fields", fields)}
+        fields = enf_comma_separated("fields", fields)
+
+        if include_reply:
+            fields = fields + ",replies{{{}}}".format(','.join(constant.INSTAGRAM_REPLY_FIELD))
+
+        args = {'fields': fields}
 
         resp = self._request(
             path='{0}/{1}'.format(self.version, comment_id),
@@ -517,6 +525,49 @@ class IgProApi(BaseApi):
             return data
         else:
             return IgProComment.new_from_json_dict(data)
+
+    def get_comments_info(self,
+                          comment_ids,  # type: Union[str, List, Tuple, Set]
+                          fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                          include_reply=True,  # type: bool
+                          return_json=False  # type: bool
+                          ):
+        # type: (...) -> dict
+        """
+        Retrieve comment info by the comment id.
+        :param comment_ids: Comma-separated id string for comment which you want.
+                You can also pass this with an id list, tuple, set.
+        :param fields: Comma-separated id string for data fields which you want.
+                You can also pass this with an id list, tuple, set.
+        :param include_reply: Set to True will include the replies to the comment.
+                Default is True.
+        :param return_json: Set to false will return a dict values are instance of IgProComment.
+                Or return json data. Default is false.
+        """
+        if fields is None:
+            fields = constant.INSTAGRAM_COMMENT_FIELD
+
+        fields = enf_comma_separated("fields", fields)
+
+        if include_reply:
+            fields = fields + ",replies{{{}}}".format(','.join(constant.INSTAGRAM_REPLY_FIELD))
+
+        args = {
+            'fields': fields,
+            "ids": enf_comma_separated("comment_ids", comment_ids)
+        }
+
+        resp = self._request(
+            path='{0}/'.format(self.version),
+            args=args
+        )
+
+        data = self._parse_response(resp)
+
+        if return_json:
+            return data
+        else:
+            return {_id: IgProComment.new_from_json_dict(p_data) for _id, p_data in iteritems(data)}
 
     def get_replies(self,
                     comment_id,
