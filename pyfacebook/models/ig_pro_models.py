@@ -3,7 +3,7 @@
 """
 
 from attr import attrs, attrib
-from typing import Dict, Optional
+from typing import Dict, List, Optional
 
 from .base import BaseModel
 from .._compat import str
@@ -135,3 +135,35 @@ class IgProHashtag(BaseModel):
     """
     id = attrib(default=None, type=Optional[str])
     name = attrib(default=None, type=Optional[str])
+
+
+@attrs
+class IgProInsightValue(BaseModel):
+    """
+    A class representing the Instagram insight value info.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/guides/insights#getting-account-metrics
+    """
+    value = attrib(default=None, type=Optional[int])
+    end_time = attrib(default=None, type=Optional[str])
+
+
+@attrs
+class IgProInsight(BaseModel):
+    """
+    A class representing the Instagram insight info.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/guides/insights#getting-account-metrics
+    """
+
+    id = attrib(default=None, type=Optional[str], repr=False)
+    name = attrib(default=None, type=Optional[str])
+    period = attrib(default=None, type=Optional[str])
+    title = attrib(default=None, type=Optional[str], repr=False)
+    description = attrib(default=None, type=Optional[str], repr=False)
+    values = attrib(default=None, type=Optional[List[Dict]])
+
+    def __attrs_post_init__(self):
+        if self.values is not None and isinstance(self.values, List):
+            values = self.values
+            self.values = [IgProInsightValue.new_from_json_dict(item) for item in values]

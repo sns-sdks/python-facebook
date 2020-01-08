@@ -1,0 +1,17 @@
+{
+  "name": "impressions",
+  "period": "day",
+  "values": [
+    {
+      "value": 32,
+      "end_time": "2018-01-11T08:00:00+0000"
+    },
+    {
+      "value": 32,
+      "end_time": "2018-01-12T08:00:00+0000"
+    }
+  ],
+  "title": "Impressions",
+  "description": "Total number of times this profile has been seen",
+  "id": "instagram_business_account_id/insights/impressions/day"
+}
