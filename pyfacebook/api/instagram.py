@@ -694,7 +694,7 @@ class IgProApi(BaseApi):
     def get_user_insights(self,
                           user_id,  # type: str
                           period,  # type: str
-                          metrics=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                          metrics,  # type: Union[str, List, Tuple, Set]
                           since=None,  # type: Optional[int],
                           until=None,  # type: Optional[int],
                           return_json=False,  # type: bool
@@ -708,7 +708,8 @@ class IgProApi(BaseApi):
                     - lifetime
                     - day
                     - days_28
-        :param metrics: Metrics that needs to be fetched.
+        :param metrics: Comma-separated id string for metrics that needs to be fetched..
+                You can also pass this with an id list, tuple, set.
                 Note:
                     some metrics incompatible with the period.
                     see more: https://developers.facebook.com/docs/instagram-api/reference/user/insights#metrics-periods
@@ -730,6 +731,39 @@ class IgProApi(BaseApi):
 
         resp = self._request(
             path="{0}/{1}/insights".format(self.version, user_id),
+            args=args
+        )
+
+        data = self._parse_response(resp)
+        if return_json:
+            return data["data"]
+        else:
+            return [IgProInsight.new_from_json_dict(item) for item in data["data"]]
+
+    def get_media_insights(self,
+                           media_id,  # type: str
+                           metrics,  # type: Union[str, List, Tuple, Set]
+                           return_json=False,  # type: bool
+                           ):
+        # type: (...) -> List[Union[IgProInsight, dict]]
+        """
+        Retrieve given media insights data.
+        :param media_id: The media id for which you want to get data.
+        :param metrics: Comma-separated id string for metrics that needs to be fetched..
+                You can also pass this with an id list, tuple, set.
+                Note:
+                    Different media type has different metric.
+                    see more: https://developers.facebook.com/docs/instagram-api/reference/media/insights#insights-2
+        :param return_json: Set to false will return a list of instance of IgProInsight.
+                Or return json data. Default is false.
+        """
+
+        args = {
+            "metric": enf_comma_separated("metrics", metrics)
+        }
+
+        resp = self._request(
+            path="{0}/{1}/insights".format(self.version, media_id),
             args=args
         )
 
