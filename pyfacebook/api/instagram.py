@@ -695,8 +695,8 @@ class IgProApi(BaseApi):
                           user_id,  # type: str
                           period,  # type: str
                           metrics=None,  # type: Optional[Union[str, List, Tuple, Set]]
-                          since=None,  # type: Optional[str],
-                          until=None,  # type: Optional[str],
+                          since=None,  # type: Optional[int],
+                          until=None,  # type: Optional[int],
                           return_json=False,  # type: bool
                           ):
         # type: (...) -> List[Union[IgProInsight, dict]]
