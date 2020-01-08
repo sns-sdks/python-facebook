@@ -17,6 +17,8 @@ class IgProModelTest(unittest.TestCase):
         IG_REPLY = json.loads(f.read().decode("utf-8"))
     with open(BASE_PATH + 'ig_hashtag.json', 'rb') as f:
         IG_HASHTAG = json.loads(f.read().decode("utf-8"))
+    with open(BASE_PATH + "ig_insight.json", "rb") as f:
+        IG_INSIGHT = json.loads(f.read().decode("utf-8"))
 
     def testUser(self):
         m = models.IgProUser.new_from_json_dict(self.IG_USER)
@@ -47,3 +49,11 @@ class IgProModelTest(unittest.TestCase):
         m = models.IgProHashtag.new_from_json_dict(self.IG_HASHTAG)
 
         self.assertEqual(m.id, "17841593698074073")
+
+    def testInsight(self):
+        m = models.IgProInsight.new_from_json_dict(self.IG_INSIGHT)
+
+        self.assertEqual(m.name, "impressions")
+        self.assertEqual(m.id, "instagram_business_account_id/insights/impressions/day")
+        self.assertEqual(len(m.values), 2)
+        self.assertEqual(m.values[0].value, 32)
