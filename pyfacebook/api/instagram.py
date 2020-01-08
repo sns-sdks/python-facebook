@@ -7,7 +7,7 @@ from six import iteritems
 
 from pyfacebook.error import PyFacebookException, ErrorCode, ErrorMessage
 from pyfacebook.models import (
-    IgProMedia, IgProUser, IgProComment, IgProReply
+    IgProMedia, IgProUser, IgProComment, IgProReply, IgProInsight
 )
 
 from .base import BaseApi
@@ -280,7 +280,7 @@ class IgProApi(BaseApi):
                         ):
         # type: (...) -> List[Union[IgProMedia, dict]]
         """
-        Retrieve
+        Retrieve ig user medias data by user id.
         :param user_id: The id for instagram business user which you want to get data.
         :param fields: Comma-separated id string for data fields which you want.
                 You can also pass this with an id list, tuple, set.
@@ -690,3 +690,51 @@ class IgProApi(BaseApi):
             return data
         else:
             return {_id: IgProReply.new_from_json_dict(p_data) for _id, p_data in iteritems(data)}
+
+    def get_user_insights(self,
+                          user_id,  # type: str
+                          period,  # type: str
+                          metrics=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                          since=None,  # type: Optional[str],
+                          until=None,  # type: Optional[str],
+                          return_json=False,  # type: bool
+                          ):
+        # type: (...) -> List[Union[IgProInsight, dict]]
+        """
+        Retrieve instagram business account user insights data.
+        :param user_id: The id for instagram business user which you want to get data.
+        :param period: The period to aggregation data.
+                Accepted parameters:
+                    - lifetime
+                    - day
+                    - days_28
+        :param metrics: Metrics that needs to be fetched.
+                Note:
+                    some metrics incompatible with the period.
+                    see more: https://developers.facebook.com/docs/instagram-api/reference/user/insights#metrics-periods
+        :param since: Lower bound of the time range to fetch data. Need Unix timestamps.
+        :param until: Upper bound of the time range to fetch data. Need Unix timestamps.
+                The time range not more than 30 days (2592000 s).
+        :param return_json: Set to false will return a list of instance of IgProInsight.
+                Or return json data. Default is false.
+        """
+
+        args = {
+            "metric": enf_comma_separated("metrics", metrics),
+            "period": period
+        }
+        if since is not None:
+            args["since"] = since
+        if until is not None:
+            args["until"] = until
+
+        resp = self._request(
+            path="{0}/{1}/insights".format(self.version, user_id),
+            args=args
+        )
+
+        data = self._parse_response(resp)
+        if return_json:
+            return data["data"]
+        else:
+            return [IgProInsight.new_from_json_dict(item) for item in data["data"]]
