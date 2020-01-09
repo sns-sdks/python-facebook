@@ -334,6 +334,20 @@ Instagram 图谱 API 可以 `instagram Professional accounts <https://help.insta
     {'18107567341036926': IgProReply(id='18107567341036926', timestamp='2019-10-15T07:06:09+0000'),
      '17846106427692294': IgProReply(id='17846106427692294', timestamp='2019-10-15T07:05:17+0000')}
 
+获取授权用户的 insights 数据::
+
+    In [4]: api.get_user_insights(user_id=api.instagram_business_id, period="day", metrics=["impressions", "reach"])
+    Out[4]:
+    [IgProInsight(name='impressions', period='day', values=[IgProInsightValue(value=1038, end_time='2020-01-08T08:00:00+0000'), IgProInsightValue(value=136, end_time='2020-01-09T08:00:00+0000')]),
+     IgProInsight(name='reach', period='day', values=[IgProInsightValue(value=751, end_time='2020-01-08T08:00:00+0000'), IgProInsightValue(value=54, end_time='2020-01-09T08:00:00+0000')])]
+
+
+获取授权用户的贴文的 insights 数据::
+
+    In [6]: api.get_media_insights(media_id="media_id", metrics=["engagement","impressions"])
+    Out[6]:
+    [IgProInsight(name='engagement', period='lifetime', values=[IgProInsightValue(value=90, end_time=None)]),
+     IgProInsight(name='impressions', period='lifetime', values=[IgProInsightValue(value=997, end_time=None)])]
 
 ====
 TODO
@@ -357,6 +371,8 @@ Instagram：
 - 获取授权业务主页的贴文信息
 - 获取授权业务主页的贴文评论数据
 - 获取授权业务主页的评论的回复数据
+- 获取授权业务主页用户的 Insights 数据
+- 获取授权业务主页贴文的 Insights 数据
 
 ----
 待做
