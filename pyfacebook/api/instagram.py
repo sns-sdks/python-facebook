@@ -10,7 +10,7 @@ from pyfacebook.models import (
     IgProMedia, IgProUser, IgProComment, IgProReply, IgProInsight
 )
 
-from .base import BaseApi
+from pyfacebook.api.base import BaseApi
 from pyfacebook.utils import constant
 from pyfacebook.utils.param_validation import enf_comma_separated
 
