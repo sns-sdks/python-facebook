@@ -7,7 +7,7 @@ from six import iteritems
 
 from pyfacebook.error import PyFacebookException, ErrorCode, ErrorMessage
 from pyfacebook.models import (
-    IgProMedia, IgProUser, IgProComment, IgProReply, IgProInsight
+    IgProMedia, IgProUser, IgProComment, IgProReply, IgProInsight, IgProHashtag
 )
 
 from pyfacebook.api.base import BaseApi
@@ -772,3 +772,226 @@ class IgProApi(BaseApi):
             return data["data"]
         else:
             return [IgProInsight.new_from_json_dict(item) for item in data["data"]]
+
+    def search_user_hashtag(self,
+                            user_id,  # type: str
+                            q,  # type: str
+                            return_json=False,  # type: bool
+                            ):
+        # type: (...) ->  List[Union[IgProHashtag, dict]]
+        """
+        Retrieve IG Hashtag IDs.
+
+        Note:
+            You can query a maximum of 30 unique hashtags within a 7 day period.
+
+        :param user_id: Instagram business account id.
+        :param q: The hashtag name to query.
+        :param return_json: Set to false will return a list of instance of IgProHashtag.
+                Or return json data. Default is false.
+        :return: hashtag data list
+        """
+
+        args = {
+            "user_id": user_id,
+            "q": q
+        }
+
+        resp = self._request(
+            path="{0}/ig_hashtag_search".format(self.version),
+            args=args
+        )
+
+        data = self._parse_response(resp)
+
+        if return_json:
+            return data["data"]
+        else:
+            return [IgProHashtag.new_from_json_dict(item) for item in data["data"]]
+
+    def get_hashtag_info(self,
+                         hashtag_id,  # type: str
+                         return_json=False,  # type: bool
+                         ):
+        # type: (...) -> Optional[IgProHashtag, dict]
+        """
+        Retrieve hashtag info by hashtag id.
+        :param hashtag_id: The id for target hashtag.
+        :param return_json: Set to false will return an instance of IgProHashtag.
+                Or return json data. Default is false.
+        :return: Hashtag info.
+        """
+
+        args = {
+            "fields": "id,name"
+        }
+
+        resp = self._request(
+            path="{0}/{1}".format(self.version, hashtag_id),
+            args=args
+        )
+
+        data = self._parse_response(resp)
+
+        if return_json:
+            return data
+        else:
+            return IgProHashtag.new_from_json_dict(data)
+
+    def get_hashtag_top_medias(self,
+                               user_id,  # type: str
+                               hashtag_id,  # type: str
+                               fields=None,  # type: Union[str, List, Tuple, Set]
+                               count=25,  # type: Optional[int]
+                               limit=25,  # type: int
+                               return_json=False,  # type: bool
+                               ):
+        # type: (...) -> List[Union[IgProMedia, dict]]
+        """
+        Retrieve the most popular photo and video IG Media objects that have been tagged with the hashtag.
+        :param user_id: Instagram business account id.
+        :param hashtag_id: The id for hashtag which you want to retrieve data.
+        :param fields: Comma-separated id string for data fields which you want.
+                You can also pass this with an id list, tuple, set.
+        :param count: The count for you want to get medias.
+                Default is 25.
+                If need get all, set this with None.
+        :param limit: Each request retrieve comments count from api.
+                For comments it should no more than 50.
+        :param return_json: Set to false will return a list of instance of IgProMedia.
+                Or return json data. Default is false.
+        :return: media data list.
+        """
+        if fields is None:
+            fields = constant.INSTAGRAM_HASHTAG_MEDIA_FIELD
+
+        if count is None:
+            limit = 50  # Each query will return a maximum of 50 medias.
+        else:
+            limit = min(count, limit)
+
+        args = {
+            "user_id": user_id,
+            "fields": enf_comma_separated(field="fields", value=fields),
+            "limit": limit,
+        }
+
+        medias = []
+        next_cursor = None
+
+        while True:
+            next_cursor, previous_cursor, data = self.paged_by_cursor(
+                target=hashtag_id,
+                resource='top_media',
+                args=args,
+                next_cursor=next_cursor
+            )
+            data = data.get('data', [])
+
+            if return_json:
+                medias += data
+            else:
+                medias += [IgProMedia.new_from_json_dict(item) for item in data]
+            if count is not None:
+                if len(medias) >= count:
+                    medias = medias[:count]
+                    break
+            if next_cursor is None:
+                break
+        return medias
+
+    def get_hashtag_recent_medias(self,
+                                  user_id,  # type: str
+                                  hashtag_id,  # type: str
+                                  fields=None,  # type: Union[str, List, Tuple, Set]
+                                  count=25,  # type: Optional[int]
+                                  limit=25,  # type: int
+                                  return_json=False,  # type: bool
+                                  ):
+        # type: (...) -> List[Union[IgProMedia, dict]]
+        """
+        Retrieve a list of the most recently published photo and video IG Media objects
+        published with a specific hashtag.
+        :param user_id: Instagram business account id.
+        :param hashtag_id: The id for hashtag which you want to retrieve data.
+        :param fields: Comma-separated id string for data fields which you want.
+                You can also pass this with an id list, tuple, set.
+        :param count: The count for you want to get medias.
+                Default is 25.
+                If need get all, set this with None.
+        :param limit: Each request retrieve comments count from api.
+                For comments it should no more than 50.
+        :param return_json: Set to false will return a list of instance of IgProMedia.
+                Or return json data. Default is false.
+        :return: media data list.
+        """
+        if fields is None:
+            fields = constant.INSTAGRAM_HASHTAG_MEDIA_FIELD
+
+        if count is None:
+            limit = 50  # Each query will return a maximum of 50 medias.
+        else:
+            limit = min(count, limit)
+
+        args = {
+            "user_id": user_id,
+            "fields": enf_comma_separated(field="fields", value=fields),
+            "limit": limit,
+        }
+
+        medias = []
+        next_cursor = None
+
+        while True:
+            next_cursor, previous_cursor, data = self.paged_by_cursor(
+                target=hashtag_id,
+                resource='recent_media',
+                args=args,
+                next_cursor=next_cursor
+            )
+            data = data.get('data', [])
+
+            if return_json:
+                medias += data
+            else:
+                medias += [IgProMedia.new_from_json_dict(item) for item in data]
+            if count is not None:
+                if len(medias) >= count:
+                    medias = medias[:count]
+                    break
+            if next_cursor is None:
+                break
+        return medias
+
+    def get_user_recently_searched_hashtags(self,
+                                            user_id,  # type: str
+                                            limit=25,  # type: int
+                                            return_json=False,  # type: bool
+                                            ):
+        # type: (...) -> List[Union[IgProHashtag, dict]]
+        """
+        Retrieve the IG Hashtags that an IG User has searched for within the last 7 days.
+
+        :param user_id: Instagram business account id.
+        :param limit: Each request retrieve hashtags count from api.
+                For this method. limit can't more than 30.
+        :param return_json: Set to false will return a list of instance of IgProHashtag.
+                Or return json data. Default is false.
+        :return: hashtag data list
+        """
+        args = {
+            "fields": "id,name",
+            "limit": limit,
+        }
+
+        resp = self._request(
+            path="{0}/{1}/recently_searched_hashtags".format(self.version, user_id),
+            args=args
+        )
+
+        data = self._parse_response(resp)
+
+        if return_json:
+            return data["data"]
+        else:
+            return [IgProHashtag.new_from_json_dict(item) for item in data["data"]]
