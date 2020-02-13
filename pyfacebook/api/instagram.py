@@ -838,14 +838,14 @@ class IgProApi(BaseApi):
         else:
             return IgProHashtag.new_from_json_dict(data)
 
-    def get_hashtag_top_media(self,
-                              user_id,  # type: str
-                              hashtag_id,  # type: str
-                              fields=None,  # type: Union[str, List, Tuple, Set]
-                              count=25,  # type: Optional[int]
-                              limit=25,  # type: int
-                              return_json=False,  # type: bool
-                              ):
+    def get_hashtag_top_medias(self,
+                               user_id,  # type: str
+                               hashtag_id,  # type: str
+                               fields=None,  # type: Union[str, List, Tuple, Set]
+                               count=25,  # type: Optional[int]
+                               limit=25,  # type: int
+                               return_json=False,  # type: bool
+                               ):
         # type: (...) -> List[Union[IgProMedia, dict]]
         """
         Retrieve the most popular photo and video IG Media objects that have been tagged with the hashtag.
@@ -892,22 +892,22 @@ class IgProApi(BaseApi):
                 medias += data
             else:
                 medias += [IgProMedia.new_from_json_dict(item) for item in data]
-            if next_cursor is None:
-                break
             if count is not None:
                 if len(medias) >= count:
                     medias = medias[:count]
                     break
+            if next_cursor is None:
+                break
         return medias
 
-    def get_hashtag_recent_media(self,
-                                 user_id,  # type: str
-                                 hashtag_id,  # type: str
-                                 fields=None,  # type: Union[str, List, Tuple, Set]
-                                 count=25,  # type: Optional[int]
-                                 limit=25,  # type: int
-                                 return_json=False,  # type: bool
-                                 ):
+    def get_hashtag_recent_medias(self,
+                                  user_id,  # type: str
+                                  hashtag_id,  # type: str
+                                  fields=None,  # type: Union[str, List, Tuple, Set]
+                                  count=25,  # type: Optional[int]
+                                  limit=25,  # type: int
+                                  return_json=False,  # type: bool
+                                  ):
         # type: (...) -> List[Union[IgProMedia, dict]]
         """
         Retrieve a list of the most recently published photo and video IG Media objects
@@ -955,12 +955,12 @@ class IgProApi(BaseApi):
                 medias += data
             else:
                 medias += [IgProMedia.new_from_json_dict(item) for item in data]
-            if next_cursor is None:
-                break
             if count is not None:
                 if len(medias) >= count:
                     medias = medias[:count]
                     break
+            if next_cursor is None:
+                break
         return medias
 
     def get_user_recently_searched_hashtags(self,
