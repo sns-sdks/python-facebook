@@ -782,10 +782,10 @@ class IgProApi(BaseApi):
         """
         Retrieve the IG Hashtags that an IG User has searched for within the last 7 days.
 
-        :param user_id: instagram business account id.
+        :param user_id: Instagram business account id.
         :param limit: Each request retrieve hashtags count from api.
                 For this method. limit can't more than 30.
-        :param return_json: Set to false will return a list of instance of IgProInsight.
+        :param return_json: Set to false will return a list of instance of IgProHashtag.
                 Or return json data. Default is false.
         :return: hashtag data list
         """
@@ -805,3 +805,40 @@ class IgProApi(BaseApi):
             return data["data"]
         else:
             return [IgProHashtag.new_from_json_dict(item) for item in data["data"]]
+
+    def search_hashtag(self,
+                       user_id,  # type: str
+                       q,  # type: str
+                       return_json=False,  # type: bool
+                       ):
+        # type: (...) ->  List[Union[IgProHashtag, dict]]
+        """
+        Retrieve IG Hashtag IDs.
+
+        Note:
+            You can query a maximum of 30 unique hashtags within a 7 day period.
+
+        :param user_id: Instagram business account id.
+        :param q: The hashtag name to query.
+        :param return_json: Set to false will return a list of instance of IgProHashtag.
+                Or return json data. Default is false.
+        :return: hashtag data list
+        """
+
+        args = {
+            "user_id": user_id,
+            "q": q
+        }
+
+        resp = self._request(
+            path="{0}/ig_hashtag_search".format(self.version),
+            args=args
+        )
+
+        data = self._parse_response(resp)
+
+        if return_json:
+            return data["data"]
+        else:
+            return [IgProHashtag.new_from_json_dict(item) for item in data["data"]]
+
