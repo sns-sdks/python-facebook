@@ -809,6 +809,35 @@ class IgProApi(BaseApi):
         else:
             return [IgProHashtag.new_from_json_dict(item) for item in data["data"]]
 
+    def get_hashtag_info(self,
+                         hashtag_id,  # type: str
+                         return_json=False,  # type: bool
+                         ):
+        # type: (...) -> Optional[IgProHashtag, dict]
+        """
+        Retrieve hashtag info by hashtag id.
+        :param hashtag_id: The id for target hashtag.
+        :param return_json: Set to false will return an instance of IgProHashtag.
+                Or return json data. Default is false.
+        :return: Hashtag info.
+        """
+
+        args = {
+            "fields": "id,name"
+        }
+
+        resp = self._request(
+            path="{0}/{1}".format(self.version, hashtag_id),
+            args=args
+        )
+
+        data = self._parse_response(resp)
+
+        if return_json:
+            return data
+        else:
+            return IgProHashtag.new_from_json_dict(data)
+
     def get_user_recently_searched_hashtags(self,
                                             user_id,  # type: str
                                             limit=25,  # type: int
