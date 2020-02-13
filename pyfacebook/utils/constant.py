@@ -94,3 +94,9 @@ INSTAGRAM_REPLY_FIELD = INSTAGRAM_COMMENT_FIELD
 INSTAGRAM_HASHTAG_FIELD = {
     'id', 'name'
 }
+
+INSTAGRAM_HASHTAG_MEDIA_FIELD = {
+    "caption", "children{id,media_type,media_url,permalink}",
+    "comments_count", "id", "like_count", "media_type",
+    "media_url", "permalink",
+}

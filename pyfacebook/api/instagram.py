@@ -838,6 +838,69 @@ class IgProApi(BaseApi):
         else:
             return IgProHashtag.new_from_json_dict(data)
 
+    def get_hashtag_recent_media(self,
+                                 user_id,  # type: str
+                                 hashtag_id,  # type: str
+                                 fields=None,  # type: Union[str, List, Tuple, Set]
+                                 count=25,  # type: Optional[int]
+                                 limit=25,  # type: int
+                                 return_json=False,  # type: bool
+                                 ):
+        # type: (...) -> List[Union[IgProMedia, dict]]
+        """
+        Retrieve a list of the most recently published photo and video IG Media objects
+        published with a specific hashtag.
+        :param user_id: Instagram business account id.
+        :param hashtag_id: The id for hashtag which you want to retrieve data.
+        :param fields: Comma-separated id string for data fields which you want.
+                You can also pass this with an id list, tuple, set.
+        :param count: The count for you want to get medias.
+                Default is 25.
+                If need get all, set this with None.
+        :param limit: Each request retrieve comments count from api.
+                For comments it should no more than 50.
+        :param return_json: Set to false will return a list of instance of IgProMedia.
+                Or return json data. Default is false.
+        :return: media data list.
+        """
+        if fields is None:
+            fields = constant.INSTAGRAM_HASHTAG_MEDIA_FIELD
+
+        if count is None:
+            limit = 50  # Each query will return a maximum of 50 medias.
+        else:
+            limit = min(count, limit)
+
+        args = {
+            "user_id": user_id,
+            "fields": enf_comma_separated(field="fields", value=fields),
+            "limit": limit,
+        }
+
+        medias = []
+        next_cursor = None
+
+        while True:
+            next_cursor, previous_cursor, data = self.paged_by_cursor(
+                target=hashtag_id,
+                resource='recent_media',
+                args=args,
+                next_cursor=next_cursor
+            )
+            data = data.get('data', [])
+
+            if return_json:
+                medias += data
+            else:
+                medias += [IgProMedia.new_from_json_dict(item) for item in data]
+            if next_cursor is None:
+                break
+            if count is not None:
+                if len(medias) >= count:
+                    medias = medias[:count]
+                    break
+        return medias
+
     def get_user_recently_searched_hashtags(self,
                                             user_id,  # type: str
                                             limit=25,  # type: int
