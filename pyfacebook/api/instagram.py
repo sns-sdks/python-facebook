@@ -7,7 +7,7 @@ from six import iteritems
 
 from pyfacebook.error import PyFacebookException, ErrorCode, ErrorMessage
 from pyfacebook.models import (
-    IgProMedia, IgProUser, IgProComment, IgProReply, IgProInsight
+    IgProMedia, IgProUser, IgProComment, IgProReply, IgProInsight, IgProHashtag
 )
 
 from pyfacebook.api.base import BaseApi
@@ -772,3 +772,36 @@ class IgProApi(BaseApi):
             return data["data"]
         else:
             return [IgProInsight.new_from_json_dict(item) for item in data["data"]]
+
+    def get_user_recently_searched_hashtags(self,
+                                            user_id,  # type: str
+                                            limit=25,  # type: int
+                                            return_json=False,  # type: bool
+                                            ):
+        # type: (...) -> List[Union[IgProHashtag, dict]]
+        """
+        Retrieve the IG Hashtags that an IG User has searched for within the last 7 days.
+
+        :param user_id: instagram business account id.
+        :param limit: Each request retrieve hashtags count from api.
+                For this method. limit can't more than 30.
+        :param return_json: Set to false will return a list of instance of IgProInsight.
+                Or return json data. Default is false.
+        :return: hashtag data list
+        """
+        args = {
+            "fields": "id,name",
+            "limit": limit,
+        }
+
+        resp = self._request(
+            path="{0}/{1}/recently_searched_hashtags".format(self.version, user_id),
+            args=args
+        )
+
+        data = self._parse_response(resp)
+
+        if return_json:
+            return data["data"]
+        else:
+            return [IgProHashtag.new_from_json_dict(item) for item in data["data"]]
