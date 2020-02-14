@@ -127,7 +127,7 @@ class BaseApi(object):
         # type: (str, str) -> Optional[str]
         if secret is None:
             logging.warning(
-                "Calls from a server can be better secured by adding a parameter called appsecret_proof."
+                "Calls from a server can be better secured by adding a parameter called appsecret_proof. "
                 "And need your app secret."
             )
             return None

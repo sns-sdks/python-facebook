@@ -36,7 +36,8 @@ class ApiMediaTest(unittest.TestCase):
                 period="day",
                 metrics=["impressions", "follower_count"],
                 since=1576771200,
-                until=1577635200
+                until=1577635200,
+                access_token=self.api._access_token,
             )
             self.assertEqual(len(res), 2)
             self.assertEqual(res[0].name, "impressions")
@@ -48,6 +49,7 @@ class ApiMediaTest(unittest.TestCase):
                 metrics=("impressions", "reach"),
                 since=1576771200,
                 until=1577635200,
+                access_token=self.api._access_token,
                 return_json=True,
             )
             self.assertEqual(len(res_json), 2)
@@ -66,7 +68,8 @@ class ApiMediaTest(unittest.TestCase):
                 metrics=[
                     "carousel_album_engagement", "carousel_album_impressions",
                     "carousel_album_reach", "saved", "video_views"
-                ]
+                ],
+                access_token=self.api._access_token,
             )
             self.assertEqual(len(media_album_insights), 5)
             self.assertEqual(media_album_insights[0].period, "lifetime")
@@ -77,6 +80,7 @@ class ApiMediaTest(unittest.TestCase):
                 metrics=[
                     "engagement", "impressions", "reach", "saved"
                 ],
+                access_token=self.api._access_token,
                 return_json=True
             )
             self.assertEqual(len(media_photo_insights), 4)
