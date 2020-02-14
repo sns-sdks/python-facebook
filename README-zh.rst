@@ -334,20 +334,69 @@ Instagram 图谱 API 可以 `instagram Professional accounts <https://help.insta
     {'18107567341036926': IgProReply(id='18107567341036926', timestamp='2019-10-15T07:06:09+0000'),
      '17846106427692294': IgProReply(id='17846106427692294', timestamp='2019-10-15T07:05:17+0000')}
 
-获取授权用户的 insights 数据::
+使用 ``get_user_insights`` 方法可以获取账号的授权数据。
+
+如果你有另一个业务账号的授权，你可以指定 ``user_id`` 和 ``access_token`` 参数，来获取该账号的授权数据。
+
+或者只获取你账号的授权数据::
 
     In [4]: api.get_user_insights(user_id=api.instagram_business_id, period="day", metrics=["impressions", "reach"])
     Out[4]:
     [IgProInsight(name='impressions', period='day', values=[IgProInsightValue(value=1038, end_time='2020-01-08T08:00:00+0000'), IgProInsightValue(value=136, end_time='2020-01-09T08:00:00+0000')]),
      IgProInsight(name='reach', period='day', values=[IgProInsightValue(value=751, end_time='2020-01-08T08:00:00+0000'), IgProInsightValue(value=54, end_time='2020-01-09T08:00:00+0000')])]
 
-
-获取授权用户的贴文的 insights 数据::
+与 ``get_user_insights`` 方法类似，你可以指定 ``user_id`` 和 ``access_token`` 参数来获取其他业务帐号的贴文授权数据。
+或者获取你自己的贴文的授权数据::
 
     In [6]: api.get_media_insights(media_id="media_id", metrics=["engagement","impressions"])
     Out[6]:
     [IgProInsight(name='engagement', period='lifetime', values=[IgProInsightValue(value=90, end_time=None)]),
      IgProInsight(name='impressions', period='lifetime', values=[IgProInsightValue(value=997, end_time=None)])]
+
+搜索标签的ID::
+
+    In [3]: api.search_hashtag(q="love")
+    Out[3]: [IgProHashtag(id='17843826142012701', name=None)]
+
+获取标签的信息::
+
+    In [4]: api.get_hashtag_info(hashtag_id="17843826142012701")
+    Out[4]: IgProHashtag(id='17843826142012701', name='love')
+
+获取使用该标签的排名较高的贴文::
+
+    In [5]: r = api.get_hashtag_top_medias(hashtag_id="17843826142012701", count=5)
+
+    In [6]: r
+    Out[6]:
+    [IgProMedia(comments=None, id='18086291068155608', permalink='https://www.instagram.com/p/B8ielBPpHaw/'),
+     IgProMedia(comments=None, id='17935250359346228', permalink='https://www.instagram.com/p/B8icUmwoF0Y/'),
+     IgProMedia(comments=None, id='17847031435934181', permalink='https://www.instagram.com/p/B8icycxKEn-/'),
+     IgProMedia(comments=None, id='18000940699302502', permalink='https://www.instagram.com/p/B8ieNN7Cv6S/'),
+     IgProMedia(comments=None, id='18025516372248793', permalink='https://www.instagram.com/p/B8iduQJgSyO/')]
+
+获取使用该标签的最近的贴文::
+
+    In [7]: r1 = api.get_hashtag_recent_medias(hashtag_id="17843826142012701", count=5)
+
+    In [8]: r1
+    Out[8]:
+    [IgProMedia(comments=None, id='18128248021002097', permalink='https://www.instagram.com/p/B8ifnoWA5Ru/'),
+     IgProMedia(comments=None, id='18104579776105272', permalink='https://www.instagram.com/p/B8ifwfsgBw2/'),
+     IgProMedia(comments=None, id='17898846532442427', permalink='https://www.instagram.com/p/B8ifwZ4ltqP/'),
+     IgProMedia(comments=None, id='17891698510462453', permalink='https://www.instagram.com/p/B8ifwepgf_E/'),
+     IgProMedia(comments=None, id='17883544606492965', permalink='https://www.instagram.com/p/B8ifwabgiPf/')]
+
+如果你有其他业务号的授权，你可以指定 ``user_id`` 和 ``access_token`` 来获取到该账号的标签搜索记录，
+或者获取你自己的搜索记录::
+
+    In [9]: api.get_user_recently_searched_hashtags(user_id="17841406338772941")
+    Out[9]:
+    [IgProHashtag(id='17843826142012701', name='love'),
+     IgProHashtag(id='17843421130029320', name='liukun'),
+     IgProHashtag(id='17841562447105233', name='loveyou'),
+     IgProHashtag(id='17843761288040806', name='a')]
+
 
 ====
 TODO
@@ -373,12 +422,16 @@ Instagram：
 - 获取授权业务主页的评论的回复数据
 - 获取授权业务主页用户的 Insights 数据
 - 获取授权业务主页贴文的 Insights 数据
+- 搜索标签 ID
+- 获取标签信息
+- 获取标签下排名靠前的贴文
+- 获取标签下最近的贴文
+- 获取授权业务主页的标签搜索记录
 
 ----
 待做
 ----
 
-- Insights 数据的获取
 - 发布帖子
 
 

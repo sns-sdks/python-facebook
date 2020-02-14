@@ -341,13 +341,19 @@ To fetch multi replies info by one requests::
      '17846106427692294': IgProReply(id='17846106427692294', timestamp='2019-10-15T07:05:17+0000')}
 
 
-Get your account insights data::
+Use ``get_user_insights`` method, you can get account insights data.
+
+If you want get your account insights, just provide ``user_id`` with your id.
+
+If you have other account's access token, you can provide with ``user_id`` and ``access_token``::
 
     In [4]: api.get_user_insights(user_id=api.instagram_business_id, period="day", metrics=["impressions", "reach"])
     Out[4]:
     [IgProInsight(name='impressions', period='day', values=[IgProInsightValue(value=1038, end_time='2020-01-08T08:00:00+0000'), IgProInsightValue(value=136, end_time='2020-01-09T08:00:00+0000')]),
      IgProInsight(name='reach', period='day', values=[IgProInsightValue(value=751, end_time='2020-01-08T08:00:00+0000'), IgProInsightValue(value=54, end_time='2020-01-09T08:00:00+0000')])]
 
+
+The same as ``get_user_insights``, you can custom provide ``media_id`` and ``access_token``.
 
 Get your media insights data::
 
@@ -358,7 +364,7 @@ Get your media insights data::
 
 Get hashtag id::
 
-    In [3]: api.search_user_hashtag(user_id="your id", q="love")
+    In [3]: api.search_hashtag(q="love")
     Out[3]: [IgProHashtag(id='17843826142012701', name=None)]
 
 Get hashtag info::
@@ -368,7 +374,7 @@ Get hashtag info::
 
 Get hashtag's top medias::
 
-    In [5]: r = api.get_hashtag_top_medias(user_id="17841406338772941", hashtag_id="17843826142012701", count=5)
+    In [5]: r = api.get_hashtag_top_medias(hashtag_id="17843826142012701", count=5)
 
     In [6]: r
     Out[6]:
@@ -380,7 +386,7 @@ Get hashtag's top medias::
 
 Get hashtag's recent medias::
 
-    In [7]: r1 = api.get_hashtag_recent_medias(user_id="17841406338772941", hashtag_id="17843826142012701", count=5)
+    In [7]: r1 = api.get_hashtag_recent_medias(hashtag_id="17843826142012701", count=5)
 
     In [8]: r1
     Out[8]:
@@ -390,7 +396,8 @@ Get hashtag's recent medias::
      IgProMedia(comments=None, id='17891698510462453', permalink='https://www.instagram.com/p/B8ifwepgf_E/'),
      IgProMedia(comments=None, id='17883544606492965', permalink='https://www.instagram.com/p/B8ifwabgiPf/')]
 
-Get user recent searched hashtags::
+If you have other account's access token, you can provide with ``user_id`` and ``access_token`` to get his search hashtags.
+Or just get your account recent searched hashtags::
 
     In [9]: api.get_user_recently_searched_hashtags(user_id="17841406338772941")
     Out[9]:
@@ -433,7 +440,6 @@ Instagram Professional Api:
 TODO
 ----
 
-- Acquisition of Insights Data
 - publish
 
 
