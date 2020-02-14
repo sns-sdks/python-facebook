@@ -45,42 +45,17 @@ class ApiHashtagTest(unittest.TestCase):
         with responses.RequestsMock() as m:
             m.add("GET", self.BASE_URL + "ig_hashtag_search", json=self.HASHTAG_SEARCH)
 
-            hashtags = self.api.search_user_hashtag(
-                user_id=self.instagram_business_id,
+            hashtags = self.api.search_hashtag(
                 q="liukun"
             )
             self.assertEqual(len(hashtags), 1)
             self.assertEqual(hashtags[0].id, "17843421130029320")
 
-            hashtags_json = self.api.search_user_hashtag(
-                user_id=self.instagram_business_id,
+            hashtags_json = self.api.search_hashtag(
                 q="liukun",
                 return_json=True
             )
             self.assertEqual(hashtags_json[0]["id"], "17843421130029320")
-
-    def testGetUserRecentlySearchedHashtags(self):
-        with responses.RequestsMock() as m:
-            m.add(
-                "GET",
-                self.BASE_URL + self.instagram_business_id + "/recently_searched_hashtags",
-                json=self.RECENTLY_HASHTAGS
-            )
-
-            hashtags = self.api.get_user_recently_searched_hashtags(
-                user_id=self.instagram_business_id,
-                limit=3,
-            )
-
-            self.assertEqual(len(hashtags), 3)
-            self.assertEqual(hashtags[0].name, "loveyou")
-
-            hashtags_json = self.api.get_user_recently_searched_hashtags(
-                user_id=self.instagram_business_id,
-                limit=3,
-                return_json=True
-            )
-            self.assertEqual(hashtags_json[1]["name"], "love")
 
     def testGetHashtagInfo(self):
         hashtag_id = "17843826142012701"
@@ -100,7 +75,6 @@ class ApiHashtagTest(unittest.TestCase):
             m.add("GET", self.BASE_URL + hashtag_id + "/top_media", json=self.HASHTAG_TOP_MEDIAS_DEFAULT_P2)
 
             medias = self.api.get_hashtag_top_medias(
-                user_id=self.instagram_business_id,
                 hashtag_id=hashtag_id,
                 count=None,
             )
@@ -112,7 +86,6 @@ class ApiHashtagTest(unittest.TestCase):
             m.add("GET", self.BASE_URL + hashtag_id + "/top_media", json=self.HASHTAG_TOP_MEDIAS_FIELDS_P2)
 
             medias_json = self.api.get_hashtag_top_medias(
-                user_id=self.instagram_business_id,
                 hashtag_id=hashtag_id,
                 fields=["id", "media_type", "comments_count", "like_count"],
                 count=8,
@@ -130,7 +103,6 @@ class ApiHashtagTest(unittest.TestCase):
             m.add("GET", self.BASE_URL + hashtag_id + "/recent_media", json=self.HASHTAG_RECENT_MEDIAS_DEFAULT_P2)
 
             medias = self.api.get_hashtag_recent_medias(
-                user_id=self.instagram_business_id,
                 hashtag_id=hashtag_id,
                 count=None,
             )
@@ -142,7 +114,6 @@ class ApiHashtagTest(unittest.TestCase):
             m.add("GET", self.BASE_URL + hashtag_id + "/recent_media", json=self.HASHTAG_RECENT_MEDIAS_FIELDS_P2)
 
             medias_json = self.api.get_hashtag_recent_medias(
-                user_id=self.instagram_business_id,
                 hashtag_id=hashtag_id,
                 fields=("id", "media_type", "comments_count", "like_count"),
                 count=8,
@@ -151,3 +122,28 @@ class ApiHashtagTest(unittest.TestCase):
             )
             self.assertEqual(len(medias_json), 8)
             self.assertEqual(medias_json[0]["id"], "17983329973290591")
+
+    def testGetUserRecentlySearchedHashtags(self):
+        with responses.RequestsMock() as m:
+            m.add(
+                "GET",
+                self.BASE_URL + self.instagram_business_id + "/recently_searched_hashtags",
+                json=self.RECENTLY_HASHTAGS
+            )
+
+            hashtags = self.api.get_user_recently_searched_hashtags(
+                user_id=self.instagram_business_id,
+                limit=3,
+                access_token=self.api._access_token
+            )
+
+            self.assertEqual(len(hashtags), 3)
+            self.assertEqual(hashtags[0].name, "loveyou")
+
+            hashtags_json = self.api.get_user_recently_searched_hashtags(
+                user_id=self.instagram_business_id,
+                limit=3,
+                access_token=self.api._access_token,
+                return_json=True
+            )
+            self.assertEqual(hashtags_json[1]["name"], "love")

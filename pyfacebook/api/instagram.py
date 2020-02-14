@@ -697,6 +697,7 @@ class IgProApi(BaseApi):
                           metrics,  # type: Union[str, List, Tuple, Set]
                           since=None,  # type: Optional[int],
                           until=None,  # type: Optional[int],
+                          access_token=None,  # type: str
                           return_json=False,  # type: bool
                           ):
         # type: (...) -> List[Union[IgProInsight, dict]]
@@ -716,6 +717,7 @@ class IgProApi(BaseApi):
         :param since: Lower bound of the time range to fetch data. Need Unix timestamps.
         :param until: Upper bound of the time range to fetch data. Need Unix timestamps.
                 The time range not more than 30 days (2592000 s).
+        :param access_token: Target user access token. If not will use default access token.
         :param return_json: Set to false will return a list of instance of IgProInsight.
                 Or return json data. Default is false.
         """
@@ -724,6 +726,10 @@ class IgProApi(BaseApi):
             "metric": enf_comma_separated("metrics", metrics),
             "period": period
         }
+
+        if access_token is not None:
+            args["access_token"] = access_token
+
         if since is not None:
             args["since"] = since
         if until is not None:
@@ -743,6 +749,7 @@ class IgProApi(BaseApi):
     def get_media_insights(self,
                            media_id,  # type: str
                            metrics,  # type: Union[str, List, Tuple, Set]
+                           access_token=None,  # type: str
                            return_json=False,  # type: bool
                            ):
         # type: (...) -> List[Union[IgProInsight, dict]]
@@ -754,6 +761,7 @@ class IgProApi(BaseApi):
                 Note:
                     Different media type has different metric.
                     see more: https://developers.facebook.com/docs/instagram-api/reference/media/insights#insights-2
+        :param access_token: Target user access token. If not will use default access token.
         :param return_json: Set to false will return a list of instance of IgProInsight.
                 Or return json data. Default is false.
         """
@@ -761,6 +769,9 @@ class IgProApi(BaseApi):
         args = {
             "metric": enf_comma_separated("metrics", metrics)
         }
+
+        if access_token is not None:
+            args["access_token"] = access_token
 
         resp = self._request(
             path="{0}/{1}/insights".format(self.version, media_id),
@@ -773,11 +784,10 @@ class IgProApi(BaseApi):
         else:
             return [IgProInsight.new_from_json_dict(item) for item in data["data"]]
 
-    def search_user_hashtag(self,
-                            user_id,  # type: str
-                            q,  # type: str
-                            return_json=False,  # type: bool
-                            ):
+    def search_hashtag(self,
+                       q,  # type: str
+                       return_json=False,  # type: bool
+                       ):
         # type: (...) ->  List[Union[IgProHashtag, dict]]
         """
         Retrieve IG Hashtag IDs.
@@ -785,7 +795,6 @@ class IgProApi(BaseApi):
         Note:
             You can query a maximum of 30 unique hashtags within a 7 day period.
 
-        :param user_id: Instagram business account id.
         :param q: The hashtag name to query.
         :param return_json: Set to false will return a list of instance of IgProHashtag.
                 Or return json data. Default is false.
@@ -793,7 +802,7 @@ class IgProApi(BaseApi):
         """
 
         args = {
-            "user_id": user_id,
+            "user_id": self.instagram_business_id,
             "q": q
         }
 
@@ -839,7 +848,6 @@ class IgProApi(BaseApi):
             return IgProHashtag.new_from_json_dict(data)
 
     def get_hashtag_top_medias(self,
-                               user_id,  # type: str
                                hashtag_id,  # type: str
                                fields=None,  # type: Union[str, List, Tuple, Set]
                                count=25,  # type: Optional[int]
@@ -849,7 +857,7 @@ class IgProApi(BaseApi):
         # type: (...) -> List[Union[IgProMedia, dict]]
         """
         Retrieve the most popular photo and video IG Media objects that have been tagged with the hashtag.
-        :param user_id: Instagram business account id.
+
         :param hashtag_id: The id for hashtag which you want to retrieve data.
         :param fields: Comma-separated id string for data fields which you want.
                 You can also pass this with an id list, tuple, set.
@@ -871,7 +879,7 @@ class IgProApi(BaseApi):
             limit = min(count, limit)
 
         args = {
-            "user_id": user_id,
+            "user_id": self.instagram_business_id,
             "fields": enf_comma_separated(field="fields", value=fields),
             "limit": limit,
         }
@@ -901,7 +909,6 @@ class IgProApi(BaseApi):
         return medias
 
     def get_hashtag_recent_medias(self,
-                                  user_id,  # type: str
                                   hashtag_id,  # type: str
                                   fields=None,  # type: Union[str, List, Tuple, Set]
                                   count=25,  # type: Optional[int]
@@ -912,7 +919,7 @@ class IgProApi(BaseApi):
         """
         Retrieve a list of the most recently published photo and video IG Media objects
         published with a specific hashtag.
-        :param user_id: Instagram business account id.
+
         :param hashtag_id: The id for hashtag which you want to retrieve data.
         :param fields: Comma-separated id string for data fields which you want.
                 You can also pass this with an id list, tuple, set.
@@ -934,7 +941,7 @@ class IgProApi(BaseApi):
             limit = min(count, limit)
 
         args = {
-            "user_id": user_id,
+            "user_id": self.instagram_business_id,
             "fields": enf_comma_separated(field="fields", value=fields),
             "limit": limit,
         }
@@ -966,6 +973,7 @@ class IgProApi(BaseApi):
     def get_user_recently_searched_hashtags(self,
                                             user_id,  # type: str
                                             limit=25,  # type: int
+                                            access_token=None,  # type: str
                                             return_json=False,  # type: bool
                                             ):
         # type: (...) -> List[Union[IgProHashtag, dict]]
@@ -975,6 +983,7 @@ class IgProApi(BaseApi):
         :param user_id: Instagram business account id.
         :param limit: Each request retrieve hashtags count from api.
                 For this method. limit can't more than 30.
+        :param access_token: Target user access token. If not will use default access token.
         :param return_json: Set to false will return a list of instance of IgProHashtag.
                 Or return json data. Default is false.
         :return: hashtag data list
@@ -983,6 +992,9 @@ class IgProApi(BaseApi):
             "fields": "id,name",
             "limit": limit,
         }
+
+        if access_token is not None:
+            args["access_token"] = access_token
 
         resp = self._request(
             path="{0}/{1}/recently_searched_hashtags".format(self.version, user_id),
