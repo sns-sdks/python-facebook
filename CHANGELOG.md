@@ -1,5 +1,12 @@
 ## CHANGE LOG
 
+#### [0.5.4](https://github.com/sns-sdks/python-facebook/compare/v0.5.3...v0.5.4) (2020-02-14)
+
+Introduce instagram insights api and hashtag api.
+
+Simple usage at [GET DATA](README.rst#get-data-1).
+
+
 #### [0.5.3](https://github.com/sns-sdks/python-facebook/compare/v0.5.2...v0.5.3) (2020-01-05)
 
 ###### Broken Change
