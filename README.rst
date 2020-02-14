@@ -356,6 +356,49 @@ Get your media insights data::
     [IgProInsight(name='engagement', period='lifetime', values=[IgProInsightValue(value=90, end_time=None)]),
      IgProInsight(name='impressions', period='lifetime', values=[IgProInsightValue(value=997, end_time=None)])]
 
+Get hashtag id::
+
+    In [3]: api.search_user_hashtag(user_id="your id", q="love")
+    Out[3]: [IgProHashtag(id='17843826142012701', name=None)]
+
+Get hashtag info::
+
+    In [4]: api.get_hashtag_info(hashtag_id="17843826142012701")
+    Out[4]: IgProHashtag(id='17843826142012701', name='love')
+
+Get hashtag's top medias::
+
+    In [5]: r = api.get_hashtag_top_medias(user_id="17841406338772941", hashtag_id="17843826142012701", count=5)
+
+    In [6]: r
+    Out[6]:
+    [IgProMedia(comments=None, id='18086291068155608', permalink='https://www.instagram.com/p/B8ielBPpHaw/'),
+     IgProMedia(comments=None, id='17935250359346228', permalink='https://www.instagram.com/p/B8icUmwoF0Y/'),
+     IgProMedia(comments=None, id='17847031435934181', permalink='https://www.instagram.com/p/B8icycxKEn-/'),
+     IgProMedia(comments=None, id='18000940699302502', permalink='https://www.instagram.com/p/B8ieNN7Cv6S/'),
+     IgProMedia(comments=None, id='18025516372248793', permalink='https://www.instagram.com/p/B8iduQJgSyO/')]
+
+Get hashtag's recent medias::
+
+    In [7]: r1 = api.get_hashtag_recent_medias(user_id="17841406338772941", hashtag_id="17843826142012701", count=5)
+
+    In [8]: r1
+    Out[8]:
+    [IgProMedia(comments=None, id='18128248021002097', permalink='https://www.instagram.com/p/B8ifnoWA5Ru/'),
+     IgProMedia(comments=None, id='18104579776105272', permalink='https://www.instagram.com/p/B8ifwfsgBw2/'),
+     IgProMedia(comments=None, id='17898846532442427', permalink='https://www.instagram.com/p/B8ifwZ4ltqP/'),
+     IgProMedia(comments=None, id='17891698510462453', permalink='https://www.instagram.com/p/B8ifwepgf_E/'),
+     IgProMedia(comments=None, id='17883544606492965', permalink='https://www.instagram.com/p/B8ifwabgiPf/')]
+
+Get user recent searched hashtags::
+
+    In [9]: api.get_user_recently_searched_hashtags(user_id="17841406338772941")
+    Out[9]:
+    [IgProHashtag(id='17843826142012701', name='love'),
+     IgProHashtag(id='17843421130029320', name='liukun'),
+     IgProHashtag(id='17841562447105233', name='loveyou'),
+     IgProHashtag(id='17843761288040806', name='a')]
+
 
 ====
 TODO
@@ -372,7 +415,7 @@ Facebook Api:
 - Feed Info (public posts, published posts, tagged posts).
 - Comment Info.
 
-Instagram Api:
+Instagram Professional Api:
 
 - Other business account info and media.
 - Authorized business account info
@@ -380,6 +423,11 @@ Instagram Api:
 - Authorized account comments
 - Authorized account replies
 - Authorized account insights and media insights
+- Search hashtag id
+- Get hashtag info
+- Get top medias with hashtag
+- Get recent medias with hashtag
+- Get Authorized account recent searched hashtags
 
 ----
 TODO
