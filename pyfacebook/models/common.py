@@ -2,7 +2,7 @@
     some models for common.
 """
 from attr import attrib, attrs
-from typing import Optional, List
+from typing import Dict, List, Optional
 
 from .base import BaseModel
 from .picture import ImageSource
@@ -62,3 +62,9 @@ class StoryAttachment(BaseModel):
     type = attrib(default=None, type=Optional[str])
     unshimmed_url = attrib(default=None, type=Optional[str], repr=False)
     url = attrib(default=None, type=Optional[str], repr=False)
+    subattachments = attrib(default=None, type=Optional[Dict], repr=False)
+
+    def __attrs_post_init__(self):
+        if self.subattachments is not None and isinstance(self.subattachments, dict):
+            subattachments = self.subattachments.get("data", [])
+            self.subattachments = [StoryAttachment.new_from_json_dict(item) for item in subattachments]
