@@ -1092,7 +1092,7 @@ class IgProApi(BaseApi):
                 You can also pass this with an id list, tuple, set.
                 Default is all public fields. (id,like_count,text,timestamp,media)
         :param access_token: Target user access token. If not will use default access token.
-        :param return_json: Set to false will return a list of instance of IgProMedia.
+        :param return_json: Set to false will return a list of instance of IgProComment.
                 Or return json data. Default is false.
         :return: comment data
         """
@@ -1120,3 +1120,52 @@ class IgProApi(BaseApi):
             return data["mentioned_comment"]
         else:
             return IgProComment.new_from_json_dict(data["mentioned_comment"])
+
+    def get_mentioned_media_info(self,
+                                 user_id,  # type: str
+                                 media_id,  # type: str
+                                 fields=None,  # type: Union[str, List, Tuple, Set]
+                                 access_token=None,  # type: str
+                                 return_json=False,  # type: bool
+                                 ):
+        # type: (...) -> Union[IgProMedia, dict]
+        """
+        You can use this to retrieve media info which an ig user has been @mentioned in a caption by another ig user.
+
+        :param user_id: Target user id which media mentioned for.
+        :param media_id: The media id which the ig user has been @mentioned.
+        :param fields: Comma-separated id string for data fields which you want.
+                You can also pass this with an id list, tuple, set.
+                Default is all public fields. fields as follows:
+                (caption,comments,comments_count,like_count,media_type,media_url,owner,timestamp,username)
+        :param access_token: Target user access token. If not will use default access token.
+        :param return_json: Set to false will return a list of instance of IgProMedia.
+                Or return json data. Default is false.
+        :return: media data
+        """
+
+        if fields is None:
+            fields = constant.INSTAGRAM_MEDIA_PUBLIC_FIELD.union(
+                {"comments{{{}}}".format(",".join(constant.INSTAGRAM_COMMENT_FIELD))}
+            )
+
+        args = {
+            "fields": "mentioned_media.media_id({media_id}){{{fields}}}".format(
+                media_id=media_id,
+                fields=enf_comma_separated(field="fields", value=fields)
+            )
+        }
+
+        if access_token is not None:
+            args["access_token"] = access_token
+
+        resp = self._request(
+            path="{0}/{1}".format(self.version, user_id),
+            args=args
+        )
+        data = self._parse_response(resp)
+
+        if return_json:
+            return data["mentioned_media"]
+        else:
+            return IgProMedia.new_from_json_dict(data["mentioned_media"])
