@@ -407,6 +407,30 @@ Or just get your account recent searched hashtags::
      IgProHashtag(id='17843761288040806', name='a')]
 
 
+Get the media objects in which a Business or Creator Account has been tagged.
+If you have another account authorized access token, you can provide with ``user_id`` and ``access_token`` to get his data.
+Or only get your account's data::
+
+    In [10]: medias = api.get_tagged_user_medias(user_id=api.instagram_business_id, count=5, limit=5)
+    Out[10]:
+    [IgProMedia(id='18027939643230671', permalink='https://www.instagram.com/p/B38Xyp6nqsS/'),
+     IgProMedia(id='17846368219941692', permalink='https://www.instagram.com/p/B8gQCApHMT-/'),
+     IgProMedia(id='17913531439230186', permalink='https://www.instagram.com/p/Bop3AGOASfY/'),
+     IgProMedia(id='17978630677077508', permalink='https://www.instagram.com/p/BotSABoAn8E/'),
+     IgProMedia(id='17955956875141196', permalink='https://www.instagram.com/p/Bn-35GGl7YM/')]
+
+Get data about a comment that an Business or Creator Account has been @mentioned in comment text::
+
+    In [11]: api.get_mentioned_comment_info(user_id=api.instagram_business_id, comment_id="17892250648466172")
+    Out[11]: IgProComment(id='17892250648466172', timestamp='2020-02-24T09:15:16+0000')
+
+
+Get data about a media object on which a Business or Creator Account has been @mentioned in a caption::
+
+    In [12]: api.get_mentioned_media_info(user_id=api.instagram_business_id, media_id="18027939643230671")
+    Out[12]: IgProMedia(id='18027939643230671', permalink='https://www.instagram.com/p/B38Xyp6nqsS/')
+
+
 ====
 TODO
 ====
@@ -435,6 +459,9 @@ Instagram Professional Api:
 - Get top medias with hashtag
 - Get recent medias with hashtag
 - Get Authorized account recent searched hashtags
+- Get medias which tagged account
+- Get comment info mentioned user.
+- Get media info mentioned user.
 
 ----
 TODO

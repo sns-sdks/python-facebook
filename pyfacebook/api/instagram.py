@@ -825,6 +825,7 @@ class IgProApi(BaseApi):
         # type: (...) -> Optional[IgProHashtag, dict]
         """
         Retrieve hashtag info by hashtag id.
+
         :param hashtag_id: The id for target hashtag.
         :param return_json: Set to false will return an instance of IgProHashtag.
                 Or return json data. Default is false.
@@ -927,7 +928,7 @@ class IgProApi(BaseApi):
                 Default is 25.
                 If need get all, set this with None.
         :param limit: Each request retrieve comments count from api.
-                For comments it should no more than 50.
+                For medias it should no more than 50.
         :param return_json: Set to false will return a list of instance of IgProMedia.
                 Or return json data. Default is false.
         :return: media data list.
@@ -1007,3 +1008,166 @@ class IgProApi(BaseApi):
             return data["data"]
         else:
             return [IgProHashtag.new_from_json_dict(item) for item in data["data"]]
+
+    def get_tagged_user_medias(self,
+                               user_id,  # type: str
+                               fields=None,  # type: Union[str, List, Tuple, Set]
+                               count=50,  # type: Optional[int]
+                               limit=50,  # type: int
+                               access_token=None,  # type: str
+                               return_json=False,  # type: bool
+                               ):
+        # type: (...) -> List[Union[IgProMedia, dict]]
+        """
+        You can use this to retrieve medias which an ig user has been tagged by another ig user.
+
+        Note:
+            The private ig media will not be returned.
+
+        :param user_id: Target user id which result medias tagged.
+        :param fields: Comma-separated id string for data fields which you want.
+                You can also pass this with an id list, tuple, set.
+                Default is all public fields.
+        :param count: The you want to get medias.
+                Default is 50.
+                If you want to get all medias. set with None.
+        :param limit: Each request retrieve comments count from api.
+                Not have a exact value. And default is 50.
+        :param access_token: Target user access token. If not will use default access token.
+        :param return_json: Set to false will return a list of instance of IgProMedia.
+                Or return json data. Default is false.
+        :return: medias list
+        """
+        if fields is None:
+            fields = constant.INSTAGRAM_MEDIA_PUBLIC_FIELD.union(
+                {"comments{{{}}}".format(",".join(constant.INSTAGRAM_COMMENT_FIELD))}
+            )
+
+        if count is not None:
+            limit = min(count, limit)
+
+        args = {
+            "fields": enf_comma_separated(field="fields", value=fields),
+            "limit": limit,
+        }
+
+        if access_token is not None:
+            args["access_token"] = access_token
+
+        medias = []
+        next_cursor = None
+
+        while True:
+            next_cursor, previous_cursor, data = self.paged_by_cursor(
+                target=user_id,
+                resource="tags",
+                args=args,
+                next_cursor=next_cursor
+            )
+            data = data.get('data', [])
+
+            if return_json:
+                medias += data
+            else:
+                medias += [IgProMedia.new_from_json_dict(item) for item in data]
+            if count is not None:
+                if len(medias) >= count:
+                    medias = medias[:count]
+            if next_cursor is None:
+                break
+        return medias
+
+    def get_mentioned_comment_info(self,
+                                   user_id,  # type: str
+                                   comment_id,  # type: str
+                                   fields=None,  # type: Union[str, List, Tuple, Set]
+                                   access_token=None,  # type: str
+                                   return_json=False,  # type: bool
+                                   ):
+        # type: (...) -> Union[IgProComment, dict]
+        """
+        You can use this to retrieve comment data which an ig user has been @mentioned by another ig user.
+
+        :param user_id: Target user id which comment mentioned for.
+        :param comment_id: The comment id which the ig user has been @mentioned.
+        :param fields: Comma-separated id string for data fields which you want.
+                You can also pass this with an id list, tuple, set.
+                Default is all public fields. (id,like_count,text,timestamp,media)
+        :param access_token: Target user access token. If not will use default access token.
+        :param return_json: Set to false will return a list of instance of IgProComment.
+                Or return json data. Default is false.
+        :return: comment data
+        """
+
+        if fields is None:
+            fields = constant.INSTAGRAM_MENTION_COMMENT_FIELD
+
+        args = {
+            "fields": "mentioned_comment.comment_id({comment_id}){{{fields}}}".format(
+                comment_id=comment_id,
+                fields=enf_comma_separated(field="fields", value=fields)
+            ),
+        }
+
+        if access_token is not None:
+            args["access_token"] = access_token
+
+        resp = self._request(
+            path="{0}/{1}".format(self.version, user_id),
+            args=args
+        )
+        data = self._parse_response(resp)
+
+        if return_json:
+            return data["mentioned_comment"]
+        else:
+            return IgProComment.new_from_json_dict(data["mentioned_comment"])
+
+    def get_mentioned_media_info(self,
+                                 user_id,  # type: str
+                                 media_id,  # type: str
+                                 fields=None,  # type: Union[str, List, Tuple, Set]
+                                 access_token=None,  # type: str
+                                 return_json=False,  # type: bool
+                                 ):
+        # type: (...) -> Union[IgProMedia, dict]
+        """
+        You can use this to retrieve media info which an ig user has been @mentioned in a caption by another ig user.
+
+        :param user_id: Target user id which media mentioned for.
+        :param media_id: The media id which the ig user has been @mentioned.
+        :param fields: Comma-separated id string for data fields which you want.
+                You can also pass this with an id list, tuple, set.
+                Default is all public fields. fields as follows:
+                (caption,comments,comments_count,like_count,media_type,media_url,owner,timestamp,username)
+        :param access_token: Target user access token. If not will use default access token.
+        :param return_json: Set to false will return a list of instance of IgProMedia.
+                Or return json data. Default is false.
+        :return: media data
+        """
+
+        if fields is None:
+            fields = constant.INSTAGRAM_MEDIA_PUBLIC_FIELD.union(
+                {"comments{{{}}}".format(",".join(constant.INSTAGRAM_COMMENT_FIELD))}
+            )
+
+        args = {
+            "fields": "mentioned_media.media_id({media_id}){{{fields}}}".format(
+                media_id=media_id,
+                fields=enf_comma_separated(field="fields", value=fields)
+            )
+        }
+
+        if access_token is not None:
+            args["access_token"] = access_token
+
+        resp = self._request(
+            path="{0}/{1}".format(self.version, user_id),
+            args=args
+        )
+        data = self._parse_response(resp)
+
+        if return_json:
+            return data["mentioned_media"]
+        else:
+            return IgProMedia.new_from_json_dict(data["mentioned_media"])

@@ -102,7 +102,7 @@ class IgProMedia(BaseModel):
     """
     caption = attrib(default=None, type=Optional[str], repr=False)
     children = attrib(default=None, type=Optional[Dict], repr=False)
-    comments = attrib(default=None, type=Optional[Dict])
+    comments = attrib(default=None, type=Optional[Dict], repr=False)
     comments_count = attrib(default=None, type=Optional[int], repr=False)
     id = attrib(default=None, type=Optional[str])
     ig_id = attrib(default=None, type=Optional[int], repr=False)
@@ -161,7 +161,7 @@ class IgProInsight(BaseModel):
     period = attrib(default=None, type=Optional[str])
     title = attrib(default=None, type=Optional[str], repr=False)
     description = attrib(default=None, type=Optional[str], repr=False)
-    values = attrib(default=None, type=Optional[List[Dict]])
+    values = attrib(default=None, type=Optional[List[Dict]], repr=False)
 
     def __attrs_post_init__(self):
         if self.values is not None and isinstance(self.values, List):

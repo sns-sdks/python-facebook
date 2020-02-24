@@ -119,7 +119,7 @@ Facebook 存在不同类型的访问口令。使用不同的访问口令可以�
     {'20531316728': Page(id='20531316728', name='Facebook', username='facebookapp'),
      'nba': Page(id='8245623462', name='NBA', username='nba')}
 
-存在多种方法来获取主页的贴文数据。
+存在多种方法来获取主页的帖子数据。
 
 >>> api.get_page_feeds()
 >>> api.get_page_posts()
@@ -158,14 +158,14 @@ API 每年返回大约 600 个经排名的帖子。
     Out[8]: [Post...]
 
 
-如果你已经有了贴文的 ID，你可以通过如下方法来获取贴文的详情数据。
+如果你已经有了帖子的 ID，你可以通过如下方法来获取帖子的详情数据。
 
-获取单个贴子的数据::
+获取单个帖子的数据::
 
     In [9]: api.get_post_info(post_id="20531316728_587455038708591")
     Out[9]: Post(id='20531316728_587455038708591', permalink_url='https://www.facebook.com/facebookapp/videos/587455038708591/')
 
-单请求获取多个贴子的数据::
+单请求获取多个帖子的数据::
 
     In [10]: api.get_posts_info(ids=["20531316728_587455038708591", "20531316728_10159023836696729"])
     Out[10]:
@@ -245,7 +245,7 @@ Instagram 图谱 API 可以 `instagram Professional accounts <https://help.insta
 如果你想要搜索其他商家帐号的基础数据和帖子。你可以使用如下的方法::
 
     - discovery_user: 获取用户的基础数据
-    - discovery_user_medias: 获取用户的贴文
+    - discovery_user_medias: 获取用户的帖子
 
 .. note::
    使用 discovery 方法进行搜索只支持使用用户名
@@ -255,7 +255,7 @@ Instagram 图谱 API 可以 `instagram Professional accounts <https://help.insta
     In [6]: api.discovery_user(username="facebook")
     Out[6]: IgProUser(id='17841400455970028', name='Facebook', username='facebook')
 
-通过其他商家用户的用户名来获取贴文数据::
+通过其他商家用户的用户名来获取帖子数据::
 
     In [7]: api.discovery_user_medias(username="facebook", count=2)
     Out[7]:
@@ -267,22 +267,22 @@ Instagram 图谱 API 可以 `instagram Professional accounts <https://help.insta
     In [10]: api.get_user_info(user_id="your instagram business id")
     Out[10]: IgProUser(id='17841406338772941', name='LiuKun', username='ikroskun')
 
-获取你的贴文::
+获取你的帖子::
 
     In [11]: api.get_user_medias(user_id=api.instagram_business_id, count=2)
     Out[11]:
     [IgProMedia(comments=None, id='18075344632131157', permalink='https://www.instagram.com/p/B38X8BzHsDi/'),
      IgProMedia(comments=None, id='18027939643230671', permalink='https://www.instagram.com/p/B38Xyp6nqsS/')]
 
-如果你已经有了一些贴文的 ID 你可以通过如下方式获取贴文的详情数据。
+如果你已经有了一些帖子的 ID 你可以通过如下方式获取帖子的详情数据。
 
-获取单个贴文的详情信息::
+获取单个帖子的详情信息::
 
     In [12]: api.get_media_info(media_id="18075344632131157")
     Out[12]: IgProMedia(comments=None, id='18075344632131157', permalink='https://www.instagram.com/p/B38X8BzHsDi/')
 
 
-通过单个请求获取多个贴文的详情数据::
+通过单个请求获取多个帖子的详情数据::
 
     In [13]: api.get_medias_info(media_ids=["18075344632131157", "18027939643230671"])
     Out[13]:
@@ -290,7 +290,7 @@ Instagram 图谱 API 可以 `instagram Professional accounts <https://help.insta
      '18027939643230671': IgProMedia(comments=None, id='18027939643230671', permalink='https://www.instagram.com/p/B38Xyp6nqsS/')}
 
 
-获取某个贴文的评论数据::
+获取某个帖子的评论数据::
 
     In [16]: api.get_comments_by_media(media_id="17955956875141196", count=2)
     Out[16]:
@@ -345,8 +345,8 @@ Instagram 图谱 API 可以 `instagram Professional accounts <https://help.insta
     [IgProInsight(name='impressions', period='day', values=[IgProInsightValue(value=1038, end_time='2020-01-08T08:00:00+0000'), IgProInsightValue(value=136, end_time='2020-01-09T08:00:00+0000')]),
      IgProInsight(name='reach', period='day', values=[IgProInsightValue(value=751, end_time='2020-01-08T08:00:00+0000'), IgProInsightValue(value=54, end_time='2020-01-09T08:00:00+0000')])]
 
-与 ``get_user_insights`` 方法类似，你可以指定 ``user_id`` 和 ``access_token`` 参数来获取其他业务帐号的贴文授权数据。
-或者获取你自己的贴文的授权数据::
+与 ``get_user_insights`` 方法类似，你可以指定 ``user_id`` 和 ``access_token`` 参数来获取其他业务帐号的帖子授权数据。
+或者获取你自己的帖子的授权数据::
 
     In [6]: api.get_media_insights(media_id="media_id", metrics=["engagement","impressions"])
     Out[6]:
@@ -363,7 +363,7 @@ Instagram 图谱 API 可以 `instagram Professional accounts <https://help.insta
     In [4]: api.get_hashtag_info(hashtag_id="17843826142012701")
     Out[4]: IgProHashtag(id='17843826142012701', name='love')
 
-获取使用该标签的排名较高的贴文::
+获取使用该标签的排名较高的帖子::
 
     In [5]: r = api.get_hashtag_top_medias(hashtag_id="17843826142012701", count=5)
 
@@ -375,7 +375,7 @@ Instagram 图谱 API 可以 `instagram Professional accounts <https://help.insta
      IgProMedia(comments=None, id='18000940699302502', permalink='https://www.instagram.com/p/B8ieNN7Cv6S/'),
      IgProMedia(comments=None, id='18025516372248793', permalink='https://www.instagram.com/p/B8iduQJgSyO/')]
 
-获取使用该标签的最近的贴文::
+获取使用该标签的最近的帖子::
 
     In [7]: r1 = api.get_hashtag_recent_medias(hashtag_id="17843826142012701", count=5)
 
@@ -397,6 +397,26 @@ Instagram 图谱 API 可以 `instagram Professional accounts <https://help.insta
      IgProHashtag(id='17841562447105233', name='loveyou'),
      IgProHashtag(id='17843761288040806', name='a')]
 
+获取标记了用户的帖子。如果你有其他业务账号的授权，可以指定 ``user_id`` 和 ``access_token`` 来获取到标记该账号的帖文。
+或者获取标记你自己账号的帖子::
+
+    In [10]: medias = api.get_tagged_user_medias(user_id=api.instagram_business_id, count=5, limit=5)
+    Out[10]:
+    [IgProMedia(id='18027939643230671', permalink='https://www.instagram.com/p/B38Xyp6nqsS/'),
+     IgProMedia(id='17846368219941692', permalink='https://www.instagram.com/p/B8gQCApHMT-/'),
+     IgProMedia(id='17913531439230186', permalink='https://www.instagram.com/p/Bop3AGOASfY/'),
+     IgProMedia(id='17978630677077508', permalink='https://www.instagram.com/p/BotSABoAn8E/'),
+     IgProMedia(id='17955956875141196', permalink='https://www.instagram.com/p/Bn-35GGl7YM/')]
+
+获取提到了你的评论的详情信息::
+
+    In [11]: api.get_mentioned_comment_info(user_id=api.instagram_business_id, comment_id="17892250648466172")
+    Out[11]: IgProComment(id='17892250648466172', timestamp='2020-02-24T09:15:16+0000')
+
+获取提到了你的帖子的详情信息::
+
+    In [12]: api.get_mentioned_media_info(user_id=api.instagram_business_id, media_id="18027939643230671")
+    Out[12]: IgProMedia(id='18027939643230671', permalink='https://www.instagram.com/p/B38Xyp6nqsS/')
 
 ====
 TODO
@@ -410,23 +430,26 @@ Facebook：
 
 - 主页信息
 - 主页图片信息
-- 贴文数据
+- 帖子数据
 - 评论数据
 
 Instagram：
 
-- 搜索其他业务主页的基础信息和贴文
+- 搜索其他业务主页的基础信息和帖子
 - 获取授权业务主页的基础信息
-- 获取授权业务主页的贴文信息
-- 获取授权业务主页的贴文评论数据
+- 获取授权业务主页的帖子信息
+- 获取授权业务主页的帖子评论数据
 - 获取授权业务主页的评论的回复数据
 - 获取授权业务主页用户的 Insights 数据
-- 获取授权业务主页贴文的 Insights 数据
+- 获取授权业务主页帖子的 Insights 数据
 - 搜索标签 ID
 - 获取标签信息
-- 获取标签下排名靠前的贴文
-- 获取标签下最近的贴文
+- 获取标签下排名靠前的帖子
+- 获取标签下最近的帖子
 - 获取授权业务主页的标签搜索记录
+- 获取标记了用户的帖文
+- 获取提到了用户的评论信息
+- 获取提到了用户的帖子信息
 
 ----
 待做

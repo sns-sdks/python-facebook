@@ -23,7 +23,7 @@ class PageCategory(BaseModel):
 
     id = attrib(default=None, type=Optional[str])
     api_enum = attrib(default=None, type=Optional[str], repr=False)
-    fb_page_categories = attrib(default=None, type=Optional[List])
+    fb_page_categories = attrib(default=None, type=Optional[List], repr=False)
     name = attrib(default=None, type=Optional[str])
 
     def __attrs_post_init__(self):
