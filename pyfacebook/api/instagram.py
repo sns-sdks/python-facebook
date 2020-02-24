@@ -927,7 +927,7 @@ class IgProApi(BaseApi):
                 Default is 25.
                 If need get all, set this with None.
         :param limit: Each request retrieve comments count from api.
-                For comments it should no more than 50.
+                For medias it should no more than 50.
         :param return_json: Set to false will return a list of instance of IgProMedia.
                 Or return json data. Default is false.
         :return: media data list.
@@ -1007,3 +1007,69 @@ class IgProApi(BaseApi):
             return data["data"]
         else:
             return [IgProHashtag.new_from_json_dict(item) for item in data["data"]]
+
+    def get_tagged_user_medias(self,
+                               user_id,  # type: str
+                               fields=None,  # type: Union[str, List, Tuple, Set]
+                               count=50,  # type: Optional[int]
+                               limit=50,  # type: int
+                               access_token=None,  # type: str
+                               return_json=False,  # type: bool
+                               ):
+        # type: (...) -> List[Union[IgProMedia, dict]]
+        """
+        You can use this to retrieve medias which an ig user has been tagged by another ig user.
+
+        Note:
+            The private ig media will not be returned.
+
+        :param user_id: Target user id which result medias tagged.
+        :param fields: Comma-separated id string for data fields which you want.
+                You can also pass this with an id list, tuple, set.
+                Default is all public fields.
+        :param count: The you want to get medias.
+                Default is 50.
+                If you want to get all medias. set with None.
+        :param limit: Each request retrieve comments count from api.
+                Not have a exact value. And default is 50.
+        :param access_token: Target user access token. If not will use default access token.
+        :param return_json: Set to false will return a list of instance of IgProMedia.
+                Or return json data. Default is false.
+        :return: medias list
+        """
+        if fields is None:
+            fields = constant.INSTAGRAM_MEDIA_PUBLIC_FIELD
+
+        if count is not None:
+            limit = min(count, limit)
+
+        args = {
+            "fields": enf_comma_separated(field="fields", value=fields),
+            "limit": limit,
+        }
+
+        if access_token is not None:
+            args["access_token"] = access_token
+
+        medias = []
+        next_cursor = None
+
+        while True:
+            next_cursor, previous_cursor, data = self.paged_by_cursor(
+                target=user_id,
+                resource="tags",
+                args=args,
+                next_cursor=next_cursor
+            )
+            data = data.get('data', [])
+
+            if return_json:
+                medias += data
+            else:
+                medias += [IgProMedia.new_from_json_dict(item) for item in data]
+            if count is not None:
+                if len(medias) >= count:
+                    medias = medias[:count]
+            if next_cursor is None:
+                break
+        return medias
