@@ -1,8 +1,18 @@
 ## CHANGE LOG
 
+#### [0.5.5](https://github.com/sns-sdks/python-facebook/compare/v0.5.4...v0.5.5) (2020-02-24)
+
+Features
+
+- Introduce ``instagram`` business account mentions api.
+- Add ``facebook`` post subattachments field.
+
 #### [0.5.4](https://github.com/sns-sdks/python-facebook/compare/v0.5.3...v0.5.4) (2020-02-14)
 
-Introduce instagram insights api and hashtag api.
+Features
+
+- Introduce ``instagram`` business account insights api.
+- Introduce ``instagram`` business account hashtag api.
 
 Simple usage at [GET DATA](README.rst#get-data-1).
 
@@ -28,6 +38,5 @@ You can see the [README](README.rst) to see the changes.
 ##### Features
 
 * **instagram:** :sparkles: instagram owner data api. ([ad9fb89](https://github.com/sns-sdks/python-facebook/commit/ad9fb89))
-
 
 * Instagram API has refactored. ([26b75ac](https://github.com/sns-sdks/python-facebook/commit/26b75ac))
