@@ -100,3 +100,8 @@ INSTAGRAM_HASHTAG_MEDIA_FIELD = {
     "comments_count", "id", "like_count", "media_type",
     "media_url", "permalink",
 }
+
+INSTAGRAM_MENTION_COMMENT_FIELD = {
+    "id", "like_count", "media{{{}}}".format(",".join(INSTAGRAM_MEDIA_FIELD)),
+    "text", "timestamp",
+}

@@ -825,6 +825,7 @@ class IgProApi(BaseApi):
         # type: (...) -> Optional[IgProHashtag, dict]
         """
         Retrieve hashtag info by hashtag id.
+
         :param hashtag_id: The id for target hashtag.
         :param return_json: Set to false will return an instance of IgProHashtag.
                 Or return json data. Default is false.
@@ -1073,3 +1074,49 @@ class IgProApi(BaseApi):
             if next_cursor is None:
                 break
         return medias
+
+    def get_mentioned_comment_info(self,
+                                   user_id,  # type: str
+                                   comment_id,  # type: str
+                                   fields=None,  # type: Union[str, List, Tuple, Set]
+                                   access_token=None,  # type: str
+                                   return_json=False,  # type: bool
+                                   ):
+        # type: (...) -> Union[IgProComment, dict]
+        """
+        You can use this to retrieve comment data which an ig user has been @mentioned by another ig user.
+
+        :param user_id: Target user id which comment mentioned for.
+        :param comment_id: The comment id which the ig user has been @mentioned.
+        :param fields: Comma-separated id string for data fields which you want.
+                You can also pass this with an id list, tuple, set.
+                Default is all public fields. (id,like_count,text,timestamp,media)
+        :param access_token: Target user access token. If not will use default access token.
+        :param return_json: Set to false will return a list of instance of IgProMedia.
+                Or return json data. Default is false.
+        :return: comment data
+        """
+
+        if fields is None:
+            fields = constant.INSTAGRAM_MENTION_COMMENT_FIELD
+
+        args = {
+            "fields": "mentioned_comment.comment_id({comment_id}){{{fields}}}".format(
+                comment_id=comment_id,
+                fields=enf_comma_separated(field="fields", value=fields)
+            ),
+        }
+
+        if access_token is not None:
+            args["access_token"] = access_token
+
+        resp = self._request(
+            path="{0}/{1}".format(self.version, user_id),
+            args=args
+        )
+        data = self._parse_response(resp)
+
+        if return_json:
+            return data["mentioned_comment"]
+        else:
+            return IgProComment.new_from_json_dict(data["mentioned_comment"])
