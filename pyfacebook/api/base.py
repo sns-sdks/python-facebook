@@ -32,10 +32,11 @@ class BaseApi(object):
                  short_token=None,  # type: Optional[str]
                  long_term_token=None,  # type: Optional[str]
                  application_only_auth=False,  # type: bool
+                 initial_access_token=True,  # type: bool
                  version=None,  # type: Optional[str]
                  timeout=None,  # type: Optional[int]
                  sleep_on_rate_limit=False,  # type: bool
-                 proxies=None,  # type: Optional[int]
+                 proxies=None,  # type: Optional[dict]
                  debug_http=False  # type: bool
                  ):
         # type: (...) -> None
@@ -100,6 +101,8 @@ class BaseApi(object):
         elif application_only_auth and all([self.app_id, app_secret]):
             token = self.get_app_token()
             self._access_token = token.access_token
+        elif not initial_access_token and all([self.app_id, app_secret]):
+            pass
         else:
             raise PyFacebookException(ErrorMessage(
                 code=ErrorCode.MISSING_PARAMS,
@@ -107,8 +110,9 @@ class BaseApi(object):
                     "You can initial api with three methods: \n"
                     "1. Just provide long(short) lived token or app access token with param `long_term_token`.\n"
                     "2. Provide a short lived token and app credentials. Api will auto exchange long term token.\n"
-                    "3. Provide app credentials and with application_only_auth set to true."
-                    "Api will auto get and use app access token."
+                    "3. Provide app credentials and with application_only_auth set to true. "
+                    "Api will auto get and use app access token.\n"
+                    "4. Provide app credentials and prepare for do authorize(This will not retrieve access token)"
                 )
             ))
 
@@ -194,6 +198,7 @@ class BaseApi(object):
         # type: (dict) -> None
         """
         Check the facebook response data. If have error raise a PyFacebookException.
+
         :param data: The data return by facebook.
         :return: None
         """

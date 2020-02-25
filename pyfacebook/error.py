@@ -17,6 +17,7 @@ class ErrorCode:
     HTTP_ERROR = 10000
     MISSING_PARAMS = 10001
     INVALID_PARAMS = 10002
+    NOT_SUPPORT_METHOD = 10010
 
 
 @attrs
