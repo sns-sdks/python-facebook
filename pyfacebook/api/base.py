@@ -46,6 +46,7 @@ class BaseApi(object):
         :param short_token: short-lived token
         :param long_term_token: long-lived token.
         :param application_only_auth: Use the `App Access Token` only.
+        :param initial_access_token: If you want use api do authorize, set this with False.
         :param version: The version for the graph api.
         :param timeout: Request time out
         :param sleep_on_rate_limit: Use this will sleep between two request.

@@ -20,6 +20,7 @@ class IgBasicApi(BaseApi):
                  app_secret=None,
                  short_token=None,
                  long_term_token=None,
+                 initial_access_token=True,
                  timeout=None,  # type: Optional[int]
                  sleep_on_rate_limit=False,  # type: bool
                  proxies=None,  # type: Optional[dict]
@@ -31,7 +32,7 @@ class IgBasicApi(BaseApi):
                          short_token=short_token,
                          long_term_token=long_term_token,
                          timeout=timeout,
-                         initial_access_token=False,
+                         initial_access_token=initial_access_token,
                          sleep_on_rate_limit=sleep_on_rate_limit,
                          proxies=proxies,
                          debug_http=debug_http
