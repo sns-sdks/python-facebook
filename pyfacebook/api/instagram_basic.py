@@ -218,8 +218,6 @@ class IgBasicApi(BaseApi):
 
         if count is not None:
             limit = min(count, limit)
-        else:
-            limit = 100  # test value
 
         args = {
             "fields": enf_comma_separated(field="fields", value=fields),
