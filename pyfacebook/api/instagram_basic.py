@@ -42,6 +42,24 @@ class IgBasicApi(BaseApi):
     def _generate_secret_proof(secret, access_token):  # type: (str, str) -> Optional[str]
         return None
 
+    def get_app_token(self, return_json=False):
+        raise PyFacebookException(ErrorMessage(
+            code=ErrorCode.NOT_SUPPORT_METHOD,
+            message="Method not support by this api."
+        ))
+
+    def get_token_info(self, input_token=None, return_json=False):
+        raise PyFacebookException(ErrorMessage(
+            code=ErrorCode.NOT_SUPPORT_METHOD,
+            message="Method not support by this api."
+        ))
+
+    def exchange_insights_token(self, page_id, access_token=None):
+        raise PyFacebookException(ErrorMessage(
+            code=ErrorCode.NOT_SUPPORT_METHOD,
+            message="Method not support by this api."
+        ))
+
     def get_long_token(self, short_token, app_id=None, app_secret=None, return_json=False):
         # type: (str, Optional[str], Optional[str], bool) -> Optional[Union[AuthAccessToken, Dict]]
         """
@@ -73,20 +91,27 @@ class IgBasicApi(BaseApi):
         else:
             return AuthAccessToken.new_from_json_dict(data)
 
-    def get_app_token(self, return_json=False):
-        raise PyFacebookException(ErrorMessage(
-            code=ErrorCode.NOT_SUPPORT_METHOD,
-            message="Method not support by this api."
-        ))
+    def refresh_access_token(self, access_token=None, return_json=False):
+        # type: (Optional[str], bool) -> Optional[Union[AuthAccessToken, Dict]]
+        """
+        :param access_token: long-lived token will be refreshed.
+        :param return_json: Set to false will return instance of AuthAccessToken.
+        Or return json data. Default is false.
+        :return: New long-lived access token data
+        """
+        if access_token is None:
+            access_token = self._access_token
 
-    def get_token_info(self, input_token=None, return_json=False):
-        raise PyFacebookException(ErrorMessage(
-            code=ErrorCode.NOT_SUPPORT_METHOD,
-            message="Method not support by this api."
-        ))
+        resp = self._request(
+            path="refresh_access_token",
+            args={
+                "grant_type": "ig_refresh_token",
+                "access_token": access_token
+            }
+        )
+        data = self._parse_response(resp)
 
-    def exchange_insights_token(self, page_id, access_token=None):
-        raise PyFacebookException(ErrorMessage(
-            code=ErrorCode.NOT_SUPPORT_METHOD,
-            message="Method not support by this api."
-        ))
+        if return_json:
+            return data
+        else:
+            return AuthAccessToken.new_from_json_dict(data)
