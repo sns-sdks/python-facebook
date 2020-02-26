@@ -103,7 +103,7 @@ class BaseApi(object):
             token = self.get_app_token()
             self._access_token = token.access_token
         elif not initial_access_token and all([self.app_id, app_secret]):
-            pass
+            self._access_token = None
         else:
             raise PyFacebookException(ErrorMessage(
                 code=ErrorCode.MISSING_PARAMS,
