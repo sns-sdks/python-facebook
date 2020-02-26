@@ -5,7 +5,7 @@ from typing import Dict, Optional, Union, List, Tuple, Set
 
 from pyfacebook.api.base import BaseApi
 from pyfacebook.error import PyFacebookException, ErrorCode, ErrorMessage
-from pyfacebook.models import AuthAccessToken, IgBasicUser, IgBasicMedia
+from pyfacebook.models import AuthAccessToken, IgBasicUser, IgBasicMedia, IgBasicMediaChildren
 from pyfacebook.utils import constant
 from pyfacebook.utils.param_validation import enf_comma_separated
 
@@ -15,7 +15,7 @@ class IgBasicApi(BaseApi):
     DEFAULT_AUTHORIZATION_URL = "https://api.instagram.com/oauth/authorize"
     DEFAULT_EXCHANGE_ACCESS_TOKEN_URL = "https://api.instagram.com/oauth/access_token"
 
-    DEFAULT_SCOPE = ["user_profile"]
+    DEFAULT_SCOPE = ["user_profile", "user_media"]
 
     def __init__(self,
                  app_id=None,
@@ -251,3 +251,72 @@ class IgBasicApi(BaseApi):
                 break
 
         return medias
+
+    def get_media_info(self,
+                       media_id,  # type: str
+                       fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                       return_json=False,  # type: bool
+                       ):
+        # type: (...) -> Union[IgBasicMedia, Dict]
+        """
+        Retrieve media info for target media id.
+
+        :param media_id: The id for target media id.
+        :param fields: Comma-separated id string for data fields which you want.
+                You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return an instance of IgBasicMedia.
+                Or return json data. Default is false.
+        :return: media data info.
+        """
+
+        if fields is None:
+            fields = constant.INSTAGRAM_BASIC_MEDIA_FIELD
+
+        args = {
+            "fields": enf_comma_separated(field="fields", value=fields),
+        }
+
+        resp = self._request(
+            path="{}".format(media_id),
+            args=args
+        )
+        data = self._parse_response(resp)
+
+        if return_json:
+            return data
+        else:
+            return IgBasicMedia.new_from_json_dict(data)
+
+    def get_media_children(self,
+                           media_id,  # type: str
+                           fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                           return_json=False,  # type: bool
+                           ):
+        # type: (...) -> List[Union[IgBasicMediaChildren, Dict]]
+        """
+        Retrieve media children data for target media.
+        :param media_id: The id for target media.
+        :param fields: Comma-separated id string for data fields which you want.
+                You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return a list of instance of IgBasicMediaChildren.
+                Or return json data. Default is false.
+        :return: media children list
+        """
+
+        if fields is None:
+            fields = constant.INSTAGRAM_BASIC_MEDIA_CHILDREN_FIELD
+
+        args = {
+            "fields": enf_comma_separated(field="fields", value=fields),
+        }
+
+        resp = self._request(
+            path="{}/children".format(media_id),
+            args=args
+        )
+        data = self._parse_response(resp)
+
+        if return_json:
+            return data["data"]
+        else:
+            return [IgBasicMediaChildren.new_from_json_dict(item) for item in data["data"]]
