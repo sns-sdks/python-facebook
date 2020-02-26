@@ -50,9 +50,9 @@ FB_PAGE_PICTURE_TYPE = {
     "small", "normal", "album", "large", "square"
 }
 
-# =======================================
-# Follows is Instagram fields to get data
-# =======================================
+# ====================================================
+# Follows is Instagram Professional fields to get data
+# ====================================================
 
 INSTAGRAM_USER_FIELD = {
     "biography", "id", "ig_id",
@@ -104,4 +104,21 @@ INSTAGRAM_HASHTAG_MEDIA_FIELD = {
 INSTAGRAM_MENTION_COMMENT_FIELD = {
     "id", "like_count", "media{{{}}}".format(",".join(INSTAGRAM_MEDIA_FIELD)),
     "text", "timestamp",
+}
+
+# =====================================================
+# Follows is Instagram Basic display fields to get data
+# =====================================================
+INSTAGRAM_BASIC_USER_FIELD = [
+    "account_type", "id", "media_count", "username"
+]
+
+INSTAGRAM_BASIC_MEDIA_CHILDREN_FIELD = {
+    "id", "media_type", "media_url", "permalink",
+    "thumbnail_url", "timestamp", "username"
+}
+
+INSTAGRAM_BASIC_MEDIA_FIELD = {
+    "caption", "id", "media_type", "media_url", "permalink",
+    "thumbnail_url", "timestamp", "username"
 }

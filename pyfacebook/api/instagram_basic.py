@@ -1,11 +1,13 @@
 """
     Instagram Basic display Api impl
 """
-from typing import Dict, Optional, Union
+from typing import Dict, Optional, Union, List, Tuple, Set
 
 from pyfacebook.api.base import BaseApi
 from pyfacebook.error import PyFacebookException, ErrorCode, ErrorMessage
-from pyfacebook.models import AuthAccessToken
+from pyfacebook.models import AuthAccessToken, IgBasicUser, IgBasicMedia
+from pyfacebook.utils import constant
+from pyfacebook.utils.param_validation import enf_comma_separated
 
 
 class IgBasicApi(BaseApi):
@@ -115,3 +117,36 @@ class IgBasicApi(BaseApi):
             return data
         else:
             return AuthAccessToken.new_from_json_dict(data)
+
+    def get_user_info(self, user_id=None, fields=None, return_json=False):
+        # type: (str, Optional[Union[str, List, Tuple, Set]], bool) -> Union[IgBasicUser, Dict]
+        """
+        Retrieve user basic info for target user.
+        :param user_id: The id for you want to get data. If not provide, will use access token belong user
+        :param fields: Comma-separated id string for data fields which you want.
+                You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return a list instance of IgBasicUser.
+                Or return json data. Default is false.
+        :return: User info data
+        """
+
+        if user_id is None:
+            user_id = "me"
+
+        if fields is None:
+            fields = constant.INSTAGRAM_BASIC_USER_FIELD
+
+        args = {
+            "fields": enf_comma_separated(field="fields", value=fields)
+        }
+
+        resp = self._request(
+            path="{}".format(user_id),
+            args=args
+        )
+        data = self._parse_response(resp)
+
+        if return_json:
+            return data
+        else:
+            return IgBasicUser.new_from_json_dict(data)
