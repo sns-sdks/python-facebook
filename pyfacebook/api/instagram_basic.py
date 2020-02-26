@@ -150,3 +150,104 @@ class IgBasicApi(BaseApi):
             return data
         else:
             return IgBasicUser.new_from_json_dict(data)
+
+    def paged_by_cursor(self,
+                        target,  # type: str
+                        resource,  # type: str
+                        args,  # type: Dict
+                        next_cursor=None  # type: Optional[str]
+                        ):
+        # type: (...) -> (Optional[str], Optional[str], Dict)
+        """
+        Paging data by cursor.
+
+        :param target: Id for target object
+        :param resource: resource type string.
+        :param args: args dict.
+        :param next_cursor: The paging cursor str. It will return from the api.
+        :return: next cursor, previous cursor, data list
+        """
+
+        if next_cursor is not None:
+            args["after"] = next_cursor
+
+        resp = self._request(
+            path="{0}/{1}".format(target, resource),
+            args=args
+        )
+
+        next_cursor, previous_cursor = None, None
+        data = self._parse_response(resp)
+
+        if "paging" in data:
+            paging = data["paging"]
+            if "next" in paging:
+                cursors = paging.get("cursors", {})
+                next_cursor = cursors.get('after')
+                previous_cursor = cursors.get('before')
+        return next_cursor, previous_cursor, data
+
+    def get_user_medias(self,
+                        user_id=None,  # type: str
+                        fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                        count=25,  # type: Optional[int]
+                        limit=25,  # type: int
+                        return_json=False,  # type: bool
+                        ):
+        # type: (...) -> List[Union[IgBasicMedia, Dict]]
+        """
+        Retrieve target user's medias.
+
+        :param user_id: The id for you want to get data. If not provide, will use access token belong user.
+        :param fields: Comma-separated id string for data fields which you want.
+                You can also pass this with an id list, tuple, set.
+        :param count: The count is you want to retrieve medias. Default is 25.
+                If you want to get all data. Set it to None.
+        :param limit: Each request retrieve posts count from api.
+                For medias it may no more than 100. (Not verified.)
+        :param return_json: Set to false will return a list instance of IgBasicMedia.
+                Or return json data. Default is false.
+        :return: Media data list
+        """
+
+        if user_id is None:
+            user_id = "me"
+
+        if fields is None:
+            fields = constant.INSTAGRAM_BASIC_MEDIA_FIELD
+
+        if count is not None:
+            limit = min(count, limit)
+        else:
+            limit = 100  # test value
+
+        args = {
+            "fields": enf_comma_separated(field="fields", value=fields),
+            "limit": limit,
+        }
+
+        medias = []
+        next_cursor = None
+
+        while True:
+            next_cursor, previous_cursor, data = self.paged_by_cursor(
+                target=user_id,
+                resource="media",
+                args=args,
+                next_cursor=next_cursor
+            )
+            data = data.get("data", [])
+
+            if return_json:
+                medias += data
+            else:
+                medias += [IgBasicMedia.new_from_json_dict(item) for item in data]
+
+            if count is not None:
+                if len(medias) >= count:
+                    medias = medias[:count]
+                    break
+            if next_cursor is None:
+                break
+
+        return medias

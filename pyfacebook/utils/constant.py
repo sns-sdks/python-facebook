@@ -120,5 +120,5 @@ INSTAGRAM_BASIC_MEDIA_CHILDREN_FIELD = {
 
 INSTAGRAM_BASIC_MEDIA_FIELD = {
     "caption", "id", "media_type", "media_url", "permalink",
-    "thumbnail_url", "timestamp", "username"
+    "thumbnail_url", "timestamp", "username", "children{{{}}}".format(",".join(INSTAGRAM_BASIC_MEDIA_CHILDREN_FIELD))
 }
