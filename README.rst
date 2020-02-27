@@ -33,7 +33,7 @@ Introduction
 
 Library provides a service to easy use Facebook Graph API.
 
-It currently includes the use of ``Facebook`` and ``Instagram Business`` product data.
+It currently includes the use of ``Facebook`` and ``Instagram Business``, ``Instagram Basic Display`` product data.
 
 ==========
 Installing
@@ -54,6 +54,8 @@ You can view the latest ``python-facebook`` documentation at: https://python-fac
 Also view the full ``Facebook Graph API`` docs at: https://developers.facebook.com/docs/graph-api/
 
 And full ``Instagram Graph API`` docs at: https://developers.facebook.com/docs/instagram-api/
+
+And full ``Instagram Basic Display API`` docs at: https://developers.facebook.com/docs/instagram-basic-display-api/
 
 =============================
 Base-Usage-Facebook Graph API
@@ -430,6 +432,71 @@ Get data about a media object on which a Business or Creator Account has been @m
     In [12]: api.get_mentioned_media_info(user_id=api.instagram_business_id, media_id="18027939643230671")
     Out[12]: IgProMedia(id='18027939643230671', permalink='https://www.instagram.com/p/B38Xyp6nqsS/')
 
+==============================
+Base-Usage-Instagram Basic API
+==============================
+
+Instagram Basic Display API can be used to access any type of Instagram account but only provides read-access to basic data.
+
+You need do authorize first, and get access token which have permission to retrieve data.
+
+All docs on `Basic Display APi <https://developers.facebook.com/docs/instagram-basic-display-api>`_.
+
+-----------
+Initial Api
+-----------
+
+Now provide three methods to init api.
+
+If you have long-lived access token, can just initial by token::
+
+    In[1]: from pyfacebook import IgBasicApi
+    In[2]: api = IgBasicApi(long_term_token="token")
+
+If you have short-lived access token, can provide with app credentials::
+
+    In[3]: api = IgBasicApi(app_id="app id", app_secret="app secret", short_token="token")
+
+If you want to authorized by user on hand. You can use authorize flow::
+
+    In[4]: api = IgBasicApi(app_id="app id", app_secret="app secret", initial_access_token=False)
+    In[5]: api.get_authorization_url()
+    Out[5]:
+    ('https://api.instagram.com/oauth/authorize?response_type=code&client_id=app+id&redirect_uri=https%3A%2F%2Flocalhost%2F&scope=user_profile+user_media&state=PyFacebook',
+     'PyFacebook')
+    # give permission and copy the redirect full url.
+    In[6]: api.exchange_access_token(response="the full url")
+
+--------
+Get Data
+--------
+
+You can get user basic info::
+
+    In[7]: api.get_user_info()
+    Out[7]: IgBasicUser(id='17841406338772941', username='ikroskun')
+
+You can get user medias::
+
+    In[7]: r = api.get_user_medias()
+    In[8]: r
+    Out[8]:
+    [IgBasicMedia(id='17846368219941692', media_type='IMAGE', permalink='https://www.instagram.com/p/B8gQCApHMT-/'),
+     IgBasicMedia(id='18091893643133286', media_type='IMAGE', permalink='https://www.instagram.com/p/B8gPx-UnsjA/'),
+     IgBasicMedia(id='18075344632131157', media_type='VIDEO', permalink='https://www.instagram.com/p/B38X8BzHsDi/'),
+     IgBasicMedia(id='18027939643230671', media_type='CAROUSEL_ALBUM', permalink='https://www.instagram.com/p/B38Xyp6nqsS/'),
+     IgBasicMedia(id='17861821972334188', media_type='IMAGE', permalink='https://www.instagram.com/p/BuGD8NmF4KI/'),
+     IgBasicMedia(id='17864312515295083', media_type='IMAGE', permalink='https://www.instagram.com/p/BporjsCF6mt/'),
+     IgBasicMedia(id='17924095942208544', media_type='IMAGE', permalink='https://www.instagram.com/p/BoqBgsNl5qT/'),
+     IgBasicMedia(id='17896189813249754', media_type='IMAGE', permalink='https://www.instagram.com/p/Bop_Hz5FzyL/'),
+     IgBasicMedia(id='17955956875141196', media_type='CAROUSEL_ALBUM', permalink='https://www.instagram.com/p/Bn-35GGl7YM/'),
+     IgBasicMedia(id='17970645226046242', media_type='IMAGE', permalink='https://www.instagram.com/p/Bme0cU1giOH/')]
+
+You can just get one media info::
+
+    In[9]: r = basic_api.get_media_info(media_id="18027939643230671")
+    In[9]: r
+    Out[10]: IgBasicMedia(id='18027939643230671', media_type='CAROUSEL_ALBUM', permalink='https://www.instagram.com/p/B38Xyp6nqsS/')
 
 ====
 TODO
@@ -462,6 +529,12 @@ Instagram Professional Api:
 - Get medias which tagged account
 - Get comment info mentioned user.
 - Get media info mentioned user.
+
+Instagram Basic display api:
+
+- Get user info
+- Get user medias
+- Get media info
 
 ----
 TODO
