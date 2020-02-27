@@ -32,7 +32,7 @@ README: `English <README.rst>`_ | `中文 <README-zh.rst>`_
 
 该库提供一种更加简单的方式去使用 ``Facebook`` 平台的数据接口。 注意，当你使用时，由于一些原因，需要在外网环境下才可以使用。
 
-目前包括了 ``Facebook``, ``Instagram Business`` 产品数据的使用。
+目前包括了 ``Facebook``, ``Instagram Business``, ``Instagram Basic Display`` 产品数据的使用。
 
 ====
 安装
@@ -51,6 +51,7 @@ README: `English <README.rst>`_ | `中文 <README-zh.rst>`_
 
 涉及的 ``Facebook Graph API`` 你都可以通过访问: https://developers.facebook.com/docs/graph-api/ 去查看
 涉及的 ``Instagram Graph API`` 你都可以通过访问: https://developers.facebook.com/docs/instagram-api/ 去查看
+涉及的 ``Instagram Basic Display API`` 你都可以通过访问: https://developers.facebook.com/docs/instagram-basic-display-api/ 去查看
 
 =======================
 使用 Facebook Graph API
@@ -418,6 +419,73 @@ Instagram 图谱 API 可以 `instagram Professional accounts <https://help.insta
     In [12]: api.get_mentioned_media_info(user_id=api.instagram_business_id, media_id="18027939643230671")
     Out[12]: IgProMedia(id='18027939643230671', permalink='https://www.instagram.com/p/B38Xyp6nqsS/')
 
+
+========================
+使用 Instagram Basic API
+========================
+
+Instagram 基本显示 API 可以用来访问任何类型的 Instagram 账户，但是仅仅提供对基本数据的访问权限。
+
+使用该 API 时，你需要首先进行授权，获取拥有访问数据的权限的访问口令。
+
+所有的文档你可以你可以访问 `基本显示 APi <https://developers.facebook.com/docs/instagram-basic-display-api>`_.
+
+----------
+初始化 Api
+----------
+
+现在提供三种方式初始化 Api 实例。
+
+如果你已经拥有长效的访问口令。可以直接使用该访问口令进行初始化::
+
+    In[1]: from pyfacebook import IgBasicApi
+    In[2]: api = IgBasicApi(long_term_token="token")
+
+如果你有短效的访问口令，你需要提供你的应用程序的密钥，用以交换到长效的访问口令::
+
+    In[3]: api = IgBasicApi(app_id="app id", app_secret="app secret", short_token="token")
+
+如果你只想要使用应用密钥初始化 Api，然后交由用户手动进行授权，你可以使用授权流程::
+
+    In[4]: api = IgBasicApi(app_id="app id", app_secret="app secret", initial_access_token=False)
+    In[5]: api.get_authorization_url()
+    Out[5]:
+    ('https://api.instagram.com/oauth/authorize?response_type=code&client_id=app+id&redirect_uri=https%3A%2F%2Flocalhost%2F&scope=user_profile+user_media&state=PyFacebook',
+     'PyFacebook')
+    # 用户访问链接后，允许相关权限，会跳转到指定的 URL. 复制完整的跳转 URL
+    In[6]: api.exchange_access_token(response="跳转的 URL")
+
+--------
+数据获取
+--------
+
+你可以获取用户的基础信息::
+
+    In[7]: api.get_user_info()
+    Out[7]: IgBasicUser(id='17841406338772941', username='ikroskun')
+
+你可以获取用户的帖子信息::
+
+    In[7]: r = api.get_user_medias()
+    In[8]: r
+    Out[8]:
+    [IgBasicMedia(id='17846368219941692', media_type='IMAGE', permalink='https://www.instagram.com/p/B8gQCApHMT-/'),
+     IgBasicMedia(id='18091893643133286', media_type='IMAGE', permalink='https://www.instagram.com/p/B8gPx-UnsjA/'),
+     IgBasicMedia(id='18075344632131157', media_type='VIDEO', permalink='https://www.instagram.com/p/B38X8BzHsDi/'),
+     IgBasicMedia(id='18027939643230671', media_type='CAROUSEL_ALBUM', permalink='https://www.instagram.com/p/B38Xyp6nqsS/'),
+     IgBasicMedia(id='17861821972334188', media_type='IMAGE', permalink='https://www.instagram.com/p/BuGD8NmF4KI/'),
+     IgBasicMedia(id='17864312515295083', media_type='IMAGE', permalink='https://www.instagram.com/p/BporjsCF6mt/'),
+     IgBasicMedia(id='17924095942208544', media_type='IMAGE', permalink='https://www.instagram.com/p/BoqBgsNl5qT/'),
+     IgBasicMedia(id='17896189813249754', media_type='IMAGE', permalink='https://www.instagram.com/p/Bop_Hz5FzyL/'),
+     IgBasicMedia(id='17955956875141196', media_type='CAROUSEL_ALBUM', permalink='https://www.instagram.com/p/Bn-35GGl7YM/'),
+     IgBasicMedia(id='17970645226046242', media_type='IMAGE', permalink='https://www.instagram.com/p/Bme0cU1giOH/')]
+
+你可以获取当个帖子的信息::
+
+    In[9]: r = basic_api.get_media_info(media_id="18027939643230671")
+    In[9]: r
+    Out[10]: IgBasicMedia(id='18027939643230671', media_type='CAROUSEL_ALBUM', permalink='https://www.instagram.com/p/B38Xyp6nqsS/')
+
 ====
 TODO
 ====
@@ -450,6 +518,12 @@ Instagram：
 - 获取标记了用户的帖文
 - 获取提到了用户的评论信息
 - 获取提到了用户的帖子信息
+
+Instagram 基础显示 API:
+
+- 获取用户信息
+- 获取的用户的帖子
+- 获取帖子的详情
 
 ----
 待做
