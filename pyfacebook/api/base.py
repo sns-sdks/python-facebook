@@ -37,7 +37,7 @@ class BaseApi(object):
                  version=None,  # type: Optional[str]
                  timeout=None,  # type: Optional[int]
                  sleep_on_rate_limit=False,  # type: bool
-                 sleep_header_function=None,  # type: Callable
+                 sleep_seconds_mapping=None,  # type: Callable
                  proxies=None,  # type: Optional[dict]
                  debug_http=False  # type: bool
                  ):
@@ -52,6 +52,7 @@ class BaseApi(object):
         :param version: The version for the graph api.
         :param timeout: Request time out
         :param sleep_on_rate_limit: Use this will sleep between two request.
+        :param sleep_seconds_mapping: Mapping for percent to sleep.
         :param proxies: Your proxies config.
         :param debug_http: Set to True to enable debug output from urllib when performing
         any HTTP requests.  Defaults to False.
@@ -96,10 +97,7 @@ class BaseApi(object):
                     message="Version string is invalid for {0}. You can provide with like: 5.0 or v5.0".format(version),
                 ))
 
-        if not callable(sleep_header_function):
-            self.sleep_header_function = default_sleep_header_function
-        else:
-            self.sleep_header_function = sleep_header_function
+        self.sleep_seconds_mapping = sleep_seconds_mapping
 
         if long_term_token:
             self._access_token = long_term_token
@@ -194,7 +192,7 @@ class BaseApi(object):
         headers = response.headers
         self.rate_limit.set_limit(headers)
         if self.sleep_on_rate_limit:
-            sleep_seconds = self.sleep_header_function(headers=headers)
+            sleep_seconds = self.rate_limit.get_sleep_seconds(sleep_data=self.sleep_seconds_mapping)
             time.sleep(sleep_seconds)
         return response
 
