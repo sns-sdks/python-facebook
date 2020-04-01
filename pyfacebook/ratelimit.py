@@ -159,5 +159,3 @@ class RateLimit(object):
             return 60 * 10  # sleep 10 minutes
         # Default sleep seconds is 2
         return 2
-
-

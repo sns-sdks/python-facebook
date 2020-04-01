@@ -15,7 +15,7 @@ from requests_oauthlib.compliance_fixes.facebook import facebook_compliance_fix
 
 from pyfacebook.error import PyFacebookException, ErrorMessage, ErrorCode
 from pyfacebook.models import AccessToken, AuthAccessToken
-from pyfacebook.ratelimit import RateLimit, default_sleep_header_function
+from pyfacebook.ratelimit import RateLimit
 
 
 class BaseApi(object):
