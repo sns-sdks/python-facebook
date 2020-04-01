@@ -5,7 +5,8 @@ import hashlib
 import hmac
 import logging
 import re
-from typing import Dict, Optional, Union, List
+import time
+from typing import Callable, Dict, Optional, Union, List
 
 import requests
 from requests import Response
@@ -14,7 +15,7 @@ from requests_oauthlib.compliance_fixes.facebook import facebook_compliance_fix
 
 from pyfacebook.error import PyFacebookException, ErrorMessage, ErrorCode
 from pyfacebook.models import AccessToken, AuthAccessToken
-from pyfacebook.ratelimit import RateLimit
+from pyfacebook.ratelimit import RateLimit, default_sleep_header_function
 
 
 class BaseApi(object):
@@ -36,6 +37,7 @@ class BaseApi(object):
                  version=None,  # type: Optional[str]
                  timeout=None,  # type: Optional[int]
                  sleep_on_rate_limit=False,  # type: bool
+                 sleep_header_function=None,  # type: Callable
                  proxies=None,  # type: Optional[dict]
                  debug_http=False  # type: bool
                  ):
@@ -61,7 +63,7 @@ class BaseApi(object):
         self.base_url = self.GRAPH_URL
         self.proxies = proxies
         self.session = requests.Session()
-        self.sleep_on_rate_limit = sleep_on_rate_limit  # TODO
+        self.sleep_on_rate_limit = sleep_on_rate_limit
         self.instagram_business_id = None
         self._debug_http = debug_http
         self.authorization_url = self.DEFAULT_AUTHORIZATION_URL
@@ -93,6 +95,11 @@ class BaseApi(object):
                     code=ErrorCode.INVALID_PARAMS,
                     message="Version string is invalid for {0}. You can provide with like: 5.0 or v5.0".format(version),
                 ))
+
+        if not callable(sleep_header_function):
+            self.sleep_header_function = default_sleep_header_function
+        else:
+            self.sleep_header_function = sleep_header_function
 
         if long_term_token:
             self._access_token = long_term_token
@@ -186,6 +193,9 @@ class BaseApi(object):
             raise PyFacebookException(ErrorMessage(code=ErrorCode.HTTP_ERROR, message=e.args[0]))
         headers = response.headers
         self.rate_limit.set_limit(headers)
+        if self.sleep_on_rate_limit:
+            sleep_seconds = self.sleep_header_function(headers=headers)
+            time.sleep(sleep_seconds)
         return response
 
     def _parse_response(self, response):

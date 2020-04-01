@@ -118,3 +118,13 @@ class RateLimit(object):
             return self.resources["business"][object_id][endpoint]
 
         return self.resources["app"]
+
+
+def default_sleep_header_function(headers):
+    # type: (dict) -> int
+    """
+    :param headers: response headers
+    :return:
+    """
+    # default every request sleep two seconds
+    return 2

@@ -49,7 +49,7 @@ class BaseApiTest(unittest.TestCase):
 
         with responses.RequestsMock() as m:
             m.add("GET", self.ACCESS_TOKEN_URL, json=self.APP_ACCESS_TOKEN)
-            api = BaseApi(app_id="123456789", app_secret="secret", application_only_auth=True)
+            api = BaseApi(app_id="123456789", app_secret="secret", application_only_auth=True, sleep_on_rate_limit=True)
             self.assertEqual(api._access_token, "123456789|fvYq7ORmqKa2IDCijArPOYKB0")
 
         with responses.RequestsMock() as m:
