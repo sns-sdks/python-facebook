@@ -25,6 +25,7 @@ class Api(BaseApi):
                  version=None,
                  timeout=None,
                  sleep_on_rate_limit=False,
+                 sleep_seconds_mapping=None,
                  proxies=None,
                  debug_http=False
                  ):
@@ -38,6 +39,7 @@ class Api(BaseApi):
             version=version,
             timeout=timeout,
             sleep_on_rate_limit=sleep_on_rate_limit,
+            sleep_seconds_mapping=sleep_seconds_mapping,
             proxies=proxies,
             debug_http=debug_http
         )

@@ -102,6 +102,16 @@ Facebook 存在不同类型的访问口令。使用不同的访问口令可以�
 
 使用短期口令和长期口令初始化的区别在于，使用短期口令时，库会自动获取到 长期的口令。
 
+``Facebook`` 平台的速率限制很模糊，与你的应用的用户的数量有关，所以此处允许自定义两次请求的间隔时间。
+你可以只设置参数 ``sleep_on_rate_limit`` 为 ``True``, 这样两次请求之间的间隔固定为了 2 秒。
+或者你可以给参数 ``sleep_seconds_mapping`` 传递一个自定义的时间数据，比如::
+
+    In [9]: mapping = {10: 2, 20: 5, 50: 20, 70: 30}  # 键是当前的流量百分比，值是需要间隔的时间秒数.
+    In [10]: api = Api(
+        ...:     app_id="your app id", app_secret="your app secret", long_term_token="long-term token",
+        ...:     sleep_on_rate_limit=True, sleep_seconds_mapping=mapping
+        ...:)
+
 --------
 获取数据
 --------

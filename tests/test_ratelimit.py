@@ -15,6 +15,9 @@ class RateLimitTest(unittest.TestCase):
         r.set_limit(headers)
 
         self.assertEqual(r.get_limit().call_count, 91)
+        self.assertEqual(r.get_limit().max_percent(), 91)
+        self.assertEqual(r.get_max_percent(), 91)
+        self.assertEqual(r.get_sleep_seconds(), 2)
 
     def testBusinessLimit(self):
         r = RateLimit()

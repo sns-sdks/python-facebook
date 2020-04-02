@@ -4,7 +4,7 @@ from collections import defaultdict
 from six import iteritems
 
 from attr import attrs, attrib
-from typing import Optional
+from typing import List, Optional
 
 try:
     from json.decoder import JSONDecodeError  # pragma: no cover
@@ -15,9 +15,18 @@ logger = logging.getLogger(__name__)
 
 
 @attrs
+class PercentSecond(object):
+    """
+    This is a data class for percent and sleep seconds mapping.
+    """
+    percent = attrib(type=int)
+    seconds = attrib(type=int)
+
+
+@attrs
 class RateLimitData(object):
     """
-    ThisA class representing the rate limit data.
+    This A class representing the rate limit data.
     Refer: https://developers.facebook.com/docs/graph-api/overview/rate-limiting#headers
     """
     call_count = attrib(default=0, type=int)
@@ -25,6 +34,9 @@ class RateLimitData(object):
     total_time = attrib(default=0, type=int)
     type = attrib(default=None, type=Optional[str])
     estimated_time_to_regain_access = attrib(default=None, type=Optional[str])
+
+    def max_percent(self):
+        return max(self.call_count, self.total_cputime, self.total_time)
 
 
 class RateLimit(object):
@@ -118,3 +130,32 @@ class RateLimit(object):
             return self.resources["business"][object_id][endpoint]
 
         return self.resources["app"]
+
+    def get_max_percent(self):
+        # TODO only check app usage now.
+        app_usage = self.resources["app"]
+        percent = app_usage.max_percent()
+        return percent
+
+    def get_sleep_seconds(self, sleep_data=None):
+        # type: (Optional[List[PercentSecond]]) -> int
+        """
+        Get seconds to sleep in requests.
+        :param sleep_data:
+            the dict for case percent to sleep seconds. ex:
+            [
+                PercentSecond(percent=20,seconds=2),
+                PercentSecond(percent=50,seconds=3),
+                PercentSecond(percent=90,seconds=10),
+                PercentSecond(percent=100,seconds=1800),
+            ]
+        :return: sleep seconds
+        """
+        if isinstance(sleep_data, list):
+            max_percent = self.get_max_percent()
+            for ps in sleep_data:
+                if max_percent <= ps.percent:
+                    return ps.seconds
+            return 60 * 10  # sleep 10 minutes
+        # Default sleep seconds is 2
+        return 2

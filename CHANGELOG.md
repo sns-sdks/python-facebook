@@ -1,5 +1,11 @@
 # Changelog
 
+### [0.6.1](https://github.com/sns-sdks/python-facebook/compare/v0.6.0...v0.6.1) (2020-04-02)
+
+### Features
+
+- Introduce simple sleep in requests to avoid reach the limit quickly.
+
 ### [0.6.0](https://github.com/sns-sdks/python-facebook/compare/v0.5.5...v0.6.0) (2020-03-12)
 
 ### Features
