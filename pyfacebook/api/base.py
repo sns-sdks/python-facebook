@@ -6,7 +6,8 @@ import hmac
 import logging
 import re
 import time
-from typing import Callable, Dict, Optional, Union, List
+import six
+from typing import Dict, Optional, Union, List
 
 import requests
 from requests import Response
@@ -15,7 +16,7 @@ from requests_oauthlib.compliance_fixes.facebook import facebook_compliance_fix
 
 from pyfacebook.error import PyFacebookException, ErrorMessage, ErrorCode
 from pyfacebook.models import AccessToken, AuthAccessToken
-from pyfacebook.ratelimit import RateLimit
+from pyfacebook.ratelimit import RateLimit, PercentSecond
 
 
 class BaseApi(object):
@@ -37,7 +38,7 @@ class BaseApi(object):
                  version=None,  # type: Optional[str]
                  timeout=None,  # type: Optional[int]
                  sleep_on_rate_limit=False,  # type: bool
-                 sleep_seconds_mapping=None,  # type: Callable
+                 sleep_seconds_mapping=None,  # type: Dict[int, int]
                  proxies=None,  # type: Optional[dict]
                  debug_http=False  # type: bool
                  ):
@@ -97,7 +98,7 @@ class BaseApi(object):
                     message="Version string is invalid for {0}. You can provide with like: 5.0 or v5.0".format(version),
                 ))
 
-        self.sleep_seconds_mapping = sleep_seconds_mapping
+        self.sleep_seconds_mapping = self._build_sleep_seconds_resource(sleep_seconds_mapping)
 
         if long_term_token:
             self._access_token = long_term_token
@@ -131,6 +132,19 @@ class BaseApi(object):
             requests_log = logging.getLogger("requests.packages.urllib3")
             requests_log.setLevel(logging.DEBUG)
             requests_log.propagate = True
+
+    @staticmethod
+    def _build_sleep_seconds_resource(sleep_seconds_mapping):
+        # type: (Optional[Dict]) -> Optional[List[PercentSecond]]
+        """
+        Sort and convert data
+        :param sleep_seconds_mapping: mapping for sleep.
+        :return:
+        """
+        if sleep_seconds_mapping is None:
+            return None
+        mapping_list = [PercentSecond(percent=p, seconds=s) for p, s in six.iteritems(sleep_seconds_mapping)]
+        return sorted(mapping_list, key=lambda ps: ps.percent)
 
     @staticmethod
     def _generate_secret_proof(secret, access_token):
