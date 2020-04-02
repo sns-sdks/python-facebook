@@ -104,6 +104,17 @@ If you have a long term token you can initial an api as follows(Just provide onl
 
 the different initial with parameter ``short_token`` or ``long_term_token`` is short token will auto exchange a long term token inside.
 
+Facebook rate limit is very vague, it related to the number of users of your app. So library provide the custom sleep times in requests.
+You can only set parameter ``sleep_on_rate_limit`` with ``True`` to let api sleep two seconds between two requests.
+Or you can set parameter ``sleep_seconds_mapping`` with a dict contains your custom data. ex::
+
+    In [9]: mapping = {10: 2, 20: 5, 50: 20, 70: 30}  # key is api limit reached percent and value is seconds to sleep.
+    In [10]: api = Api(
+        ...:     app_id="your app id", app_secret="your app secret", long_term_token="long-term token",
+        ...:     sleep_on_rate_limit=True, sleep_seconds_mapping=mapping
+        ...:)
+
+
 --------
 Get Data
 --------
