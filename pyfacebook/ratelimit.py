@@ -151,7 +151,7 @@ class RateLimit(object):
             ]
         :return: sleep seconds
         """
-        if isinstance(sleep_data, dict):
+        if isinstance(sleep_data, list):
             max_percent = self.get_max_percent()
             for ps in sleep_data:
                 if max_percent <= ps.percent:
