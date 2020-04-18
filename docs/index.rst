@@ -16,6 +16,7 @@ Contents:
    :maxdepth: 1
 
    installation.rst
+   extended_api_methods.rst
    models.rst
    pyfacebook.rst
 
