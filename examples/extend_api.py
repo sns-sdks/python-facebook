@@ -52,11 +52,12 @@ class ExtApi(Api):
     ]
 
     def page_by_next(self,
-                     target,
-                     resource,
-                     args,
-                     next_page):
-        # type: (str, str, Dict, str) -> (str, Dict)
+                     target,  # type: str
+                     resource,  # type: str
+                     args,  # type: Dict
+                     next_page,  # type: str
+                     ):
+        # type: (...) -> (str, Dict)
         """
         :param target: target id
         :param resource: target resource field
