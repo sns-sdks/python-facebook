@@ -62,6 +62,8 @@ API 通过 ``pyfacebook.Api`` 类公开访问。
 为了获取对应的数据，你首先需要一个 Facebook App。
 你可以访问 `App docs <https://developers.facebook.com/docs/apps>`_ 去获取更多关于如何创建 App 和 如何为 App 申请相关的权限的信息。
 
+另外，你可以在 `示例文件夹 <examples>`_ 中查看一些简单的例子
+
 ----------
 初始化 API
 ----------

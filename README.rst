@@ -66,6 +66,8 @@ The API is exposed via the ``pyfacebook.Api`` class.
 To get data, you need have a facebook app first.
 You can get more information about create, apply permissions for app at `App docs <https://developers.facebook.com/docs/apps>`_.
 
+Also, you can get some examples for this library at `Example folder <examples>`_.
+
 -----------
 Initial Api
 -----------
