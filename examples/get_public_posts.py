@@ -14,7 +14,7 @@ APP_SECRET = "Your APP SECRET"
 ACCESS_TOKEN = "Your Access Token"
 
 
-def get_posts(page_username: str):
+def get_posts(page_username):
     api = Api(
         app_id=APP_ID,
         app_secret=APP_SECRET,
