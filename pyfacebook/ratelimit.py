@@ -30,6 +30,8 @@ class RateLimitData(object):
     Refer: https://developers.facebook.com/docs/graph-api/overview/rate-limiting#headers
     """
     call_count = attrib(default=0, type=int)
+    call_volume = attrib(default=0, type=int)
+    cpu_time = attrib(default=0, type=int)
     total_cputime = attrib(default=0, type=int)
     total_time = attrib(default=0, type=int)
     type = attrib(default=None, type=Optional[str])
