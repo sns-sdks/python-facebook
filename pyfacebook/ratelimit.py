@@ -5,6 +5,7 @@ from six import iteritems
 
 from attr import attrs, attrib
 from typing import List, Optional
+from requests.models import CaseInsensitiveDict
 
 try:
     from json.decoder import JSONDecodeError  # pragma: no cover
@@ -86,7 +87,7 @@ class RateLimit(object):
 
     @staticmethod
     def parse_headers(headers, key):
-        # type: (dict, str) -> Optional[dict]
+        # type: (CaseInsensitiveDict, str) -> Optional[dict]
         """
         Get rate limit information from header for key.
         :param headers: Response headers
@@ -104,7 +105,7 @@ class RateLimit(object):
         return None
 
     def set_limit(self, headers):
-        # type: (dict) -> None
+        # type: (CaseInsensitiveDict) -> None
         """
         Get rate limit data from response headers. And update to instance.
         :param headers: Response headers
