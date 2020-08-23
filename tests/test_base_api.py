@@ -10,7 +10,7 @@ from pyfacebook.api.base import BaseApi
 
 class BaseApiTest(unittest.TestCase):
     BASE_PATH = "testdata/base/"
-    BASE_URL = "https://graph.facebook.com/v5.0/"
+    BASE_URL = "https://graph.facebook.com/{}/".format(pyfacebook.Api.VALID_API_VERSIONS[-1])
     ACCESS_TOKEN_URL = BASE_URL + "oauth/access_token"
 
     with open(BASE_PATH + "app_token.json", "rb") as f:
@@ -121,7 +121,7 @@ class BaseApiTest(unittest.TestCase):
             self.assertEqual(token["access_token"], "123456789|fvYq7ORmqKa2IDCijArPOYKB0")
 
     def testGetTokenInfo(self):
-        debug_token_utl = "https://graph.facebook.com/v5.0/debug_token"
+        debug_token_utl = "https://graph.facebook.com/{}/debug_token".format(BaseApi.VALID_API_VERSIONS[-1])
         with responses.RequestsMock() as m:
             m.add("GET", debug_token_utl, json=self.TOKEN_INFO)
 

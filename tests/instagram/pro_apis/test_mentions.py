@@ -7,7 +7,7 @@ import pyfacebook
 
 class ApiMentionTest(unittest.TestCase):
     BASE_PATH = "testdata/instagram/apidata/mentions/"
-    BASE_URL = "https://graph.facebook.com/v5.0/"
+    BASE_URL = "https://graph.facebook.com/{}/".format(pyfacebook.Api.VALID_API_VERSIONS[-1])
 
     with open(BASE_PATH + "tagged_user_medias_p1.json", "rb") as f:
         TAGGED_USER_MEDIAS_P1 = json.loads(f.read().decode("utf-8"))

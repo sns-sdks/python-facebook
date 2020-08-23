@@ -8,7 +8,7 @@ import pyfacebook
 
 class ApiUserTest(unittest.TestCase):
     BASE_PATH = "testdata/instagram/apidata/users/"
-    BASE_URL = "https://graph.facebook.com/v5.0/"
+    BASE_URL = "https://graph.facebook.com/{}/".format(pyfacebook.Api.VALID_API_VERSIONS[-1])
 
     with open(BASE_PATH + "user_default_fields.json", "rb") as f:
         USER_DEFAULT = json.loads(f.read().decode("utf-8"))
