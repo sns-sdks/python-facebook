@@ -25,6 +25,3 @@ requests-oauthlib = "*"
 attrs = "*"
 cattrs = "*"
 typing = "*"
-
-[requires]
-python_version = "3.7"
