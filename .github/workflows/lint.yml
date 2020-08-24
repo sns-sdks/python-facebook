@@ -17,6 +17,9 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           make env
+      - name: Check lint with flake8
+        run: |
+          pipenv run flake8 --ignore E111,E124,E126,E221,E501,w504 --exclude .git,__pycache__
       - name: Test with pytest
         run: |
-          make lint
+          pipenv run pytest -s
