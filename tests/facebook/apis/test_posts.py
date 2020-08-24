@@ -35,7 +35,8 @@ class PostApiTest(unittest.TestCase):
         self.api = pyfacebook.Api(
             app_id="12345678",
             app_secret="secret",
-            long_term_token="token"
+            long_term_token="token",
+            version="v8.0"
         )
 
     def testPageFeed(self):

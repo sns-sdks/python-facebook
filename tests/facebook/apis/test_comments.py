@@ -25,7 +25,7 @@ class CommentTestApi(unittest.TestCase):
     def setUp(self):
         self.api = pyfacebook.Api(
             app_id="123456", app_secret="secret",
-            long_term_token="token"
+            long_term_token="token", version="v8.0"
         )
 
     def testGetCommentByObject(self):
