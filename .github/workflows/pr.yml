@@ -26,8 +26,8 @@ jobs:
       - name: Test with pytest
         run: |
           pipenv run pytest -s
+      - uses: codecov/codecov-action@v1
       - name: Codecov
-        uses: codecov/codecov-action@v1
         run: |
           codecov
 
