@@ -1,6 +1,10 @@
-name: prCheck
+name: master
 
-on: [pull_request]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
 
 jobs:
   build:
@@ -29,5 +33,5 @@ jobs:
       - uses: codecov/codecov-action@v1
       - name: Codecov
         run: |
-          codecov
+          pipenv run codecov
 
