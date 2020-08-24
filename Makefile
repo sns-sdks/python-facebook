@@ -12,6 +12,7 @@ help:
 env:
 	pip install pipenv
 	pipenv install --dev
+	pip freeze
 
 
 clean:
@@ -27,7 +28,7 @@ docs:
 	$(MAKE) -C doc html
 
 lint:
-	flake8 --ignore E111,E124,E126,E221,E501,w504 --exclude .git,__pycache__
+	pipenv run flake8 --ignore E111,E124,E126,E221,E501,w504 --exclude .git,__pycache__
 
 
 test:
