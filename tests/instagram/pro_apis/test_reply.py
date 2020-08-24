@@ -9,7 +9,7 @@ import pyfacebook
 
 class ApiRepliesTest(unittest.TestCase):
     BASE_PATH = "testdata/instagram/apidata/replies/"
-    BASE_URL = "https://graph.facebook.com/v5.0/"
+    BASE_URL = "https://graph.facebook.com/{}/".format(pyfacebook.Api.VALID_API_VERSIONS[-1])
 
     with open(BASE_PATH + "replies_default_p1.json", "rb") as f:
         REPLIES_DEFAULT_p1 = json.loads(f.read().decode("utf-8"))

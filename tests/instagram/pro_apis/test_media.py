@@ -9,7 +9,7 @@ import pyfacebook
 
 class ApiMediaTest(unittest.TestCase):
     BASE_PATH = "testdata/instagram/apidata/medias/"
-    BASE_URL = "https://graph.facebook.com/v5.0/"
+    BASE_URL = "https://graph.facebook.com/{}/".format(pyfacebook.Api.VALID_API_VERSIONS[-1])
 
     with open(BASE_PATH + "media_default_fields_p1.json", "rb") as f:
         MEDIAS_DEFAULT_p1 = json.loads(f.read().decode("utf-8"))

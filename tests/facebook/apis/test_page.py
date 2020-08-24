@@ -9,7 +9,7 @@ import pyfacebook
 
 class ApiPageTest(unittest.TestCase):
     BASE_PATH = "testdata/facebook/apidata/pages/"
-    BASE_URL = "https://graph.facebook.com/" + pyfacebook.Api.VALID_API_VERSIONS[-1] + "/"
+    BASE_URL = "https://graph.facebook.com/{}/".format(pyfacebook.Api.VALID_API_VERSIONS[-1])
 
     with open(BASE_PATH + "single_default_page.json", "rb") as f:
         SINGLE_PAGE_INFO_1 = json.loads(f.read().decode("utf-8"))

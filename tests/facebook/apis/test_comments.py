@@ -9,7 +9,7 @@ import pyfacebook
 
 class CommentTestApi(unittest.TestCase):
     BASE_PATH = "testdata/facebook/apidata/comments/"
-    BASE_URL = "https://graph.facebook.com/v5.0/"
+    BASE_URL = "https://graph.facebook.com/{}/".format(pyfacebook.Api.VALID_API_VERSIONS[-1])
 
     with open(BASE_PATH + "comment_by_parent_p1.json", "rb") as f:
         COMMENTS_PAGED_1 = json.loads(f.read().decode("utf-8"))
@@ -25,7 +25,7 @@ class CommentTestApi(unittest.TestCase):
     def setUp(self):
         self.api = pyfacebook.Api(
             app_id="123456", app_secret="secret",
-            long_term_token="token"
+            long_term_token="token", version="v8.0"
         )
 
     def testGetCommentByObject(self):

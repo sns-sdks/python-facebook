@@ -8,7 +8,7 @@ import pyfacebook
 
 class ApiHashtagTest(unittest.TestCase):
     BASE_PATH = "testdata/instagram/apidata/hashtags/"
-    BASE_URL = "https://graph.facebook.com/v5.0/"
+    BASE_URL = "https://graph.facebook.com/{}/".format(pyfacebook.Api.VALID_API_VERSIONS[-1])
 
     with open(BASE_PATH + "hashtag_search.json", "rb") as f:
         HASHTAG_SEARCH = json.loads(f.read().decode("utf-8"))
