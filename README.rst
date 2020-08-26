@@ -364,8 +364,8 @@ If you have other account's access token, you can provide with ``user_id`` and `
 
     In [4]: api.get_user_insights(user_id=api.instagram_business_id, period="day", metrics=["impressions", "reach"])
     Out[4]:
-    [IgProInsight(name='impressions', period='day', values=[IgProInsightValue(value=1038, end_time='2020-01-08T08:00:00+0000'), IgProInsightValue(value=136, end_time='2020-01-09T08:00:00+0000')]),
-     IgProInsight(name='reach', period='day', values=[IgProInsightValue(value=751, end_time='2020-01-08T08:00:00+0000'), IgProInsightValue(value=54, end_time='2020-01-09T08:00:00+0000')])]
+    [IgProInsight(name='impressions', period='day'),
+     IgProInsight(name='reach', period='day')]
 
 
 The same as ``get_user_insights``, you can custom provide ``media_id`` and ``access_token``.
@@ -374,8 +374,8 @@ Get your media insights data::
 
     In [6]: api.get_media_insights(media_id="media_id", metrics=["engagement","impressions"])
     Out[6]:
-    [IgProInsight(name='engagement', period='lifetime', values=[IgProInsightValue(value=90, end_time=None)]),
-     IgProInsight(name='impressions', period='lifetime', values=[IgProInsightValue(value=997, end_time=None)])]
+    [IgProInsight(name='engagement', period='lifetime'),
+     IgProInsight(name='impressions', period='lifetime')]
 
 Get hashtag id::
 
