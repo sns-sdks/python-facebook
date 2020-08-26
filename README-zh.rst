@@ -355,16 +355,16 @@ Instagram 图谱 API 可以 `instagram Professional accounts <https://help.insta
 
     In [4]: api.get_user_insights(user_id=api.instagram_business_id, period="day", metrics=["impressions", "reach"])
     Out[4]:
-    [IgProInsight(name='impressions', period='day', values=[IgProInsightValue(value=1038, end_time='2020-01-08T08:00:00+0000'), IgProInsightValue(value=136, end_time='2020-01-09T08:00:00+0000')]),
-     IgProInsight(name='reach', period='day', values=[IgProInsightValue(value=751, end_time='2020-01-08T08:00:00+0000'), IgProInsightValue(value=54, end_time='2020-01-09T08:00:00+0000')])]
+    [IgProInsight(name='impressions', period='day'),
+     IgProInsight(name='reach', period='day')]
 
 与 ``get_user_insights`` 方法类似，你可以指定 ``user_id`` 和 ``access_token`` 参数来获取其他业务帐号的帖子授权数据。
 或者获取你自己的帖子的授权数据::
 
     In [6]: api.get_media_insights(media_id="media_id", metrics=["engagement","impressions"])
     Out[6]:
-    [IgProInsight(name='engagement', period='lifetime', values=[IgProInsightValue(value=90, end_time=None)]),
-     IgProInsight(name='impressions', period='lifetime', values=[IgProInsightValue(value=997, end_time=None)])]
+    [IgProInsight(name='engagement', period='lifetime'),
+     IgProInsight(name='impressions', period='lifetime')]
 
 搜索标签的ID::
 
