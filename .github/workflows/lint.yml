@@ -20,7 +20,7 @@ jobs:
           poetry install
       - name: Check lint with flake8
         run: |
-          flake8
+          poetry run flake8
       - name: Test with pytest
         run: |
-          pytest -s
+          poetry run pytest -s
