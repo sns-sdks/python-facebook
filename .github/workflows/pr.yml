@@ -21,14 +21,15 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          make env
+          pip install poetry
+          poetry install
       - name: Check lint with flake8
         run: |
-          pipenv run flake8 --ignore E111,E124,E126,E221,E501,w504 --exclude .git,__pycache__
+          poetry run flake8
       - name: Test with pytest
         run: |
-          pipenv run pytest -s
+          poetry run pytest -s
       - uses: codecov/codecov-action@v1
       - name: Codecov
         run: |
-          pipenv run codecov
+          poetry run codecov
