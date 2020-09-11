@@ -26,13 +26,11 @@ jobs:
           key: ${{ matrix.python-version }}-poetry-${{ hashFiles('Pipfile') }}
       - name: Install dependencies
         run: |
-          python -m venv venv
-          . venv/bin/activate
           python -m pip install --upgrade pip poetry
           poetry install
       - name: Test with pytest
         run: |
-          . venv/bin/activate
+          source "$( poetry env list --full-path )/bin/activate"
           pytest
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
@@ -59,7 +57,7 @@ jobs:
           python -m venv venv
           . venv/bin/activate
           python -m pip install --upgrade pip flake8
-      - name: Black test
+      - name: flake8 test
         run: |
           . venv/bin/activate
-          flake8
+          flake8 .
