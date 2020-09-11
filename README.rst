@@ -2,7 +2,7 @@ Python Facebook
 
 A Python wrapper around for Facebook Common API.
 
-.. image:: https://github.com/sns-sdks/python-facebook/workflows/master/badge.svg
+.. image:: https://github.com/sns-sdks/python-facebook/workflows/Test/badge.svg
     :target: https://github.com/sns-sdks/python-facebook/actions
     :alt: Build Status
 
