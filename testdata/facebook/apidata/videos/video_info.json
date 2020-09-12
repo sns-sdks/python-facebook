@@ -14,5 +14,23 @@
   "status": {
     "video_status": "ready"
   },
-  "updated_time": "2020-09-12T15:18:05+0000"
+  "updated_time": "2020-09-12T15:18:05+0000",
+  "likes": {
+    "data": [
+    ],
+    "summary": {
+      "total_count": 1525,
+      "can_like": true,
+      "has_liked": false
+    }
+  },
+  "comments": {
+    "data": [
+    ],
+    "summary": {
+      "order": "ranked",
+      "total_count": 139,
+      "can_comment": true
+    }
+  }
 }

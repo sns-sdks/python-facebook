@@ -5,10 +5,12 @@
 """
 
 from attr import attrs, attrib
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 from .base import BaseModel
 from .common import Privacy
+from .comment import CommentSummary
+from .likes import LikesSummary
 from .._compat import str
 
 
@@ -90,3 +92,15 @@ class Video(BaseModel):
     title = attrib(default=None, type=Optional[str], repr=False)
     universal_video_id = attrib(default=None, type=Optional[str], repr=False)
     updated_time = attrib(default=None, type=Optional[str], repr=False)
+
+    # connections
+    comments = attrib(default=None, type=Optional[Dict], repr=False)
+    likes = attrib(default=None, type=Optional[Dict], repr=False)
+
+    def __attrs_post_init__(self):
+        if self.comments is not None and isinstance(self.comments, dict):
+            comment_summary = self.comments.get("summary", {})
+            self.comments = CommentSummary.new_from_json_dict(comment_summary)
+        if self.likes is not None and isinstance(self.likes, dict):
+            likes_summary = self.likes.get("summary", {})
+            self.likes = LikesSummary.new_from_json_dict(likes_summary)

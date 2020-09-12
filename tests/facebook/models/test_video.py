@@ -23,3 +23,6 @@ class PostModelTest(unittest.TestCase):
 
         self.assertEqual(m.privacy.value, "EVERYONE")
         self.assertFalse(m.is_crosspost_video)
+
+        self.assertEqual(m.likes.total_count, 1525)
+        self.assertEqual(m.comments.total_count, 139)

@@ -72,5 +72,23 @@
   "is_crosspost_video": false,
   "is_crossposting_eligible": false,
   "is_episode": false,
-  "is_instagram_eligible": true
+  "is_instagram_eligible": true,
+  "likes": {
+    "data": [
+    ],
+    "summary": {
+      "total_count": 1525,
+      "can_like": true,
+      "has_liked": false
+    }
+  },
+  "comments": {
+    "data": [
+    ],
+    "summary": {
+      "order": "ranked",
+      "total_count": 139,
+      "can_comment": true
+    }
+  }
 }

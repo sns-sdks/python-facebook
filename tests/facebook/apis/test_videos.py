@@ -76,10 +76,12 @@ class PostApiTest(unittest.TestCase):
                         'picture',
                         'published',
                         'status',
-                        'updated_time']
-
+                        'updated_time',
+                        "likes.summary(true).limit(0)",
+                        "comments.summary(true).limit(0)"]
             )
             self.assertEqual(video.id, video_id)
+            self.assertEqual(video.likes.total_count, 1525)
 
             video_json = self.api.get_video_info(
                 video_id=video_id,

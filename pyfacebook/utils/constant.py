@@ -53,6 +53,8 @@ FB_PAGE_PICTURE_TYPE = {
 FB_VIDEO_BASIC_FIELDS = {
     "id", "title", "description",
     "created_time", "updated_time",
+    # common connections
+    "likes.summary(true).limit(0)", "comments.summary(true).limit(0)"
 }
 
 # ====================================================
