@@ -22,7 +22,7 @@ jobs:
       - name: Cache venv
         uses: actions/cache@v2
         with:
-          path: venv
+          path: ~/.cache/pypoetry/virtualenvs
           key: ${{ matrix.python-version }}-poetry-${{ hashFiles('pyproject.toml') }}
       - name: Install dependencies
         run: |
