@@ -2,7 +2,7 @@ Python Facebook
 
 使用 `Python` 封装的 `Facebook` 平台下的一些数据接口
 
-.. image:: https://github.com/sns-sdks/python-facebook/workflows/master/badge.svg
+.. image:: https://github.com/sns-sdks/python-facebook/workflows/Test/badge.svg
     :target: https://github.com/sns-sdks/python-facebook/actions
     :alt: Build Status
 
