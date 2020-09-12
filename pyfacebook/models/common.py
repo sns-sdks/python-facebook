@@ -68,3 +68,18 @@ class StoryAttachment(BaseModel):
         if self.subattachments is not None and isinstance(self.subattachments, dict):
             subattachments = self.subattachments.get("data", [])
             self.subattachments = [StoryAttachment.new_from_json_dict(item) for item in subattachments]
+
+
+@attrs
+class Privacy(BaseModel):
+    """
+    A class representing the privacy info.
+
+    Refer: https://developers.facebook.com/docs/graph-api/reference/privacy/
+    """
+    allow = attrib(default=None, type=Optional[str], repr=False)
+    deny = attrib(default=None, type=Optional[str], repr=False)
+    description = attrib(default=None, type=Optional[str])
+    friends = attrib(default=None, type=Optional[str], repr=False)
+    networks = attrib(default=None, type=Optional[str], repr=False)
+    value = attrib(default=None, type=Optional[str])

@@ -50,6 +50,18 @@ FB_PAGE_PICTURE_TYPE = {
     "small", "normal", "album", "large", "square"
 }
 
+FB_VIDEO_BASIC_FIELDS = {
+    "id", "title", "description",
+    "created_time", "updated_time",
+    # common connections
+    "likes.summary(true).limit(0)", "comments.summary(true).limit(0)"
+}
+
+FB_VIDEO_CAPTION_BASIC_FIELDS = {
+    "create_time", "is_auto_generated", "is_default",
+    "locale", "locale_name", "uri",
+}
+
 # ====================================================
 # Follows is Instagram Professional fields to get data
 # ====================================================
