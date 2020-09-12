@@ -50,6 +50,11 @@ FB_PAGE_PICTURE_TYPE = {
     "small", "normal", "album", "large", "square"
 }
 
+FB_VIDEO_BASIC_FIELDS = {
+    "id", "title", "description",
+    "created_time", "updated_time",
+}
+
 # ====================================================
 # Follows is Instagram Professional fields to get data
 # ====================================================

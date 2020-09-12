@@ -8,7 +8,8 @@ from pyfacebook.error import PyFacebookException, ErrorMessage, ErrorCode
 
 from pyfacebook.models import (
     Page, Comment, CommentSummary,
-    ProfilePictureSource, Post
+    ProfilePictureSource, Post,
+    Video,
 )
 from pyfacebook.api.base import BaseApi
 from pyfacebook.utils import constant
@@ -614,3 +615,131 @@ class Api(BaseApi):
             else:
                 res[_id] = ProfilePictureSource.new_from_json_dict(picture_data)
         return res
+
+    def get_videos_by_object(self,
+                             object_id,
+                             fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                             filter_type="uploaded",  # type: Optional[str]
+                             count=10,  # type: Optional[int]
+                             limit=25,  # type: int
+                             return_json=False  # type: bool
+                             ):
+        # type: (...) -> List[Union[Video, dict]]
+        """
+        Retrieve videos from object(such as page,user,group...)
+        :param object_id: The id for object(post, photo..)
+        :param fields: Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param filter_type: The video type to query.
+                valid parameters are:
+                - uploaded
+                - tagged
+        :param count: The count will retrieve videos. If you want to get all data. Set it to None.
+        :param limit: Each request retrieve posts count from api. For videos it should no more than 100.
+        :param return_json: Set to false will return a list of Comment instances.
+        Or return json data. Default is false.
+        :return: Videos list.
+        """
+        if fields is None:
+            fields = constant.FB_VIDEO_BASIC_FIELDS
+
+        if count is not None:
+            limit = min(count, limit)
+
+        args = {
+            'fields': enf_comma_separated("fields", fields),
+            'type': filter_type,
+            'limit': limit,
+        }
+
+        videos = []
+        next_cursor = None
+
+        while True:
+            next_cursor, previous_cursor, data = self.paged_by_cursor(
+                resource='videos',
+                target=object_id,
+                args=args,
+                next_cursor=next_cursor
+            )
+            if return_json:
+                videos += data.get('data', [])
+            else:
+                videos += [Video.new_from_json_dict(item) for item in data.get('data', [])]
+            if count is not None:
+                if len(videos) >= count:
+                    videos = videos[:count]
+                    break
+            if next_cursor is None:
+                break
+        return videos
+
+    def get_video_info(self,
+                       video_id,  # type: str
+                       fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                       return_json=False  # type: bool
+                       ):
+        # type: (...) -> Union[Video, dict]
+        """
+        Retrieve video info by id.
+        :param video_id: The id for video you want to retrieve data.
+        :param fields: Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return a list of Post instances.
+        Or return json data. Default is false.
+        :return: Video instance or dict
+        """
+        if fields is None:
+            fields = constant.FB_COMMENT_BASIC_FIELDS
+
+        args = {
+            "fields": enf_comma_separated("fields", fields)
+        }
+
+        resp = self._request(
+            method='GET',
+            path='{0}/{1}'.format(self.version, video_id),
+            args=args
+        )
+
+        data = self._parse_response(resp)
+        if return_json:
+            return data
+        else:
+            return Video.new_from_json_dict(data)
+
+    def get_videos(self,
+                   ids,  # type: Optional[Union[str, List, Tuple, Set]]
+                   fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                   return_json=False  # type: bool
+                   ):
+        # type: (...) -> dict
+        """
+        Retrieve multi videos info by one request.
+        :param ids: Comma-separated id(username) string for page which you want to get.
+        You can also pass this with an id list, tuple, set.
+        Notice not more than 50.
+        :param fields:Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return a dict of Comment instances.
+        Or return json data. Default is false.
+        :return: Videos dict.
+        """
+        if fields is None:
+            fields = constant.FB_VIDEO_BASIC_FIELDS
+
+        args = {
+            "ids": enf_comma_separated("ids", ids),
+            "fields": enf_comma_separated("fields", fields)
+        }
+        resp = self._request(
+            method='GET',
+            path='{0}/'.format(self.version),
+            args=args
+        )
+
+        data = self._parse_response(resp)
+        if return_json:
+            return data
+        else:
+            return {_id: Video.new_from_json_dict(p_data) for _id, p_data in iteritems(data)}
