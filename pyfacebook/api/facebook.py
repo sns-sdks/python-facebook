@@ -9,7 +9,7 @@ from pyfacebook.error import PyFacebookException, ErrorMessage, ErrorCode
 from pyfacebook.models import (
     Page, Comment, CommentSummary,
     ProfilePictureSource, Post,
-    Video,
+    Video, VideoCaption
 )
 from pyfacebook.api.base import BaseApi
 from pyfacebook.utils import constant
@@ -690,7 +690,7 @@ class Api(BaseApi):
         :return: Video instance or dict
         """
         if fields is None:
-            fields = constant.FB_COMMENT_BASIC_FIELDS
+            fields = constant.FB_VIDEO_BASIC_FIELDS
 
         args = {
             "fields": enf_comma_separated("fields", fields)
@@ -743,3 +743,73 @@ class Api(BaseApi):
             return data
         else:
             return {_id: Video.new_from_json_dict(p_data) for _id, p_data in iteritems(data)}
+
+    def get_caption_by_video_id(self,
+                                video_id,  # type: str
+                                fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                                return_json=False  # type: bool
+                                ):
+        # type: (...) -> Union[List[VideoCaption], dict]
+        """
+        Retrieve caption for video.
+        :param video_id: The id for video you want to retrieve data.
+        :param fields: Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return a list of Post instances.
+        Or return json data. Default is false.
+        :return: VideoCaption instance or dict
+        """
+        if fields is None:
+            fields = constant.FB_VIDEO_CAPTION_BASIC_FIELDS
+
+        args = {
+            "fields": enf_comma_separated("fields", fields)
+        }
+
+        resp = self._request(
+            method='GET',
+            path='{0}/{1}/captions'.format(self.version, video_id),
+            args=args
+        )
+
+        data = self._parse_response(resp)
+        if return_json:
+            return data
+        else:
+            return [VideoCaption.new_from_json_dict(item) for item in data.get('data', [])]
+
+    def get_caption_by_video_ids(self,
+                                 ids,  # type: Optional[Union[str, List, Tuple, Set]]
+                                 fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                                 return_json=False  # type: bool
+                                 ):
+        # type: (...) -> dict
+        """
+        Retrieves captions for multi videos.
+        :param ids: Comma-separated id(username) string for page which you want to get.
+        You can also pass this with an id list, tuple, set.
+        Notice not more than 50.
+        :param fields:Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return a dict of Comment instances.
+        Or return json data. Default is false.
+        :return: VideoCaptions dict.
+        """
+        if fields is None:
+            fields = constant.FB_VIDEO_CAPTION_BASIC_FIELDS
+
+        args = {
+            "ids": enf_comma_separated("ids", ids),
+            "fields": enf_comma_separated("fields", fields)
+        }
+        resp = self._request(
+            method='GET',
+            path='{0}/captions'.format(self.version),
+            args=args
+        )
+
+        data = self._parse_response(resp)
+        if return_json:
+            return data
+        else:
+            return {_id: [Video.new_from_json_dict(item) for item in p_data["data"]] for _id, p_data in iteritems(data)}

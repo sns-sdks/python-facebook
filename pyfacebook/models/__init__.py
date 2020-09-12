@@ -4,7 +4,7 @@ from .comment import Comment, CommentSummary
 from .page import Page, PageCategory
 from .picture import ProfilePictureSource, CoverPhoto
 from .post import Post
-from .video import Video
+from .video import Video, VideoCaption
 from .ig_basic_models import IgBasicUser, IgBasicMedia, IgBasicMediaChildren
 from .ig_pro_models import IgProUser, IgProMedia, IgProComment, IgProReply, IgProHashtag, IgProInsight
 
@@ -20,6 +20,7 @@ __all__ = [
     "Post",
     "ProfilePictureSource",
     "Video",
+    "VideoCaption",
     # Instagram Basic display
     "IgBasicUser",
     "IgBasicMedia",

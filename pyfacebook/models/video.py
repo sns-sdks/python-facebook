@@ -104,3 +104,17 @@ class Video(BaseModel):
         if self.likes is not None and isinstance(self.likes, dict):
             likes_summary = self.likes.get("summary", {})
             self.likes = LikesSummary.new_from_json_dict(likes_summary)
+
+
+@attrs
+class VideoCaption(BaseModel):
+    """
+    A class representing the video caption info.
+    """
+
+    create_time = attrib(default=None, type=Optional[str])
+    is_auto_generated = attrib(default=None, type=Optional[bool], repr=False)
+    is_default = attrib(default=None, type=Optional[bool], repr=False)
+    locale = attrib(default=None, type=Optional[str], repr=False)
+    locale_name = attrib(default=None, type=Optional[str], repr=False)
+    uri = attrib(default=None, type=Optional[str], repr=False)
