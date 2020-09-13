@@ -62,6 +62,20 @@ FB_VIDEO_CAPTION_BASIC_FIELDS = {
     "locale", "locale_name", "uri",
 }
 
+FB_ALBUM_BASIC_FIELDS = {
+    "id", "created_time", "count",
+    "name", "description",
+    # common connections
+    "likes.summary(true).limit(0)",
+    "comments.summary(true).limit(0)",
+}
+
+FB_PHOTO_BASIC_FIELDS = {
+    "id", "created_time", "name", "link",
+    # common connections
+    "likes.summary(true).limit(0)",
+}
+
 # ====================================================
 # Follows is Instagram Professional fields to get data
 # ====================================================

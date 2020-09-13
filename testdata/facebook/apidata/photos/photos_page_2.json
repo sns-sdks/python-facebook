@@ -1,0 +1,79 @@
+{
+  "data": [
+    {
+      "id": "198814868346780",
+      "likes": {
+        "data": [],
+        "summary": {
+          "total_count": 52,
+          "can_like": true,
+          "has_liked": false
+        }
+      },
+      "name": "“I want to make sure that as I'm teaching my classes, my girls are set up and ready to go and can kind of work independently.”",
+      "link": "https://www.facebook.com/facebook/photos/a.145161477045453/198814868346780/?type=3",
+      "created_time": "2020-09-10T16:01:00+0000"
+    },
+    {
+      "id": "198814838346783",
+      "likes": {
+        "data": [],
+        "summary": {
+          "total_count": 77,
+          "can_like": true,
+          "has_liked": false
+        }
+      },
+      "name": "Annabel, 5 1/2",
+      "link": "https://www.facebook.com/facebook/photos/a.145161477045453/198814838346783/?type=3",
+      "created_time": "2020-09-10T16:01:00+0000"
+    },
+    {
+      "id": "198814808346786",
+      "likes": {
+        "data": [],
+        "summary": {
+          "total_count": 44,
+          "can_like": true,
+          "has_liked": false
+        }
+      },
+      "name": "“We've got a classroom downstairs. Some of my daughters will rotate between using the classroom depending on their class time and what they need to be doing.”",
+      "link": "https://www.facebook.com/facebook/photos/a.145161477045453/198814808346786/?type=3",
+      "created_time": "2020-09-10T16:01:00+0000"
+    },
+    {
+      "id": "198814801680120",
+      "likes": {
+        "data": [],
+        "summary": {
+          "total_count": 57,
+          "can_like": true,
+          "has_liked": false
+        }
+      },
+      "name": "Autumn, 17",
+      "link": "https://www.facebook.com/facebook/photos/a.145161477045453/198814801680120/?type=3",
+      "created_time": "2020-09-10T16:01:00+0000"
+    },
+    {
+      "id": "198651098363157",
+      "likes": {
+        "data": [],
+        "summary": {
+          "total_count": 9,
+          "can_like": true,
+          "has_liked": false
+        }
+      },
+      "link": "https://www.facebook.com/facebook/photos/a.145161477045453/198651098363157/?type=3",
+      "created_time": "2020-09-10T14:00:03+0000"
+    }
+  ],
+  "paging": {
+    "cursors": {
+      "before": "before",
+      "after": "after"
+    }
+  }
+}
