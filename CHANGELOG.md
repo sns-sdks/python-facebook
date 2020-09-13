@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.7.0](https://github.com/sns-sdks/python-facebook/compare/v0.6.1...v0.7.0) (2020-09-13)
+
+### Features
+
+- Add new api for video,album and photos for facebook.
+- Update to support for to Graph API V8.0    
+
 ### [0.6.1](https://github.com/sns-sdks/python-facebook/compare/v0.6.0...v0.6.1) (2020-04-02)
 
 ### Features
