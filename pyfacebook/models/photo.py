@@ -35,7 +35,7 @@ class Photo(BaseModel, LikesSummaryField):
     can_backdate = attrib(default=None, type=Optional[bool], repr=False)
     can_delete = attrib(default=None, type=Optional[bool], repr=False)
     can_tag = attrib(default=None, type=Optional[bool], repr=False)
-    created_time = attrib(default=None, type=Optional[str], repr=False)
+    created_time = attrib(default=None, type=Optional[str])
     # event = None
     # TODO now cattr not allow rename
     # from
@@ -43,7 +43,7 @@ class Photo(BaseModel, LikesSummaryField):
     icon = attrib(default=None, type=Optional[str], repr=False)
     images = attrib(default=None, type=Optional[List[PlatformImageSource]], repr=False)
     link = attrib(default=None, type=Optional[str], repr=False)
-    name = attrib(default=None, type=Optional[str], repr=False)
+    name = attrib(default=None, type=Optional[str])
     name_tags = attrib(default=None, type=Optional[List[EntityAtTextRange]], repr=False)
     page_story_id = attrib(default=None, type=Optional[str], repr=False)
     place = attrib(default=None, type=Optional[Place], repr=False)
