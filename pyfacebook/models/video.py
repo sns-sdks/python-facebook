@@ -5,12 +5,11 @@
 """
 
 from attr import attrs, attrib
-from typing import Dict, List, Optional
+from typing import List, Optional
 
 from .base import BaseModel
-from .common import Privacy
-from .comment import CommentSummary
-from .likes import LikesSummary
+from .common import Privacy, Place
+from .mixins import LikesAndCommentsSummaryField
 from .._compat import str
 
 
@@ -29,24 +28,9 @@ class VideoFormat(BaseModel):
 #     id = attrib(default=None, type=Optional[str])
 #     name = attrib(default=None, type=Optional[str])
 
-
 @attrs
-class VideoPlaceLocation(BaseModel):
-    city = attrib(default=None, type=Optional[str])
-    country = attrib(default=None, type=Optional[str], repr=False)
-    latitude = attrib(default=None, type=Optional[float], repr=False)
-    located_in = attrib(default=None, type=Optional[str], repr=False)
-    longitude = attrib(default=None, type=Optional[float], repr=False)
-    state = attrib(default=None, type=Optional[str], repr=False)
-    street = attrib(default=None, type=Optional[str], repr=False)
-    zip = attrib(default=None, type=Optional[str], repr=False)
-
-
-@attrs
-class VideoPlace(BaseModel):
-    id = attrib(default=None, type=Optional[str])
-    name = attrib(default=None, type=Optional[str])
-    location = attrib(default=None, type=Optional[VideoPlaceLocation], repr=False)
+class VideoPlace(Place):
+    pass
 
 
 @attrs
@@ -56,7 +40,7 @@ class VideoStatus(BaseModel):
 
 
 @attrs
-class Video(BaseModel):
+class Video(BaseModel, LikesAndCommentsSummaryField):
     """
     A class representing the video info.
     """
@@ -92,18 +76,6 @@ class Video(BaseModel):
     title = attrib(default=None, type=Optional[str], repr=False)
     universal_video_id = attrib(default=None, type=Optional[str], repr=False)
     updated_time = attrib(default=None, type=Optional[str], repr=False)
-
-    # connections
-    comments = attrib(default=None, type=Optional[Dict], repr=False)
-    likes = attrib(default=None, type=Optional[Dict], repr=False)
-
-    def __attrs_post_init__(self):
-        if self.comments is not None and isinstance(self.comments, dict):
-            comment_summary = self.comments.get("summary", {})
-            self.comments = CommentSummary.new_from_json_dict(comment_summary)
-        if self.likes is not None and isinstance(self.likes, dict):
-            likes_summary = self.likes.get("summary", {})
-            self.likes = LikesSummary.new_from_json_dict(likes_summary)
 
 
 @attrs

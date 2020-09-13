@@ -83,3 +83,28 @@ class Privacy(BaseModel):
     friends = attrib(default=None, type=Optional[str], repr=False)
     networks = attrib(default=None, type=Optional[str], repr=False)
     value = attrib(default=None, type=Optional[str])
+
+
+@attrs
+class Location(BaseModel):
+    """
+    A class representing the location info.
+
+    Refer: https://developers.facebook.com/docs/graph-api/reference/location/
+    """
+    city = attrib(default=None, type=Optional[str])
+    country = attrib(default=None, type=Optional[str], repr=False)
+    latitude = attrib(default=None, type=Optional[float], repr=False)
+    located_in = attrib(default=None, type=Optional[str], repr=False)
+    longitude = attrib(default=None, type=Optional[float], repr=False)
+    state = attrib(default=None, type=Optional[str], repr=False)
+    street = attrib(default=None, type=Optional[str], repr=False)
+    zip = attrib(default=None, type=Optional[str], repr=False)
+
+
+@attrs
+class Place(BaseModel):
+    id = attrib(default=None, type=Optional[str])
+    name = attrib(default=None, type=Optional[str])
+    location = attrib(default=None, type=Optional[Location], repr=False)
+    overall_rating = attrib(default=None, type=Optional[float], repr=False)
