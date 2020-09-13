@@ -6,8 +6,8 @@ from attr import attrs, attrib
 from typing import Optional, Dict
 
 from .base import BaseModel
-from .comment import CommentSummary
 from .common import StoryAttachment
+from .mixins import CommentsSummaryField
 from .._compat import str
 
 
@@ -33,7 +33,7 @@ class ReactionsSummary(BaseModel):
 
 
 @attrs
-class Post(BaseModel):
+class Post(BaseModel, CommentsSummaryField):
     """
     A class representing the post info.
 
@@ -66,12 +66,11 @@ class Post(BaseModel):
     thankful = attrib(default=None, type=Optional[Dict], repr=False)
 
     def __attrs_post_init__(self):
+        super(Post, self).__attrs_post_init__()
+
         if self.attachments is not None and isinstance(self.attachments, dict):
             attachments = self.attachments.get("data", [])
             self.attachments = [StoryAttachment.new_from_json_dict(item) for item in attachments]
-        if self.comments is not None and isinstance(self.comments, dict):
-            comment_summary = self.comments.get("summary", {})
-            self.comments = CommentSummary.new_from_json_dict(comment_summary)
         # handle the reaction items
         self.reactions_handler("reactions", init_type=False)
         self.reactions_handler("like")
