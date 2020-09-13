@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "python-facebook-api"
-version = "0.6.1"
+version = "0.7.0"
 description = "A Python wrapper around the Facebook Graph API"
 authors = ["Ikaros kun <merle.liukun@gmail.com>"]
 license = "Apache-2.0"
