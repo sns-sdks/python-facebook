@@ -1,0 +1,40 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  release-pypi:
+    name: release-pypi
+    runs-on: ubuntu-18.04
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+          architecture: 'x64'
+      - name: Cache venv
+        uses: actions/cache@v2
+        with:
+          path: venv
+          key: ubuntu-18.04-poetryenv-${{ hashFiles('pyproject.toml') }}
+      - name: Install Dependencies
+        run: |
+          python3 -m venv venv
+          . venv/bin/activate
+          pip install -U pip
+          pip install poetry
+          poetry install
+      - name: Poetry Build
+        run: |
+          . venv/bin/activate
+          poetry build
+      - name: Upload to Pypi
+        env:
+          PASSWORD: ${{ secrets.PYPI_TOKEN }}
+        run: |
+          . venv/bin/activate
+          poetry publish --username __token__ --password ${PASSWORD}
