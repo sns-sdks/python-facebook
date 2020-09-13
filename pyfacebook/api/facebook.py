@@ -9,7 +9,8 @@ from pyfacebook.error import PyFacebookException, ErrorMessage, ErrorCode
 from pyfacebook.models import (
     Page, Comment, CommentSummary,
     ProfilePictureSource, Post,
-    Video, VideoCaption
+    Video, VideoCaption,
+    Album, Photo,
 )
 from pyfacebook.api.base import BaseApi
 from pyfacebook.utils import constant
@@ -685,7 +686,7 @@ class Api(BaseApi):
         :param video_id: The id for video you want to retrieve data.
         :param fields: Comma-separated id string for data fields which you want.
         You can also pass this with an id list, tuple, set.
-        :param return_json: Set to false will return a list of Post instances.
+        :param return_json: Set to false will return a list of Video instances.
         Or return json data. Default is false.
         :return: Video instance or dict
         """
@@ -813,3 +814,249 @@ class Api(BaseApi):
             return data
         else:
             return {_id: [Video.new_from_json_dict(item) for item in p_data["data"]] for _id, p_data in iteritems(data)}
+
+    def get_albums_by_object(self,
+                             object_id,
+                             fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                             count=10,  # type: Optional[int]
+                             limit=25,  # type: int
+                             return_json=False  # type: bool
+                             ):
+        # type: (...) -> List[Union[Album, dict]]
+        """
+        Retrieve a list of Albums on one object.
+        :param object_id: The id for object(page..)
+        :param fields: Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param count: The count will retrieve videos. If you want to get all data. Set it to None.
+        :param limit: Each request retrieve posts count from api. It should no more than 100.
+        :param return_json: Set to false will return a list of Album instances.
+        Or return json data. Default is false.
+        :return: Albums list.
+        """
+
+        if fields is None:
+            fields = constant.FB_ALBUM_BASIC_FIELDS
+
+        if count is not None:
+            limit = min(count, limit)
+
+        args = {
+            'fields': enf_comma_separated("fields", fields),
+            'limit': limit,
+        }
+
+        albums = []
+        next_cursor = None
+
+        while True:
+            next_cursor, previous_cursor, data = self.paged_by_cursor(
+                resource='albums',
+                target=object_id,
+                args=args,
+                next_cursor=next_cursor
+            )
+            if return_json:
+                albums += data.get('data', [])
+            else:
+                albums += [Album.new_from_json_dict(item) for item in data.get('data', [])]
+            if count is not None:
+                if len(albums) >= count:
+                    albums = albums[:count]
+                    break
+            if next_cursor is None:
+                break
+        return albums
+
+    def get_album_info(self,
+                       album_id,  # type: str
+                       fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                       return_json=False  # type: bool
+                       ):
+        # type: (...) -> Union[Album, dict]
+        """
+        Retrieve album info by id.
+        :param album_id: The id for Album you want to retrieve data.
+        :param fields: Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return a list of Album instances.
+        Or return json data. Default is false.
+        :return: Photo instance or dict
+        """
+        if fields is None:
+            fields = constant.FB_ALBUM_BASIC_FIELDS
+
+        args = {
+            "fields": enf_comma_separated("fields", fields)
+        }
+
+        resp = self._request(
+            method='GET',
+            path='{0}/{1}'.format(self.version, album_id),
+            args=args
+        )
+
+        data = self._parse_response(resp)
+        if return_json:
+            return data
+        else:
+            return Album.new_from_json_dict(data)
+
+    def get_albums(self,
+                   ids,  # type: Optional[Union[str, List, Tuple, Set]]
+                   fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                   return_json=False  # type: bool
+                   ):
+        # type: (...) -> dict
+        """
+        Retrieve multi albums info by one request.
+        :param ids: Comma-separated id(username) string for album which you want to get.
+        You can also pass this with an id list, tuple, set.
+        Notice not more than 50.
+        :param fields:Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return a dict of Photo instances.
+        Or return json data. Default is false.
+        :return: Albums dict.
+        """
+        if fields is None:
+            fields = constant.FB_PHOTO_BASIC_FIELDS
+
+        args = {
+            "ids": enf_comma_separated("ids", ids),
+            "fields": enf_comma_separated("fields", fields)
+        }
+        resp = self._request(
+            method='GET',
+            path='{0}/'.format(self.version),
+            args=args
+        )
+
+        data = self._parse_response(resp)
+        if return_json:
+            return data
+        else:
+            return {_id: Album.new_from_json_dict(p_data) for _id, p_data in iteritems(data)}
+
+    def get_photos_by_object(self,
+                             object_id,
+                             fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                             count=10,  # type: Optional[int]
+                             limit=25,  # type: int
+                             return_json=False  # type: bool
+                             ):
+        # type: (...) -> List[Union[Photo, dict]]
+        """
+        Retrieve a list of Photos on one object.
+        :param object_id: The id for object(page, album..)
+        :param fields: Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param count: The count will retrieve videos. If you want to get all data. Set it to None.
+        :param limit: Each request retrieve posts count from api. It should no more than 100.
+        :param return_json: Set to false will return a list of Photo instances.
+        Or return json data. Default is false.
+        :return: Photos list.
+        """
+        if fields is None:
+            fields = constant.FB_PHOTO_BASIC_FIELDS
+
+        if count is not None:
+            limit = min(count, limit)
+
+        args = {
+            'fields': enf_comma_separated("fields", fields),
+            'limit': limit,
+        }
+
+        photos = []
+        next_cursor = None
+
+        while True:
+            next_cursor, previous_cursor, data = self.paged_by_cursor(
+                resource='photos',
+                target=object_id,
+                args=args,
+                next_cursor=next_cursor
+            )
+            if return_json:
+                photos += data.get('data', [])
+            else:
+                photos += [Photo.new_from_json_dict(item) for item in data.get('data', [])]
+            if count is not None:
+                if len(photos) >= count:
+                    photos = photos[:count]
+                    break
+            if next_cursor is None:
+                break
+        return photos
+
+    def get_photo_info(self,
+                       photo_id,  # type: str
+                       fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                       return_json=False  # type: bool
+                       ):
+        # type: (...) -> Union[Photo, dict]
+        """
+        Retrieve photo info by id.
+        :param photo_id: The id for photo you want to retrieve data.
+        :param fields: Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return a list of Photo instances.
+        Or return json data. Default is false.
+        :return: Photo instance or dict
+        """
+        if fields is None:
+            fields = constant.FB_PHOTO_BASIC_FIELDS
+
+        args = {
+            "fields": enf_comma_separated("fields", fields)
+        }
+
+        resp = self._request(
+            method='GET',
+            path='{0}/{1}'.format(self.version, photo_id),
+            args=args
+        )
+
+        data = self._parse_response(resp)
+        if return_json:
+            return data
+        else:
+            return Photo.new_from_json_dict(data)
+
+    def get_photos(self,
+                   ids,  # type: Optional[Union[str, List, Tuple, Set]]
+                   fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                   return_json=False  # type: bool
+                   ):
+        # type: (...) -> dict
+        """
+        Retrieve multi photos info by one request.
+        :param ids: Comma-separated id(username) string for photo which you want to get.
+        You can also pass this with an id list, tuple, set.
+        Notice not more than 50.
+        :param fields:Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return a dict of Photo instances.
+        Or return json data. Default is false.
+        :return: Photos dict.
+        """
+
+        if fields is None:
+            fields = constant.FB_PHOTO_BASIC_FIELDS
+
+        args = {
+            "ids": enf_comma_separated("ids", ids),
+            "fields": enf_comma_separated("fields", fields)
+        }
+        resp = self._request(
+            method='GET',
+            path='{0}/'.format(self.version),
+            args=args
+        )
+
+        data = self._parse_response(resp)
+        if return_json:
+            return data
+        else:
+            return {_id: Photo.new_from_json_dict(p_data) for _id, p_data in iteritems(data)}

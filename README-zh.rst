@@ -224,6 +224,59 @@ API 每年返回大约 600 个经排名的帖子。
     {'20531316728': ProfilePictureSource(url='https://scontent.xx.fbcdn.net/v/t1.0-1/p100x100/58978526_10158354585751729_7411073224387067904_o.png?_nc_cat=1&_nc_oc=AQmaFO7eND-DVRoArrQLUZVDpmemw8nMPmHJWvoCyXId_MKLLHQdsS8UbTOX4oaEfeQ&_nc_ht=scontent.xx&oh=128f57c4dc65608993af62b562d92d84&oe=5E942420', height=100, width=100),
      'nba': ProfilePictureSource(url='https://scontent.xx.fbcdn.net/v/t1.0-1/p100x100/81204460_10158199356848463_5727214464013434880_n.jpg?_nc_cat=1&_nc_oc=AQmcent57E-a-923C_VVpiX26nGqKDodImY1gsiu7h1czDmcpLHXR8D5hIh9g9Ao3wY&_nc_ht=scontent.xx&oh=1656771e6c11bd03147b69ee643238ba&oe=5E66450C', height=100, width=100)}
 
+你可以通过对象(主页，用户)的ID获取该对象的视频::
+
+    In [16]: api.get_videos_by_object("ikaroskunlife", fields=["id", "title", "description"], count=None, limit=20)
+    Out[16]:
+    [Video(id='969222676905304', created_time=None, description='冬日'),
+     Video(id='210174653594254', created_time=None, description='Snowing'),
+     Video(id='674270653053120', created_time=None, description='Visible')]
+
+如果你已经获得了视频的ID，你可以通过如下方式获取视频更多信息::
+
+    In [17]: api.get_video_info("969222676905304")
+    Out[17]: Video(id='969222676905304', created_time='2020-09-12T09:53:06+0000', description='冬日')
+
+    In [18]: api.get_videos(ids=["210174653594254", "674270653053120"])
+    Out[18]:
+    {'210174653594254': Video(id='210174653594254', created_time='2020-03-31T08:13:14+0000', description='Snowing'),
+     '674270653053120': Video(id='674270653053120', created_time='2019-09-02T06:13:17+0000', description='Visible')}
+
+你可以通过对象(主页，用户)的ID获取该对象的相册::
+
+    In[19]: api.get_albums_by_object("instagram", count=20, limit=15)
+    Out[19]:
+    [Album(id='372558296163354', created_time='2012-10-29T19:46:35+0000', name='时间线照片'),
+     Album(id='623202484432266', created_time='2014-04-12T15:28:26+0000', name='手机上传')...]
+
+如果你已经获得了相册的ID，你可以通过如下方式获取相册更多信息::
+
+    In[20]: api.get_album_info("372558296163354")
+    Out[20]: Album(id='372558296163354', created_time='2012-10-29T19:46:35+0000', name='时间线照片')
+
+    In[21]: api.get_albums(ids="372558296163354,623202484432266")
+    Out[21]:
+    {'372558296163354': Album(id='372558296163354', created_time='2012-10-29T19:46:35+0000', name='时间线照片'),
+     '623202484432266': Album(id='623202484432266', created_time='2014-04-12T15:28:26+0000', name='手机上传')}
+
+你可以通过对象(主页，用户)的ID获取该对象的图片::
+
+    In [22]: api.get_photos_by_object("372558296163354", count=10, limit=5)
+    Out[22]:
+    [Photo(id='3293405020745319', created_time='2020-09-10T19:11:01+0000', name='Roller skating = Black joy for Travis Reynolds. 🖤\n\nWatch our IGTV to catch some good vibes and see his 🔥🔥🔥 tricks. \n\n#ShareBlackStories\n\nhttps://www.instagram.com/tv/CE9xgF3jwS_/'),
+     Photo(id='3279789248773563', created_time='2020-09-06T16:23:17+0000', name='#HelloFrom Los Glaciares National Park, Argentina 👏👏👏\n\nhttps://www.instagram.com/p/CEzSoQNMdfH/'),
+     Photo(id='3276650595754095', created_time='2020-09-05T16:52:54+0000', name=None)...]
+
+如果你已经获得了图片的ID，你可以通过如下方式获取图片更多信息::
+
+    In [4]: api.get_photo_info("3293405020745319")
+    Out[4]: Photo(id='3293405020745319', created_time='2020-09-10T19:11:01+0000', name='Roller skating = Black joy for Travis Reynolds. 🖤\n\nWatch our IGTV to catch some good vibes and see his 🔥🔥🔥 tricks. \n\n#ShareBlackStories\n\nhttps://www.instagram.com/tv/CE9xgF3jwS_/')
+
+    In [5]: api.get_photos(ids=["3279789248773563", "3276650595754095"])
+    Out[5]:
+    {'3279789248773563': Photo(id='3279789248773563', created_time='2020-09-06T16:23:17+0000', name='#HelloFrom Los Glaciares National Park, Argentina 👏👏👏\n\nhttps://www.instagram.com/p/CEzSoQNMdfH/'),
+     '3276650595754095': Photo(id='3276650595754095', created_time='2020-09-05T16:52:54+0000', name=None)}
+
 ========================
 使用 Instagram Graph API
 ========================
@@ -512,6 +565,9 @@ Facebook：
 - 主页图片信息
 - 帖子数据
 - 评论数据
+- 视频数据
+- 相册数据
+- 图片数据
 
 Instagram：
 

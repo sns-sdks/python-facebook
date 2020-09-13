@@ -7,7 +7,7 @@ from six import iteritems
 import pyfacebook
 
 
-class PostApiTest(unittest.TestCase):
+class VideoApiTest(unittest.TestCase):
     BASE_PATH = "testdata/facebook/apidata/videos/"
     BASE_URL = "https://graph.facebook.com/{}/".format(pyfacebook.Api.VALID_API_VERSIONS[-1])
 

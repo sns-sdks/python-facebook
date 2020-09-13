@@ -4,7 +4,7 @@ import unittest
 import pyfacebook.models as models
 
 
-class PostModelTest(unittest.TestCase):
+class VideoModelTest(unittest.TestCase):
     BASE_PATH = "testdata/facebook/models/videos/"
 
     with open(BASE_PATH + 'video.json', 'rb') as f:
