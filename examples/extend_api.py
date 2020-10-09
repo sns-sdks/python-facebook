@@ -30,8 +30,8 @@ class PageConversation(BaseModel):
     updated_time = attrib(default=None, type=Optional[str])
     message_count = attrib(default=None, type=Optional[int])
     unread_count = attrib(default=None, type=Optional[int])
-    participants = attrib(default=None, type=Optional[Union[Dict, List[People]]])
-    senders = attrib(default=None, type=Optional[Union[Dict, List[People]]])
+    participants = attrib(default=None, type=Optional[Dict])
+    senders = attrib(default=None, type=Optional[Dict])
     can_reply = attrib(default=None, type=Optional[bool], repr=False)
     is_subscribed = attrib(default=None, type=Optional[bool], repr=False)
 
