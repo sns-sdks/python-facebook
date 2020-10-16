@@ -110,6 +110,12 @@ INSTAGRAM_MEDIA_OWNER_FIELD = INSTAGRAM_MEDIA_FIELD.union({
     "owner", "shortcode", "thumbnail_url"
 })
 
+INSTAGRAM_STORY_FIELD = {
+    "id", "ig_id", "caption",
+    "media_type", "media_url", "owner", "permalink",
+    "shortcode", "thumbnail_url", "timestamp", "username"
+}
+
 INSTAGRAM_COMMENT_FIELD = {
     "hidden", "id", "like_count", "media",
     "text", "timestamp", "user", "username"

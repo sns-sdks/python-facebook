@@ -1,0 +1,49 @@
+{
+  "data": [
+    {
+      "id": "18168273289049440",
+      "media_type": "IMAGE",
+      "media_url": "https://scontent-lax3-1.cdninstagram.com/v/t51.29350-15/121708333_386771855845543_6575258531100040471_n.jpg?_nc_cat=104&_nc_sid=8ae9d6&_nc_ohc=OiYQXK0Sv_8AX-wIw_m&_nc_ht=scontent-lax3-1.cdninstagram.com&oh=c114e910054071345f72299d6160a05e&oe=5FB11AF1",
+      "owner": {
+        "id": "17841406338772941"
+      },
+      "permalink": "https://instagram.com/stories/ikroskun/2421239445800645437",
+      "shortcode": "CGZ-HKbHHM9",
+      "timestamp": "2020-10-16T13:17:24+0000",
+      "username": "ikroskun",
+      "ig_id": "2421239445800645437"
+    },
+    {
+      "caption": "厉害了",
+      "id": "17876166859931045",
+      "media_type": "IMAGE",
+      "media_url": "https://scontent-lax3-2.cdninstagram.com/v/t51.29350-15/121615854_883056945566047_6781892595954855821_n.jpg?_nc_cat=107&_nc_sid=8ae9d6&_nc_ohc=s4IkJZrN5tMAX-ZXOkx&_nc_ht=scontent-lax3-2.cdninstagram.com&oh=a33201c524d3d0513e07ca38368b5239&oe=5FAE3DD1",
+      "owner": {
+        "id": "17841406338772941"
+      },
+      "permalink": "https://instagram.com/stories/ikroskun/2421224614649404224",
+      "shortcode": "CGZ6vV1nBtA",
+      "timestamp": "2020-10-16T12:48:02+0000",
+      "username": "ikroskun",
+      "ig_id": "2421224614649404224"
+    },
+    {
+      "id": "17967354091336995",
+      "media_type": "IMAGE",
+      "media_url": "https://scontent-lax3-1.cdninstagram.com/v/t51.29350-15/121514510_195085092135371_1213977306340103108_n.jpg?_nc_cat=109&_nc_sid=8ae9d6&_nc_ohc=jmgZ3vpHKQ0AX83P1n6&_nc_ht=scontent-lax3-1.cdninstagram.com&oh=ee0c7672593bfdf3c9dde1d5b95220d7&oe=5FAD8F9C",
+      "owner": {
+        "id": "17841406338772941"
+      },
+      "permalink": "https://instagram.com/stories/ikroskun/2421224077929597220",
+      "shortcode": "CGZ6nh-nckk",
+      "timestamp": "2020-10-16T12:46:57+0000",
+      "username": "ikroskun",
+      "ig_id": "2421224077929597220"
+    }
+  ],
+  "paging": {
+    "cursors": {
+      "before": "before"
+    }
+  }
+}

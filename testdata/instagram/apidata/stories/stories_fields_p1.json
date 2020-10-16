@@ -1,0 +1,23 @@
+{
+  "data": [
+    {
+      "id": "18168273289049440",
+      "media_type": "IMAGE",
+      "media_url": "https://scontent-lax3-1.cdninstagram.com/v/t51.29350-15/121708333_386771855845543_6575258531100040471_n.jpg?_nc_cat=104&_nc_sid=8ae9d6&_nc_ohc=OiYQXK0Sv_8AX-wIw_m&_nc_ht=scontent-lax3-1.cdninstagram.com&oh=c114e910054071345f72299d6160a05e&oe=5FB11AF1",
+      "username": "ikroskun"
+    },
+    {
+      "id": "17876166859931045",
+      "media_type": "IMAGE",
+      "media_url": "https://scontent-lax3-2.cdninstagram.com/v/t51.29350-15/121615854_883056945566047_6781892595954855821_n.jpg?_nc_cat=107&_nc_sid=8ae9d6&_nc_ohc=s4IkJZrN5tMAX-ZXOkx&_nc_ht=scontent-lax3-2.cdninstagram.com&oh=a33201c524d3d0513e07ca38368b5239&oe=5FAE3DD1",
+      "username": "ikroskun"
+    }
+  ],
+  "paging": {
+    "cursors": {
+      "before": "before",
+      "after": "after"
+    },
+    "next": "https://graph.facebook.com/v8.0/17841406338772941/stories?access_token=token&pretty=0&fields=id%2Cmedia_type%2Cmedia_url%2Cusername&limit=2&after=after"
+  }
+}
