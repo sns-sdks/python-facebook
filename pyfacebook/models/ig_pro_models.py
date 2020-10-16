@@ -94,20 +94,13 @@ class IgProComment(IgProBaseComment):
 
 
 @attrs
-class IgProMedia(BaseModel):
+class MediaCommon(BaseModel):
     """
-    A class representing the Instagram media info.
-
-    Refer: https://developers.facebook.com/docs/instagram-api/reference/media
+    Some common fields for media or story
     """
-    caption = attrib(default=None, type=Optional[str], repr=False)
-    children = attrib(default=None, type=Optional[Dict], repr=False)
-    comments = attrib(default=None, type=Optional[Dict], repr=False)
-    comments_count = attrib(default=None, type=Optional[int], repr=False)
     id = attrib(default=None, type=Optional[str])
     ig_id = attrib(default=None, type=Optional[int], repr=False)
-    is_comment_enabled = attrib(default=None, type=Optional[bool], repr=False)
-    like_count = attrib(default=None, type=Optional[int], repr=False)
+    caption = attrib(default=None, type=Optional[str], repr=False)
     media_type = attrib(default=None, type=Optional[str], repr=False)
     media_url = attrib(default=None, type=Optional[str], repr=False)
     owner = attrib(default=None, type=Optional[IgProUser], repr=False)
@@ -116,6 +109,30 @@ class IgProMedia(BaseModel):
     thumbnail_url = attrib(default=None, type=Optional[str], repr=False)
     timestamp = attrib(default=None, type=Optional[str], repr=False)
     username = attrib(default=None, type=Optional[str], repr=False)
+
+
+@attrs
+class IgProStory(MediaCommon):
+    """
+    A class representing the Instagram story info. It's similar to media but not have some fields.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/user/stories
+    """
+    ...
+
+
+@attrs
+class IgProMedia(MediaCommon):
+    """
+    A class representing the Instagram media info.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/media
+    """
+    is_comment_enabled = attrib(default=None, type=Optional[bool], repr=False)
+    comments = attrib(default=None, type=Optional[Dict], repr=False)
+    comments_count = attrib(default=None, type=Optional[int], repr=False)
+    like_count = attrib(default=None, type=Optional[int], repr=False)
+    children = attrib(default=None, type=Optional[Dict], repr=False)
 
     def __attrs_post_init__(self):
         if self.children is not None and isinstance(self.children, dict):

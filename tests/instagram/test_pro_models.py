@@ -19,6 +19,8 @@ class IgProModelTest(unittest.TestCase):
         IG_HASHTAG = json.loads(f.read().decode("utf-8"))
     with open(BASE_PATH + "ig_insight.json", "rb") as f:
         IG_INSIGHT = json.loads(f.read().decode("utf-8"))
+    with open(BASE_PATH + "ig_story.json", "rb") as f:
+        IG_STORY = json.loads(f.read().decode("utf-8"))
 
     def testUser(self):
         m = models.IgProUser.new_from_json_dict(self.IG_USER)
@@ -57,3 +59,9 @@ class IgProModelTest(unittest.TestCase):
         self.assertEqual(m.id, "instagram_business_account_id/insights/impressions/day")
         self.assertEqual(len(m.values), 2)
         self.assertEqual(m.values[0].value, 32)
+
+    def testStory(self):
+        m = models.IgProStory.new_from_json_dict(self.IG_STORY)
+
+        self.assertEqual(m.id, "17908009870517752")
+        self.assertEqual(m.owner.id, "17841406338772941")
