@@ -30,26 +30,26 @@ class ApiStoriesTest(unittest.TestCase):
         )
 
     def testGetStories(self):
-        # test all items
+        # test count
         with responses.RequestsMock() as m:
             m.add("GET", self.BASE_URL + self.instagram_business_id + "/stories", json=self.STORIES_DEFAULT)
 
             res = self.api.get_user_stories(
                 user_id=self.instagram_business_id,
-                count=None,
-                limit=5,
+                count=2,
                 return_json=True
             )
-            self.assertEqual(len(res), 3)
+            self.assertEqual(len(res), 2)
 
-        # test count
+        # test all items
         with responses.RequestsMock() as m:
             m.add("GET", self.BASE_URL + self.instagram_business_id + "/stories", json=self.STORIES_FIELDS_p1)
             m.add("GET", self.BASE_URL + self.instagram_business_id + "/stories", json=self.STORIES_FIELDS_p2)
 
             res = self.api.get_user_stories(
                 user_id=self.instagram_business_id,
-                fields=["id", "media_type", "media_url", "username"]
+                fields=["id", "media_type", "media_url", "username"],
+                count=None,
             )
             self.assertEqual(len(res), 3)
 
