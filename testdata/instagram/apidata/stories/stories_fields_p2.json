@@ -1,0 +1,16 @@
+{
+  "data": [
+    {
+      "id": "17967354091336995",
+      "media_type": "IMAGE",
+      "media_url": "https://scontent-lax3-1.cdninstagram.com/v/t51.29350-15/121514510_195085092135371_1213977306340103108_n.jpg?_nc_cat=109&_nc_sid=8ae9d6&_nc_ohc=jmgZ3vpHKQ0AX83P1n6&_nc_ht=scontent-lax3-1.cdninstagram.com&oh=ee0c7672593bfdf3c9dde1d5b95220d7&oe=5FAD8F9C",
+      "username": "ikroskun"
+    }
+  ],
+  "paging": {
+    "cursors": {
+      "before": "before"
+    },
+    "previous": "https://graph.facebook.com/v8.0/17841406338772941/stories?access_token=EAACsqT7rCzQBAF5Bo7A8EbwpqyXOUCmezKdLadZB1y0POZBePcQOOX1cEaGPnnQnueAzjiftvQUcHMkOrAULrzWR9jd5SMb54O1cOdO6uQr0qlh0SZCUjmN90P63ieD2yKDFgertOnAuk6ZAHxV54ZC8B3xLslhZAENNMMbq3SL296HZCOx2so3Neo4UiHIlyegOmyDGKF3SgZDZD&pretty=0&fields=id%2Cmedia_type%2Cmedia_url%2Cusername&limit=2&before=QVFIUlVLY0hmQ2NjMDlXNVlOd0RqOUZA3bHh0N0N3dVVQSGUzcUJnN3VPbllCSG02bk4waUJPN3pjd0ZA0eldIakp4YWRWUUR1VGVyWnA0TVc3WFNFSUFwV3J3"
+  }
+}

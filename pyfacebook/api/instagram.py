@@ -7,7 +7,8 @@ from six import iteritems
 
 from pyfacebook.error import PyFacebookException, ErrorCode, ErrorMessage
 from pyfacebook.models import (
-    IgProMedia, IgProUser, IgProComment, IgProReply, IgProInsight, IgProHashtag
+    IgProMedia, IgProUser, IgProComment, IgProReply, IgProInsight, IgProHashtag,
+    IgProStory,
 )
 
 from pyfacebook.api.base import BaseApi
@@ -422,6 +423,129 @@ class IgProApi(BaseApi):
             return data
         else:
             return {_id: IgProMedia.new_from_json_dict(p_data) for _id, p_data in iteritems(data)}
+
+    def get_user_stories(self,
+                         user_id,  # type: str
+                         fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                         count=10,  # type: Optional[int]
+                         limit=10,  # type: int
+                         return_json=False  # type: bool
+                         ):
+        # type: (...) -> List[Union[IgProStory, dict]]
+        """
+        Retrieve ig user stories data by user id.
+        :param user_id: The id for instagram business user which you want to get data.
+        :param fields: Comma-separated id string for data fields which you want.
+                You can also pass this with an id list, tuple, set.
+        :param count: The count for you want to get stories.
+                Default is 10.
+                If need get all, set this with None.
+        :param limit: Each request retrieve stories count from api.
+        :param return_json: Set to false will return instance of IgProStory.
+                Or return json data. Default is false.
+        :return: IgProStory instance list or original data list.
+        """
+        if fields is None:
+            fields = constant.INSTAGRAM_STORY_FIELD
+
+        if count is not None:
+            limit = min(limit, count)
+
+        args = {
+            'fields': enf_comma_separated("fields", fields),
+            'limit': limit
+        }
+
+        stories = []
+        next_cursor = None
+
+        while True:
+            next_cursor, previous_cursor, data = self.paged_by_cursor(
+                target=user_id,
+                resource='stories',
+                args=args,
+                next_cursor=next_cursor
+            )
+            data = data.get('data', [])
+
+            for item in data:
+                if return_json:
+                    stories.append(item)
+                else:
+                    stories.append(IgProMedia.new_from_json_dict(item))
+            if count is not None:
+                if len(stories) >= count:
+                    stories = stories[:count]
+                    break
+            if next_cursor is None:
+                break
+        return stories
+
+    def get_story_info(self,
+                       story_id,  # type: str
+                       fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                       return_json=False  # type: bool
+                       ):
+        # type: (...) -> Union[IgProMedia, dict]
+        """
+        Retrieve the story info by story id.
+        :param story_id: The story id for which you want to get data.
+        :param fields: Comma-separated id string for data fields which you want.
+                You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return instance of IgProUser.
+                Or return json data. Default is false.
+        :return: story instance or dict info.
+        """
+        if fields is None:
+            fields = constant.INSTAGRAM_STORY_FIELD
+
+        args = {'fields': enf_comma_separated("fields", fields)}
+
+        resp = self._request(
+            path='{0}/{1}'.format(self.version, story_id),
+            args=args
+        )
+
+        data = self._parse_response(resp)
+        if return_json:
+            return data
+        else:
+            return IgProStory.new_from_json_dict(data)
+
+    def get_stories_info(self,
+                         story_ids,  # type: Union[str, List, Tuple, Set]
+                         fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                         return_json=False  # type: bool
+                         ):
+        # type: (...) -> dict
+        """
+        Retrieve the stories info by multi story id.
+        :param story_ids: Comma-separated id string for story which you want.
+                You can also pass this with an id list, tuple, set.
+        :param fields: Comma-separated id string for data fields which you want.
+                You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return a dict values are instance of IgProUser.
+                Or return json data. Default is false.
+        :return: dict of response
+        """
+        if fields is None:
+            fields = constant.INSTAGRAM_STORY_FIELD
+
+        args = {
+            "fields": enf_comma_separated("fields", fields),
+            "ids": enf_comma_separated("story_ids", story_ids)
+        }
+
+        resp = self._request(
+            path='{0}/'.format(self.version),
+            args=args
+        )
+
+        data = self._parse_response(resp)
+        if return_json:
+            return data
+        else:
+            return {_id: IgProStory.new_from_json_dict(p_data) for _id, p_data in iteritems(data)}
 
     def get_comments_by_media(self,
                               media_id,  # type: str

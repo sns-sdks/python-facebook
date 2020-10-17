@@ -8,7 +8,10 @@ from .video import Video, VideoCaption
 from .photo import Photo
 from .album import Album
 from .ig_basic_models import IgBasicUser, IgBasicMedia, IgBasicMediaChildren
-from .ig_pro_models import IgProUser, IgProMedia, IgProComment, IgProReply, IgProHashtag, IgProInsight
+from .ig_pro_models import (
+    IgProUser, IgProMedia, IgProComment,
+    IgProReply, IgProHashtag, IgProInsight, IgProStory
+)
 
 __all__ = [
     "AccessToken",
@@ -36,4 +39,5 @@ __all__ = [
     "IgProReply",
     "IgProHashtag",
     "IgProInsight",
+    "IgProStory",
 ]
