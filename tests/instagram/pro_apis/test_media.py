@@ -30,6 +30,13 @@ class ApiMediaTest(unittest.TestCase):
     with open(BASE_PATH + "medias_fields.json", "rb") as f:
         MEDIAS_FIELDS = json.loads(f.read().decode("utf-8"))
 
+    with open(BASE_PATH + "tags_medias.json", "rb") as f:
+        TAGS_MEDIAS = json.loads(f.read().decode("utf-8"))
+    with open(BASE_PATH + "tags_medias_p1.json", "rb") as f:
+        TAGS_MEDIAS_P1 = json.loads(f.read().decode("utf-8"))
+    with open(BASE_PATH + "tags_medias_p2.json", "rb") as f:
+        TAGS_MEDIAS_P2 = json.loads(f.read().decode("utf-8"))
+
     def setUp(self):
         self.instagram_business_id = "17841406338772941"
         self.api = pyfacebook.IgProApi(
@@ -123,3 +130,28 @@ class ApiMediaTest(unittest.TestCase):
             for _id, data in iteritems(res_fields):
                 self.assertIn(_id, media_ids)
                 self.assertIn(_id, data["id"])
+
+    def testGetTagsMedias(self):
+        # test all items
+        with responses.RequestsMock() as m:
+            m.add("GET", self.BASE_URL + f"{self.instagram_business_id}/tags", json=self.TAGS_MEDIAS)
+            m.add("GET", self.BASE_URL + f"{self.instagram_business_id}/tags", json=self.TAGS_MEDIAS_P1)
+            m.add("GET", self.BASE_URL + f"{self.instagram_business_id}/tags", json=self.TAGS_MEDIAS_P2)
+
+            res = self.api.get_tags_medias(
+                user_id=self.instagram_business_id,
+                fields=["id", "like_count", "media_type", "timestamp", "username"],
+                count=4
+            )
+
+            self.assertEqual(len(res), 4)
+            self.assertEqual(res[0].id, "18027939643230671")
+
+            res_json = self.api.get_tags_medias(
+                user_id=self.instagram_business_id,
+                count=None,
+                limit=3,
+                return_json=True
+            )
+            self.assertEqual(len(res_json), 5)
+            self.assertEqual(res_json[0]["id"], "18027939643230671")

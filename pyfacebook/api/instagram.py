@@ -424,6 +424,61 @@ class IgProApi(BaseApi):
         else:
             return {_id: IgProMedia.new_from_json_dict(p_data) for _id, p_data in iteritems(data)}
 
+    def get_tags_medias(self,
+                        user_id,  # type: str
+                        fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                        count=10,  # type: Optional[int]
+                        limit=10,  # type: int
+                        return_json=False  # type: bool
+                        ):
+        # type: (...) -> List[Union[IgProMedia, dict]]
+        """
+        Retrieve a collection of IG Media objects in which an IG User has been tagged by another Instagram user.
+        :param user_id: The id for instagram business user which you want to get data.
+        :param fields: Comma-separated id string for data fields which you want.
+                You can also pass this with an id list, tuple, set.
+        :param count: The count for you want to get stories.
+                Default is 10.
+                If need get all, set this with None.
+        :param limit: Each request retrieve stories count from api.
+        :param return_json: Set to false will return instance of IgProMedia.
+                Or return json data. Default is false.
+        :return: IgProMedia instance list or original data dict
+        """
+        if fields is None:
+            fields = constant.INSTAGRAM_MEDIA_PUBLIC_FIELD
+
+        if count is not None:
+            limit = min(limit, count)
+
+        args = {
+            "fields": enf_comma_separated("fields", fields),
+            "limit": limit
+        }
+
+        medias = []
+        next_cursor = None
+
+        while True:
+            next_cursor, previous_cursor, data = self.paged_by_cursor(
+                target=user_id,
+                resource='tags',
+                args=args,
+                next_cursor=next_cursor
+            )
+            data = data.get('data', [])
+            if return_json:
+                medias += data
+            else:
+                medias += [IgProMedia.new_from_json_dict(item) for item in data]
+            if count is not None:
+                if len(medias) >= count:
+                    medias = medias[:count]
+                    break
+            if next_cursor is None:
+                break
+        return medias
+
     def get_user_stories(self,
                          user_id,  # type: str
                          fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
@@ -431,7 +486,7 @@ class IgProApi(BaseApi):
                          limit=10,  # type: int
                          return_json=False  # type: bool
                          ):
-        # type: (...) -> List[Union[IgProStory, dict]]
+        # type: (...) -> List[Union[IgProStory, List]]
         """
         Retrieve ig user stories data by user id.
         :param user_id: The id for instagram business user which you want to get data.
@@ -467,12 +522,10 @@ class IgProApi(BaseApi):
                 next_cursor=next_cursor
             )
             data = data.get('data', [])
-
-            for item in data:
-                if return_json:
-                    stories.append(item)
-                else:
-                    stories.append(IgProMedia.new_from_json_dict(item))
+            if return_json:
+                stories += data
+            else:
+                stories += [IgProStory.new_from_json_dict(item) for item in data]
             if count is not None:
                 if len(stories) >= count:
                     stories = stories[:count]
