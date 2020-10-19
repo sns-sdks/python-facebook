@@ -134,9 +134,9 @@ class ApiMediaTest(unittest.TestCase):
     def testGetTagsMedias(self):
         # test all items
         with responses.RequestsMock() as m:
-            m.add("GET", self.BASE_URL + f"{self.instagram_business_id}/tags", json=self.TAGS_MEDIAS)
-            m.add("GET", self.BASE_URL + f"{self.instagram_business_id}/tags", json=self.TAGS_MEDIAS_P1)
-            m.add("GET", self.BASE_URL + f"{self.instagram_business_id}/tags", json=self.TAGS_MEDIAS_P2)
+            m.add("GET", self.BASE_URL + self.instagram_business_id + "/tags", json=self.TAGS_MEDIAS)
+            m.add("GET", self.BASE_URL + self.instagram_business_id + "/tags", json=self.TAGS_MEDIAS_P1)
+            m.add("GET", self.BASE_URL + self.instagram_business_id + "/tags", json=self.TAGS_MEDIAS_P2)
 
             res = self.api.get_tags_medias(
                 user_id=self.instagram_business_id,
