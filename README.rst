@@ -1,6 +1,6 @@
 Python Facebook
 
-A Python wrapper around for Facebook Common API.
+A Python wrapper for the Facebook Common API.
 
 .. image:: https://github.com/sns-sdks/python-facebook/workflows/Test/badge.svg
     :target: https://github.com/sns-sdks/python-facebook/actions
@@ -31,9 +31,9 @@ Inspired by `Python-Twitter <https://github.com/bear/python-twitter>`_.
 Introduction
 ============
 
-Library provides a service to easy use Facebook Graph API.
+Library provides a service to easily use Facebook Graph API.
 
-It currently includes the use of ``Facebook`` and ``Instagram Business``, ``Instagram Basic Display`` product data.
+It currently includes the use of ``Facebook``,  ``Instagram Business``, and ``Instagram Basic Display`` product data.
 
 ==========
 Installing
@@ -63,7 +63,7 @@ Base-Usage-Facebook Graph API
 
 The API is exposed via the ``pyfacebook.Api`` class.
 
-To get data, you need have a facebook app first.
+To get data, you need to have a facebook app first.
 You can get more information about create, apply permissions for app at `App docs <https://developers.facebook.com/docs/apps>`_.
 
 Also, you can get some examples for this library at `Example folder <examples>`_.
@@ -72,7 +72,7 @@ Also, you can get some examples for this library at `Example folder <examples>`_
 Initial Api
 -----------
 
-Facebook has different type access tokens. You can use different access token to get different data.
+Facebook has different types of access tokens. You can use different access tokens to get different data.
 
 1. User Access Token
 #. App Access Token
@@ -81,7 +81,7 @@ Facebook has different type access tokens. You can use different access token to
 
 You can see the docs `access-token`_ to get more information.
 
-If you want to get user access token by authorize. You can follows the docs `authorization-manually`_ to initial the api.
+If you want to get user access token by authorize. You can follow the docs `authorization-manually`_ to initial the api.
 
 If you just want to use app access token to get some public data. You can initial an api as follows::
 
@@ -95,7 +95,7 @@ If you have a short-lived token you can initial an api as follows::
     In [5]: api.get_token_info()
     Out[5]: AccessToken(app_id='id', application='app name', user_id='token user id')
 
-If you have a long term token you can initial an api as follows(Just provide only ``long_term_token`` parameter enough. but for security need provide with app credentials)::
+If you have a long term token you can initial an api as follows (Just provide only ``long_term_token`` parameter enough. but for security need provide with app credentials)::
 
     In [6]: api = Api(app_id="your app id", app_secret="your app secret", long_term_token="long-term token")
     In [7]: api.get_token_info()
@@ -104,11 +104,11 @@ If you have a long term token you can initial an api as follows(Just provide onl
     # this need token have additional manage_pages permission.
     In [8]: api = Api(long_term_token="long-term token")
 
-the different initial with parameter ``short_token`` or ``long_term_token`` is short token will auto exchange a long term token inside.
+the difference between initialize with parameter ``short_token`` or ``long_term_token`` is that short token will auto exchange a long term token inside.
 
-Facebook rate limit is very vague, it related to the number of users of your app. So library provide the custom sleep times in requests.
+Facebook rate limit is very vague, it is related to the number of users of your app. So the library provides the custom sleep times in requests.
 You can only set parameter ``sleep_on_rate_limit`` with ``True`` to let api sleep two seconds between two requests.
-Or you can set parameter ``sleep_seconds_mapping`` with a dict contains your custom data. ex::
+Or you can set parameter ``sleep_seconds_mapping`` with a dict that contains your custom data. ex::
 
     In [9]: mapping = {10: 2, 20: 5, 50: 20, 70: 30}  # key is api limit reached percent and value is seconds to sleep.
     In [10]: api = Api(
@@ -121,7 +121,7 @@ Or you can set parameter ``sleep_seconds_mapping`` with a dict contains your cus
 Get Data
 --------
 
-You can get a facebook page information by follows methods.
+You can get a facebook page information by the following methods.
 
 To fetch one facebook page's public data::
 
@@ -136,14 +136,14 @@ To fetch multi page by one request, you can pass the page username list or page 
     {'20531316728': Page(id='20531316728', name='Facebook', username='facebookapp'),
      'nba': Page(id='8245623462', name='NBA', username='nba')}
 
-There have multi methods to retrieve one page's posts data.
+There are multiple methods to retrieve one page's posts data.
 
 >>> api.get_page_feeds()
 >>> api.get_page_posts()
 >>> api.get_page_published_posts()
 >>> api.get_page_tagged_posts()
 
-Page feeds can get feed of posts (including status updates) and links published by this page, or by others on this page. You can call with follows::
+Page feeds can get feed of posts (including status updates) and links published by this page, or by others on this page. You can call with the following::
 
     In [5]: api.get_page_feeds(page_id="20531316728",count=2)
     Out[5]:
@@ -158,13 +158,13 @@ Page posts can only get the posts that were published by this page::
      Post(id='20531316728_10159023836696729', permalink_url='https://www.facebook.com/20531316728/posts/10159023836696729/')]
 
 
-Because facebook graph api limit `Page Feed <https://developers.facebook.com/docs/graph-api/reference/v5.0/page/feed>`_.
-Use public token only can get approximately 600 ranked, published posts per year.
+Because of facebook graph api limit `Page Feed <https://developers.facebook.com/docs/graph-api/reference/v5.0/page/feed>`_.
+Using public token can only get approximately 600 ranked, published posts per year.
 
-So if you want to get page's all posts or posts which tagged the page. you need use method ``get_page_published_posts``, and this need a page access token with permission ``manage_pages``.
+So if you want to get all of a page's posts or posts which tagged the page. you need use method ``get_page_published_posts``, and this needs a page's access token with permission ``manage_pages``.
 
 You can use authorization to get that page access token. Just follows docs `authorization-manually`_.
-Then can get all published posts::
+Then you can get all published posts::
 
     In [7]: api.get_published_posts(username='facebookapp', access_token='page access token')
     Out[7]: [Post...]
@@ -175,7 +175,7 @@ You can get tagged posts::
     Out[8]: [Post...]
 
 
-If you also have the post id, you can get post detail info by follows methods.
+If you also have the post id, you can get post detail info by the following methods.
 
 To fetch a post info::
 
@@ -189,7 +189,7 @@ To fetch multi posts by one requests::
     {'20531316728_587455038708591': Post(id='20531316728_587455038708591', permalink_url='https://www.facebook.com/facebookapp/videos/587455038708591/'),
      '20531316728_10159023836696729': Post(id='20531316728_10159023836696729', permalink_url='https://www.facebook.com/20531316728/posts/10159023836696729/')}
 
-You can get comments data by the object(post,page and so on) id::
+You can get comments data by the object(post, page and so on) id::
 
     In [11]: api.get_comments_by_object(object_id="20531316728_587455038708591", count=2)
     Out[11]:
@@ -197,7 +197,7 @@ You can get comments data by the object(post,page and so on) id::
       Comment(id='587455038708591_587464298707665', can_like=True, can_comment=True, comment_count=2, like_count=14)],
      CommentSummary(total_count=392, can_comment=True))
 
-If you already have the comment id, you can get comment details info with follows methods.
+If you already have the comment id, you can get comment details info with the following methods.
 
 To fetch one comment info::
 
@@ -213,7 +213,7 @@ To fetch multi comment info by one request::
 
 
 
-You can get the page's profile picture by follow methods.
+You can get the page's profile picture by the following methods.
 
 To fetch one page picture::
 
@@ -228,7 +228,7 @@ To fetch multi page picture::
     {'20531316728': ProfilePictureSource(url='https://scontent.xx.fbcdn.net/v/t1.0-1/p100x100/58978526_10158354585751729_7411073224387067904_o.png?_nc_cat=1&_nc_oc=AQmaFO7eND-DVRoArrQLUZVDpmemw8nMPmHJWvoCyXId_MKLLHQdsS8UbTOX4oaEfeQ&_nc_ht=scontent.xx&oh=128f57c4dc65608993af62b562d92d84&oe=5E942420', height=100, width=100),
      'nba': ProfilePictureSource(url='https://scontent.xx.fbcdn.net/v/t1.0-1/p100x100/81204460_10158199356848463_5727214464013434880_n.jpg?_nc_cat=1&_nc_oc=AQmcent57E-a-923C_VVpiX26nGqKDodImY1gsiu7h1czDmcpLHXR8D5hIh9g9Ao3wY&_nc_ht=scontent.xx&oh=1656771e6c11bd03147b69ee643238ba&oe=5E66450C', height=100, width=100)}
 
-You can get videos data by the object(page,user...) id::
+You can get videos data by the object(page, user...) id::
 
     In [16]: api.get_videos_by_object("ikaroskunlife", fields=["id", "title", "description"], count=None, limit=20)
     Out[16]:
@@ -236,7 +236,7 @@ You can get videos data by the object(page,user...) id::
      Video(id='210174653594254', created_time=None, description='Snowing'),
      Video(id='674270653053120', created_time=None, description='Visible')]
 
-If you already have the id of videos, you can get more info by follow methods::
+If you already have the id of videos, you can get more info by the following methods::
 
     In [17]: api.get_video_info("969222676905304")
     Out[17]: Video(id='969222676905304', created_time='2020-09-12T09:53:06+0000', description='冬日')
@@ -246,14 +246,14 @@ If you already have the id of videos, you can get more info by follow methods::
     {'210174653594254': Video(id='210174653594254', created_time='2020-03-31T08:13:14+0000', description='Snowing'),
      '674270653053120': Video(id='674270653053120', created_time='2019-09-02T06:13:17+0000', description='Visible')}
 
-You can get albums data by the object(page,user...) id::
+You can get albums data by the object(page, user...) id::
 
     In[19]: api.get_albums_by_object("instagram", count=20, limit=15)
     Out[19]:
     [Album(id='372558296163354', created_time='2012-10-29T19:46:35+0000', name='时间线照片'),
      Album(id='623202484432266', created_time='2014-04-12T15:28:26+0000', name='手机上传')...]
 
-If you already have the id of album, you can get more info by follow methods::
+If you already have the id of album, you can get more info by the following methods::
 
     In[20]: api.get_album_info("372558296163354")
     Out[20]: Album(id='372558296163354', created_time='2012-10-29T19:46:35+0000', name='时间线照片')
@@ -263,7 +263,7 @@ If you already have the id of album, you can get more info by follow methods::
     {'372558296163354': Album(id='372558296163354', created_time='2012-10-29T19:46:35+0000', name='时间线照片'),
      '623202484432266': Album(id='623202484432266', created_time='2014-04-12T15:28:26+0000', name='手机上传')}
 
-You can get photos data by the object(page,album,user...) id::
+You can get photos data by the object(page, album, user...) id::
 
     In [22]: api.get_photos_by_object("372558296163354", count=10, limit=5)
     Out[22]:
@@ -271,7 +271,7 @@ You can get photos data by the object(page,album,user...) id::
      Photo(id='3279789248773563', created_time='2020-09-06T16:23:17+0000', name='#HelloFrom Los Glaciares National Park, Argentina 👏👏👏\n\nhttps://www.instagram.com/p/CEzSoQNMdfH/'),
      Photo(id='3276650595754095', created_time='2020-09-05T16:52:54+0000', name=None)...]
 
-If you already have the id of photos, you can get more info by follow methods::
+If you already have the id of photos, you can get more info by the following methods::
 
     In [4]: api.get_photo_info("3293405020745319")
     Out[4]: Photo(id='3293405020745319', created_time='2020-09-10T19:11:01+0000', name='Roller skating = Black joy for Travis Reynolds. 🖤\n\nWatch our IGTV to catch some good vibes and see his 🔥🔥🔥 tricks. \n\n#ShareBlackStories\n\nhttps://www.instagram.com/tv/CE9xgF3jwS_/')
@@ -286,23 +286,23 @@ If you already have the id of photos, you can get more info by follow methods::
 Base-Usage-Instagram Graph API
 ==============================
 
-Instagram Graph API allows to get `instagram Professional accounts <https://help.instagram.com/502981923235522>`_ data.
+Instagram Graph API allows you to get `instagram Professional accounts <https://help.instagram.com/502981923235522>`_ data.
 
 -----------
 Initial Api
 -----------
 
-As similar to facebook graph api. This api can initial by multi methods. But only can use user access token, and need your instagram business id.
+As similar to facebook graph api. This api can be initialized by multiple methods. But can only use user access token, and needs your instagram business id.
 
-If you want to get user access token by authorize. You can follows the docs `authorization-manually`_ to initial the api.
+If you want to get user access token by authorize. You can follows the docs `authorization-manually`_ to initialize the api.
 
-If you have a short-lived token you can initial an api as follows::
+If you have a short-lived token you can initialize an api as follows::
 
     In [2]: api = IgProApi(app_id="your app id", app_secret="your app secret", short_token="short-lived token", instagram_business_id="17841406338772941")
     In [3]: api.get_token_info()
     Out[3]: AccessToken(app_id='id', application='app name', user_id="token user id")
 
-If you have a long term token you can initial an api as follows(Just provide only ``long_term_token`` parameter enough. but for security need provide with app credentials)::
+If you have a long term token you can initialize an api as follows (Just providing only ``long_term_token`` parameter is enough, but for security you need to provide app credentials)::
 
     In [4]: api = IgProApi(app_id="your app id", app_secret="your app secret", long_term_token="long-lived token")
     In [5]: api.get_token_info()
@@ -348,7 +348,7 @@ Get your medias::
      IgProMedia(comments=None, id='18027939643230671', permalink='https://www.instagram.com/p/B38Xyp6nqsS/')]
 
 
-If you already have some medias id, you can get media info as follows methods.
+If you already have some medias id, you can get media info by the following methods.
 
 To fetch a post info::
 
@@ -371,7 +371,7 @@ Get comments for media::
      IgProComment(id='17844360649889631', timestamp='2020-01-05T05:58:42+0000')]
 
 
-If you already have some comments id, you can get comment details info as follows methods.
+If you already have some comments id, you can get comment details info by the following methods.
 
 To fetch a comment info::
 
@@ -393,7 +393,7 @@ Get replies for a comments::
     [IgProReply(id='18107567341036926', timestamp='2019-10-15T07:06:09+0000'),
      IgProReply(id='17846106427692294', timestamp='2019-10-15T07:05:17+0000')]
 
-If you already have some replies id, you can get replies details info as follows methods.
+If you already have some replies id, you can get replies details info by the following methods.
 
 To fetch a reply info::
 
@@ -463,7 +463,7 @@ Get hashtag's recent medias::
      IgProMedia(comments=None, id='17891698510462453', permalink='https://www.instagram.com/p/B8ifwepgf_E/'),
      IgProMedia(comments=None, id='17883544606492965', permalink='https://www.instagram.com/p/B8ifwabgiPf/')]
 
-If you have other account's access token, you can provide with ``user_id`` and ``access_token`` to get his search hashtags.
+If you have other account's access token, you can provide it with ``user_id`` and ``access_token`` to get its search hashtags.
 Or just get your account recent searched hashtags::
 
     In [9]: api.get_user_recently_searched_hashtags(user_id="17841406338772941")
@@ -475,7 +475,7 @@ Or just get your account recent searched hashtags::
 
 
 Get the media objects in which a Business or Creator Account has been tagged.
-If you have another account authorized access token, you can provide with ``user_id`` and ``access_token`` to get his data.
+If you have another account authorized access token, you can provide it with ``user_id`` and ``access_token`` to get its data.
 Or only get your account's data::
 
     In [10]: medias = api.get_tagged_user_medias(user_id=api.instagram_business_id, count=5, limit=5)
@@ -503,7 +503,7 @@ Base-Usage-Instagram Basic API
 
 Instagram Basic Display API can be used to access any type of Instagram account but only provides read-access to basic data.
 
-You need do authorize first, and get access token which have permission to retrieve data.
+You need do authorize first, and get access token which has permission to retrieve data.
 
 All docs on `Basic Display APi <https://developers.facebook.com/docs/instagram-basic-display-api>`_.
 
@@ -557,7 +557,7 @@ You can get user medias::
      IgBasicMedia(id='17955956875141196', media_type='CAROUSEL_ALBUM', permalink='https://www.instagram.com/p/Bn-35GGl7YM/'),
      IgBasicMedia(id='17970645226046242', media_type='IMAGE', permalink='https://www.instagram.com/p/Bme0cU1giOH/')]
 
-You can just get one media info::
+You can get just one media info::
 
     In[9]: r = basic_api.get_media_info(media_id="18027939643230671")
     In[9]: r
