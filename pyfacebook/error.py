@@ -1,7 +1,10 @@
 from attr import attrs, attrib
 from typing import Optional
 
-__all__ = ["PyFacebookError", "ErrorCode", "ErrorMessage", "PyFacebookException"]
+__all__ = [
+    "PyFacebookError", "ErrorCode", "ErrorMessage",
+    "PyFacebookException", "PyFacebookDeprecationWaring"
+]
 
 
 class PyFacebookError(Exception):
@@ -71,3 +74,7 @@ class PyFacebookException(Exception):
 
     def __str__(self):
         return self.__repr__()
+
+
+class PyFacebookDeprecationWaring(DeprecationWarning):
+    pass
