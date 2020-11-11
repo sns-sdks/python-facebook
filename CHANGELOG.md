@@ -1,5 +1,13 @@
 # Changelog
 
+### [0.7.2](https://github.com/sns-sdks/python-facebook/compare/v0.7.0...v0.7.2) (2020-11-11)
+
+### Features
+
+- Add new api for story, tags for IG.
+- Modify Facebook OAuth flow method.
+- Add support for Python 3.9.
+
 ### [0.7.0](https://github.com/sns-sdks/python-facebook/compare/v0.6.1...v0.7.0) (2020-09-13)
 
 ### Features
