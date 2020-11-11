@@ -7,6 +7,7 @@ import logging
 import re
 import time
 import six
+import warnings
 from typing import Dict, Optional, Union, List
 
 import requests
@@ -14,7 +15,7 @@ from requests import Response
 from requests_oauthlib import OAuth2Session
 from requests_oauthlib.compliance_fixes.facebook import facebook_compliance_fix
 
-from pyfacebook.error import PyFacebookException, ErrorMessage, ErrorCode
+from pyfacebook.error import PyFacebookException, ErrorMessage, ErrorCode, PyFacebookDeprecationWaring
 from pyfacebook.models import AccessToken, AuthAccessToken
 from pyfacebook.ratelimit import RateLimit, PercentSecond
 
@@ -315,6 +316,26 @@ class BaseApi(object):
         else:
             return AccessToken.new_from_json_dict(data['data'])
 
+    def _get_oauth_session(self, redirect_uri=None, scope=None, **kwargs):
+        """
+        build session for oauth flow.
+        :param redirect_uri: The URL that you want to redirect the person logging in back to.
+        :param scope: A list of Permissions to request from the person using your app.
+        :param kwargs: Extend args for oauth.
+        :return:
+        """
+        if redirect_uri is None:
+            redirect_uri = self.redirect_uri
+
+        if scope is None:
+            scope = self.scope
+        session = OAuth2Session(
+            client_id=self.app_id, scope=scope, redirect_uri=redirect_uri,
+            state=self.DEFAULT_STATE, **kwargs
+        )
+        session = facebook_compliance_fix(session)
+        return session
+
     def get_authorization_url(self, redirect_uri=None, scope=None, **kwargs):
         # type: (str, List, Dict) -> (str, str)
         """
@@ -334,51 +355,38 @@ class BaseApi(object):
                 message="To do authorization need your app credentials"
             ))
 
-        if redirect_uri is None:
-            redirect_uri = self.redirect_uri
+        session = self._get_oauth_session(redirect_uri=redirect_uri, scope=scope, **kwargs)
 
-        if scope is None:
-            scope = self.scope
-
-        session = OAuth2Session(
-            client_id=self.app_id, scope=scope, redirect_uri=redirect_uri,
-            state=self.DEFAULT_STATE, **kwargs
-        )
-        self.auth_session = facebook_compliance_fix(session)
-
-        authorization_url, state = self.auth_session.authorization_url(
+        authorization_url, state = session.authorization_url(
             url=self.authorization_url
         )
 
         return authorization_url, state
 
-    def exchange_access_token(self, response, return_json=False):
-        # type: (str, bool) -> Union[AuthAccessToken, Dict]
+    def exchange_access_token(self, response, redirect_uri=None, return_json=False):
+        # type: (str, str, bool) -> Union[AuthAccessToken, Dict]
         """
         :param response: The whole response url for your previous authorize step.
+        :param redirect_uri: The URL that you want to redirect the person logging in back to.
         :param return_json: Set to false will return instance of AuthAccessToken.
         Or return json data. Default is false.
         :return:
         """
-        if self.auth_session is None:
-            raise PyFacebookException(ErrorMessage(
-                code=ErrorCode.MISSING_PARAMS,
-                message="exchange token should do authorize first"
-            ))
+        session = self._get_oauth_session(redirect_uri=redirect_uri)
 
-        self.auth_session.fetch_token(
+        session.fetch_token(
             self.exchange_access_token_url, client_secret=self.app_secret,
             authorization_response=response
         )
 
-        self._access_token = self.auth_session.access_token
+        self._access_token = session.access_token
 
         if return_json:
-            return self.auth_session.token
+            return session.token
         else:
-            return AuthAccessToken.new_from_json_dict(self.auth_session.token)
+            return AuthAccessToken.new_from_json_dict(session.token)
 
-    def exchange_insights_token(self, page_id, access_token=None):
+    def exchange_page_token(self, page_id, access_token=None):
         # type: (str, Optional[str]) -> str
         """
         Use user access token to exchange page(managed by that user) access token.
@@ -415,3 +423,15 @@ class BaseApi(object):
                 )
             ))
         return data["access_token"]
+
+    def exchange_insights_token(self, page_id, access_token=None):
+        """
+        :param page_id:
+        :param access_token:
+        :return:
+        """
+        warnings.warn(
+            "This method will deprecated soon, please use exchange_page_token instead",
+            PyFacebookDeprecationWaring
+        )
+        return self.exchange_page_token(page_id=page_id, access_token=access_token)

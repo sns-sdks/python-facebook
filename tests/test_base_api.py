@@ -143,13 +143,8 @@ class BaseApiTest(unittest.TestCase):
         url, state = api.get_authorization_url()
         self.assertEqual(state, "PyFacebook")
         self.assertTrue(url)
-        self.assertIsNotNone(api.auth_session)
 
     def testExchangeAccessToken(self):
-        with self.assertRaises(pyfacebook.PyFacebookException):
-            api = BaseApi(long_term_token="token")
-            api.exchange_access_token(response="")
-
         api = BaseApi(app_id="appId", app_secret="appSecret", long_term_token="token")
         _, state = api.get_authorization_url()
 
@@ -175,7 +170,10 @@ class BaseApiTest(unittest.TestCase):
         with responses.RequestsMock() as m:
             m.add("GET", self.BASE_URL + page_id, json=self.INSIGHTS_TOKEN)
 
-            token = api.exchange_insights_token(page_id=page_id, access_token="token")
+            token = api.exchange_page_token(page_id=page_id)
+            self.assertEqual(token, "token")
+
+            token = api.exchange_page_token(page_id=page_id, access_token="token")
             self.assertEqual(token, "token")
 
             token = api.exchange_insights_token(page_id=page_id)

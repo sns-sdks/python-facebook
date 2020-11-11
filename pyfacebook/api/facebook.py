@@ -24,6 +24,7 @@ class Api(BaseApi):
                  short_token=None,
                  long_term_token=None,
                  application_only_auth=False,
+                 initial_access_token=True,  # type: bool
                  version=None,
                  timeout=None,
                  sleep_on_rate_limit=False,
@@ -38,6 +39,7 @@ class Api(BaseApi):
             short_token=short_token,
             long_term_token=long_term_token,
             application_only_auth=application_only_auth,
+            initial_access_token=initial_access_token,
             version=version,
             timeout=timeout,
             sleep_on_rate_limit=sleep_on_rate_limit,
