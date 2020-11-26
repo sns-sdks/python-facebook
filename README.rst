@@ -563,6 +563,17 @@ You can get just one media info::
     In[9]: r
     Out[10]: IgBasicMedia(id='18027939643230671', media_type='CAROUSEL_ALBUM', permalink='https://www.instagram.com/p/B38Xyp6nqsS/')
 
+
+=======
+SUPPORT
+=======
+
+Thanks for `Jetbrains <https://www.jetbrains.com/>`_.
+
+.. image:: docs/imgs/jetbrains.svg
+    :target: https://www.jetbrains.com/
+    :alt: Jetbrains
+
 ====
 TODO
 ====
