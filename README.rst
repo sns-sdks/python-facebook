@@ -568,10 +568,11 @@ You can get just one media info::
 SUPPORT
 =======
 
-Thanks for `Jetbrains <https://www.jetbrains.com/>`_.
+``python-facebook-api`` had been being developed with Pycharm under the free JetBrains Open Source license(s) granted by JetBrains s.r.o.,
+hence I would like to express my thanks here.
 
 .. image:: docs/imgs/jetbrains.svg
-    :target: https://www.jetbrains.com/
+    :target: https://www.jetbrains.com/?from=sns-sdks/python-facebook
     :alt: Jetbrains
 
 ====
