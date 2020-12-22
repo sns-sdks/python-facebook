@@ -76,6 +76,13 @@ FB_PHOTO_BASIC_FIELDS = {
     "likes.summary(true).limit(0)",
 }
 
+FB_LIVE_VIDEO_BASIC_FIELDS = {
+    "id", "creation_time", "description", "title",
+    "permalink_url", "live_views", "status", "secure_stream_url",
+    # common connections
+    "comments.summary(true).limit(0)",
+}
+
 # ====================================================
 # Follows is Instagram Professional fields to get data
 # ====================================================
