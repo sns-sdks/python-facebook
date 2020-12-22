@@ -2,7 +2,7 @@
     models for live
 """
 
-from typing import Dict, List, Optional
+from typing import List, Optional
 from attr import attrs, attrib
 
 from .base import BaseModel
