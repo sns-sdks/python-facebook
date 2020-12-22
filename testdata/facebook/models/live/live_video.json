@@ -35,5 +35,14 @@
   "seconds_left": 17621,
   "secure_stream_url": "rtmps://live-api-s.facebook.com:443/rtmp/178598660650827?s_bl=1&s_psm=1&s_sc=178598673984159&s_sw=0&s_vt=api-s&a=AbyNElWSaQZpbhTV",
   "status": "LIVE",
-  "stream_url": "rtmps://live-api-s.facebook.com:443/rtmp/178598660650827?s_bl=1&s_psm=1&s_sc=178598673984159&s_sw=0&s_vt=api-s&a=AbyNElWSaQZpbhTV"
+  "stream_url": "rtmps://live-api-s.facebook.com:443/rtmp/178598660650827?s_bl=1&s_psm=1&s_sc=178598673984159&s_sw=0&s_vt=api-s&a=AbyNElWSaQZpbhTV",
+  "comments": {
+    "data": [
+    ],
+    "summary": {
+      "order": "ranked",
+      "total_count": 45,
+      "can_comment": true
+    }
+  }
 }

@@ -17,3 +17,4 @@ class LiveVideoModelTest(unittest.TestCase):
         self.assertEqual(m.status, "LIVE")
         self.assertEqual(m.ingest_streams[0].stream_id, "0")
         self.assertEqual(m.ingest_streams[0].stream_health.video_bitrate, 2511983)
+        self.assertEqual(m.comments.total_count, 45)

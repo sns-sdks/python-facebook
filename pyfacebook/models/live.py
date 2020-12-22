@@ -2,10 +2,11 @@
     models for live
 """
 
-from typing import List, Optional
+from typing import Dict, List, Optional
 from attr import attrs, attrib
 
 from .base import BaseModel
+from .mixins import CommentsSummaryField
 from .._compat import str
 
 
@@ -43,9 +44,9 @@ class LiveVideoInputStream(BaseModel):
 
 
 @attrs
-class LiveVideo(BaseModel):
+class LiveVideo(BaseModel, CommentsSummaryField):
     """
-    A class representing sthe live video info.
+    A class representing the live video info.
 
     Refer: https://developers.facebook.com/docs/graph-api/reference/live-video/
     """
