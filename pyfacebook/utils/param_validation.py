@@ -29,8 +29,9 @@ def enf_comma_separated(
         Api needed string
     """
     try:
+        # if value point with string, not check.
         if isinstance(value, str):
-            value = value.split(",")
+            value = [value]
         elif isinstance(value, (list, tuple)):
             pass
         elif isinstance(value, set):
