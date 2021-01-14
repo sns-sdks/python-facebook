@@ -83,6 +83,12 @@ FB_LIVE_VIDEO_BASIC_FIELDS = {
     "comments.summary(true).limit(0)",
 }
 
+FB_LIVE_VIDEO_INPUT_STREAM_BASIC_FIELDS = [
+    "id", "dash_ingest_url", "dash_preview_url", "is_master",
+    "live_encoder", "secure_stream_url", "stream_health",
+    "stream_id", "stream_url",
+]
+
 # ====================================================
 # Follows is Instagram Professional fields to get data
 # ====================================================
