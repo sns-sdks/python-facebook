@@ -1,0 +1,63 @@
+{
+  "data": [
+    {
+      "title": "huanting",
+      "status": "VOD",
+      "secure_stream_url": "rtmps://live-api-s.facebook.com:443/rtmp/2814245952123884?s_bl=1&s_psm=1&s_sc=2832034030345076&s_sw=0&s_vt=api-s&a=Abz6weCZTPxZ07l_",
+      "stream_url": "rtmps://live-api-s.facebook.com:443/rtmp/2814245952123884?s_bl=1&s_psm=1&s_sc=2832034030345076&s_sw=0&s_vt=api-s&a=Abz6weCZTPxZ07l_",
+      "id": "2814245952123884",
+      "ingest_streams": [
+        {
+          "stream_id": "0",
+          "stream_url": "rtmps://live-api-s.facebook.com:443/rtmp/2814245952123884?s_bl=1&s_psm=1&s_sc=2832034030345076&s_sw=0&s_vt=api-s&a=Abz6weCZTPxZ07l_",
+          "secure_stream_url": "rtmps://live-api-s.facebook.com:443/rtmp/2814245952123884?s_bl=1&s_psm=1&s_sc=2832034030345076&s_sw=0&s_vt=api-s&a=Abz6weCZTPxZ07l_",
+          "is_master": true,
+          "dash_preview_url": "https://video-gmp1-1.xx.fbcdn.net/hvideo-frc-ftw/_nc_ohc-MWKr91RUAVIAX_xk1Dd/_nc_cat-110/v/rFWJ-X5zg--5r8iB5hTn2/live-dash/dash-abr-ibr-audio/2814245952123884_0.mpd?_nc_rl=AfAQcmsXLWKWwavNBp4&ms=m_CT&oh=fb487cb17a7b9c37d30ada6092bd2daf&oe=6002007E",
+          "dash_ingest_url": "https://dashi.facebook.com:443/rtmp/2814245952123884?s_bl=1&s_l=1&s_sc=2832034030345076&s_sw=0&s_vt=api-s&a=AbzbxkctmUcfa16o",
+          "stream_health": {
+            "video_bitrate": 0,
+            "video_framerate": 29.928056716919,
+            "video_gop_size": 1835,
+            "video_height": 720,
+            "video_width": 1280,
+            "audio_bitrate": 0
+          },
+          "id": "2814245955457217"
+        }
+      ]
+    },
+    {
+      "title": "有何不可",
+      "status": "VOD",
+      "secure_stream_url": "rtmps://live-api-s.facebook.com:443/rtmp/2809188389296307?s_bl=1&s_psm=1&s_sc=2832034027011743&s_sw=0&s_vt=api-s&a=Abw3mUmkFSuH-yQc",
+      "stream_url": "rtmps://live-api-s.facebook.com:443/rtmp/2809188389296307?s_bl=1&s_psm=1&s_sc=2832034027011743&s_sw=0&s_vt=api-s&a=Abw3mUmkFSuH-yQc",
+      "id": "2809188389296307",
+      "ingest_streams": [
+        {
+          "stream_id": "0",
+          "stream_url": "rtmps://live-api-s.facebook.com:443/rtmp/2809188389296307?s_bl=1&s_psm=1&s_sc=2832034027011743&s_sw=0&s_vt=api-s&a=Abw3mUmkFSuH-yQc",
+          "secure_stream_url": "rtmps://live-api-s.facebook.com:443/rtmp/2809188389296307?s_bl=1&s_psm=1&s_sc=2832034027011743&s_sw=0&s_vt=api-s&a=Abw3mUmkFSuH-yQc",
+          "is_master": true,
+          "dash_preview_url": "https://video-gmp1-1.xx.fbcdn.net/hvideo-prn-frc/_nc_ohc-wNeCklRtWfMAX-lyVQC/_nc_cat-104/v/rb95MC_jHM2zbcUBgctEJ/live-dash/dash-abr-ibr-audio/2809188389296307_0.mpd?_nc_rl=AfDbgyJT7p9kxDgCXy4&ms=m_CT&oh=f9cc867a2a70ef5cc441309388c6cc3d&oe=6001F7BF",
+          "dash_ingest_url": "https://dashi.facebook.com:443/rtmp/2809188389296307?s_bl=1&s_l=1&s_sc=2832034027011743&s_sw=0&s_vt=api-s&a=AbxIXD4Fj3IT_hln",
+          "stream_health": {
+            "video_bitrate": 0,
+            "video_framerate": 29.303564071655,
+            "video_gop_size": 9240,
+            "video_height": 480,
+            "video_width": 656,
+            "audio_bitrate": 0
+          },
+          "id": "2809188399296306"
+        }
+      ]
+    }
+  ],
+  "paging": {
+    "cursors": {
+      "before": "before",
+      "after": "after"
+    },
+    "next": "https://graph.facebook.com/v4.0/2121008874780932/live_videos?access_token=token&pretty=0&fields=title%2Cstatus%2Csecure_stream_url%2Cstream_url%2Cid%2Cingest_streams&limit=2&after=after"
+  }
+}

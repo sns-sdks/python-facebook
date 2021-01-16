@@ -30,7 +30,7 @@ class VideoApiTest(unittest.TestCase):
             app_id="12345678",
             app_secret="secret",
             long_term_token="token",
-            version="v8.0"
+            version=pyfacebook.Api.VALID_API_VERSIONS[-1]
         )
 
     def testGetVideosByObject(self):
