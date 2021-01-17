@@ -282,6 +282,25 @@ If you already have the id of photos, you can get more info by the following met
      '3276650595754095': Photo(id='3276650595754095', created_time='2020-09-05T16:52:54+0000', name=None)}
 
 
+You can get live videos data by the object(page, user...) id::
+
+    In [6]: api.get_live_videos_by_object(object_id="2121008874780932", limit=10, count=2)
+    Out[6]:
+    [LiveVideo(id='2814245952123884', permalink_url='/IkaroskunLife/videos/710393869909608/'),
+     LiveVideo(id='2809188389296307', permalink_url='/IkaroskunLife/videos/706216360286730/')]
+
+If you already have the id of live videos, you can get more info by the following methods::
+
+    In [7]: api.get_live_video_info(live_video_id="2814245952123884")
+    Out[7]: LiveVideo(id='2814245952123884', permalink_url='/IkaroskunLife/videos/710393869909608/')
+
+    In [8]: api.get_live_videos(ids=["2814245952123884", "2809188389296307"])
+    Out[8]:
+    {'2814245952123884': LiveVideo(id='2814245952123884', permalink_url='/IkaroskunLife/videos/710393869909608/'),
+     '2809188389296307': LiveVideo(id='2809188389296307', permalink_url='/IkaroskunLife/videos/706216360286730/')}
+
+Same as get live video input stream data.
+
 ==============================
 Base-Usage-Instagram Graph API
 ==============================
@@ -592,6 +611,7 @@ Facebook Api:
 - Video Info.
 - Album Info.
 - Photo Info.
+- Live Video Info.
 
 Instagram Professional Api:
 
