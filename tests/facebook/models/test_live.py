@@ -11,7 +11,7 @@ class LiveVideoModelTest(unittest.TestCase):
         LIVE_VIDEO_INFO = json.loads(f.read().decode('utf-8'))
 
     def testLiveVideo(self):
-        m: models.LiveVideo = models.LiveVideo.new_from_json_dict(self.LIVE_VIDEO_INFO)
+        m = models.LiveVideo.new_from_json_dict(self.LIVE_VIDEO_INFO)
 
         self.assertEqual(m.id, "178598660650827")
         self.assertEqual(m.status, "LIVE")
