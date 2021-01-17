@@ -10,7 +10,7 @@ from pyfacebook.models import (
     Page, Comment, CommentSummary,
     ProfilePictureSource, Post,
     Video, VideoCaption,
-    Album, Photo,
+    Album, Photo, LiveVideo, LiveVideoInputStream
 )
 from pyfacebook.api.base import BaseApi
 from pyfacebook.utils import constant
@@ -953,7 +953,7 @@ class Api(BaseApi):
         :param object_id: The id for object(page, album..)
         :param fields: Comma-separated id string for data fields which you want.
         You can also pass this with an id list, tuple, set.
-        :param count: The count will retrieve videos. If you want to get all data. Set it to None.
+        :param count: The count will retrieve photos. If you want to get all data. Set it to None.
         :param limit: Each request retrieve posts count from api. It should no more than 100.
         :param return_json: Set to false will return a list of Photo instances.
         Or return json data. Default is false.
@@ -1034,10 +1034,10 @@ class Api(BaseApi):
         # type: (...) -> dict
         """
         Retrieve multi photos info by one request.
-        :param ids: Comma-separated id(username) string for photo which you want to get.
+        :param ids: Comma-separated id string for photo which you want to get.
         You can also pass this with an id list, tuple, set.
         Notice not more than 50.
-        :param fields:Comma-separated id string for data fields which you want.
+        :param fields: Comma-separated id string for data fields which you want.
         You can also pass this with an id list, tuple, set.
         :param return_json: Set to false will return a dict of Photo instances.
         Or return json data. Default is false.
@@ -1062,3 +1062,192 @@ class Api(BaseApi):
             return data
         else:
             return {_id: Photo.new_from_json_dict(p_data) for _id, p_data in iteritems(data)}
+
+    def get_live_videos_by_object(self,
+                                  object_id,  # type: str
+                                  fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                                  count=10,  # type: Optional[int]
+                                  limit=25,  # type: int
+                                  return_json=False  # type: bool
+                                  ):
+        # type: (...) -> List[Union[LiveVideo, dict]]
+        """
+        :param object_id: The id for object(page,group)
+        :param fields: Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param count: The count will retrieve live videos. If you want to get all data. Set it to None.
+        :param limit: Each request retrieve live videos count from api. It should no more than 100.
+        :param return_json: Set to false will return a list of LiveVideo instances.
+        Or return json data. Default is false.
+        :return: LiveVideo list
+        """
+        if fields is None:
+            fields = constant.FB_LIVE_VIDEO_BASIC_FIELDS
+
+        if count is not None:
+            limit = min(count, limit)
+
+        args = {
+            "fields": enf_comma_separated("fields", fields),
+            "limit": limit,
+        }
+
+        live_videos = []
+        next_cursor = None
+
+        while True:
+            next_cursor, previous_cursor, data = self.paged_by_cursor(
+                resource='live_videos',
+                target=object_id,
+                args=args,
+                next_cursor=next_cursor
+            )
+            arr = data.get("data", [])
+            if return_json:
+                live_videos += arr
+            else:
+                live_videos += [LiveVideo.new_from_json_dict(item) for item in arr]
+            if count is not None:
+                if len(live_videos) >= count:
+                    live_videos = live_videos[:count]
+                    break
+            if next_cursor is None:
+                break
+        return live_videos
+
+    def get_live_video_info(self,
+                            live_video_id,  # type: str
+                            fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                            return_json=False  # type: bool
+                            ):
+        # type: (...) -> Union[LiveVideo, dict]
+        """
+        Retrieve live video info by id.
+        :param live_video_id: The id for live video.
+        :param fields: Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return a list of LiveVideo instances.
+        Or return json data. Default is false.
+        :return: LiveVideo instance or dict
+        """
+        if fields is None:
+            fields = constant.FB_LIVE_VIDEO_BASIC_FIELDS
+
+        args = {
+            "fields": enf_comma_separated("fields", fields)
+        }
+        resp = self._request(
+            method='GET',
+            path='{0}/{1}'.format(self.version, live_video_id),
+            args=args
+        )
+        data = self._parse_response(resp)
+        if return_json:
+            return data
+        else:
+            return LiveVideo.new_from_json_dict(data)
+
+    def get_live_videos(self,
+                        ids,  # type: Optional[Union[str, List, Tuple, Set]]
+                        fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                        return_json=False  # type: bool
+                        ):
+        # type: (...) -> dict
+        """
+        Retrieve multi live videos info by one request.
+        :param ids: Comma-separated id string for live videos which you want to get.
+        You can also pass this with an id list, tuple, set.
+        Notice not more than 50.
+        :param fields: Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return a dict of Photo instances.
+        Or return json data. Default is false.
+        :return: Live videos dict.
+        """
+        if fields is None:
+            fields = constant.FB_LIVE_VIDEO_BASIC_FIELDS
+
+        args = {
+            "ids": enf_comma_separated("ids", ids),
+            "fields": enf_comma_separated("fields", fields)
+        }
+        resp = self._request(
+            method='GET',
+            path='{0}/'.format(self.version),
+            args=args
+        )
+
+        data = self._parse_response(resp)
+        if return_json:
+            return data
+        else:
+            return {_id: LiveVideo.new_from_json_dict(p_data) for _id, p_data in iteritems(data)}
+
+    def get_live_video_input_stream(self,
+                                    live_video_input_stream_id,  # type: str
+                                    fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                                    return_json=False  # type: bool
+                                    ):
+        # type: (...) -> Optional[LiveVideoInputStream]
+        """
+        Retrieve a live video broadcast ingest stream.
+
+        :param live_video_input_stream_id: The id for stream.
+        :param fields: Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return a list of LiveVideoInputStream instances.
+        Or return json data. Default is false.
+        :return: LiveVideoInputStream instance or dict
+        """
+        if fields is None:
+            fields = constant.FB_LIVE_VIDEO_INPUT_STREAM_BASIC_FIELDS
+
+        args = {
+            "fields": enf_comma_separated("fields", fields)
+        }
+        resp = self._request(
+            method="GET",
+            path="{0}/{1}".format(self.version, live_video_input_stream_id),
+            args=args,
+        )
+        data = self._parse_response(resp)
+        if return_json:
+            return data
+        else:
+            return LiveVideoInputStream.new_from_json_dict(data)
+
+    def get_live_video_input_streams(self,
+                                     ids,  # type: Optional[Union[str, List, Tuple, Set]]
+                                     fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
+                                     return_json=False  # type: bool
+                                     ):
+        # type: (...) -> dict
+        """
+        Retrieve multi live video ingest streams info by one request.
+        :param ids: Comma-separated id string for live video ingest streams which you want to get.
+        You can also pass this with an id list, tuple, set.
+        Notice not more than 50.
+        :param fields: Comma-separated id string for data fields which you want.
+        You can also pass this with an id list, tuple, set.
+        :param return_json: Set to false will return a dict of LiveVideoInputStream instances.
+        Or return json data. Default is false.
+        :return: LiveVideoInputStreams dict.
+        """
+        if fields is None:
+            fields = constant.FB_LIVE_VIDEO_INPUT_STREAM_BASIC_FIELDS
+
+        args = {
+            "ids": enf_comma_separated("ids", ids),
+            "fields": enf_comma_separated("fields", fields)
+        }
+        resp = self._request(
+            method='GET',
+            path='{0}/'.format(self.version),
+            args=args
+        )
+
+        data = self._parse_response(resp)
+        if return_json:
+            return data
+        else:
+            return {_id: LiveVideoInputStream.new_from_json_dict(p_data) for _id, p_data in iteritems(data)}

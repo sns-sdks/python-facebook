@@ -1,0 +1,48 @@
+{
+  "creation_time": "2020-12-22T07:29:07+0000",
+  "dash_ingest_url": "https://dashi.facebook.com:443/rtmp/178598660650827?s_bl=1&s_l=1&s_sc=178598673984159&s_sw=0&s_vt=api-s&a=AbxQCtpiEFksV0Yu",
+  "broadcast_start_time": "2020-12-22T07:29:44+0000",
+  "dash_preview_url": "https://video-gmp1-1.xx.fbcdn.net/hvideo-cln-odn/_nc_ohc-EqKvuuCccZsAX9Q1vRu/_nc_cat-101/v/r4tWYqML5wo7I42hkFUkh/live-dash/dash-abr-ibr-audio/178598660650827.mpd?_nc_rl=AfArz44MmneWkTfH3h8&ms=m_CNP&oh=b854197ea3961fe1edcc0f9d72f535db&oe=5FE34D42",
+  "description": "阿萨德as的21",
+  "embed_html": "",
+  "from": {
+    "name": "Zhanhui5",
+    "id": "109813227529371"
+  },
+  "id": "178598660650827",
+  "ingest_streams": [
+    {
+      "stream_id": "0",
+      "stream_url": "rtmps://live-api-s.facebook.com:443/rtmp/178598660650827?s_bl=1&s_psm=1&s_sc=178598673984159&s_sw=0&s_vt=api-s&a=AbyNElWSaQZpbhTV",
+      "secure_stream_url": "rtmps://live-api-s.facebook.com:443/rtmp/178598660650827?s_bl=1&s_psm=1&s_sc=178598673984159&s_sw=0&s_vt=api-s&a=AbyNElWSaQZpbhTV",
+      "is_master": true,
+      "dash_preview_url": "https://video-gmp1-1.xx.fbcdn.net/hvideo-cln-odn/_nc_ohc-EqKvuuCccZsAX9Q1vRu/_nc_cat-101/v/r4tWYqML5wo7I42hkFUkh/live-dash/dash-abr-ibr-audio/178598660650827_0.mpd?_nc_rl=AfArz44MmneWkTfHeZc&ms=m_CNP&oh=8b7d62c2225714ef31785c5fbf7f2667&oe=5FE37ED8",
+      "dash_ingest_url": "https://dashi.facebook.com:443/rtmp/178598660650827?s_bl=1&s_l=1&s_sc=178598673984159&s_sw=0&s_vt=api-s&a=AbxQCtpiEFksV0Yu",
+      "stream_health": {
+        "video_bitrate": 2511983,
+        "video_framerate": 30.149412155151,
+        "video_gop_size": 2633,
+        "video_height": 746,
+        "video_width": 1192,
+        "audio_bitrate": 161035.21875
+      },
+      "id": "178598663984160"
+    }
+  ],
+  "live_views": 1,
+  "permalink_url": "/109813227529371/videos/880581359435685/",
+  "overlay_url": "",
+  "seconds_left": 17621,
+  "secure_stream_url": "rtmps://live-api-s.facebook.com:443/rtmp/178598660650827?s_bl=1&s_psm=1&s_sc=178598673984159&s_sw=0&s_vt=api-s&a=AbyNElWSaQZpbhTV",
+  "status": "LIVE",
+  "stream_url": "rtmps://live-api-s.facebook.com:443/rtmp/178598660650827?s_bl=1&s_psm=1&s_sc=178598673984159&s_sw=0&s_vt=api-s&a=AbyNElWSaQZpbhTV",
+  "comments": {
+    "data": [
+    ],
+    "summary": {
+      "order": "ranked",
+      "total_count": 45,
+      "can_comment": true
+    }
+  }
+}

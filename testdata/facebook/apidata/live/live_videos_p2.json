@@ -1,0 +1,26 @@
+{
+  "data": [
+    {
+      "title": "SNS-Live",
+      "status": "VOD",
+      "stream_url": "rtmps://live-api-s.facebook.com:443/rtmp/2792737087608104?s_bl=1&s_psm=1&s_sc=2832034023678410&s_sw=0&s_vt=api-s&a=Abw7sNTfG3mkVUjC",
+      "secure_stream_url": "rtmps://live-api-s.facebook.com:443/rtmp/2792737087608104?s_bl=1&s_psm=1&s_sc=2832034023678410&s_sw=0&s_vt=api-s&a=Abw7sNTfG3mkVUjC",
+      "embed_html": "",
+      "id": "2792737087608104"
+    },
+    {
+      "status": "VOD",
+      "stream_url": "rtmps://live-api-s.facebook.com:443/rtmp/2789437417938071?s_bl=1&s_psm=1&s_sc=2832034033678409&s_sw=0&s_vt=api-s&a=AbzY5iqbbAttP4Sm",
+      "secure_stream_url": "rtmps://live-api-s.facebook.com:443/rtmp/2789437417938071?s_bl=1&s_psm=1&s_sc=2832034033678409&s_sw=0&s_vt=api-s&a=AbzY5iqbbAttP4Sm",
+      "embed_html": "",
+      "id": "2789437417938071"
+    }
+  ],
+  "paging": {
+    "cursors": {
+      "before": "before",
+      "after": "after"
+    },
+    "previous": "https://graph.facebook.com/v8.0/2121008874780932/live_videos?access_token=token&pretty=0&limit=2&before=before"
+  }
+}
