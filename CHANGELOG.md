@@ -1,5 +1,16 @@
 # Changelog
 
+### [0.8.0](https://github.com/sns-sdks/python-facebook/compare/v0.7.2...v0.8.0) (2021-01-17)
+
+### Features
+
+- Add new api for live videos
+
+### Fix
+
+- Bug for lost children fields for check params. thanks for [@stevenviola](https://github.com/stevenviola)
+
+
 ### [0.7.2](https://github.com/sns-sdks/python-facebook/compare/v0.7.0...v0.7.2) (2020-11-11)
 
 ### Features
