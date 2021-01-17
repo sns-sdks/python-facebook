@@ -25,22 +25,34 @@ class LiveVideoApiTest(unittest.TestCase):
             app_id="12345678",
             app_secret="secret",
             long_term_token="token",
-            version=pyfacebook.Api.VALID_API_VERSIONS[-1]
+            version="v8.0"
         )
 
-    # def testGetLiveVideosByObject(self):
-    #     page_id = "2121008874780932"
-    #
-    #     with responses.RequestsMock() as m:
-    #         m.add("GET", self.BASE_URL + page_id + "/live_videos", json=self.LIVE_VIDEOS_PAGED_1)
-    #         m.add("GET", self.BASE_URL + page_id + "/live_videos", json=self.LIVE_VIDEOS_PAGED_2)
-    #
-    #         live_videos = self.api.get_live_videos_by_object(
-    #             object_id=page_id,
-    #             count=None,
-    #             limit=4,
-    #         )
-    #         self.assertEqual(len(live_videos), 6)
+    def testGetLiveVideosByObject(self):
+        page_id = "2121008874780932"
+
+        with responses.RequestsMock() as m:
+            m.add("GET", self.BASE_URL + page_id + "/live_videos", json=self.LIVE_VIDEOS_PAGED_1)
+            m.add("GET", self.BASE_URL + page_id + "/live_videos", json=self.LIVE_VIDEOS_PAGED_2)
+
+            live_videos = self.api.get_live_videos_by_object(
+                object_id=page_id,
+                count=None,
+                limit=2,
+            )
+            self.assertEqual(len(live_videos), 4)
+
+        with responses.RequestsMock() as m:
+            m.add("GET", self.BASE_URL + page_id + "/live_videos", json=self.LIVE_VIDEOS_PAGED_1)
+            m.add("GET", self.BASE_URL + page_id + "/live_videos", json=self.LIVE_VIDEOS_PAGED_2)
+
+            live_videos = self.api.get_live_videos_by_object(
+                object_id=page_id,
+                count=3,
+                limit=2,
+                return_json=True
+            )
+            self.assertEqual(len(live_videos), 3)
 
     def testGetLiveVideo(self):
         vid = "2814245952123884"
@@ -98,7 +110,7 @@ class LiveVideoInputStream(unittest.TestCase):
             app_id="12345678",
             app_secret="secret",
             long_term_token="token",
-            version=pyfacebook.Api.VALID_API_VERSIONS[-1]
+            version="v8.0"
         )
 
     def testGetInputStream(self):
