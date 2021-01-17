@@ -1214,7 +1214,7 @@ class Api(BaseApi):
         if return_json:
             return data
         else:
-            return LiveVideo.new_from_json_dict(data)
+            return LiveVideoInputStream.new_from_json_dict(data)
 
     def get_live_video_input_streams(self,
                                      ids,  # type: Optional[Union[str, List, Tuple, Set]]
