@@ -9,7 +9,7 @@ import pyfacebook
 
 class CommentTestApi(unittest.TestCase):
     BASE_PATH = "testdata/facebook/apidata/comments/"
-    BASE_URL = "https://graph.facebook.com/{}/".format(pyfacebook.Api.VALID_API_VERSIONS[-1])
+    BASE_URL = "https://graph.facebook.com/v8.0/"
 
     with open(BASE_PATH + "comment_by_parent_p1.json", "rb") as f:
         COMMENTS_PAGED_1 = json.loads(f.read().decode("utf-8"))

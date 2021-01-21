@@ -9,7 +9,7 @@ import pyfacebook
 
 class ApiPageTest(unittest.TestCase):
     BASE_PATH = "testdata/facebook/apidata/pages/"
-    BASE_URL = "https://graph.facebook.com/{}/".format(pyfacebook.Api.VALID_API_VERSIONS[-1])
+    BASE_URL = "https://graph.facebook.com/v8.0/"
 
     with open(BASE_PATH + "single_default_page.json", "rb") as f:
         SINGLE_PAGE_INFO_1 = json.loads(f.read().decode("utf-8"))
@@ -22,7 +22,7 @@ class ApiPageTest(unittest.TestCase):
 
     def setUp(self):
         self.api = pyfacebook.Api(
-            long_term_token="token"
+            long_term_token="token", version="v8.0",
         )
 
     def testPage(self):

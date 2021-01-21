@@ -9,7 +9,7 @@ import pyfacebook
 
 class PostApiTest(unittest.TestCase):
     BASE_PATH = "testdata/facebook/apidata/posts/"
-    BASE_URL = "https://graph.facebook.com/{}/".format(pyfacebook.Api.VALID_API_VERSIONS[-1])
+    BASE_URL = "https://graph.facebook.com/v8.0/"
     PAGE_ID = "2121008874780932"
 
     with open(BASE_PATH + "feeds_default_fields_p1.json", "rb") as f:

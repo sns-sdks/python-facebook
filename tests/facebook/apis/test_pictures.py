@@ -9,7 +9,7 @@ import pyfacebook
 
 class CommentTestApi(unittest.TestCase):
     BASE_PATH = "testdata/facebook/apidata/pictures/"
-    BASE_URL = "https://graph.facebook.com/{}/".format(pyfacebook.Api.VALID_API_VERSIONS[-1])
+    BASE_URL = "https://graph.facebook.com/v8.0/"
 
     with open(BASE_PATH + "single_picture.json", "rb") as f:
         SINGLE_PICTURE = json.loads(f.read().decode("utf-8"))
@@ -19,7 +19,7 @@ class CommentTestApi(unittest.TestCase):
     def setUp(self):
         self.api = pyfacebook.Api(
             app_id="123456", app_secret="secret",
-            long_term_token="token"
+            long_term_token="token", version="v8.0",
         )
 
     def testGetPictureInfo(self):
