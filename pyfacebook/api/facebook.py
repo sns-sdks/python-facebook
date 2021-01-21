@@ -195,7 +195,7 @@ class Api(BaseApi):
         :param count: The count will retrieve posts. If you want to get all data. Set it to None.
         :param limit: Each request retrieve posts count from api. For posts it should no more than 100.
         :param access_token: If you want to pass with own access token, can with this parameter.
-        :param return_json: Set to false will return a list of Post instances.
+        :param return_json: Set to false will return a list of Page instances.
         Or return json data. Default is false.
         :return:
         """
@@ -375,11 +375,11 @@ class Api(BaseApi):
         # type: (...) -> dict
         """
         Retrieve multi posts info by one request.
-        :param ids: Comma-separated id(username) string for page which you want to get.
+        :param ids: Comma-separated id string for page which you want to get.
         You can also pass this with an id list, tuple, set.
         :param fields:Comma-separated id string for data fields which you want.
         You can also pass this with an id list, tuple, set.
-        :param return_json: Set to false will return a dict of Page instances.
+        :param return_json: Set to false will return a dict of Post instances.
         Or return json data. Default is false.
         """
         if fields is None:
@@ -482,7 +482,7 @@ class Api(BaseApi):
         :param comment_id: The id for comment you want to retrieve data.
         :param fields: Comma-separated id string for data fields which you want.
         You can also pass this with an id list, tuple, set.
-        :param return_json: Set to false will return a list of Post instances.
+        :param return_json: Set to false will return a list of Comment instances.
         Or return json data. Default is false.
         """
         if fields is None:
@@ -512,7 +512,7 @@ class Api(BaseApi):
         # type: (...) -> dict
         """
         Retrieve multi comments info by one request.
-        :param ids: Comma-separated id(username) string for page which you want to get.
+        :param ids: Comma-separated id string for page which you want to get.
         You can also pass this with an id list, tuple, set.
         :param fields:Comma-separated id string for data fields which you want.
         You can also pass this with an id list, tuple, set.
@@ -549,7 +549,7 @@ class Api(BaseApi):
 
         :param page_id: The id for picture you want to retrieve data.
         :param pic_type: The picture type.
-        :param return_json: Set to false will return a dict of Comment instances.
+        :param return_json: Set to false will return a dict of Picture instances.
         Or return json data. Default is false.
         """
 
@@ -584,10 +584,10 @@ class Api(BaseApi):
                      ):
         # type: (...) -> dict
         """
-        :param ids: Comma-separated id(username) string for page which you want to get.
+        :param ids: Comma-separated id string for page which you want to get.
         You can also pass this with an id list, tuple, set.
         :param pic_type: The picture type.
-        :param return_json: Set to false will return a dict of Comment instances.
+        :param return_json: Set to false will return a dict of Picture instances.
         Or return json data. Default is false.
         """
         if pic_type is not None and pic_type not in constant.FB_PAGE_PICTURE_TYPE:
@@ -639,7 +639,7 @@ class Api(BaseApi):
                 - tagged
         :param count: The count will retrieve videos. If you want to get all data. Set it to None.
         :param limit: Each request retrieve posts count from api. For videos it should no more than 100.
-        :param return_json: Set to false will return a list of Comment instances.
+        :param return_json: Set to false will return a list of Video instances.
         Or return json data. Default is false.
         :return: Videos list.
         """
@@ -719,12 +719,12 @@ class Api(BaseApi):
         # type: (...) -> dict
         """
         Retrieve multi videos info by one request.
-        :param ids: Comma-separated id(username) string for page which you want to get.
+        :param ids: Comma-separated id string for video which you want to get.
         You can also pass this with an id list, tuple, set.
         Notice not more than 50.
         :param fields:Comma-separated id string for data fields which you want.
         You can also pass this with an id list, tuple, set.
-        :param return_json: Set to false will return a dict of Comment instances.
+        :param return_json: Set to false will return a dict of Video instances.
         Or return json data. Default is false.
         :return: Videos dict.
         """
@@ -755,10 +755,10 @@ class Api(BaseApi):
         # type: (...) -> Union[List[VideoCaption], dict]
         """
         Retrieve caption for video.
-        :param video_id: The id for video you want to retrieve data.
+        :param video_id: The id for video caption you want to retrieve data.
         :param fields: Comma-separated id string for data fields which you want.
         You can also pass this with an id list, tuple, set.
-        :param return_json: Set to false will return a list of Post instances.
+        :param return_json: Set to false will return a list of VideoCaptions instances.
         Or return json data. Default is false.
         :return: VideoCaption instance or dict
         """
@@ -789,12 +789,12 @@ class Api(BaseApi):
         # type: (...) -> dict
         """
         Retrieves captions for multi videos.
-        :param ids: Comma-separated id(username) string for page which you want to get.
+        :param ids: Comma-separated id string for video captions which you want to get.
         You can also pass this with an id list, tuple, set.
         Notice not more than 50.
         :param fields:Comma-separated id string for data fields which you want.
         You can also pass this with an id list, tuple, set.
-        :param return_json: Set to false will return a dict of Comment instances.
+        :param return_json: Set to false will return a dict of VideoCaption instances.
         Or return json data. Default is false.
         :return: VideoCaptions dict.
         """
@@ -883,7 +883,7 @@ class Api(BaseApi):
         You can also pass this with an id list, tuple, set.
         :param return_json: Set to false will return a list of Album instances.
         Or return json data. Default is false.
-        :return: Photo instance or dict
+        :return: Album instance or dict
         """
         if fields is None:
             fields = constant.FB_ALBUM_BASIC_FIELDS
@@ -912,12 +912,12 @@ class Api(BaseApi):
         # type: (...) -> dict
         """
         Retrieve multi albums info by one request.
-        :param ids: Comma-separated id(username) string for album which you want to get.
+        :param ids: Comma-separated id string for albums which you want to get.
         You can also pass this with an id list, tuple, set.
         Notice not more than 50.
         :param fields:Comma-separated id string for data fields which you want.
         You can also pass this with an id list, tuple, set.
-        :param return_json: Set to false will return a dict of Photo instances.
+        :param return_json: Set to false will return a dict of albums instances.
         Or return json data. Default is false.
         :return: Albums dict.
         """
@@ -1003,7 +1003,7 @@ class Api(BaseApi):
         :param photo_id: The id for photo you want to retrieve data.
         :param fields: Comma-separated id string for data fields which you want.
         You can also pass this with an id list, tuple, set.
-        :param return_json: Set to false will return a list of Photo instances.
+        :param return_json: Set to false will return a Photo instances.
         Or return json data. Default is false.
         :return: Photo instance or dict
         """

@@ -9,7 +9,7 @@ import pyfacebook
 
 class VideoApiTest(unittest.TestCase):
     BASE_PATH = "testdata/facebook/apidata/videos/"
-    BASE_URL = "https://graph.facebook.com/{}/".format(pyfacebook.Api.VALID_API_VERSIONS[-1])
+    BASE_URL = "https://graph.facebook.com/v8.0/"
 
     with open(BASE_PATH + "page_videos_p1.json", "rb") as f:
         VIDEOS_PAGED_1 = json.loads(f.read().decode("utf-8"))
@@ -30,7 +30,7 @@ class VideoApiTest(unittest.TestCase):
             app_id="12345678",
             app_secret="secret",
             long_term_token="token",
-            version=pyfacebook.Api.VALID_API_VERSIONS[-1]
+            version="v8.0"
         )
 
     def testGetVideosByObject(self):

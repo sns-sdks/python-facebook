@@ -9,7 +9,7 @@ import pyfacebook
 
 class LiveVideoApiTest(unittest.TestCase):
     BASE_PATH = "testdata/facebook/apidata/live/"
-    BASE_URL = "https://graph.facebook.com/{}/".format(pyfacebook.Api.VALID_API_VERSIONS[-1])
+    BASE_URL = "https://graph.facebook.com/v8.0/"
 
     with open(BASE_PATH + "live_videos_p1.json", "rb") as f:
         LIVE_VIDEOS_PAGED_1 = json.loads(f.read().decode("utf-8"))
@@ -98,7 +98,7 @@ class LiveVideoApiTest(unittest.TestCase):
 
 class LiveVideoInputStream(unittest.TestCase):
     BASE_PATH = "testdata/facebook/apidata/live/"
-    BASE_URL = "https://graph.facebook.com/{}/".format(pyfacebook.Api.VALID_API_VERSIONS[-1])
+    BASE_URL = "https://graph.facebook.com/v8.0/"
 
     with open(BASE_PATH + "stream.json", "rb") as f:
         STREAM = json.loads(f.read().decode("utf-8"))
