@@ -1,5 +1,15 @@
 # Changelog
 
+### [0.8.0](https://github.com/sns-sdks/python-facebook/compare/v0.8.0...v0.8.1) (2021-02-08)
+
+### Features
+
+- Upgrade api to v9.0
+
+### Fix
+
+- Bugs for #91 #93
+
 ### [0.8.0](https://github.com/sns-sdks/python-facebook/compare/v0.7.2...v0.8.0) (2021-01-17)
 
 ### Features
