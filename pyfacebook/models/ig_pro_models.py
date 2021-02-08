@@ -3,7 +3,7 @@
 """
 
 from attr import attrs, attrib
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any
 
 from .base import BaseModel
 from .._compat import str
@@ -161,7 +161,7 @@ class IgProInsightValue(BaseModel):
 
     Refer: https://developers.facebook.com/docs/instagram-api/guides/insights#getting-account-metrics
     """
-    value = attrib(default=None, type=Optional[int])
+    value = attrib(default=None, type=Optional[Any])
     end_time = attrib(default=None, type=Optional[str])
 
 
