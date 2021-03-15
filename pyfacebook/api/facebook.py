@@ -203,7 +203,7 @@ class Api(BaseApi):
             resource = 'feed'
 
         if fields is None:
-            fields = constant.FB_POST_BASIC_FIELDS.union(constant.FB_POST_REACTIONS_FIELD)
+            fields = constant.FB_POST_BASIC_FIELDS + constant.FB_POST_REACTIONS_FIELD
 
         args = {
             'fields': enf_comma_separated("fields", fields),
@@ -350,7 +350,7 @@ class Api(BaseApi):
         Or return json data. Default is false.
         """
         if fields is None:
-            fields = constant.FB_POST_BASIC_FIELDS.union(constant.FB_POST_REACTIONS_FIELD)
+            fields = constant.FB_POST_BASIC_FIELDS + constant.FB_POST_REACTIONS_FIELD
 
         args = {
             'fields': enf_comma_separated("fields", fields)
@@ -383,7 +383,7 @@ class Api(BaseApi):
         Or return json data. Default is false.
         """
         if fields is None:
-            fields = constant.FB_POST_BASIC_FIELDS.union(constant.FB_POST_REACTIONS_FIELD)
+            fields = constant.FB_POST_BASIC_FIELDS + constant.FB_POST_REACTIONS_FIELD
 
         args = {
             "ids": enf_comma_separated("ids", ids),
@@ -520,7 +520,7 @@ class Api(BaseApi):
         Or return json data. Default is false.
         """
         if fields is None:
-            fields = constant.FB_COMMENT_BASIC_FIELDS.union(constant.FB_POST_REACTIONS_FIELD)
+            fields = constant.FB_COMMENT_BASIC_FIELDS + constant.FB_POST_REACTIONS_FIELD
 
         args = {
             "ids": enf_comma_separated("ids", ids),

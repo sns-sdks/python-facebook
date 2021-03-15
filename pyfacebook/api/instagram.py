@@ -1218,9 +1218,9 @@ class IgProApi(BaseApi):
         :return: medias list
         """
         if fields is None:
-            fields = constant.INSTAGRAM_MEDIA_PUBLIC_FIELD.union(
-                {"comments{{{}}}".format(",".join(constant.INSTAGRAM_COMMENT_FIELD))}
-            )
+            fields = constant.INSTAGRAM_MEDIA_PUBLIC_FIELD + [
+                "comments{{{}}}".format(",".join(constant.INSTAGRAM_COMMENT_FIELD))
+            ]
 
         if count is not None:
             limit = min(count, limit)
@@ -1326,9 +1326,9 @@ class IgProApi(BaseApi):
         """
 
         if fields is None:
-            fields = constant.INSTAGRAM_MEDIA_PUBLIC_FIELD.union(
-                {"comments{{{}}}".format(",".join(constant.INSTAGRAM_COMMENT_FIELD))}
-            )
+            fields = constant.INSTAGRAM_MEDIA_PUBLIC_FIELD + [
+                "comments{{{}}}".format(",".join(constant.INSTAGRAM_COMMENT_FIELD))
+            ]
 
         args = {
             "fields": "mentioned_media.media_id({media_id}){{{fields}}}".format(
