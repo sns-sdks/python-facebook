@@ -1,6 +1,10 @@
 import json
 import unittest
-from unittest.mock import patch
+
+try:
+    from unittest.mock import patch
+except ImportError:
+    from mock import patch
 
 import responses
 from requests import HTTPError
