@@ -11,7 +11,8 @@ from .live import LiveVideo, LiveVideoInputStream
 from .ig_basic_models import IgBasicUser, IgBasicMedia, IgBasicMediaChildren
 from .ig_pro_models import (
     IgProUser, IgProMedia, IgProComment,
-    IgProReply, IgProHashtag, IgProInsight, IgProStory
+    IgProReply, IgProHashtag, IgProInsight, IgProStory,
+    IgProContainer, IgProPublishLimit
 )
 
 __all__ = [
@@ -43,4 +44,6 @@ __all__ = [
     "IgProHashtag",
     "IgProInsight",
     "IgProStory",
+    "IgProContainer",
+    "IgProPublishLimit",
 ]

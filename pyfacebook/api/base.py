@@ -21,7 +21,7 @@ from pyfacebook.ratelimit import RateLimit, PercentSecond
 
 
 class BaseApi(object):
-    VALID_API_VERSIONS = ["v3.3", "v4.0", "v5.0", "v6.0", "v7.0", "v8.0", "v9.0"]
+    VALID_API_VERSIONS = ["v3.3", "v4.0", "v5.0", "v6.0", "v7.0", "v8.0", "v9.0", "v10.0"]
     GRAPH_URL = "https://graph.facebook.com/"
     DEFAULT_AUTHORIZATION_URL = 'https://www.facebook.com/dialog/oauth'
     DEFAULT_EXCHANGE_ACCESS_TOKEN_URL = 'https://graph.facebook.com/oauth/access_token'
@@ -174,6 +174,8 @@ class BaseApi(object):
         if post_args is not None:
             method = "POST"
         if enforce_auth:
+            if method == "POST":
+                post_args = {}
             if method == "POST" and "access_token" not in post_args:
                 post_args["access_token"] = self._access_token
             elif method == "GET" and "access_token" not in args:
