@@ -1,6 +1,13 @@
 # Changelog
 
-### [0.8.0](https://github.com/sns-sdks/python-facebook/compare/v0.8.0...v0.8.1) (2021-02-08)
+### [0.9.0](https://github.com/sns-sdks/python-facebook/compare/v0.8.1...v0.9.0) (2021-03-16)
+
+### Features
+
+- Upgrade api to v10.0
+- Instagram business publish content
+
+### [0.8.1](https://github.com/sns-sdks/python-facebook/compare/v0.8.0...v0.8.1) (2021-02-08)
 
 ### Features
 
