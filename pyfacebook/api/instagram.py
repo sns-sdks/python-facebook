@@ -8,7 +8,7 @@ from six import iteritems
 from pyfacebook.error import PyFacebookException, ErrorCode, ErrorMessage
 from pyfacebook.models import (
     IgProMedia, IgProUser, IgProComment, IgProReply, IgProInsight, IgProHashtag,
-    IgProStory,
+    IgProStory, IgProContainer, IgProPublishLimit,
 )
 
 from pyfacebook.api.base import BaseApi
@@ -1356,5 +1356,66 @@ class IgProApi(BaseApi):
                            fields=None,  # type: Union[str, List, Tuple, Set]
                            return_json=False  # type: bool
                            ):
-        # type (...) -> Union[IgProMedia, dict]
-        pass
+        # type: (...) -> Union[IgProContainer, dict]
+        """
+        :param container_id:
+        :param fields: A comma-separated list of fields and edges you want returned.
+                If omitted, default fields will be returned.
+        :param return_json: Set to false will return instance of IgProContainer.
+                Or return json data. Default is false.
+        :return: container info
+        """
+
+        if fields is None:
+            fields = constant.INSTAGRAM_CONTAINER_FIELDS
+
+        args = {
+            "fields": enf_comma_separated(field="fields", value=fields),
+        }
+
+        resp = self._request(
+            path="{0}/{1}".format(self.version, container_id),
+            args=args,
+        )
+        data = self._parse_response(resp)
+
+        if return_json:
+            return data
+        else:
+            return IgProContainer.new_from_json_dict(data)
+
+    def get_publish_limit(self,
+                          fields=None,  # type: Union[str, List, Tuple, Set]
+                          since=None,  # type: str
+                          return_json=False  # type: bool
+                          ):
+        # type: (...) -> Union[IgProPublishLimit, dict]
+        """
+        :param fields: A comma-separated list of fields you want returned.
+                If omitted, the quota_usage field will be returned by default.
+        :param since: A Unix timestamp no older than 24 hours.
+        :param return_json: Set to false will return instance of IgProPublishLimit.
+                Or return json data. Default is false.
+        :return: publish limit info
+        """
+
+        if fields is None:
+            fields = constant.INSTAGRAM_PUBLISH_FIELDS
+
+        args = {
+            "fields": enf_comma_separated(field="fields", value=fields),
+            "since": since,
+        }
+
+        resp = self._request(
+            path="{0}/{1}/content_publishing_limit".format(self.version, self.instagram_business_id),
+            args=args
+        )
+
+        data = self._parse_response(resp)
+
+        if return_json:
+            return data
+        else:
+            return IgProPublishLimit.new_from_json_dict(data["data"][0])
+

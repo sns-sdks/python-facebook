@@ -151,6 +151,14 @@ INSTAGRAM_MENTION_COMMENT_FIELD = [
     "text", "timestamp",
 ]
 
+INSTAGRAM_CONTAINER_FIELDS = [
+    "id", "status_code",
+]
+
+INSTAGRAM_PUBLISH_FIELDS = [
+    "quota_usage", "config"
+]
+
 # =====================================================
 # Follows is Instagram Basic display fields to get data
 # =====================================================
