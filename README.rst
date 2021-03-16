@@ -516,6 +516,56 @@ Get data about a media object on which a Business or Creator Account has been @m
     In [12]: api.get_mentioned_media_info(user_id=api.instagram_business_id, media_id="18027939643230671")
     Out[12]: IgProMedia(id='18027939643230671', permalink='https://www.instagram.com/p/B38Xyp6nqsS/')
 
+Now you can publish instagram content if your app have publish permission.
+
+for publish, you need create a container first, the make the container publish.
+
+.. code-block:: python
+
+    # create photo
+    >>> api.create_photo(
+            image_url="https://www.example.com/images/gugges.jpg",
+            caption="publish test",
+            location_id="7640348500",
+            user_tags='[{"username": "somebody", "x": 0.5, "y": 0.8}]'
+        )
+    # IgProContainer(id='17877174857201040', status_code=None)
+
+    # create video
+    >>> api.create_video(
+            video_url="https://www.example.com/videos/hungry-fonzes.mov",
+            caption="video test",
+            location_id="",
+            thumb_offset=5,
+        )
+    # IgProContainer(id='17877174857201041', status_code=None)
+
+Then you can get container status, if container is ready, You can make it published.
+
+.. code-block:: python
+
+    >>> api.get_container_info(container_id="17877174857201040")
+    # IgProContainer(id='17877174857201040', status_code='FINISHED')
+
+Then you can publish it.
+
+.. code-block:: python
+
+    >>> api.publish_container(creation_id="17877174857201040")
+    # {'id': '17892354025952911'}
+
+If success, will return the media id.
+
+
+For now, Instagram accounts are limited to 25 API-published posts within a 24 hour moving period.
+
+So you can get current limit info.
+
+.. code-block:: python
+
+    >>> api.get_publish_limit()
+    # IgProPublishLimit(quota_usage=4)
+
 ==============================
 Base-Usage-Instagram Basic API
 ==============================
@@ -629,6 +679,7 @@ Instagram Professional Api:
 - Get medias which tagged account
 - Get comment info mentioned user.
 - Get media info mentioned user.
+- Publish Content
 
 Instagram Basic display api:
 
