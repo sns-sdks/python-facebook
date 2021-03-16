@@ -1386,7 +1386,7 @@ class IgProApi(BaseApi):
 
     def get_publish_limit(self,
                           fields=None,  # type: Union[str, List, Tuple, Set]
-                          since=None,  # type: str
+                          since=None,  # type: Optional[str]
                           return_json=False  # type: bool
                           ):
         # type: (...) -> Union[IgProPublishLimit, dict]
@@ -1419,3 +1419,98 @@ class IgProApi(BaseApi):
         else:
             return IgProPublishLimit.new_from_json_dict(data["data"][0])
 
+    def create_photo(self,
+                     image_url,  # type: str
+                     caption=None,  # type: Optional[str]
+                     location_id=None,  # type: Optional[str]
+                     user_tags=None,  # type: Optional[str]
+                     return_json=False  # type: bool
+                     ):
+        # type: (...) -> Union[IgProContainer, dict]
+        """
+        :param image_url: The path to the photo. We will cURL your photo using the passed in URL
+                so it must be on a public server.
+        :param caption: Caption for the photo. You can include hashtags and @tags.
+                Maximum 2200 characters, 30 hashtags, and 20 @ tags.
+        :param location_id: The ID of a Page associated with a location that you want to tag the photo with.
+        :param user_tags: An json array of public usernames and x/y coordinates for any public Instagram users who
+                you want to tag in the photo.
+                The array must be formatted in JSON and contain a username, x, and y, property.
+        :param return_json: return_json: Set to false will return instance of IgProContainer.
+                Or return json data. Default is false.
+        :return: Container info.
+        """
+
+        args = {
+            "image_url": image_url,
+            "caption": caption,
+            "location_id": location_id,
+            "user_tags": user_tags,
+        }
+
+        resp = self._request(
+            method="POST",
+            path="{0}/media".format(self.instagram_business_id),
+            args=args,
+        )
+        data = self._parse_response(resp)
+
+        if return_json:
+            return data
+        else:
+            return IgProContainer.new_from_json_dict(data)
+
+    def create_video(self,
+                     video_url,  # type: str
+                     caption=None,  # type: Optional[str]
+                     location_id=None,  # type: Optional[str]
+                     thumb_offset=0,  # type: Optional[int]
+                     return_json=False  # type: bool
+                     ):
+        # type: (...) -> Union[IgProContainer, dict]
+        """
+        :param video_url: Path to the video. We will cURL your video using the passed in URL
+                so it must be on a public server.
+        :param caption: Caption for the video. You can include hashtags and @tags.
+                Maximum 2200 characters, 30 hashtags, and 20 @ tags.
+        :param location_id: The ID of a Page associated with a location that you want to tag the video with.
+        :param thumb_offset: Location, in milliseconds, of the video frame to be used as the video's cover
+                thumbnail image. Default value is 0, which is the first frame of the video.
+        :param return_json: return_json: Set to false will return instance of IgProContainer.
+                Or return json data. Default is false.
+        :return: Container info.
+        """
+        args = {
+            "video_url": video_url,
+            "caption": caption,
+            "location_id": location_id,
+            "thumb_offset": thumb_offset,
+            "media_type": "VIDEO",
+        }
+
+        resp = self._request(
+            method="POST",
+            path="{0}/media".format(self.instagram_business_id),
+            args=args,
+        )
+        data = self._parse_response(resp)
+
+        if return_json:
+            return data
+        else:
+            return IgProContainer.new_from_json_dict(data)
+
+    def publish_container(self, creation_id):
+        # type: (str) -> Union[dict]
+        """
+        :param creation_id: Container's id for media which you want to publish.
+        :return: data for media ids
+        """
+        resp = self._request(
+            method="POST",
+            path="{0}/media_publish".format(self.instagram_business_id),
+            args={"creation_id": creation_id},
+        )
+
+        data = self._parse_response(resp)
+        return data

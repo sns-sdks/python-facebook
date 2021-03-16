@@ -174,6 +174,8 @@ class BaseApi(object):
         if post_args is not None:
             method = "POST"
         if enforce_auth:
+            if method == "POST":
+                post_args = {}
             if method == "POST" and "access_token" not in post_args:
                 post_args["access_token"] = self._access_token
             elif method == "GET" and "access_token" not in args:
