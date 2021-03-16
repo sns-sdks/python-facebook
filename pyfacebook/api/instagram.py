@@ -1350,3 +1350,11 @@ class IgProApi(BaseApi):
             return data["mentioned_media"]
         else:
             return IgProMedia.new_from_json_dict(data["mentioned_media"])
+
+    def get_container_info(self,
+                           container_id,  # type: str,
+                           fields=None,  # type: Union[str, List, Tuple, Set]
+                           return_json=False  # type: bool
+                           ):
+        # type (...) -> Union[IgProMedia, dict]
+        pass

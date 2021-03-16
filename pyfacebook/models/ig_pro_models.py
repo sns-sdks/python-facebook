@@ -184,3 +184,39 @@ class IgProInsight(BaseModel):
         if self.values is not None and isinstance(self.values, List):
             values = self.values
             self.values = [IgProInsightValue.new_from_json_dict(item) for item in values]
+
+
+@attrs
+class IgProContainer(BaseModel):
+    """
+    A class representing the Instagram container info.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-container
+    """
+
+    id = attrib(default=None, type=Optional[str])
+    status_code = attrib(default=None, type=Optional[str])
+
+
+@attrs
+class IgProPublishLimitConfig(BaseModel):
+    """
+    A class representing the Instagram publish limit config
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-user/content_publishing_limit#fields
+    """
+
+    quota_total = attrib(default=None, type=Optional[int])
+    quota_duration = attrib(default=None, type=Optional[int])
+
+
+@attrs
+class IgProPublishLimit(BaseModel):
+    """
+    A class representing the Instagram publish limit
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-user/content_publishing_limit#fields
+    """
+
+    quota_usage = attrib(default=None, type=Optional[int])
+    config = attrib(default=None, type=Optional[IgProPublishLimitConfig], repr=False)
