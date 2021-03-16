@@ -196,6 +196,7 @@ class IgProContainer(BaseModel):
 
     id = attrib(default=None, type=Optional[str])
     status_code = attrib(default=None, type=Optional[str])
+    status = attrib(default=None, type=Optional[str], repr=False)
 
 
 @attrs
