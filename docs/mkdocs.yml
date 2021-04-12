@@ -1,0 +1,46 @@
+site_name: Python Facebook Docs
+site_description: Docs for python-facebook library
+repo_url: https://github.com/sns-sdks/python-facebook
+copyright: Copyright &copy; 2019 - 2021 Ikaros kun
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+  palette:
+    # Light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+
+    # Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
+
+nav:
+  - Introduction: index.md
+  - Installation: installation.md
+  - Advanced:
+      - Extend API: advanced/extended_api_methods.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/realllkk520
+    - icon: fontawesome/brands/github
+      link: https://github.com/sns-sdks/python-facebook
+
+markdown_extensions:
+  - codehilite
+  - admonition
+  - pymdownx.superfences
+  - pymdownx.emoji
