@@ -69,7 +69,7 @@
 - Introduce ``instagram`` business account insights api.
 - Introduce ``instagram`` business account hashtag api.
 
-Simple usage at [GET DATA](README.rst#get-data-1).
+Simple usage at [GET DATA](https://github.com/sns-sdks/python-facebook/blob/master/README.rst#get-data-1).
 
 
 ### [0.5.3](https://github.com/sns-sdks/python-facebook/compare/v0.5.2...v0.5.3) (2020-01-05)
@@ -78,7 +78,7 @@ Simple usage at [GET DATA](README.rst#get-data-1).
 
 * Now we refactor all api for this library.
 
-You can see the [README](README.rst) to see the changes.
+You can see the [README](https://github.com/sns-sdks/python-facebook/blob/master/README.rst) to see the changes.
 
 
 ### [0.5.2](https://github.com/sns-sdks/python-facebook/compare/v0.5.1...v0.5.2) (2019-11-13)
