@@ -3,7 +3,7 @@
 """
 
 from attr import attrs, attrib
-from typing import Optional, Dict
+from typing import Optional, Dict, List
 
 from .base import BaseModel
 from .common import StoryAttachment
@@ -33,6 +33,17 @@ class ReactionsSummary(BaseModel):
 
 
 @attrs
+class MessageTag(BaseModel):
+    """
+    A class representing the page post message tag ingo.
+    """
+    id = attrib(default=None, type=Optional[str])
+    name = attrib(default=None, type=Optional[str])
+    offset = attrib(default=None, type=Optional[int])
+    length = attrib(default=None, type=Optional[int])
+
+
+@attrs
 class Post(BaseModel, CommentsSummaryField):
     """
     A class representing the post info.
@@ -47,6 +58,7 @@ class Post(BaseModel, CommentsSummaryField):
     full_picture = attrib(default=None, type=Optional[str], repr=False)
     icon = attrib(default=None, type=Optional[str], repr=False)
     message = attrib(default=None, type=Optional[str], repr=False)
+    message_tags = attrib(default=None, type=Optional[List[MessageTag]], repr=False)
     permalink_url = attrib(default=None, type=Optional[str])
     shares = attrib(default=None, type=Optional[PostShares], repr=False)
     status_type = attrib(default=None, type=Optional[str], repr=False)

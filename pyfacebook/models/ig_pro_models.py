@@ -101,6 +101,7 @@ class MediaCommon(BaseModel):
     id = attrib(default=None, type=Optional[str])
     ig_id = attrib(default=None, type=Optional[int], repr=False)
     caption = attrib(default=None, type=Optional[str], repr=False)
+    media_product_type = attrib(default=None, type=Optional[str], repr=False)
     media_type = attrib(default=None, type=Optional[str], repr=False)
     media_url = attrib(default=None, type=Optional[str], repr=False)
     owner = attrib(default=None, type=Optional[IgProUser], repr=False)
@@ -109,6 +110,7 @@ class MediaCommon(BaseModel):
     thumbnail_url = attrib(default=None, type=Optional[str], repr=False)
     timestamp = attrib(default=None, type=Optional[str], repr=False)
     username = attrib(default=None, type=Optional[str], repr=False)
+    video_title = attrib(default=None, type=Optional[str], repr=False)
 
 
 @attrs
