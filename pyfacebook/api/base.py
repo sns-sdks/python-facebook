@@ -83,7 +83,7 @@ class BaseApi(object):
             version = str(version)
             if not version.startswith('v'):
                 version = 'v' + version
-            version_regex = re.compile(r"^v\d.\d{1,2}$")
+            version_regex = re.compile(r"^v\d*.\d{1,2}$")
             match = version_regex.search(str(version))
             if match is not None:
                 if version not in self.VALID_API_VERSIONS:

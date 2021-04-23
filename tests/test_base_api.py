@@ -45,6 +45,9 @@ class BaseApiTest(unittest.TestCase):
         api = BaseApi(long_term_token="token", version="3.3")
         self.assertEqual(api.version, "v3.3")
 
+        api = BaseApi(long_term_token="token", version="v10.0")
+        self.assertEqual(api.version, "v10.0")
+
     @patch('time.sleep', return_value=None)
     def testApiToken(self, patched_time_sleep):
         with self.assertRaises(pyfacebook.PyFacebookException):
