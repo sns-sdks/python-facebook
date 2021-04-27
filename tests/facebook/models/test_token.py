@@ -22,6 +22,11 @@ class AccessTokenModelTest(unittest.TestCase):
 
         data_dict = m.as_dict()
         self.assertEqual(data_dict["access_token"], "access_token")
+        data_str = m.as_json_str()
+        self.assertEqual(
+            data_str,
+            '{"access_token": "access_token", "token_type": "type", "expires_in": 3600, "expires_at": 1568901737}'
+        )
 
     def testCorrectAccessToken(self):
         m = models.AccessToken.new_from_json_dict(self.ACCESS_TOKEN_CORRECT)

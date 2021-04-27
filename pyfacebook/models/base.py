@@ -1,7 +1,7 @@
 """
     This is the base model
 """
-import six
+import json
 
 import cattr
 from attr import attrs
@@ -11,16 +11,13 @@ from attr import attrs
 class BaseModel(object):
 
     @classmethod
-    def drop_extra_attrs(cls, data):
-        attrs_attrs = getattr(cls, '__attrs_attrs__', None)
-        attributes = {attr.name for attr in attrs_attrs}
-        return {key: val for key, val in six.iteritems(data) if key in attributes}
-
-    @classmethod
     def new_from_json_dict(cls, data):
-        data = cls.drop_extra_attrs(data)
         instance = cattr.structure(data, cls)
+        instance._json = data  # save original data
         return instance
 
     def as_dict(self):
         return cattr.unstructure(self)
+
+    def as_json_str(self):
+        return json.dumps(self.as_dict())
