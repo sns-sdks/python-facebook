@@ -1,4 +1,4 @@
-from attr import attrs, attrib
+from attr import attrs, attrib, asdict
 from typing import Optional
 
 __all__ = [
@@ -38,6 +38,7 @@ class PyFacebookException(Exception):
     """
 
     def __init__(self, data):
+        self.data = None
         self.message = None
         self.type = None
         self.code = None
@@ -58,12 +59,14 @@ class PyFacebookException(Exception):
             self.error_type = data.error_type
             self.type = data.error_type
             self.code = data.code
+            self.data = asdict(data)
         elif isinstance(data, dict):
             self.error_type = "FacebookException"
             self.message = data.get("message")
             self.type = data.get("type")
             self.code = data.get("code")
             self.fbtrace_id = data.get("fbtrace_id")
+            self.data = {"error": data}
 
     def __repr__(self):
         return (
