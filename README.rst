@@ -6,8 +6,8 @@ A Python wrapper for the Facebook Common API.
     :target: https://github.com/sns-sdks/python-facebook/actions
     :alt: Build Status
 
-.. image:: https://readthedocs.org/projects/python-facebook-api/badge/?version=latest
-    :target: https://python-facebook-api.readthedocs.io/en/latest/?badge=latest
+.. image:: https://img.shields.io/badge/Docs-passing-brightgreen
+    :target: https://sns-sdks.github.io/python-facebook/
     :alt: Documentation Status
 
 .. image:: https://codecov.io/gh/sns-sdks/python-facebook/branch/master/graph/badge.svg
@@ -49,7 +49,7 @@ You can install this library from ``pypi``::
 Documentation
 =============
 
-You can view the latest ``python-facebook`` documentation at: https://python-facebook-api.readthedocs.io/en/latest/
+You can view the latest ``python-facebook`` documentation at: https://sns-sdks.github.io/python-facebook/
 
 Also view the full ``Facebook Graph API`` docs at: https://developers.facebook.com/docs/graph-api/
 

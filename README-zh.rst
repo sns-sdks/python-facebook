@@ -6,8 +6,8 @@ Python Facebook
     :target: https://github.com/sns-sdks/python-facebook/actions
     :alt: Build Status
 
-.. image:: https://readthedocs.org/projects/python-facebook-api/badge/?version=latest
-    :target: https://python-facebook-api.readthedocs.io/en/latest/?badge=latest
+.. image:: https://img.shields.io/badge/Docs-passing-brightgreen
+    :target: https://sns-sdks.github.io/python-facebook/
     :alt: Documentation Status
 
 .. image:: https://codecov.io/gh/sns-sdks/python-facebook/branch/master/graph/badge.svg
@@ -47,7 +47,7 @@ README: `English <README.rst>`_ | `中文 <README-zh.rst>`_
 文档
 ====
 
-你可以访问: https://python-facebook-api.readthedocs.io/en/latest/ 去查看相关文档 (Doing).
+你可以访问: https://sns-sdks.github.io/python-facebook/ 去查看相关文档 (Doing).
 
 涉及的 ``Facebook Graph API`` 你都可以通过访问: https://developers.facebook.com/docs/graph-api/ 去查看
 涉及的 ``Instagram Graph API`` 你都可以通过访问: https://developers.facebook.com/docs/instagram-api/ 去查看
