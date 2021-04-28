@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.9.2](https://github.com/sns-sdks/python-facebook/compare/v0.9.1...v0.9.2) (2021-04-28)
+
+### Features
+
+- error update
+
 ## [0.9.1](https://github.com/sns-sdks/python-facebook/compare/v0.9.0...v0.9.1) (2021-04-27)
 
 ### Features
