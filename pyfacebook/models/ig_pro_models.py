@@ -113,8 +113,6 @@ class MediaCommon(BaseModel):
     timestamp = attrib(default=None, type=Optional[str], repr=False)
     username = attrib(default=None, type=Optional[str], repr=False)
     video_title = attrib(default=None, type=Optional[str], repr=False)
-    # connections
-    children = attrib(default=None, type=Optional[Dict], repr=False)
 
 
 @attrs
@@ -125,7 +123,10 @@ class IgProMedia(MediaCommon):
     Refer: https://developers.facebook.com/docs/instagram-api/reference/media
     """
     is_comment_enabled = attrib(default=None, type=Optional[bool], repr=False)
+
+    # connections
     comments = attrib(default=None, type=Optional[Dict], repr=False)
+    children = attrib(default=None, type=Optional[Dict], repr=False)
 
     def __attrs_post_init__(self):
         if self.children is not None and isinstance(self.children, dict):
@@ -143,11 +144,7 @@ class IgProStory(MediaCommon):
 
     Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-user/stories
     """
-
-    def __attrs_post_init__(self):
-        if self.children is not None and isinstance(self.children, dict):
-            children = self.children.get("data", [])
-            self.children = [IgProMediaChildren.new_from_json_dict(item) for item in children]
+    ...
 
 
 @attrs
