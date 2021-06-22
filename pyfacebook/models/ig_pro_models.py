@@ -144,7 +144,7 @@ class IgProStory(MediaCommon):
 
     Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-user/stories
     """
-    ...
+    pass
 
 
 @attrs
