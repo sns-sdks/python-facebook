@@ -101,6 +101,8 @@ class MediaCommon(BaseModel):
     id = attrib(default=None, type=Optional[str])
     ig_id = attrib(default=None, type=Optional[int], repr=False)
     caption = attrib(default=None, type=Optional[str], repr=False)
+    comments_count = attrib(default=None, type=Optional[int], repr=False)
+    like_count = attrib(default=None, type=Optional[int], repr=False)
     media_product_type = attrib(default=None, type=Optional[str], repr=False)
     media_type = attrib(default=None, type=Optional[str], repr=False)
     media_url = attrib(default=None, type=Optional[str], repr=False)
@@ -114,16 +116,6 @@ class MediaCommon(BaseModel):
 
 
 @attrs
-class IgProStory(MediaCommon):
-    """
-    A class representing the Instagram story info. It's similar to media but not have some fields.
-
-    Refer: https://developers.facebook.com/docs/instagram-api/reference/user/stories
-    """
-    pass
-
-
-@attrs
 class IgProMedia(MediaCommon):
     """
     A class representing the Instagram media info.
@@ -131,9 +123,9 @@ class IgProMedia(MediaCommon):
     Refer: https://developers.facebook.com/docs/instagram-api/reference/media
     """
     is_comment_enabled = attrib(default=None, type=Optional[bool], repr=False)
+
+    # connections
     comments = attrib(default=None, type=Optional[Dict], repr=False)
-    comments_count = attrib(default=None, type=Optional[int], repr=False)
-    like_count = attrib(default=None, type=Optional[int], repr=False)
     children = attrib(default=None, type=Optional[Dict], repr=False)
 
     def __attrs_post_init__(self):
@@ -143,6 +135,16 @@ class IgProMedia(MediaCommon):
         if self.comments is not None and isinstance(self.comments, dict):
             comments = self.comments.get("data", [])
             self.comments = [IgProComment.new_from_json_dict(item) for item in comments]
+
+
+@attrs
+class IgProStory(MediaCommon):
+    """
+    A class representing the Instagram story info. It's similar to media but not have some fields.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-user/stories
+    """
+    pass
 
 
 @attrs
