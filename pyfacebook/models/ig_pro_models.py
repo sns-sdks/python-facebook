@@ -101,6 +101,8 @@ class MediaCommon(BaseModel):
     id = attrib(default=None, type=Optional[str])
     ig_id = attrib(default=None, type=Optional[int], repr=False)
     caption = attrib(default=None, type=Optional[str], repr=False)
+    comments_count = attrib(default=None, type=Optional[int], repr=False)
+    like_count = attrib(default=None, type=Optional[int], repr=False)
     media_product_type = attrib(default=None, type=Optional[str], repr=False)
     media_type = attrib(default=None, type=Optional[str], repr=False)
     media_url = attrib(default=None, type=Optional[str], repr=False)
@@ -111,16 +113,8 @@ class MediaCommon(BaseModel):
     timestamp = attrib(default=None, type=Optional[str], repr=False)
     username = attrib(default=None, type=Optional[str], repr=False)
     video_title = attrib(default=None, type=Optional[str], repr=False)
-
-
-@attrs
-class IgProStory(MediaCommon):
-    """
-    A class representing the Instagram story info. It's similar to media but not have some fields.
-
-    Refer: https://developers.facebook.com/docs/instagram-api/reference/user/stories
-    """
-    pass
+    # connections
+    children = attrib(default=None, type=Optional[Dict], repr=False)
 
 
 @attrs
@@ -132,9 +126,6 @@ class IgProMedia(MediaCommon):
     """
     is_comment_enabled = attrib(default=None, type=Optional[bool], repr=False)
     comments = attrib(default=None, type=Optional[Dict], repr=False)
-    comments_count = attrib(default=None, type=Optional[int], repr=False)
-    like_count = attrib(default=None, type=Optional[int], repr=False)
-    children = attrib(default=None, type=Optional[Dict], repr=False)
 
     def __attrs_post_init__(self):
         if self.children is not None and isinstance(self.children, dict):
@@ -143,6 +134,20 @@ class IgProMedia(MediaCommon):
         if self.comments is not None and isinstance(self.comments, dict):
             comments = self.comments.get("data", [])
             self.comments = [IgProComment.new_from_json_dict(item) for item in comments]
+
+
+@attrs
+class IgProStory(MediaCommon):
+    """
+    A class representing the Instagram story info. It's similar to media but not have some fields.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-user/stories
+    """
+
+    def __attrs_post_init__(self):
+        if self.children is not None and isinstance(self.children, dict):
+            children = self.children.get("data", [])
+            self.children = [IgProMediaChildren.new_from_json_dict(item) for item in children]
 
 
 @attrs

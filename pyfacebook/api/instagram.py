@@ -486,7 +486,7 @@ class IgProApi(BaseApi):
                          limit=10,  # type: int
                          return_json=False  # type: bool
                          ):
-        # type: (...) -> List[Union[IgProStory, List]]
+        # type: (...) -> List[Union[IgProStory, dict]]
         """
         Retrieve ig user stories data by user id.
         :param user_id: The id for instagram business user which you want to get data.

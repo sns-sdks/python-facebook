@@ -123,9 +123,9 @@ INSTAGRAM_MEDIA_OWNER_FIELD = INSTAGRAM_MEDIA_FIELD + [
 ]
 
 INSTAGRAM_STORY_FIELD = [
-    "id", "ig_id", "caption",
-    "media_type", "media_url", "owner", "permalink",
-    "shortcode", "thumbnail_url", "timestamp", "username"
+    "id", "ig_id", "caption", "comments_count", "like_count",
+    "media_product_type", "media_type", "media_url", "owner", "permalink",
+    "shortcode", "thumbnail_url", "timestamp", "username", "video_title",
 ]
 
 INSTAGRAM_COMMENT_FIELD = [
