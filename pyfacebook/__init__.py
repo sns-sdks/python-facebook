@@ -6,4 +6,4 @@ from .api import *  # noqa
 from .error import *  # noqa
 from .models import *  # noqa
 
-__version__ = "0.9.2"
+__version__ = "0.9.3"
