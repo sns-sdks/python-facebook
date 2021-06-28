@@ -21,7 +21,7 @@ from pyfacebook.ratelimit import RateLimit, PercentSecond
 
 
 class BaseApi(object):
-    VALID_API_VERSIONS = ["v3.3", "v4.0", "v5.0", "v6.0", "v7.0", "v8.0", "v9.0", "v10.0"]
+    VALID_API_VERSIONS = ["v3.3", "v4.0", "v5.0", "v6.0", "v7.0", "v8.0", "v9.0", "v10.0", "v11.0"]
     GRAPH_URL = "https://graph.facebook.com/"
     DEFAULT_AUTHORIZATION_URL = 'https://www.facebook.com/dialog/oauth'
     DEFAULT_EXCHANGE_ACCESS_TOKEN_URL = 'https://graph.facebook.com/oauth/access_token'

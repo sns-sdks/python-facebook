@@ -75,19 +75,15 @@ class ApiMediaTest(unittest.TestCase):
         # test time filter
         with responses.RequestsMock() as m:
             m.add("GET", self.BASE_URL + self.instagram_business_id + "/media", json=self.MEDIAS_DEFAULT_p1)
-            # m.add("GET", self.BASE_URL + self.instagram_business_id + "/media", json=self.MEDIAS_DEFAULT_p2)
 
             res = self.api.get_user_medias(
                 user_id=self.instagram_business_id,
-                since_time="2019-10-1",
-                until_time="2019-11-1",
-                count=None,
+                since="2019-10-1",
+                until="2019-11-1",
+                count=2,
                 limit=5
             )
             self.assertEqual(len(res), 2)
-
-        with self.assertRaises(pyfacebook.PyFacebookException):
-            self.api.get_user_medias(user_id=self.instagram_business_id, since_time="2019")
 
     def testGetMediaInfo(self):
         media_id = "18027939643230671"

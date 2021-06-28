@@ -194,6 +194,8 @@ class IgBasicApi(BaseApi):
                         fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
                         count=25,  # type: Optional[int]
                         limit=25,  # type: int
+                        since=None,  # type: Optional[str]
+                        until=None,  # type: Optional[str]
                         return_json=False,  # type: bool
                         ):
         # type: (...) -> List[Union[IgBasicMedia, Dict]]
@@ -207,6 +209,8 @@ class IgBasicApi(BaseApi):
                 If you want to get all data. Set it to None.
         :param limit: Each request retrieve posts count from api.
                 For medias it may no more than 100. (Not verified.)
+        :param since: A Unix timestamp that points to the start of a range of time-based data.
+        :param until: A Unix timestamp that points to the end of a range of time-based data.
         :param return_json: Set to false will return a list instance of IgBasicMedia.
                 Or return json data. Default is false.
         :return: Media data list
@@ -223,6 +227,8 @@ class IgBasicApi(BaseApi):
 
         args = {
             "fields": enf_comma_separated(field="fields", value=fields),
+            "since": since,
+            "until": until,
             "limit": limit,
         }
 
