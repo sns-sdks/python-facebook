@@ -275,8 +275,8 @@ class IgProApi(BaseApi):
     def get_user_medias(self,
                         user_id,  # type: str
                         fields=None,  # type: Optional[Union[str, List, Tuple, Set]]
-                        since_time=None,  # type: Optional[str]
-                        until_time=None,  # type: Optional[str]
+                        since=None,  # type: Optional[str]
+                        until=None,  # type: Optional[str]
                         count=10,  # type: Optional[int]
                         limit=10,  # type: int
                         return_json=False  # type: bool
@@ -287,10 +287,8 @@ class IgProApi(BaseApi):
         :param user_id: The id for instagram business user which you want to get data.
         :param fields: Comma-separated id string for data fields which you want.
                 You can also pass this with an id list, tuple, set.
-        :param since_time: Lower bound of the time range to the medias publish time.
-                Format is %Y-%m-%d. If not provide, will not limit by this.
-        :param until_time: Upper bound of the time range to the medias publish time.
-                Format is %Y-%m-%d. If not provide, will not limit by this.
+        :param since: A Unix timestamp that points to the start of a range of time-based data.
+        :param until: A Unix timestamp that points to the end of a range of time-based data.
         :param count: The count for you want to get medias.
                 Default is 10.
                 If need get all, set this with None.
@@ -300,17 +298,6 @@ class IgProApi(BaseApi):
                 Or return json data. Default is false.
         """
 
-        try:
-            if since_time is not None:
-                since_time = datetime.datetime.strptime(since_time, '%Y-%m-%d')
-            if until_time is not None:
-                until_time = datetime.datetime.strptime(until_time, '%Y-%m-%d')
-        except (ValueError, TypeError):
-            raise PyFacebookException(ErrorMessage(
-                code=ErrorCode.INVALID_PARAMS,
-                message="since_time or until_time must format as %Y-%m-%d",
-            ))
-
         if fields is None:
             fields = constant.INSTAGRAM_MEDIA_OWNER_FIELD
 
@@ -319,7 +306,9 @@ class IgProApi(BaseApi):
 
         args = {
             'fields': enf_comma_separated("fields", fields),
-            'limit': limit
+            'limit': limit,
+            "since": since,
+            "until": until,
         }
 
         medias = []
@@ -334,24 +323,10 @@ class IgProApi(BaseApi):
             )
             data = data.get('data', [])
             for item in data:
-                begin_flag, end_flag = True, True
-
-                if "timestamp" in item:
-                    timestamp = datetime.datetime.strptime(item['timestamp'][:-5], '%Y-%m-%dT%H:%M:%S')
-                    if since_time is not None:
-                        begin_flag = since_time < timestamp
-                    if until_time is not None:
-                        end_flag = until_time > timestamp
-
-                if all([begin_flag, end_flag]):
-                    if return_json:
-                        medias.append(item)
-                    else:
-                        medias.append(IgProMedia.new_from_json_dict(item))
-                if not begin_flag:
-                    next_cursor = None
-                    break
-
+                if return_json:
+                    medias.append(item)
+                else:
+                    medias.append(IgProMedia.new_from_json_dict(item))
             if count is not None:
                 if len(medias) >= count:
                     medias = medias[:count]
