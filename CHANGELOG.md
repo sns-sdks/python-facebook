@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.9.3](https://github.com/sns-sdks/python-facebook/compare/v0.9.1...v0.9.2) (2021-04-28)
+
+### Features
+
+- Update API version to V11.0
+- Add parameters `since` and `until` for instaram media api.
+
+### Broken Change
+
+- Replace IgProApi `get_user_medias` method parameter `since_time` and `until_time` With `since` and `until`.
+
+
 ## [0.9.2](https://github.com/sns-sdks/python-facebook/compare/v0.9.1...v0.9.2) (2021-04-28)
 
 ### Features
