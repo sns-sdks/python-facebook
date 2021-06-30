@@ -11,7 +11,9 @@ from typing import Dict, List, Optional, Tuple
 import requests
 from requests import Response
 
-from pyfacebook.ratelimit import RateLimit, PercentSecond
+from pyfacebook import RateLimit, PercentSecond
+
+logger = logging.getLogger(__name__)
 
 
 class GraphAPI:
@@ -118,7 +120,7 @@ class GraphAPI:
         :return:
         """
         if secret is None:
-            logging.debug(
+            logger.debug(
                 "Calls from a server can be better secured by adding a parameter called appsecret_proof. "
                 "And need your app secret."
             )
