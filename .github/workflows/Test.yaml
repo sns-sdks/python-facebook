@@ -11,7 +11,11 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [2.7, 3.6, 3.7, 3.8, 3.9]
+        python-version: [3.6, 3.7, 3.8, 3.9]
+        include:
+          - python-version: 3.8
+            update-coverage: true
+
 
     steps:
       - uses: actions/checkout@v2
@@ -34,31 +38,27 @@ jobs:
         run: |
           poetry run pytest
       - name: Upload coverage to Codecov
+        if: ${{ matrix.update-coverage }}
         uses: codecov/codecov-action@v1
         with:
           file: ./coverage.xml
           fail_ci_if_error: true
 
   lint:
-    name: flake8
+    name: black
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
-          python-version: 3.7
-      - name: Cache venv
+          python-version: 3.8
+      - name: Cache pip
         uses: actions/cache@v2
         with:
-          path: venv
-          key: lintenv-v2-flake8
+          path: ~/.cache/pip
+          key: lintenv-v2
       - name: Install dependencies
-        run: |
-          python -m venv venv
-          . venv/bin/activate
-          python -m pip install --upgrade pip flake8
-      - name: flake8 test
-        run: |
-          . venv/bin/activate
-          flake8 .
+        run: python -m pip install --upgrade pip black
+      - name: Black test
+        run: black --check .

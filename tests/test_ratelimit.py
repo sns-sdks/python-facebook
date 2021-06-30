@@ -1,30 +1,43 @@
-import unittest
+from requests.models import CaseInsensitiveDict
+from pyfacebook import RateLimit, PercentSecond
 
-from pyfacebook.ratelimit import RateLimit
+
+def test_parse_headers():
+    headers = CaseInsensitiveDict({"key": "None"})
+    assert RateLimit.parse_headers(headers, key="key") is None
+    assert RateLimit.parse_headers(headers, key="key-null") is None
 
 
-class RateLimitTest(unittest.TestCase):
+def test_app_limit():
+    headers = CaseInsensitiveDict(
+        {"x-app-usage": '{"call_count":91,"total_cputime":15,"total_time":12}'}
+    )
+    r = RateLimit()
+    r.set_limit(headers)
 
-    def testParseHeaders(self):
-        headers = {"key": "None"}
-        self.assertIsNone(RateLimit.parse_headers(headers, key="key"))
+    assert r.get_limit().total_cputime == 15
+    assert r.get_limit().max_percent() == 91
+    assert r.get_max_percent() == 91
+    assert r.get_sleep_seconds() == 0
 
-    def testAppLimit(self):
-        headers = {'x-app-usage': '{"call_count":91,"total_cputime":15,"total_time":12}'}
-        r = RateLimit()
-        r.set_limit(headers)
+    mapping = [PercentSecond(10, 1), PercentSecond(20, 2)]
+    assert r.get_sleep_seconds(sleep_data=mapping) == 600
 
-        self.assertEqual(r.get_limit().call_count, 91)
-        self.assertEqual(r.get_limit().max_percent(), 91)
-        self.assertEqual(r.get_max_percent(), 91)
-        self.assertEqual(r.get_sleep_seconds(), 2)
+    headers = CaseInsensitiveDict(
+        {"x-app-usage": '{"call_count":16,"total_cputime":15,"total_time":12}'}
+    )
+    r.set_limit(headers)
+    assert r.get_sleep_seconds(sleep_data=mapping) == 2
 
-    def testBusinessLimit(self):
-        r = RateLimit()
 
-        headers = {
-            "x-business-use-case-usage": "{\"112130216863063\":[{\"type\":\"pages\",\"call_count\":1,\"total_cputime\":1,\"total_time\":1,\"estimated_time_to_regain_access\":0}]}"}
+def test_business_limit():
+    headers = CaseInsensitiveDict(
+        {
+            "x-business-use-case-usage": '{"112130216863063":[{"type":"pages","call_count":1,"total_cputime":1,"total_time":1,"estimated_time_to_regain_access":0}]}'
+        }
+    )
 
-        r.set_limit(headers)
+    r = RateLimit()
+    r.set_limit(headers)
 
-        self.assertEqual(r.get_limit(object_id="112130216863063", endpoint="pages").call_count, 1)
+    assert r.get_limit("112130216863063", "pages").call_count == 1

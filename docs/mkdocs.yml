@@ -28,10 +28,6 @@ theme:
 
 nav:
   - Introduction: index.md
-  - Installation: installation.md
-  - Advanced:
-      - Extend API: advanced/extended_api_methods.md
-  - Changelog: CHANGELOG.md
 
 extra:
   social:
