@@ -11,7 +11,7 @@ from typing import Dict, List, Optional, Tuple
 import requests
 from requests import Response
 
-from pyfacebook import RateLimit, PercentSecond
+from pyfacebook import RateLimit, PercentSecond, FacebookError, LibraryError
 
 logger = logging.getLogger(__name__)
 
@@ -73,14 +73,18 @@ class GraphAPI:
             match = version_regex.search(str(version))
             if match is not None:
                 if version not in self.VALID_API_VERSIONS:
-                    raise Exception(
-                        f"Valid API version are {','.join(self.VALID_API_VERSIONS)}"
+                    raise LibraryError(
+                        {
+                            "message": f"Valid API version are {','.join(self.VALID_API_VERSIONS)}"
+                        }
                     )
                 else:
                     self.version = version
             else:
-                raise Exception(
-                    f"Version string {version} is invalid. You can provide with like: 5.0 or v5.0"
+                raise LibraryError(
+                    {
+                        "message": f"Invalid version {version}. You can provide with like: 5.0 or v5.0"
+                    }
                 )
 
         # Token
@@ -91,7 +95,7 @@ class GraphAPI:
         elif oauth_flow and all([self.app_id, self.app_secret]):
             pass
         else:
-            raise Exception("Need access token")
+            raise LibraryError({"message": "Need access token"})
 
     @staticmethod
     def _build_sleep_seconds_resource(
@@ -183,7 +187,7 @@ class GraphAPI:
                 proxies=self.proxies,
             )
         except requests.HTTPError as ex:
-            raise Exception(ex.args)
+            raise LibraryError({"message": ex.args})
 
         # check headers
         headers = response.headers
@@ -213,7 +217,7 @@ class GraphAPI:
             }
             return data
         else:
-            raise Exception("Wrong response")
+            raise LibraryError({"message": "Wrong response, not json or image"})
 
     @staticmethod
     def _check_graph_error(data: dict):
@@ -222,7 +226,7 @@ class GraphAPI:
         """
         if "error" in data:
             error_data = data["error"]
-            raise Exception(error_data)
+            raise FacebookError(error_data)
 
     def get_object(self, object_id: str, fields: str, **kwargs) -> dict:
         """

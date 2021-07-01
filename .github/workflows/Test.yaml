@@ -61,4 +61,4 @@ jobs:
       - name: Install dependencies
         run: python -m pip install --upgrade pip black
       - name: Black test
-        run: black --check .
+        run: make lint-check
