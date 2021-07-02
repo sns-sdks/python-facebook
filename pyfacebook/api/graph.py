@@ -389,7 +389,7 @@ class GraphAPI:
         authorization_url, state = session.authorization_url(url=self.AUTHORIZATION_URL)
         return authorization_url, state
 
-    def exchange_access_token(
+    def exchange_user_access_token(
         self, response: str, redirect_uri: Optional[str] = None
     ) -> dict:
         """
@@ -408,7 +408,7 @@ class GraphAPI:
 
         return session.token
 
-    def exchange_page_token(
+    def exchange_page_access_token(
         self, page_id: str, access_token: Optional[str] = None
     ) -> str:
         """
@@ -441,3 +441,89 @@ class GraphAPI:
                 }
             )
         return data["access_token"]
+
+    def exchange_long_lived_user_access_token(self, access_token=None) -> dict:
+        """
+        Generate long-lived token by short-lived token, Long-lived token generally lasts about 60 days.
+
+        :param access_token: Short-lived user access token
+        :return: Long-lived user access token info.
+        """
+        if access_token is None:
+            access_token = self._access_token
+        args = {
+            "grant_type": "fb_exchange_token",
+            "client_id": self.app_id,
+            "client_secret": self.app_secret,
+            "fb_exchange_token": access_token,
+        }
+
+        resp = self._request(
+            url=f"{self.version}/oauth/access_token",
+            args=args,
+            auth_need=False,
+        )
+        data = self._parse_response(resp)
+        return data
+
+    def exchange_long_lived_page_access_token(
+        self, user_id: str, access_token: Optional[str] = None
+    ) -> dict:
+        """
+        Generate long-lived page access token by long-lived user access token.
+
+        :param user_id: ID for the token user.
+        :param access_token: Long-lived user token.
+        :return: Data for Long-lived page token
+        """
+
+        data = self.get_connection(
+            object_id=user_id,
+            connection="accounts",
+            access_token=access_token,
+        )
+        return data
+
+    def get_app_token(
+        self, app_id: Optional[str] = None, app_secret: Optional[str] = None
+    ) -> dict:
+        """
+        Generate
+        :param app_id: ID for app
+        :param app_secret:  Secret for app
+        :return: app access token
+        """
+        if app_id is None:
+            app_id = self.app_id
+        if app_secret is None:
+            app_secret = self.app_secret
+
+        resp = self._request(
+            url=f"{self.version}/oauth/access_token",
+            args={
+                "grant_type": "client_credentials",
+                "client_id": app_id,
+                "client_secret": app_secret,
+            },
+            auth_need=False,
+        )
+        data = self._parse_response(resp)
+        return data
+
+    def debug_token(self, input_token: str, access_token: Optional[str] = None) -> dict:
+        """
+        Get input token info by issued app administrator's access token
+        :param input_token: Access token to debug.
+        :param access_token:
+        :return: Issued app administrator's access token
+        """
+        if access_token is None:
+            access_token = self._access_token
+
+        resp = self._request(
+            url=f"{self.version}/debug_token",
+            args={"input_token": input_token, "access_token": access_token},
+            auth_need=False,
+        )
+        data = self._parse_response(resp)
+        return data
