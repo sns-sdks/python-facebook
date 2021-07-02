@@ -13,7 +13,7 @@ def test_error():
         "error_subcode": 460,
         "error_user_title": "A title",
         "error_user_msg": "A message",
-        "fbtrace_id": "EJplcsCHuLu"
+        "fbtrace_id": "EJplcsCHuLu",
     }
 
     fb_err = FacebookError(error)

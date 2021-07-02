@@ -10,6 +10,8 @@ from typing import Dict, List, Optional, Tuple
 
 import requests
 from requests import Response
+from requests_oauthlib.oauth2_session import OAuth2Session
+from requests_oauthlib.compliance_fixes.facebook import facebook_compliance_fix
 
 from pyfacebook import RateLimit, PercentSecond, FacebookError, LibraryError
 
@@ -29,6 +31,11 @@ class GraphAPI:
         "v11.0",
     ]
     GRAPH_URL = "https://graph.facebook.com/"
+    AUTHORIZATION_URL = "https://www.facebook.com/dialog/oauth"
+    EXCHANGE_ACCESS_TOKEN_URL = "https://graph.facebook.com/oauth/access_token"
+    DEFAULT_REDIRECT_URI = "https://localhost/"
+    DEFAULT_SCOPE = ["public_profile"]
+    STATE = "PyFacebook"
 
     def __init__(
         self,
@@ -43,7 +50,6 @@ class GraphAPI:
         base_url: Optional[str] = None,
         timeout: Optional[int] = None,
         proxies: Optional[dict] = None,
-        debug: bool = False,
     ):
         self.app_id = app_id
         self.app_secret = app_secret
@@ -329,3 +335,109 @@ class GraphAPI:
                 break
 
         return data_set, paging
+
+    def _get_oauth_session(
+        self,
+        redirect_uri: Optional[str] = None,
+        scope: Optional[List[str]] = None,
+        **kwargs,
+    ) -> OAuth2Session:
+        """
+        :param redirect_uri: The URL that you want to redirect the person logging in back to.
+        :param scope: A list of permission string to request from the person using your app.
+        :param kwargs: Additional parameters for oauth.
+        :return: OAuth Session
+        """
+        # check app credentials
+        if not all([self.app_id, self.app_secret]):
+            raise LibraryError({"message": "OAuth need your app credentials"})
+
+        if redirect_uri is None:
+            redirect_uri = self.DEFAULT_REDIRECT_URI
+        if scope is None:
+            scope = self.DEFAULT_SCOPE
+
+        session = OAuth2Session(
+            client_id=self.app_id,
+            scope=scope,
+            redirect_uri=redirect_uri,
+            state=self.STATE,
+            **kwargs,
+        )
+        session = facebook_compliance_fix(session)
+        return session
+
+    def get_authorization_url(
+        self,
+        redirect_uri: Optional[str] = None,
+        scope: Optional[List[str]] = None,
+        **kwargs,
+    ) -> Tuple[str, str]:
+        """
+        Build authorization url to do oauth.
+        Refer: https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow
+
+        :param redirect_uri: The URL that you want to redirect the person logging in back to.
+            Note: Your redirect uri need be set to `Valid OAuth redirect URIs` items in App Dashboard.
+        :param scope: A list of permission string to request from the person using your app.
+        :param kwargs: Additional parameters for oauth.
+        :return: URL to do oauth and state
+        """
+        session = self._get_oauth_session(
+            redirect_uri=redirect_uri, scope=scope, **kwargs
+        )
+        authorization_url, state = session.authorization_url(url=self.AUTHORIZATION_URL)
+        return authorization_url, state
+
+    def exchange_access_token(
+        self, response: str, redirect_uri: Optional[str] = None
+    ) -> dict:
+        """
+        :param response: The redirect response url for
+        :param redirect_uri:
+        :return:
+        """
+        session = self._get_oauth_session(redirect_uri=redirect_uri)
+
+        session.fetch_token(
+            self.EXCHANGE_ACCESS_TOKEN_URL,
+            client_secret=self.app_secret,
+            authorization_response=response,
+        )
+        self._access_token = session.access_token
+
+        return session.token
+
+    def exchange_page_token(
+        self, page_id: str, access_token: Optional[str] = None
+    ) -> str:
+        """
+        Get page access token by page administrator's user access token.
+
+        Refer:
+            1. https://developers.facebook.com/docs/pages/access-tokens
+            2. https://developers.facebook.com/docs/facebook-login/access-tokens
+
+        :param page_id: ID for page.
+        :param access_token: Access token for user.
+        :return: Page access token
+        """
+        if access_token is None:
+            access_token = self._access_token
+
+        resp = self._request(
+            url=f"{self.version}/{page_id}",
+            args={"fields": "access_token", "access_token": access_token},
+            auth_need=False,
+        )
+
+        data = self._parse_response(resp)
+        if "access_token" not in data:
+            raise LibraryError(
+                {
+                    "message": "Can not get page access token. Reason maybe: \n"
+                    "1. Your user access token has `page_show_list` or `manage_pages` permission.\n"
+                    "2. You have the target page's manage permission."
+                }
+            )
+        return data["access_token"]
