@@ -96,10 +96,10 @@ class GraphAPI:
 
         # Token
         if access_token:
-            self._access_token = access_token
+            self.access_token = access_token
         elif application_only_auth and all([self.app_id, self.app_secret]):
             data = self.get_app_token()
-            self._access_token = data["access_token"]
+            self.access_token = data["access_token"]
         elif oauth_flow and all([self.app_id, self.app_secret]):
             pass
         else:
@@ -151,7 +151,7 @@ class GraphAPI:
         """
         args = {} if args is None else args
         if "access_token" not in args:
-            args["access_token"] = self._access_token
+            args["access_token"] = self.access_token
         # Begin with v5.0, appsecret_proof parameter can improve requests secure.
         # Refer: https://developers.facebook.com/docs/graph-api/securing-requests/
         secret_proof = self._generate_secret_proof(
@@ -408,7 +408,7 @@ class GraphAPI:
             client_secret=self.app_secret,
             authorization_response=response,
         )
-        self._access_token = session.access_token
+        self.access_token = session.access_token
 
         return session.token
 
@@ -427,7 +427,7 @@ class GraphAPI:
         :return: Page access token
         """
         if access_token is None:
-            access_token = self._access_token
+            access_token = self.access_token
 
         resp = self._request(
             url=f"{self.version}/{page_id}",
@@ -454,7 +454,7 @@ class GraphAPI:
         :return: Long-lived user access token info.
         """
         if access_token is None:
-            access_token = self._access_token
+            access_token = self.access_token
         args = {
             "grant_type": "fb_exchange_token",
             "client_id": self.app_id,
@@ -522,7 +522,7 @@ class GraphAPI:
         :return: Issued app administrator's access token
         """
         if access_token is None:
-            access_token = self._access_token
+            access_token = self.access_token
 
         resp = self._request(
             url=f"{self.version}/debug_token",
