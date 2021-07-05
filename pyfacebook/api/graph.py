@@ -105,7 +105,7 @@ class GraphAPI:
 
     @staticmethod
     def _build_sleep_seconds_resource(
-        sleep_seconds_mapping: Dict[int, int]
+        sleep_seconds_mapping: Optional[Dict[int, int]]
     ) -> Optional[List[PercentSecond]]:
         """
         Sort and convert data
@@ -234,7 +234,7 @@ class GraphAPI:
             error_data = data["error"]
             raise FacebookError(error_data)
 
-    def get_object(self, object_id: str, fields: str, **kwargs) -> dict:
+    def get_object(self, object_id: str, fields: str = "", **kwargs) -> dict:
         """
         Get object information by object id.
 
@@ -254,7 +254,7 @@ class GraphAPI:
         data = self._parse_response(resp)
         return data
 
-    def get_objects(self, ids: str, fields: str, **kwargs) -> dict:
+    def get_objects(self, ids: str, fields: str = "", **kwargs) -> dict:
         """
         Get objects information by multi object ids.
 
