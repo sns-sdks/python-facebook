@@ -5,11 +5,12 @@
 """
 
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from dataclasses_json import config
 
 from pyfacebook.models.base import BaseModel, field
+from pyfacebook.models.image import ProfilePicture
 
 
 @dataclass
@@ -71,3 +72,11 @@ class User(BaseModel):
     significant_other: Optional[dict] = field()
     supports_donate_button_in_live_video: Optional[bool] = field()
     video_upload_limits: Optional[dict] = field()
+
+    # connections fields
+    picture: Optional[Union[ProfilePicture, dict]] = field()
+
+    def __post_init__(self):
+        if self.picture is not None and isinstance(self.picture, dict):
+            picture = self.picture.get("data", {})
+            self.picture = ProfilePicture.new_from_json_dict(picture)
