@@ -6,6 +6,7 @@ import hmac
 import logging
 import re
 import time
+from urllib.parse import parse_qsl, urlparse
 from typing import Dict, List, Optional, Tuple
 
 import requests
@@ -333,6 +334,8 @@ class GraphAPI:
                 _next = paging.get("next")
             if not _next:
                 break
+            # parse next url args as new args
+            kwargs = dict(parse_qsl(urlparse(_next).query))
 
         return data_set, paging
 

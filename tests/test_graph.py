@@ -123,3 +123,78 @@ def test_get_objects(helpers, pubg_api):
             appsecret_proof="xxxx",
         )
         assert len(res) == 2
+
+
+def test_get_connection(helpers, pubg_api):
+    api = GraphAPI(access_token="token")
+    obj_id = "19292868552"
+
+    # image
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{pubg_api.version}/{obj_id}/picture",
+            body=helpers.load_file_binary("testdata/base/19292868552-picture.png"),
+            content_type="image/png",
+        )
+        res = api.get_connection(
+            object_id=obj_id,
+            connection="picture",
+            redirect=0,
+        )
+        assert res["content-type"] == "image/png"
+
+    # data
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{pubg_api.version}/{obj_id}/picture",
+            json=helpers.load_json("testdata/base/connecion_data.json"),
+        )
+
+        res = api.get_connection(object_id=obj_id, connection="picture")
+        assert res["data"]["height"] == 50
+
+
+def test_get_full_connections(helpers):
+    obj_id = "19292868552"
+
+    api = GraphAPI(access_token="token", version="v11.0")
+    # test with count
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url="https://graph.facebook.com/v11.0/19292868552/feed",
+            json=helpers.load_json("testdata/base/full_connecions_p1.json"),
+        )
+
+        feeds, paging = api.get_full_connections(
+            object_id=obj_id,
+            connection="feed",
+            count=3,
+            limit=5,
+            fields="created_time,id,message",
+        )
+        assert len(feeds) == 3
+
+    # test with no next
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url="https://graph.facebook.com/v11.0/19292868552/feed",
+            json=helpers.load_json("testdata/base/full_connecions_p1.json"),
+        )
+        m.add(
+            method=responses.GET,
+            url="https://graph.facebook.com/v11.0/19292868552/feed",
+            json=helpers.load_json("testdata/base/full_connecions_p2.json"),
+        )
+
+        feeds, paging = api.get_full_connections(
+            object_id=obj_id,
+            connection="feed",
+            count=None,
+            limit=5,
+            fields="created_time,id,message",
+        )
+        assert len(feeds) == 8
