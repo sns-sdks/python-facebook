@@ -6,6 +6,7 @@ import hmac
 import logging
 import re
 import time
+from urllib.parse import parse_qsl, urlparse
 from typing import Dict, List, Optional, Tuple
 
 import requests
@@ -95,9 +96,10 @@ class GraphAPI:
 
         # Token
         if access_token:
-            self._access_token = access_token
+            self.access_token = access_token
         elif application_only_auth and all([self.app_id, self.app_secret]):
-            pass
+            data = self.get_app_token()
+            self.access_token = data["access_token"]
         elif oauth_flow and all([self.app_id, self.app_secret]):
             pass
         else:
@@ -105,7 +107,7 @@ class GraphAPI:
 
     @staticmethod
     def _build_sleep_seconds_resource(
-        sleep_seconds_mapping: Dict[int, int]
+        sleep_seconds_mapping: Optional[Dict[int, int]]
     ) -> Optional[List[PercentSecond]]:
         """
         Sort and convert data
@@ -149,7 +151,7 @@ class GraphAPI:
         """
         args = {} if args is None else args
         if "access_token" not in args:
-            args["access_token"] = self._access_token
+            args["access_token"] = self.access_token
         # Begin with v5.0, appsecret_proof parameter can improve requests secure.
         # Refer: https://developers.facebook.com/docs/graph-api/securing-requests/
         secret_proof = self._generate_secret_proof(
@@ -234,7 +236,7 @@ class GraphAPI:
             error_data = data["error"]
             raise FacebookError(error_data)
 
-    def get_object(self, object_id: str, fields: str, **kwargs) -> dict:
+    def get_object(self, object_id: str, fields: str = "", **kwargs) -> dict:
         """
         Get object information by object id.
 
@@ -254,7 +256,7 @@ class GraphAPI:
         data = self._parse_response(resp)
         return data
 
-    def get_objects(self, ids: str, fields: str, **kwargs) -> dict:
+    def get_objects(self, ids: str, fields: str = "", **kwargs) -> dict:
         """
         Get objects information by multi object ids.
 
@@ -333,6 +335,8 @@ class GraphAPI:
                 _next = paging.get("next")
             if not _next:
                 break
+            # parse next url args as new args
+            kwargs = dict(parse_qsl(urlparse(_next).query))
 
         return data_set, paging
 
@@ -404,7 +408,7 @@ class GraphAPI:
             client_secret=self.app_secret,
             authorization_response=response,
         )
-        self._access_token = session.access_token
+        self.access_token = session.access_token
 
         return session.token
 
@@ -423,7 +427,7 @@ class GraphAPI:
         :return: Page access token
         """
         if access_token is None:
-            access_token = self._access_token
+            access_token = self.access_token
 
         resp = self._request(
             url=f"{self.version}/{page_id}",
@@ -450,7 +454,7 @@ class GraphAPI:
         :return: Long-lived user access token info.
         """
         if access_token is None:
-            access_token = self._access_token
+            access_token = self.access_token
         args = {
             "grant_type": "fb_exchange_token",
             "client_id": self.app_id,
@@ -518,7 +522,7 @@ class GraphAPI:
         :return: Issued app administrator's access token
         """
         if access_token is None:
-            access_token = self._access_token
+            access_token = self.access_token
 
         resp = self._request(
             url=f"{self.version}/debug_token",

@@ -2,7 +2,7 @@
     Base model
 """
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field as base_field
 from typing import (
     Dict,
     Type,
@@ -35,3 +35,14 @@ class BaseModel(DataClassJsonMixin):
         # save origin data
         cls._json = data
         return c
+
+
+def field(default=None, repr=False, compare=False, **kwargs):
+    kwargs.update(
+        {
+            "default": default,
+            "repr": repr,
+            "compare": compare,
+        }
+    )
+    return base_field(**kwargs)
