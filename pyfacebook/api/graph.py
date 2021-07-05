@@ -98,7 +98,8 @@ class GraphAPI:
         if access_token:
             self._access_token = access_token
         elif application_only_auth and all([self.app_id, self.app_secret]):
-            pass
+            data = self.get_app_token()
+            self._access_token = data["access_token"]
         elif oauth_flow and all([self.app_id, self.app_secret]):
             pass
         else:

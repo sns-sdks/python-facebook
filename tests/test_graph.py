@@ -28,14 +28,6 @@ def test_api_initial():
         base_url="https://graph.facebook.com/",
     )
 
-    # use application only oauth
-    api = GraphAPI(
-        app_id="app id",
-        app_secret="app secret",
-        application_only_auth=True,
-        version=GraphAPI.VALID_API_VERSIONS[-1],
-    )
-
 
 def test_sleep_seconds_mapping(pubg_api):
     r = pubg_api._build_sleep_seconds_resource({1: 1, 2: 2})
@@ -198,3 +190,113 @@ def test_get_full_connections(helpers):
             fields="created_time,id,message",
         )
         assert len(feeds) == 8
+
+
+def test_oauth_flow(helpers):
+
+    with pytest.raises(LibraryError):
+        api = GraphAPI(access_token="token")
+        api.get_authorization_url()
+
+    api = GraphAPI(app_id="id", app_secret="secret", oauth_flow=True)
+
+    # test get authorization url
+    _, state = api.get_authorization_url()
+
+    # if user give authorize.
+    resp = "https://localhost/?code=code&state=PyFacebook#_=_"
+
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.POST,
+            url=api.EXCHANGE_ACCESS_TOKEN_URL,
+            json=helpers.load_json("testdata/base/long_term_token.json"),
+        )
+
+        r = api.exchange_user_access_token(response=resp)
+        assert r["access_token"] == "token"
+
+
+def test_exchange_token(helpers):
+    api = GraphAPI(access_token="token")
+
+    page_id = "19292868552"
+
+    # test page access token
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{api.version}/{page_id}",
+            json={"id": "19292868552", "access_token": "token"},
+        )
+        token = api.exchange_page_access_token(page_id=page_id)
+        assert token == "token"
+    # test can not exchange page access token
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{api.version}/{page_id}",
+            json={"id": "19292868552"},
+        )
+        with pytest.raises(LibraryError):
+            api.exchange_page_access_token(page_id=page_id)
+
+    # test exchange long-lived user token
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{api.version}/oauth/access_token",
+            json={
+                "access_token": "token",
+                "token_type": "bearer",
+                "expires_in": 5184000,
+            },
+        )
+
+        res = api.exchange_long_lived_user_access_token()
+        assert res["access_token"] == "token"
+
+    user_id = "123456"
+    # test exchange long-lived page token
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{api.version}/{user_id}/accounts",
+            json=helpers.load_json("testdata/base/user_accounts_token.json"),
+        )
+
+        res = api.exchange_long_lived_page_access_token(user_id=user_id)
+        assert len(res["data"]) == 1
+        assert res["data"][0]["access_token"] == "access_token"
+
+
+def test_get_app_token():
+    api = GraphAPI(app_id="id", app_secret="secret", access_token="token")
+
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{api.version}/oauth/access_token",
+            json={"access_token": "access_token", "token_type": "bearer"},
+        )
+
+        data = api.get_app_token()
+        assert data["access_token"] == "access_token"
+
+        # initial with application_only_auth
+        GraphAPI(app_id="id", app_secret="secret", application_only_auth=True)
+
+
+def test_debug_token(helpers, pubg_api):
+    input_token = "token"
+
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{pubg_api.version}/debug_token",
+            json=helpers.load_json("testdata/base/token_info.json"),
+        )
+
+        res = pubg_api.debug_token(input_token=input_token)
+        assert res["data"]["type"] == "USER"
+        assert res["data"]["is_valid"]
