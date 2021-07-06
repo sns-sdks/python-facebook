@@ -1,4 +1,5 @@
-from .models import *
-from .ratelimit import RateLimitHeader, RateLimit, PercentSecond
-from .exceptions import PyFacebookException, FacebookError, LibraryError
-from .api import *
+from pyfacebook.models import *
+from pyfacebook.ratelimit import RateLimitHeader, RateLimit, PercentSecond
+from pyfacebook.exceptions import PyFacebookException, FacebookError, LibraryError
+from pyfacebook.api import GraphAPI
+from pyfacebook.api.facebook.client import FacebookApi
