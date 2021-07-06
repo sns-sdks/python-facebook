@@ -21,3 +21,17 @@ class ProfilePicture(BaseModel):
     is_silhouette: Optional[bool] = field()
     url: Optional[str] = field(repr=True)
     width: Optional[int] = field()
+
+
+@dataclass
+class CoverPhoto(BaseModel):
+    """
+    A class representing Cover Photo
+
+    Refer: https://developers.facebook.com/docs/graph-api/reference/cover-photo/
+    """
+
+    id: Optional[str] = field(repr=True, compare=True)
+    offset_x: Optional[float] = field()
+    offset_y: Optional[float] = field()
+    source: Optional[str] = field(repr=True)
