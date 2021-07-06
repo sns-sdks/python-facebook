@@ -29,3 +29,4 @@ class FacebookApi(FacebookBaseApi):
     """
 
     user = rs.FacebookUser()
+    page = rs.FacebookPage()

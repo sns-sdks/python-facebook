@@ -1,7 +1,7 @@
 """
     Apis for User.
 """
-from typing import List, Optional
+from typing import Optional, Union
 
 import pyfacebook.utils.constant as const
 from pyfacebook.api.facebook.resource.base import BaseResource
@@ -11,13 +11,18 @@ from pyfacebook.utils.params_utils import enf_comma_separated
 
 class FacebookUser(BaseResource):
     def get_info(
-        self, user_id: str, fields: Optional[List] = None, return_json: bool = False
-    ):
+        self,
+        user_id: str,
+        fields: Optional[Union[str, list, tuple]] = None,
+        return_json: bool = False,
+    ) -> Union[User, dict]:
         """
+        Get information about a Facebook User.
+
         :param user_id: ID for user.
         :param fields: Comma-separated id string for data fields which you want.
             You can also pass this with an id list, tuple.
-        :param return_json: Set to false will return a dict of instances.
+        :param return_json: Set to false will return a dataclass for user.
         Or return json data. Default is false.
         :return: User information.
         """
