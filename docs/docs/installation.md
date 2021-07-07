@@ -1,8 +1,4 @@
-Python 2.7 EOL has been reached [in 2020](https://www.python.org/dev/peps/pep-0373/#id4), with the last release made in April, 2020.
-
-So we recommend using the latest version of Python 3.
-
-This library supports Python 3.5 and newer, Python 2.7.
+This library supports Python 3.5 and newer.
 
 ## Dependencies
 

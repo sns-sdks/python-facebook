@@ -1,42 +1,40 @@
 import json
 import logging
 from collections import defaultdict
-from six import iteritems
-
-from attr import attrs, attrib
+from dataclasses import dataclass
+from json.decoder import JSONDecodeError
 from typing import List, Optional
-from requests.models import CaseInsensitiveDict
 
-try:
-    from json.decoder import JSONDecodeError  # pragma: no cover
-except ImportError:  # pragma: no cover
-    JSONDecodeError = ValueError  # pragma: no cover
+from requests.models import CaseInsensitiveDict
 
 logger = logging.getLogger(__name__)
 
 
-@attrs
+@dataclass
 class PercentSecond(object):
     """
-    This is a data class for percent and sleep seconds mapping.
+    A class representing for percent and sleep seconds mapping.
+    If less percent will sleep seconds.
     """
-    percent = attrib(type=int)
-    seconds = attrib(type=int)
+
+    percent: int
+    seconds: int
 
 
-@attrs
-class RateLimitData(object):
+@dataclass
+class RateLimitHeader(object):
     """
-    This A class representing the rate limit data.
+    A class representing the rate limit header.
     Refer: https://developers.facebook.com/docs/graph-api/overview/rate-limiting#headers
     """
-    call_count = attrib(default=0, type=int)
-    call_volume = attrib(default=0, type=int)
-    cpu_time = attrib(default=0, type=int)
-    total_cputime = attrib(default=0, type=int)
-    total_time = attrib(default=0, type=int)
-    type = attrib(default=None, type=Optional[str])
-    estimated_time_to_regain_access = attrib(default=None, type=Optional[str])
+
+    call_count: int = 0
+    total_cputime: int = 0
+    total_time: int = 0
+    type: Optional[str] = None  # only for Business Use Case Rate Limits
+    estimated_time_to_regain_access: Optional[
+        str
+    ] = None  # only for Business Use Case Rate Limits
 
     def max_percent(self):
         return max(self.call_count, self.total_cputime, self.total_time)
@@ -44,9 +42,10 @@ class RateLimitData(object):
 
 class RateLimit(object):
     """
-    app's rate limit message.
-    Refer: https://developers.facebook.com/docs/graph-api/overview/rate-limiting#application-level-rate-limiting
+    A class representing the rate limit.
+    Refer: https://developers.facebook.com/docs/graph-api/overview/rate-limiting
     """
+
     DEFAULT_TIME_WINDOW = 60 * 60
 
     def __init__(self):
@@ -78,16 +77,15 @@ class RateLimit(object):
             api.rate_limit.get_limit()
         or:
             api.rate_limit.get_limit(object_id="123456", endpoint="pages")
-        and a RateLimitData instance will be returned.
+        and a RateLimitHeader instance will be returned.
         """
         self.resources = {
-            "app": RateLimitData(),
-            "business": defaultdict(lambda: defaultdict(RateLimitData))
+            "app": RateLimitHeader(),
+            "business": defaultdict(lambda: defaultdict(RateLimitHeader)),
         }
 
     @staticmethod
-    def parse_headers(headers, key):
-        # type: (CaseInsensitiveDict, str) -> Optional[dict]
+    def parse_headers(headers: CaseInsensitiveDict, key: str) -> Optional[dict]:
         """
         Get rate limit information from header for key.
         :param headers: Response headers
@@ -99,13 +97,14 @@ class RateLimit(object):
             try:
                 data = json.loads(usage)
                 return data
-            except (TypeError, JSONDecodeError) as ex:
-                logger.error("Exception in parse {0} data error. Usage is: {1}. errors: {2}".format(key, usage, ex))
+            except JSONDecodeError as ex:
+                logger.error(
+                    f"Exception in parse {key} data error. Usage is: {usage}. errors: {ex}"
+                )
                 return None
         return None
 
-    def set_limit(self, headers):
-        # type: (CaseInsensitiveDict) -> None
+    def set_limit(self, headers: CaseInsensitiveDict):
         """
         Get rate limit data from response headers. And update to instance.
         :param headers: Response headers
@@ -113,37 +112,44 @@ class RateLimit(object):
         """
         app_usage = self.parse_headers(headers, "x-app-usage")
         if app_usage is not None:
-            self.resources["app"] = RateLimitData(**app_usage)
+            self.resources["app"] = RateLimitHeader(**app_usage)
 
         business_usage = self.parse_headers(headers, "x-business-use-case-usage")
         if business_usage is not None:
-            for business_id, items in iteritems(business_usage):
+            for business_id, items in business_usage.items():
                 for item in items:
-                    self.resources["business"][business_id][item["type"]] = RateLimitData(**item)
+                    self.resources["business"][business_id][
+                        item["type"]
+                    ] = RateLimitHeader(**item)
 
-    def get_limit(self, object_id=None, endpoint=None):
-        # type: (Optional[str], Optional[str]) -> RateLimitData
+    def get_limit(
+        self, object_id: Optional[str] = None, rate_limit_type: Optional[str] = None
+    ) -> RateLimitHeader:
         """
-        Get a RateLimitData object for given type.
+        Get a business user case rate limit for object with type or get app rate limit data.
+
         :param object_id: business object id
-        :param endpoint: rate limit type
-        :return: RateLimitData object containing rate limit information.
+        :param rate_limit_type: rate limit type, like pages,instagram,ads_insights...
+            All type at https://developers.facebook.com/docs/graph-api/overview/rate-limiting#headers-2
+        :return: RateLimitHeader object containing rate limit information.
         """
-        if all([object_id, endpoint]):
-            return self.resources["business"][object_id][endpoint]
+        if all([object_id, rate_limit_type]):
+            return self.resources["business"][object_id][rate_limit_type]
 
         return self.resources["app"]
 
-    def get_max_percent(self):
-        # TODO only check app usage now.
+    def get_max_percent(self) -> int:
+        # TODO Now only check app usage.
         app_usage = self.resources["app"]
         percent = app_usage.max_percent()
         return percent
 
-    def get_sleep_seconds(self, sleep_data=None):
-        # type: (Optional[List[PercentSecond]]) -> int
+    def get_sleep_seconds(
+        self, sleep_data: Optional[List[PercentSecond]] = None
+    ) -> int:
         """
         Get seconds to sleep in requests.
+
         :param sleep_data:
             the dict for case percent to sleep seconds. ex:
             [
@@ -160,5 +166,5 @@ class RateLimit(object):
                 if max_percent <= ps.percent:
                     return ps.seconds
             return 60 * 10  # sleep 10 minutes
-        # Default sleep seconds is 2
-        return 2
+        # Default sleep seconds is 0
+        return 0

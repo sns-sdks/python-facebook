@@ -1,32 +1,28 @@
-import json
-import unittest
+"""
+    tests for custom exceptions
+"""
 
-from pyfacebook.error import ErrorCode, ErrorMessage, PyFacebookException
+from pyfacebook import LibraryError, FacebookError
 
 
-class ErrorTest(unittest.TestCase):
-    BASE_PATH = "testdata/"
-    with open(BASE_PATH + "error.json", "rb") as f:
-        ERROR_DATA = json.loads(f.read().decode("utf-8"))
+def test_error():
+    error = {
+        "message": "Message describing the error",
+        "type": "OAuthException",
+        "code": 190,
+        "error_subcode": 460,
+        "error_user_title": "A title",
+        "error_user_msg": "A message",
+        "fbtrace_id": "EJplcsCHuLu",
+    }
 
-    def testResponseError(self):
-        ex = PyFacebookException(self.ERROR_DATA["error"])
+    fb_err = FacebookError(error)
 
-        self.assertEqual(ex.code, 100)
-        self.assertEqual(ex.type, "OAuthException")
-        self.assertEqual(ex.error_type, "FacebookException")
-        error_msg = (
-            "FacebookException(code=100,type=OAuthException,message=(#100) "
-            "Pages Public Content Access requires either app secret proof or an app token)"
-        )
-        self.assertEqual(repr(ex), error_msg)
-        self.assertTrue(str(ex), error_msg)
+    assert fb_err.code == 190
+    assert "FacebookError" in repr(fb_err)
 
-    def testErrorMessage(self):
-        error = ErrorMessage(code=ErrorCode.HTTP_ERROR, message="error")
+    error = {"message": "error message"}
+    lib_err = LibraryError(error)
 
-        ex = PyFacebookException(error)
-
-        self.assertEqual(ex.code, 10000)
-        self.assertEqual(ex.message, "error")
-        self.assertEqual(ex.error_type, "PyFacebookException")
+    assert lib_err.code == -1
+    assert "LibraryError" in str(lib_err)

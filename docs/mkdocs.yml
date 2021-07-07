@@ -1,5 +1,6 @@
 site_name: Python Facebook Docs
 site_description: Docs for python-facebook library
+site_url: https://sns-sdks.github.io/python-facebook/
 repo_url: https://github.com/sns-sdks/python-facebook
 copyright: Copyright &copy; 2019 - 2021 Ikaros kun
 
@@ -29,8 +30,6 @@ theme:
 nav:
   - Introduction: index.md
   - Installation: installation.md
-  - Advanced:
-      - Extend API: advanced/extended_api_methods.md
   - Changelog: CHANGELOG.md
 
 extra:
@@ -39,6 +38,8 @@ extra:
       link: https://twitter.com/realllkk520
     - icon: fontawesome/brands/github
       link: https://github.com/sns-sdks/python-facebook
+  version:
+    provider: mike
 
 markdown_extensions:
   - codehilite

@@ -9,7 +9,7 @@ Author: IkarosKun <merle.liukun@gmail.com>
 The Graph API is the primary way for apps to read and write to the Facebook social graph. 
 
 This library provides a Python interface for the [Facebook Graph API](https://developers.facebook.com/docs/graph-api).
-Library could work on Python 2.7+ and Python 3.6+
+Library could work on Python 3.6+
 
 
 !!! warning "Python 2.7"

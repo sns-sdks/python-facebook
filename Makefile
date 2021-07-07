@@ -39,8 +39,11 @@ cov-term: clean-pyc
 cov-html: clean-pyc
 	pytest -s --cov=pyfacebook --cov-report html
 
+lint-check:
+	 black --check .
+
 lint:
-	flake8 .
+	 black .
 
 test:
 	pytest -s
