@@ -4,4 +4,4 @@ from pyfacebook.exceptions import PyFacebookException, FacebookError, LibraryErr
 from pyfacebook.api import GraphAPI
 from pyfacebook.api.facebook.client import FacebookApi
 
-__version__ = "0.9.3"
+__version__ = "0.10.0"
