@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.10.0](https://github.com/sns-sdks/python-facebook/v0.10.0) (2021-07-7)
+
+### Features
+
+- New structure for API.
+
+### Broken Change
+
+- Remove python2 support.
+- Refactor all methods.
+
+
 ## [0.9.3](https://github.com/sns-sdks/python-facebook/compare/v0.9.1...v0.9.2) (2021-04-28)
 
 ### Features
