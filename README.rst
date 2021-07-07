@@ -134,6 +134,6 @@ SUPPORT
 ``python-facebook-api`` had been being developed with Pycharm under the free JetBrains Open Source license(s) granted by JetBrains s.r.o.,
 hence I would like to express my thanks here.
 
-.. image:: docs/images/jetbrains.svg
+.. image:: docs/docs/images/jetbrains.svg
     :target: https://www.jetbrains.com/?from=sns-sdks/python-facebook
     :alt: Jetbrains
