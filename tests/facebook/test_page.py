@@ -39,3 +39,29 @@ def test_get_info(helpers, fb_api):
 
     with pytest.raises(LibraryError):
         fb_api.page.get_info()
+
+
+def test_get_batch(helpers, fb_api):
+    page_ids = ["20531316728", "19292868552"]
+
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{fb_api.version}",
+            json=helpers.load_json(
+                "testdata/facebook/apidata/pages/multi_default_fields.json"
+            ),
+        )
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{fb_api.version}",
+            json=helpers.load_json("testdata/facebook/apidata/pages/multi_pages.json"),
+        )
+
+        data = fb_api.page.get_batch(ids=page_ids)
+        assert page_ids[0] in data.keys()
+
+        data_json = fb_api.page.get_batch(
+            ids=page_ids, fields="id,name,username,fan_count", return_json=True
+        )
+        assert data_json[page_ids[0]]["id"] == page_ids[0]
