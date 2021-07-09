@@ -61,7 +61,7 @@ class StoryAttachmentSubattachments(BaseModel):
     Refer: https://developers.facebook.com/docs/graph-api/reference/story-attachment/subattachments/
     """
 
-    data: Optional[List["StoryAttachment"]] = field()
+    data: Optional[List["StoryAttachment"]] = field(repr=True)
     paging: Optional[Paging] = field()
 
 
@@ -95,5 +95,5 @@ class Attachments(BaseModel):
     Refer: https://developers.facebook.com/docs/graph-api/reference/post/attachments/
     """
 
-    data: Optional[List[StoryAttachment]] = field(True)
+    data: Optional[List[StoryAttachment]] = field(repr=True)
     paging: Optional[Paging] = field()

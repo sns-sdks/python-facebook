@@ -17,7 +17,6 @@ USER_PUBLIC_FIELDS = [
     "short_name",
 ]
 
-
 PAGE_PUBLIC_FIELDS = [
     "id",
     "about",
@@ -39,4 +38,44 @@ PAGE_PUBLIC_FIELDS = [
     "username",
     "verification_status",
     "website",
+]
+
+ATTACHMENT_FIELDS = [
+    "description",
+    "description_tags",
+    "media",
+    "media_type",
+    "target",
+    "title",
+    "type",
+    "unshimmed_url",
+    "url",
+    "subattachments",
+]
+
+POST_PUBLIC_FIELDS = [
+    "id",
+    "message",
+    f"attachments{{{','.join(ATTACHMENT_FIELDS)}}}",
+    "created_time",
+    "full_picture",
+    "icon",
+    "message",
+    "message_tags",
+    "permalink_url",
+    "picture",
+    "shares",
+    "status_type",
+    "updated_time",
+]
+
+POST_CONNECTIONS_SUMMERY_FIELDS = [
+    "comments.filter(stream).summary(true).limit(0)",
+    "reactions.summary(true).limit(0)",
+    "reactions.type(LIKE).limit(0).summary(total_count).as(like)",
+    "reactions.type(LOVE).limit(0).summary(total_count).as(love)",
+    "reactions.type(WOW).limit(0).summary(total_count).as(wow)",
+    "reactions.type(HAHA).limit(0).summary(total_count).as(haha)",
+    "reactions.type(SAD).limit(0).summary(total_count).as(sad)",
+    "reactions.type(ANGRY).limit(0).summary(total_count).as(angry)",
 ]
