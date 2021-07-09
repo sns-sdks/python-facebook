@@ -4,11 +4,12 @@
     Refer: https://developers.facebook.com/docs/graph-api/reference/page
 """
 from dataclasses import dataclass
-from typing import List, Optional, Union
+from typing import List, Optional
 
 from pyfacebook.models.base import BaseModel, field
-from pyfacebook.models.extensions import Location, VOIPInfo
-from pyfacebook.models.image import CoverPhoto, ProfilePicture
+from pyfacebook.models.extensions import VOIPInfo
+from pyfacebook.models.place import Location
+from pyfacebook.models.image import CoverPhoto, Picture
 
 
 @dataclass
@@ -296,9 +297,4 @@ class Page(BaseModel):
     written_by: Optional[str] = field()
 
     # common connection
-    picture: Optional[Union[ProfilePicture, dict]] = field()
-
-    def __post_init__(self):
-        if self.picture is not None and isinstance(self.picture, dict):
-            picture = self.picture.get("data", {})
-            self.picture = ProfilePicture.new_from_json_dict(picture)
+    picture: Optional[Picture] = field()

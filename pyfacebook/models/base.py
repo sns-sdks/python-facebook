@@ -50,7 +50,7 @@ class BaseModel(DataClassJsonMixin):
         return data
 
 
-def dict_minus_none_values(obj: dict):
+def dict_minus_none_values(obj: Optional[dict]):
     """
     Remove data dict where value is None
     :param obj: dict object
