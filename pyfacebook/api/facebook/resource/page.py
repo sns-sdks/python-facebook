@@ -12,11 +12,11 @@ from pyfacebook.utils.params_utils import enf_comma_separated
 
 class FacebookPage(BaseResource):
     def get_info(
-        self,
-        page_id: Optional[str] = None,
-        username: Optional[str] = None,
-        fields: Optional[Union[str, list, tuple]] = None,
-        return_json=False,
+            self,
+            page_id: Optional[str] = None,
+            username: Optional[str] = None,
+            fields: Optional[Union[str, list, tuple]] = None,
+            return_json=False,
     ) -> Union[Page, dict]:
         """
         Get information about a Facebook Page.
@@ -51,10 +51,10 @@ class FacebookPage(BaseResource):
             return Page.new_from_json_dict(data=data)
 
     def get_batch(
-        self,
-        ids: Optional[Union[str, list, tuple]],
-        fields: Optional[Union[str, list, tuple]] = None,
-        return_json: bool = False,
+            self,
+            ids: Optional[Union[str, list, tuple]],
+            fields: Optional[Union[str, list, tuple]] = None,
+            return_json: bool = False,
     ) -> Union[Dict[str, Page], dict]:
         """
         Get batch pages information by ids.
@@ -81,3 +81,25 @@ class FacebookPage(BaseResource):
             return {
                 page_id: Page.new_from_json_dict(item) for page_id, item in data.items()
             }
+
+    def get_feed(
+            self,
+            fields: Optional[Union[str, list, dict]] = None,
+            since: Optional[str] = None,
+            until: Optional[str] = None,
+            count: Optional[int] = 10,
+            limit: Optional[int] = 10,
+            source: Optional[str] = "feed",
+            return_json=True,
+    ):
+        """
+        
+        :param fields:
+        :param since:
+        :param until:
+        :param count:
+        :param limit:
+        :param source:
+        :param return_json:
+        :return:
+        """
