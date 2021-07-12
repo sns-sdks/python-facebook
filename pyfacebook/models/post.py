@@ -108,6 +108,7 @@ class Post(BaseModel):
     subscribed: Optional[bool] = field()
     target: Optional[dict] = field()
     targeting: Optional[dict] = field()  # TODO
+    tagged_time: Optional[str] = field()  # Only for tagged posts.
     timeline_visibility: Optional[str] = field()
     updated_time: Optional[str] = field()
     via: Optional[dict] = field()
