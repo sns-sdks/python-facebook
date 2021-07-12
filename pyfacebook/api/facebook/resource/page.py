@@ -4,14 +4,14 @@
 from typing import Dict, List, Optional, Union, Tuple
 
 import pyfacebook.utils.constant as const
-from pyfacebook.api.facebook.resource.base import BaseResource
+from pyfacebook.api.facebook.resource.base import BaseFeedResource
 from pyfacebook.exceptions import LibraryError
 from pyfacebook.models.page import Page
 from pyfacebook.models.post import Post
 from pyfacebook.utils.params_utils import enf_comma_separated
 
 
-class FacebookPage(BaseResource):
+class FacebookPage(BaseFeedResource):
     def get_info(
         self,
         page_id: Optional[str] = None,
@@ -91,7 +91,6 @@ class FacebookPage(BaseResource):
         until: Optional[str] = None,
         count: Optional[int] = 10,
         limit: Optional[int] = 10,
-        source: Optional[str] = "feed",
         return_json: bool = False,
     ) -> Tuple[List[Union[Post, dict]], dict]:
         """
@@ -105,28 +104,19 @@ class FacebookPage(BaseResource):
         :param count: The total count for you to get data.
         :param limit: Each request retrieve objects count.
             It should no more than 100. Default is None will use api default limit.
-        :param source: Resource type. Valid values are feed/posts/tagged/published_posts.
         :param return_json: Set to false will return a dataclass for post.
             Or return json data. Default is false.
         :return: Posts information and paging
         """
-
-        if fields is None:
-            fields = const.POST_PUBLIC_FIELDS + const.POST_CONNECTIONS_SUMMERY_FIELDS
-
-        feeds, paging = self.client.get_full_connections(
+        return self._get_feed(
             object_id=page_id,
-            connection=source,
-            count=count,
-            limit=limit,
-            fields=enf_comma_separated(field="fields", value=fields),
+            fields=fields,
             since=since,
             until=until,
+            count=count,
+            limit=limit,
+            return_json=return_json,
         )
-        if return_json:
-            return feeds, paging
-        else:
-            return [Post.new_from_json_dict(fd) for fd in feeds], paging
 
     def get_posts(
         self,
@@ -153,8 +143,8 @@ class FacebookPage(BaseResource):
             Or return json data. Default is false.
         :return: Posts information and paging
         """
-        return self.get_feed(
-            page_id=page_id,
+        return self._get_feed(
+            object_id=page_id,
             fields=fields,
             since=since,
             until=until,
@@ -189,8 +179,8 @@ class FacebookPage(BaseResource):
             Or return json data. Default is false.
         :return: Posts information and paging
         """
-        return self.get_feed(
-            page_id=page_id,
+        return self._get_feed(
+            object_id=page_id,
             fields=fields,
             since=since,
             until=until,
@@ -225,8 +215,8 @@ class FacebookPage(BaseResource):
             Or return json data. Default is false.
         :return: Posts information and paging
         """
-        return self.get_feed(
-            page_id=page_id,
+        return self._get_feed(
+            object_id=page_id,
             fields=fields,
             since=since,
             until=until,

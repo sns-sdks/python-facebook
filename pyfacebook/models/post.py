@@ -128,5 +128,5 @@ class Post(BaseModel):
 
     def __repr__(self):
         # Message shorten
-        message = self.message
+        message = f"{self.message[:30]}..."
         return f"Post(id={self.id},message={message})"
