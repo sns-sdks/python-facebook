@@ -55,7 +55,6 @@ ATTACHMENT_FIELDS = [
 
 POST_PUBLIC_FIELDS = [
     "id",
-    "message",
     f"attachments{{{','.join(ATTACHMENT_FIELDS)}}}",
     "created_time",
     "full_picture",

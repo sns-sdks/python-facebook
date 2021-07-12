@@ -48,3 +48,46 @@ def test_get_batches(helpers, fb_api):
 
         users_json = fb_api.user.get_batch(ids=ids, return_json=True)
         assert users_json[ids[0]]["id"] == ids[0]
+
+
+def test_get_feed(helpers, fb_api):
+    uid = "4"
+
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{fb_api.version}/{uid}/feed",
+            json=helpers.load_json(
+                "testdata/facebook/apidata/posts/feed_fields_p1.json"
+            ),
+        )
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{fb_api.version}/{uid}/feed",
+            json=helpers.load_json(
+                "testdata/facebook/apidata/posts/feed_fields_p2.json"
+            ),
+        )
+
+        feeds, _ = fb_api.user.get_feed(user_id=uid, count=None, limit=5)
+        assert len(feeds) == 10
+        assert feeds[0].id == "4_10113477241177441"
+
+
+def test_get_posts(helpers, fb_api):
+    uid = "4"
+
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{fb_api.version}/{uid}/posts",
+            json=helpers.load_json(
+                "testdata/facebook/apidata/posts/feed_fields_p1.json"
+            ),
+        )
+
+        feeds, _ = fb_api.user.get_posts(
+            user_id=uid, count=4, limit=5, return_json=True
+        )
+        assert len(feeds) == 4
+        assert feeds[0]["id"] == "4_10113477241177441"
