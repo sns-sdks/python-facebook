@@ -1,14 +1,1 @@
-{
-  "2121008874780932_2427414477473702": {
-    "updated_time": "2019-12-16T05:33:14+0000",
-    "id": "2121008874780932_2427414477473702",
-    "created_time": "2019-09-29T03:59:53+0000",
-    "message": "So MyLife to go. haha"
-  },
-  "175154750010052_424924701699721": {
-    "updated_time": "2019-08-16T11:18:58+0000",
-    "id": "175154750010052_424924701699721",
-    "created_time": "2019-08-12T03:45:11+0000",
-    "message": "我测试一下 MyLife"
-  }
-}
+{"19292868552_10158347294088553":{"id":"19292868552_10158347294088553","created_time":"2021-07-08T15:30:19+0000","message":"Despite reliable peering being essential for Facebook and for everyone’s internet use, there hasn’t been an industry standard for how to set up a scalable, automatic peering management system. However, the team at Facebook Engineering developed PeeringDB OAuth, a new automated method that allows for faster self-service peering configuration on the open-source PeeringDB database. Read about the best practices they’ve discovered: https://fb.me/Facebook-Peering-automation","updated_time":"2021-07-09T09:29:06+0000"},"19292868552_10158345715593553":{"id":"19292868552_10158345715593553","created_time":"2021-07-07T17:02:59+0000","message":"Messenger API for Instagram opened up to all developers in June, with an opportunity to build for IG business accounts with follower counts between 10k-100k. We are expanding the rollout to Instagram business accounts with follower counts between 1K-10K so you can build for more businesses! Read more on how to get started: https://fb.me/Messenger-API-for-Instagram","updated_time":"2021-07-09T07:31:45+0000"}}

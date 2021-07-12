@@ -10,7 +10,7 @@ from typing import List, Optional, Union
 from dataclasses_json import config
 
 from pyfacebook.models.base import BaseModel, field
-from pyfacebook.models.image import ProfilePicture
+from pyfacebook.models.image import Picture
 
 
 @dataclass
@@ -74,9 +74,4 @@ class User(BaseModel):
     video_upload_limits: Optional[dict] = field()
 
     # connections fields
-    picture: Optional[Union[ProfilePicture, dict]] = field()
-
-    def __post_init__(self):
-        if self.picture is not None and isinstance(self.picture, dict):
-            picture = self.picture.get("data", {})
-            self.picture = ProfilePicture.new_from_json_dict(picture)
+    picture: Optional[Picture] = field()

@@ -313,11 +313,12 @@ class GraphAPI:
         :return: Response data and latest paging info.
         """
 
-        if limit is not None:
-            kwargs["limit"] = limit
-
         data_set, paging = [], None
         while True:
+            # sometimes may not return limit.
+            if limit is not None:
+                kwargs["limit"] = limit
+
             data = self.get_connection(
                 object_id=object_id,
                 connection=connection,
