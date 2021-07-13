@@ -2,11 +2,12 @@
     Apis for group.
 """
 
-from typing import Dict, Optional, Union
+from typing import Dict, List, Optional, Tuple, Union
 
 import pyfacebook.utils.constant as const
 from pyfacebook.api.facebook.resource.base import BaseFeedResource
 from pyfacebook.models.group import Group
+from pyfacebook.models.post import Post
 from pyfacebook.utils.params_utils import enf_comma_separated
 
 
@@ -68,3 +69,39 @@ class FacebookGroup(BaseFeedResource):
             return {
                 gp_id: Group.new_from_json_dict(item) for gp_id, item in data.items()
             }
+
+    def get_feed(
+        self,
+        group_id: str,
+        fields: Optional[Union[str, list, dict]] = None,
+        since: Optional[str] = None,
+        until: Optional[str] = None,
+        count: Optional[int] = 10,
+        limit: Optional[int] = 10,
+        return_json: bool = False,
+    ) -> Tuple[List[Union[Post, dict]], dict]:
+        """
+        Get Feed of Posts owned by the Group.
+
+        :param group_id: ID for the group to get feeds.
+        :param fields: Comma-separated id string for data fields which you want.
+            You can also pass this with an id list, tuple.
+        :param since: A Unix timestamp or strtotime data value that points to the start of data.
+        :param until: A Unix timestamp or strtotime data value that points to the end of data.
+        :param count: The total count for you to get data.
+        :param limit: Each request retrieve objects count.
+            It should no more than 100. Default is None will use api default limit.
+        :param return_json: Set to false will return a dataclass for post.
+            Or return json data. Default is false.
+        :return: Posts information and paging
+        """
+
+        return self._get_feed(
+            object_id=group_id,
+            fields=fields,
+            since=since,
+            until=until,
+            count=count,
+            limit=limit,
+            return_json=return_json,
+        )
