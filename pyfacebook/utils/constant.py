@@ -40,6 +40,14 @@ PAGE_PUBLIC_FIELDS = [
     "website",
 ]
 
+GROUP_PUBLIC_FIELDS = [
+    "id",
+    "name",
+    "description",
+    "created_time",
+    "member_count",
+]
+
 ATTACHMENT_FIELDS = [
     "description",
     "description_tags",

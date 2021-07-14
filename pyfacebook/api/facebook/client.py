@@ -31,3 +31,4 @@ class FacebookApi(FacebookBaseApi):
     user = rs.FacebookUser()
     page = rs.FacebookPage()
     post = rs.FacebookPost()
+    group = rs.FacebookGroup()

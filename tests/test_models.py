@@ -42,3 +42,12 @@ def test_post(helpers):
     assert post.id == "565225540184937_4018908568149933"
     assert post.reactions.summary.total_count == 8878
     assert "message" in repr(post)
+
+
+def test_group(helpers):
+    gp_data = helpers.load_json("testdata/facebook/models/group.json")
+
+    group = md.Group.new_from_json_dict(gp_data)
+    assert group.id == "2260975870792283"
+    assert group.member_count == 744
+    assert group.cover.id == "10156542097347597"
