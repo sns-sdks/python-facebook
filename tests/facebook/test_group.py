@@ -64,3 +64,22 @@ def test_get_batch(helpers, fb_api):
             return_json=True,
         )
         assert gps_json[gp_ids[1]]["id"] == gp_ids[1]
+
+
+def test_get_feed(helpers, fb_api):
+    gp_id = ""
+
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{fb_api.version}/{gp_id}/feed",
+            json=helpers.load_json("testdata/facebook/apidata/groups/feed_p1.json"),
+        )
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{fb_api.version}/{gp_id}/feed",
+            json=helpers.load_json("testdata/facebook/apidata/groups/feed_p2.json"),
+        )
+
+        feeds, _ = fb_api.group.get_feed(group_id=gp_id)
+        assert len(feeds) == 10
