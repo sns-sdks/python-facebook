@@ -17,7 +17,7 @@ class FacebookPage(BaseFeedResource):
         page_id: Optional[str] = None,
         username: Optional[str] = None,
         fields: Optional[Union[str, list, tuple]] = None,
-        return_json=False,
+        return_json: bool = False,
     ) -> Union[Page, dict]:
         """
         Get information about a Facebook Page.
