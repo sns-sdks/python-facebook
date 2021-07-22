@@ -4,3 +4,4 @@ from .page import Page
 from .post import Post
 from .group import Group
 from .photo import Photo
+from .album import Album
