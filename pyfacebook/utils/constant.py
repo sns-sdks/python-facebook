@@ -88,3 +88,5 @@ POST_CONNECTIONS_SUMMERY_FIELDS = [
 ]
 
 PHOTO_PUBLIC_FIELDS = ["id", "created_time", "name", "updated_time", "link"]
+
+ALBUM_PUBLIC_FIELDS = ["id", "created_time", "count", "name", "updated_time"]
