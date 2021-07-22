@@ -34,3 +34,4 @@ class FacebookApi(FacebookBaseApi):
     group = rs.FacebookGroup()
     photo = rs.FacebookPhoto()
     album = rs.FacebookAlbum()
+    video = rs.FacebookVideo()
