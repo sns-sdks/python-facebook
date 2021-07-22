@@ -60,3 +60,11 @@ def test_photo(helpers):
     assert photo.id == "10158249017468553"
     assert photo.images[0].width == 1369
     assert photo._from["id"] == "19292868552"
+
+
+def test_album(helpers):
+    ab_data = helpers.load_json("testdata/facebook/models/album.json")
+
+    album = md.Album.new_from_json_dict(ab_data)
+    assert album.id == "10153867132423553"
+    assert album._from["id"] == "19292868552"
