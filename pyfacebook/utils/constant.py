@@ -86,3 +86,5 @@ POST_CONNECTIONS_SUMMERY_FIELDS = [
     "reactions.type(SAD).limit(0).summary(total_count).as(sad)",
     "reactions.type(ANGRY).limit(0).summary(total_count).as(angry)",
 ]
+
+PHOTO_PUBLIC_FIELDS = ["id", "created_time", "name", "updated_time", "link"]

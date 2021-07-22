@@ -51,3 +51,12 @@ def test_group(helpers):
     assert group.id == "2260975870792283"
     assert group.member_count == 744
     assert group.cover.id == "10156542097347597"
+
+
+def test_photo(helpers):
+    ph_data = helpers.load_json("testdata/facebook/models/photo.json")
+
+    photo = md.Photo.new_from_json_dict(ph_data)
+    assert photo.id == "10158249017468553"
+    assert photo.images[0].width == 1369
+    assert photo._from["id"] == "19292868552"
