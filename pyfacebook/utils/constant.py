@@ -99,4 +99,5 @@ VIDEO_PUBLIC_FIELDS = [
     "published",
     "length",
     "permalink_url",
+    "updated_time",
 ]
