@@ -62,7 +62,7 @@ class FacebookPhoto(BaseResource):
         if fields is None:
             fields = const.PHOTO_PUBLIC_FIELDS
 
-        data = self.client.get_object(
+        data = self.client.get_objects(
             ids=ids,
             fields=enf_comma_separated(field="fields", value=fields),
         )

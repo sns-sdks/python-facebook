@@ -32,3 +32,4 @@ class FacebookApi(FacebookBaseApi):
     page = rs.FacebookPage()
     post = rs.FacebookPost()
     group = rs.FacebookGroup()
+    photo = rs.FacebookPhoto()
