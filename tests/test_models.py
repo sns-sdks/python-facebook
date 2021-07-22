@@ -68,3 +68,13 @@ def test_album(helpers):
     album = md.Album.new_from_json_dict(ab_data)
     assert album.id == "10153867132423553"
     assert album._from["id"] == "19292868552"
+
+
+def test_video(helpers):
+    v_data = helpers.load_json("testdata/facebook/models/video.json")
+
+    video = md.Video.new_from_json_dict(v_data)
+    assert video.id == "1192957457884299"
+    assert video.privacy.description == "Public"
+    assert video._from["id"] == "19292868552"
+    assert video.length == 12.891
