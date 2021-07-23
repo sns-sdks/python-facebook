@@ -101,3 +101,16 @@ VIDEO_PUBLIC_FIELDS = [
     "permalink_url",
     "updated_time",
 ]
+
+LIVE_VIDEO_PUBLIC_FIELDS = [
+    "id",
+    "creation_time",
+    "description",
+    "embed_html",
+    "live_views",
+    "permalink_url",
+    "secure_stream_url",
+    "status",
+    "stream_url",
+    "title",
+]
