@@ -53,6 +53,14 @@ def test_group(helpers):
     assert group.cover.id == "10156542097347597"
 
 
+def test_event(helpers):
+    event_data = helpers.load_json("testdata/facebook/models/event.json")
+
+    event = md.Event.new_from_json_dict(event_data)
+    assert event.id == "5971414212932788"
+    assert event.cover.id == "2966383383576806"
+
+
 def test_photo(helpers):
     ph_data = helpers.load_json("testdata/facebook/models/photo.json")
 
