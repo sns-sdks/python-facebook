@@ -94,3 +94,22 @@ def test_comment(helpers):
     comment = md.Comment.new_from_json_dict(c_data)
     assert comment.id == "2954961744718970_2966313500250461"
     assert comment.attachment.type == "photo"
+
+
+def test_conversation(helpers):
+    cvs_data = helpers.load_json("testdata/facebook/models/conversation.json")
+
+    cvs = md.Conversation.new_from_json_dict(cvs_data)
+    assert cvs.id == "t_587956915396498"
+    assert cvs.participants.data[0].id == "2711636948859886"
+
+
+def test_message(helpers):
+    msg_data = helpers.load_json("testdata/facebook/models/message.json")
+
+    message = md.Message.new_from_json_dict(msg_data)
+    assert (
+        message.id
+        == "m_ToF35NI1OImBjyUIgplSaBMylUFmkYY4bHogy9C1otLISU6SGhccB5NK-THX_W4EdVQiKVv5SgCW9m-_C78mRA"
+    )
+    assert message.attachments.data[0].id == "651143212510248"
