@@ -86,3 +86,11 @@ def test_live_video(helpers):
     live_video = md.LiveVideo.new_from_json_dict(v_data)
     assert live_video.id == "2943409379207540"
     assert live_video.ingest_streams[0].stream_id == "0"
+
+
+def test_comment(helpers):
+    c_data = helpers.load_json("testdata/facebook/models/comment.json")
+
+    comment = md.Comment.new_from_json_dict(c_data)
+    assert comment.id == "2954961744718970_2966313500250461"
+    assert comment.attachment.type == "photo"

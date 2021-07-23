@@ -1,9 +1,0 @@
-{
-  "error": {
-    "code": 190,
-    "message": "The access token could not be decrypted"
-  },
-  "is_valid": false,
-  "scopes": [
-  ]
-}
