@@ -48,6 +48,16 @@ GROUP_PUBLIC_FIELDS = [
     "member_count",
 ]
 
+EVENT_PUBLIC_FIELDS = [
+    "id",
+    "name",
+    "description",
+    "start_time",
+    "end_time",
+    "place",
+    "event_times",
+]
+
 ATTACHMENT_FIELDS = [
     "description",
     "description_tags",
