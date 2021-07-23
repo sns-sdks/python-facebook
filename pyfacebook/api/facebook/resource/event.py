@@ -1,66 +1,66 @@
 """
-    Apis for photo.
+    Apis for event.
 """
 
 from typing import Dict, Optional, Union
 
 import pyfacebook.utils.constant as const
 from pyfacebook.api.facebook.resource.base import BaseResource
-from pyfacebook.models.photo import Photo
+from pyfacebook.models.event import Event
 from pyfacebook.utils.params_utils import enf_comma_separated
 
 
-class FacebookPhoto(BaseResource):
+class FacebookEvent(BaseResource):
     def get_info(
         self,
-        photo_id: Optional[str],
+        event_id: Optional[str],
         fields: Optional[Union[str, list, tuple]] = None,
         return_json: bool = False,
-    ) -> Union[Photo, dict]:
+    ) -> Union[Event, dict]:
         """
-        Get information about a Facebook Photo.
+        Get information about a Facebook Event.
 
-        :param photo_id: ID for the photo.
+        :param event_id: ID for the Event.
         :param fields: Comma-separated id string for data fields which you want.
             You can also pass this with an id list, tuple.
-        :param return_json: Set to false will return a dataclass for Photo.
+        :param return_json: Set to false will return a dataclass for Event.
             Or return json data. Default is false.
-        :return: Photo information.
+        :return: Event information.
         """
 
         if fields is None:
-            fields = const.PHOTO_PUBLIC_FIELDS
+            fields = const.EVENT_PUBLIC_FIELDS
 
         data = self.client.get_object(
-            object_id=photo_id,
+            object_id=event_id,
             fields=enf_comma_separated(field="fields", value=fields),
         )
         if return_json:
             return data
         else:
-            return Photo.new_from_json_dict(data=data)
+            return Event.new_from_json_dict(data=data)
 
     def get_batch(
         self,
         ids: Optional[Union[str, list, tuple]],
         fields: Optional[Union[str, list, tuple]] = None,
         return_json: bool = False,
-    ) -> Union[Dict[str, Photo], dict]:
+    ) -> Union[Dict[str, Event], dict]:
         """
-        Get batch photos information by ids.
+        Get batch Events information by ids.
 
-        :param ids: IDs for the photos.
+        :param ids: IDs for the Events.
         :param fields: Comma-separated id string for data fields which you want.
             You can also pass this with an id list, tuple.
-        :param return_json: Set to false will return a list of dataclass for Photo.
+        :param return_json: Set to false will return a list of dataclass for Events.
             Or return json data. Default is false.
-        :return: Photos information.
+        :return: Events information.
         """
 
         ids = enf_comma_separated(field="ids", value=ids)
 
         if fields is None:
-            fields = const.PHOTO_PUBLIC_FIELDS
+            fields = const.EVENT_PUBLIC_FIELDS
 
         data = self.client.get_objects(
             ids=ids,
@@ -70,6 +70,6 @@ class FacebookPhoto(BaseResource):
             return data
         else:
             return {
-                photo_id: Photo.new_from_json_dict(item)
-                for photo_id, item in data.items()
+                event_id: Event.new_from_json_dict(item)
+                for event_id, item in data.items()
             }

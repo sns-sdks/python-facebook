@@ -12,6 +12,18 @@ from pyfacebook.models.image import CoverPhoto
 
 
 @dataclass
+class EventTime(BaseModel):
+    """
+    A class representing for the time of child event.
+    """
+
+    id: Optional[str] = field(repr=True, compare=True)
+    start_time: Optional[str] = field(repr=True)
+    ticket_uri: Optional[str] = field()
+    end_time: Optional[str] = field(repr=True)
+
+
+@dataclass
 class Event(BaseModel):
     """
     A class representing the Event.
@@ -27,7 +39,7 @@ class Event(BaseModel):
     description: Optional[str] = field()
     discount_code_enabled: Optional[bool] = field()
     end_time: Optional[str] = field()
-    event_times: Optional[List[dict]] = field()  # TODO
+    event_times: Optional[List[EventTime]] = field()
     guest_list_enabled: Optional[bool] = field()
     interested_count: Optional[int] = field()
     is_canceled: Optional[bool] = field()
