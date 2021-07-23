@@ -35,3 +35,4 @@ class FacebookApi(FacebookBaseApi):
     photo = rs.FacebookPhoto()
     album = rs.FacebookAlbum()
     video = rs.FacebookVideo()
+    live_video = rs.FacebookLiveVideo()

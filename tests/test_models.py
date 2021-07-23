@@ -78,3 +78,11 @@ def test_video(helpers):
     assert video.privacy.description == "Public"
     assert video._from["id"] == "19292868552"
     assert video.length == 12.891
+
+
+def test_live_video(helpers):
+    v_data = helpers.load_json("testdata/facebook/models/live_video.json")
+
+    live_video = md.LiveVideo.new_from_json_dict(v_data)
+    assert live_video.id == "2943409379207540"
+    assert live_video.ingest_streams[0].stream_id == "0"
