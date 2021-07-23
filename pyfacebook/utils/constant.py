@@ -114,3 +114,12 @@ LIVE_VIDEO_PUBLIC_FIELDS = [
     "stream_url",
     "title",
 ]
+
+COMMENT_PUBLIC_FIELDS = [
+    "id",
+    "comment_count",
+    "created_time",
+    "like_count",
+    "message",
+    "permalink_url",
+]
