@@ -53,7 +53,7 @@ class MessageTo(BaseModel):
 @dataclass
 class MessageAttachmentImageData(BaseModel):
     """
-    A class representing the image inf attachment.
+    A class representing the image in attachment.
     """
 
     width: Optional[int] = field()
@@ -62,8 +62,29 @@ class MessageAttachmentImageData(BaseModel):
     max_height: Optional[int] = field()
     url: Optional[str] = field(repr=True)
     preview_url: Optional[str] = field()
+    raw_gif_image: Optional[str] = field()
+    raw_webp_image: Optional[str] = field()
+    animated_gif_url: Optional[str] = field()
+    animated_gif_preview_url: Optional[str] = field()
+    animated_webp_url: Optional[str] = field()
+    animated_webp_preview_url: Optional[str] = field()
     image_type: Optional[int] = field()
     render_as_sticker: Optional[bool] = field()
+
+
+@dataclass
+class MessageAttachmentVideoData(BaseModel):
+    """
+    A class representing the video in attachment.
+    """
+
+    width: Optional[int] = field()
+    height: Optional[int] = field()
+    length: Optional[int] = field()
+    video_type: Optional[int] = field()
+    url: Optional[str] = field(repr=True)
+    preview_url: Optional[str] = field()
+    rotation: Optional[int] = field()
 
 
 @dataclass
@@ -78,7 +99,9 @@ class MessageAttachment(BaseModel):
     mime_type: Optional[str] = field()
     name: Optional[str] = field()
     size: Optional[int] = field()
+    file_url: Optional[str] = field()
     image_data: Optional[MessageAttachmentImageData] = field()
+    video_data: Optional[MessageAttachmentVideoData] = field()
 
 
 @dataclass
@@ -102,6 +125,7 @@ class Message(BaseModel):
     message: Optional[str] = field()
     tags: Optional[MessageTags] = field()
     to: Optional[MessageTo] = field()
+    sticker: Optional[str] = field()
 
     # common connections
     attachments: Optional[MessageAttachments] = field()
