@@ -42,9 +42,9 @@ def test_get_batch(helpers, fb_api):
         )
 
         cvses = fb_api.conversation.get_batch(ids=cvs_ids)
-        assert cvses[[0]].id == cvs_ids[0]
+        assert cvses[cvs_ids[0]].id == cvs_ids[0]
 
-        cvses_json = fb_api.comment.get_batch(
+        cvses_json = fb_api.conversation.get_batch(
             ids=cvs_ids,
             fields="id,link,message_count,snippet,unread_count,updated_time",
             return_json=True,
