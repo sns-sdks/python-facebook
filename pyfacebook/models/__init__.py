@@ -8,3 +8,4 @@ from .album import Album
 from .video import Video
 from .live_video import LiveVideo
 from .comment import Comment
+from .conversation import Conversation
