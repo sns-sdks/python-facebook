@@ -38,3 +38,4 @@ class FacebookApi(FacebookBaseApi):
     live_video = rs.FacebookLiveVideo()
     comment = rs.FacebookComment()
     conversation = rs.FacebookConversation()
+    message = rs.FacebookMessage()

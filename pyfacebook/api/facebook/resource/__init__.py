@@ -12,3 +12,4 @@ from pyfacebook.api.facebook.resource.video import FacebookVideo
 from pyfacebook.api.facebook.resource.live_video import FacebookLiveVideo
 from pyfacebook.api.facebook.resource.comment import FacebookComment
 from pyfacebook.api.facebook.resource.conversation import FacebookConversation
+from pyfacebook.api.facebook.resource.message import FacebookMessage

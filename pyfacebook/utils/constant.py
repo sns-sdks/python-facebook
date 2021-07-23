@@ -124,11 +124,19 @@ COMMENT_PUBLIC_FIELDS = [
     "permalink_url",
 ]
 
-CONVERSATION_PUBLIC_FIELDS = [
+CONVERSATION_FIELDS = [
     "id",
     "link",
     "message_count",
     "snippet",
     "unread_count",
     "updated_time",
+]
+
+MESSAGE_FIELDS = [
+    "id",
+    "created_time",
+    "from",
+    "to",
+    "tags",
 ]
