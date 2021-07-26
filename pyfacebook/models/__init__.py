@@ -11,4 +11,4 @@ from .live_video import LiveVideo
 from .comment import Comment
 from .conversation import Conversation
 from .message import Message
-from .ig_business_models import IgBusUser
+from .ig_business_models import IgBusUser, IgBusMedia, IgBusMediaChildren
