@@ -86,7 +86,7 @@ def test_get_feed(helpers, fb_api):
             ),
         )
 
-        feeds, _ = fb_api.page.get_feed(page_id=pid, count=None, limit=5)
+        feeds, _ = fb_api.page.get_feed(object_id=pid, count=None, limit=5)
         assert len(feeds) == 10
         assert feeds[0].id == "19292868552_10158349356748553"
 
@@ -104,7 +104,7 @@ def test_get_posts(helpers, fb_api):
         )
 
         feeds, _ = fb_api.page.get_posts(
-            page_id=pid, count=4, limit=5, return_json=True
+            object_id=pid, count=4, limit=5, return_json=True
         )
         assert len(feeds) == 4
         assert feeds[0]["id"] == "19292868552_10158349356748553"
@@ -122,7 +122,7 @@ def test_get_published_posts(helpers, fb_api):
             ),
         )
 
-        feeds, _ = fb_api.page.get_published_posts(page_id=pid, count=4)
+        feeds, _ = fb_api.page.get_published_posts(object_id=pid, count=4)
         assert len(feeds) == 4
         assert feeds[0].id == "19292868552_10158349356748553"
 
@@ -139,6 +139,6 @@ def test_get_tagged_posts(helpers, fb_api):
             ),
         )
 
-        feeds, _ = fb_api.page.get_tagged_posts(page_id=pid, count=4)
+        feeds, _ = fb_api.page.get_tagged_posts(object_id=pid, count=4)
         assert len(feeds) == 4
         assert feeds[0].id == "19292868552_10158349356748553"

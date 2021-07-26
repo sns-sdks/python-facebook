@@ -4,14 +4,15 @@
 from typing import Dict, List, Optional, Union, Tuple
 
 import pyfacebook.utils.constant as const
-from pyfacebook.api.facebook.resource.base import BaseFeedResource
+from pyfacebook.api.base_resource import BaseResource
+from pyfacebook.api.facebook.connections import FeedMixin
 from pyfacebook.exceptions import LibraryError
 from pyfacebook.models.page import Page
 from pyfacebook.models.post import Post
 from pyfacebook.utils.params_utils import enf_comma_separated
 
 
-class FacebookPage(BaseFeedResource):
+class FacebookPage(BaseResource, FeedMixin):
     def get_info(
         self,
         page_id: Optional[str] = None,
@@ -83,44 +84,9 @@ class FacebookPage(BaseFeedResource):
                 page_id: Page.new_from_json_dict(item) for page_id, item in data.items()
             }
 
-    def get_feed(
-        self,
-        page_id: str,
-        fields: Optional[Union[str, list, dict]] = None,
-        since: Optional[str] = None,
-        until: Optional[str] = None,
-        count: Optional[int] = 10,
-        limit: Optional[int] = 10,
-        return_json: bool = False,
-    ) -> Tuple[List[Union[Post, dict]], dict]:
-        """
-        Get feed of a Facebook Page including posts and links published by this Page, or by visitors to this Page.
-
-        :param page_id: ID for page to get feeds.
-        :param fields: Comma-separated id string for data fields which you want.
-            You can also pass this with an id list, tuple.
-        :param since: A Unix timestamp or strtotime data value that points to the start of data.
-        :param until: A Unix timestamp or strtotime data value that points to the end of data.
-        :param count: The total count for you to get data.
-        :param limit: Each request retrieve objects count.
-            It should no more than 100. Default is None will use api default limit.
-        :param return_json: Set to false will return a dataclass for post.
-            Or return json data. Default is false.
-        :return: Posts information and paging
-        """
-        return self._get_feed(
-            object_id=page_id,
-            fields=fields,
-            since=since,
-            until=until,
-            count=count,
-            limit=limit,
-            return_json=return_json,
-        )
-
     def get_posts(
         self,
-        page_id: str,
+        object_id: str,
         fields: Optional[Union[str, list, dict]] = None,
         since: Optional[str] = None,
         until: Optional[str] = None,
@@ -131,7 +97,7 @@ class FacebookPage(BaseFeedResource):
         """
         Get the page's own posts.
 
-        :param page_id: ID for page to get posts.
+        :param object_id: ID for page to get posts.
         :param fields: Comma-separated id string for data fields which you want.
             You can also pass this with an id list, tuple.
         :param since: A Unix timestamp or strtotime data value that points to the start of data.
@@ -144,7 +110,7 @@ class FacebookPage(BaseFeedResource):
         :return: Posts information and paging
         """
         return self._get_feed(
-            object_id=page_id,
+            object_id=object_id,
             fields=fields,
             since=since,
             until=until,
@@ -156,7 +122,7 @@ class FacebookPage(BaseFeedResource):
 
     def get_published_posts(
         self,
-        page_id: str,
+        object_id: str,
         fields: Optional[Union[str, list, dict]] = None,
         since: Optional[str] = None,
         until: Optional[str] = None,
@@ -167,7 +133,7 @@ class FacebookPage(BaseFeedResource):
         """
         Get all published posts by this page.
 
-        :param page_id: ID for page to get published posts.
+        :param object_id: ID for page to get published posts.
         :param fields: Comma-separated id string for data fields which you want.
             You can also pass this with an id list, tuple.
         :param since: A Unix timestamp or strtotime data value that points to the start of data.
@@ -180,7 +146,7 @@ class FacebookPage(BaseFeedResource):
         :return: Posts information and paging
         """
         return self._get_feed(
-            object_id=page_id,
+            object_id=object_id,
             fields=fields,
             since=since,
             until=until,
@@ -192,7 +158,7 @@ class FacebookPage(BaseFeedResource):
 
     def get_tagged_posts(
         self,
-        page_id: str,
+        object_id: str,
         fields: Optional[Union[str, list, dict]] = None,
         since: Optional[str] = None,
         until: Optional[str] = None,
@@ -203,7 +169,7 @@ class FacebookPage(BaseFeedResource):
         """
         Get posts which tagged the target page.
 
-        :param page_id: ID for page to get tagged posts.
+        :param object_id: ID for page to get tagged posts.
         :param fields: Comma-separated id string for data fields which you want.
             You can also pass this with an id list, tuple.
         :param since: A Unix timestamp or strtotime data value that points to the start of data.
@@ -216,7 +182,7 @@ class FacebookPage(BaseFeedResource):
         :return: Posts information and paging
         """
         return self._get_feed(
-            object_id=page_id,
+            object_id=object_id,
             fields=fields,
             since=since,
             until=until,
