@@ -12,3 +12,4 @@ class IGBusinessApi(BaseApi):
     """
 
     user = rs.IGBusinessUser()
+    media = rs.IGBusinessMedia()

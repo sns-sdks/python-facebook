@@ -179,7 +179,7 @@ IG_BUSINESS_MEDIA_PUBLIC_FIELDS = [
     "id",
     "caption",
     "comments_count",
-    f"children{','.join(IG_BUSINESS_MEDIA_CHILDREN_PUBLIC_FIELDS)}",
+    f"children{{{','.join(IG_BUSINESS_MEDIA_CHILDREN_PUBLIC_FIELDS)}}}",
     "like_count",
     "media_type",
     "media_url",
