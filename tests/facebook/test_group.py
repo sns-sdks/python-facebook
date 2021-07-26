@@ -81,5 +81,5 @@ def test_get_feed(helpers, fb_api):
             json=helpers.load_json("testdata/facebook/apidata/groups/feed_p2.json"),
         )
 
-        feeds, _ = fb_api.group.get_feed(group_id=gp_id)
+        feeds, _ = fb_api.group.get_feed(object_id=gp_id)
         assert len(feeds) == 10

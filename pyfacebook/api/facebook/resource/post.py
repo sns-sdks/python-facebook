@@ -5,7 +5,7 @@
 from typing import Dict, Optional, Union
 
 import pyfacebook.utils.constant as const
-from pyfacebook.api.facebook.resource.base import BaseResource
+from pyfacebook.api.base_resource import BaseResource
 from pyfacebook.models.post import Post
 from pyfacebook.utils.params_utils import enf_comma_separated
 
