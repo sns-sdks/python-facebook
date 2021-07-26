@@ -82,3 +82,41 @@ class IgBusMedia(BaseModel):
     timestamp: Optional[str] = field()
     username: Optional[str] = field()
     video_title: Optional[str] = field()
+
+
+@dataclass
+class IgBusReply(BaseModel):
+    """
+    A class representing the Reply.
+    Like a Comment.
+    """
+
+    id: Optional[str] = field(repr=True, compare=True)
+    like_count: Optional[int] = field()
+    media: Optional[IgBusMedia] = field()
+    text: Optional[str] = field(repr=True)
+    timestamp: Optional[str] = field()
+    user: Optional[IgBusUser] = field()
+    username: Optional[str] = field()
+
+
+@dataclass
+class IgBusReplies(BaseModel):
+    """
+    A class representing the Replies for comment.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-comment/replies
+    """
+
+    data: Optional[List[IgBusReply]] = field()
+
+
+@dataclass
+class IgBusComment(IgBusReply):
+    """
+    A class representing the Business Comment.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-comment/
+    """
+
+    replies: Optional[IgBusReplies] = field()
