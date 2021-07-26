@@ -13,3 +13,5 @@ class IGBusinessApi(BaseApi):
 
     user = rs.IGBusinessUser()
     media = rs.IGBusinessMedia()
+    comment = rs.IGBusinessComment()
+    reply = rs.IGBusinessReply()

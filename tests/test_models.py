@@ -140,3 +140,13 @@ def test_ig_bus_media(helpers):
     assert media.owner.id == "17841406338772941"
     assert len(media.children.data) == 3
     assert media.children.data[0].timestamp == "2021-07-26T10:45:19+0000"
+
+
+def test_ig_bus_comment(helpers):
+    data = helpers.load_json("testdata/instagram/models/ig_comment.json")
+
+    comment = md.IgBusComment.new_from_json_dict(data)
+    assert comment.id == "17892250648466172"
+    assert comment.media.id == "17846368219941692"
+    assert len(comment.replies.data) == 1
+    assert comment.replies.data[0].id == "17845747489952795"

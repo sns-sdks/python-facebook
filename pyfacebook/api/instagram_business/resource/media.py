@@ -17,7 +17,7 @@ class IGBusinessMedia(BaseResource):
         return_json: bool = False,
     ) -> Union[IgBusMedia, dict]:
         """
-        Get information about a Facebook User.
+        Get information about a Business media.
 
         :param media_id: ID for Media.
         :param fields: Comma-separated id string for data fields which you want.

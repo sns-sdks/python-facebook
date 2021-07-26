@@ -186,3 +186,13 @@ IG_BUSINESS_MEDIA_PUBLIC_FIELDS = [
     "permalink",
     "timestamp",
 ]
+
+IG_BUSINESS_COMMENT_PUBLIC_FIELDS = [
+    "id",
+    "like_count",
+    "text",
+    "timestamp",
+    "username",
+]
+
+IG_BUSINESS_REPLY_PUBLIC_FIELDS = IG_BUSINESS_COMMENT_PUBLIC_FIELDS
