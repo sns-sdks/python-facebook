@@ -51,6 +51,7 @@ class GraphAPI:
         base_url: Optional[str] = None,
         timeout: Optional[int] = None,
         proxies: Optional[dict] = None,
+        instagram_business_id: Optional[str] = None,
     ):
         self.app_id = app_id
         self.app_secret = app_secret
@@ -62,6 +63,7 @@ class GraphAPI:
         self.sleep_on_rate_limit = sleep_on_rate_limit
         self.sleep_seconds_mapping = sleep_seconds_mapping
         self.rate_limit = RateLimit()
+        self.instagram_business_id = instagram_business_id
 
         # if provide url override
         self.base_url = self.GRAPH_URL

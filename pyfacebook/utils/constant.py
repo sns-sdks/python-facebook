@@ -150,3 +150,39 @@ MESSAGE_FIELDS = [
     "to",
     "tags",
 ]
+
+# =============================================
+# Follows is Instagram graph fields to get data
+# =============================================
+
+IG_BUSINESS_USER_PUBLIC_FIELDS = [
+    "id",
+    "biography",
+    "name",
+    "username",
+    "profile_picture_url",
+    "followers_count",
+    "media_count",
+]
+
+IG_BUSINESS_MEDIA_CHILDREN_PUBLIC_FIELDS = [
+    "id",
+    "media_type",
+    "media_url",
+    "permalink",
+    "shortcode",
+    "thumbnail_url",
+    "timestamp",
+]
+
+IG_BUSINESS_MEDIA_PUBLIC_FIELDS = [
+    "id",
+    "caption",
+    "comments_count",
+    f"children{{{','.join(IG_BUSINESS_MEDIA_CHILDREN_PUBLIC_FIELDS)}}}",
+    "like_count",
+    "media_type",
+    "media_url",
+    "permalink",
+    "timestamp",
+]

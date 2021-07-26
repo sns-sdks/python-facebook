@@ -121,3 +121,22 @@ def test_message(helpers):
         == "m_ToF35NI1OImBjyUIgplSaBMylUFmkYY4bHogy9C1otLISU6SGhccB5NK-THX_W4EdVQiKVv5SgCW9m-_C78mRA"
     )
     assert message.attachments.data[0].id == "651143212510248"
+
+
+def test_ig_bus_user(helpers):
+    data = helpers.load_json("testdata/instagram/models/ig_user.json")
+
+    user = md.IgBusUser.new_from_json_dict(data)
+    assert user.id == "17841407673135339"
+    assert user.follows_count == 16
+
+
+def test_ig_bus_media(helpers):
+    data = helpers.load_json("testdata/instagram/models/ig_media.json")
+
+    media = md.IgBusMedia.new_from_json_dict(data)
+    assert media.id == "17896129349106152"
+    assert media.comments_count == 0
+    assert media.owner.id == "17841406338772941"
+    assert len(media.children.data) == 3
+    assert media.children.data[0].timestamp == "2021-07-26T10:45:19+0000"
