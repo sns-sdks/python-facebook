@@ -150,3 +150,17 @@ MESSAGE_FIELDS = [
     "to",
     "tags",
 ]
+
+# =============================================
+# Follows is Instagram graph fields to get data
+# =============================================
+
+IG_BUSINESS_USER_PUBLIC_FIELDS = [
+    "id",
+    "biography",
+    "name",
+    "username",
+    "profile_picture_url",
+    "followers_count",
+    "media_count",
+]
