@@ -120,3 +120,15 @@ class IgBusComment(IgBusReply):
     """
 
     replies: Optional[IgBusReplies] = field()
+
+
+@dataclass
+class IgBusHashtag(BaseModel):
+    """
+    A class representing the hashtag.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-hashtag/
+    """
+
+    id: Optional[str] = field(repr=True, compare=True)
+    name: Optional[str] = field(repr=True)

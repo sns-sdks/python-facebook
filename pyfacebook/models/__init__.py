@@ -17,4 +17,5 @@ from .ig_business_models import (
     IgBusMediaChildren,
     IgBusReply,
     IgBusComment,
+    IgBusHashtag,
 )

@@ -150,3 +150,11 @@ def test_ig_bus_comment(helpers):
     assert comment.media.id == "17846368219941692"
     assert len(comment.replies.data) == 1
     assert comment.replies.data[0].id == "17845747489952795"
+
+
+def test_ig_bus_hashtag(helpers):
+    data = helpers.load_json("testdata/instagram/models/ig_hashtag.json")
+
+    hashtag = md.IgBusHashtag.new_from_json_dict(data)
+    assert hashtag.id == "17841593698074073"
+    assert hashtag.name == "coke"
