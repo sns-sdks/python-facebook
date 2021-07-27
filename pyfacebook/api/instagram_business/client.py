@@ -15,3 +15,4 @@ class IGBusinessApi(BaseApi):
     media = rs.IGBusinessMedia()
     comment = rs.IGBusinessComment()
     reply = rs.IGBusinessReply()
+    hashtag = rs.IGBusinessHashtag()
