@@ -132,3 +132,16 @@ class IgBusHashtag(BaseModel):
 
     id: Optional[str] = field(repr=True, compare=True)
     name: Optional[str] = field(repr=True)
+
+
+@dataclass
+class IgBusContainer(BaseModel):
+    """
+    A class representing the media container.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-container
+    """
+
+    id: Optional[str] = field(repr=True, compare=True)
+    status: Optional[str] = field()
+    status_code: Optional[str] = field()

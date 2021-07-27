@@ -18,4 +18,5 @@ from .ig_business_models import (
     IgBusReply,
     IgBusComment,
     IgBusHashtag,
+    IgBusContainer,
 )
