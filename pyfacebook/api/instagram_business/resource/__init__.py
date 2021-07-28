@@ -5,3 +5,4 @@ from pyfacebook.api.instagram_business.resource.comment import (
     IGBusinessReply,
 )
 from pyfacebook.api.instagram_business.resource.hashtag import IGBusinessHashtag
+from pyfacebook.api.instagram_business.resource.container import IGBusinessContainer

@@ -16,3 +16,4 @@ class IGBusinessApi(BaseApi):
     comment = rs.IGBusinessComment()
     reply = rs.IGBusinessReply()
     hashtag = rs.IGBusinessHashtag()
+    container = rs.IGBusinessContainer()
