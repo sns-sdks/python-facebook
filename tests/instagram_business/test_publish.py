@@ -43,7 +43,7 @@ def test_get_batch(helpers, api):
         containers = api.container.get_batch(ids=container_ids)
         assert containers[container_ids[0]].id == container_ids[0]
 
-        containers_json = api.hashtag.get_batch(
+        containers_json = api.container.get_batch(
             ids=container_ids,
             fields="id,status_code",
             return_json=True,
