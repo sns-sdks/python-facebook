@@ -158,3 +158,11 @@ def test_ig_bus_hashtag(helpers):
     hashtag = md.IgBusHashtag.new_from_json_dict(data)
     assert hashtag.id == "17841593698074073"
     assert hashtag.name == "coke"
+
+
+def test_ig_bus_container(helpers):
+    data = helpers.load_json("testdata/instagram/models/ig_container.json")
+
+    container = md.IgBusContainer.new_from_json_dict(data)
+    assert container.id == "17889615691921648"
+    assert container.status_code == "FINISHED"
