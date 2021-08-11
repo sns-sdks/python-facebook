@@ -142,3 +142,32 @@ def test_get_tagged_posts(helpers, fb_api):
         feeds, _ = fb_api.page.get_tagged_posts(object_id=pid, count=4)
         assert len(feeds) == 4
         assert feeds[0].id == "19292868552_10158349356748553"
+
+
+def test_get_albums(helpers, fb_api):
+    pid = "2121008874780932"
+
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{fb_api.version}/{pid}/albums",
+            json=helpers.load_json(
+                "testdata/facebook/apidata/albums/albums_list_p1.json"
+            ),
+        )
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{fb_api.version}/{pid}/albums",
+            json=helpers.load_json(
+                "testdata/facebook/apidata/albums/albums_list_p2.json"
+            ),
+        )
+
+        albums, _ = fb_api.page.get_albums(object_id=pid, count=None, limit=3)
+        assert len(albums) == 6
+        assert albums[0].id == "2312974342251050"
+
+        albums_json, _ = fb_api.page.get_albums(
+            object_id=pid, count=3, limit=3, return_json=True
+        )
+        assert len(albums_json) == 3
