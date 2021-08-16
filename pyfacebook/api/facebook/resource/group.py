@@ -6,12 +6,12 @@ from typing import Dict, Optional, Union
 
 import pyfacebook.utils.constant as const
 from pyfacebook.api.base_resource import BaseResource
-from pyfacebook.api.facebook.connections import FeedMixin, AlbumsMixin
+from pyfacebook.api.facebook.connections import FeedMixin, AlbumsMixin, PhotosMixin
 from pyfacebook.models.group import Group
 from pyfacebook.utils.params_utils import enf_comma_separated
 
 
-class FacebookGroup(BaseResource, FeedMixin, AlbumsMixin):
+class FacebookGroup(BaseResource, FeedMixin, AlbumsMixin, PhotosMixin):
     def get_info(
         self,
         group_id: str,
