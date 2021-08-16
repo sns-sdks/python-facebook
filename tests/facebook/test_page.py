@@ -171,3 +171,28 @@ def test_get_albums(helpers, fb_api):
             object_id=pid, count=3, limit=3, return_json=True
         )
         assert len(albums_json) == 3
+
+
+def test_get_photos(helpers, fb_api):
+    pid = "108824017345866"
+
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{fb_api.version}/{pid}/photos",
+            json=helpers.load_json("testdata/facebook/apidata/photos/photos_p1.json"),
+        )
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{fb_api.version}/{pid}/photos",
+            json=helpers.load_json("testdata/facebook/apidata/photos/photos_p2.json"),
+        )
+
+        photos, _ = fb_api.page.get_photos(object_id=pid, count=None, limit=2)
+        assert len(photos) == 4
+        assert photos[0].id == "336596487901950"
+
+        photos_json, _ = fb_api.page.get_photos(
+            object_id=pid, count=2, limit=2, return_json=True
+        )
+        assert len(photos_json) == 2
