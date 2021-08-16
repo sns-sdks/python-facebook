@@ -11,12 +11,15 @@ from pyfacebook.api.facebook.connections import (
     AlbumsMixin,
     PhotosMixin,
     VideosMixin,
+    LiveVideosMixin,
 )
 from pyfacebook.models.group import Group
 from pyfacebook.utils.params_utils import enf_comma_separated
 
 
-class FacebookGroup(BaseResource, FeedMixin, AlbumsMixin, PhotosMixin, VideosMixin):
+class FacebookGroup(
+    BaseResource, FeedMixin, AlbumsMixin, PhotosMixin, VideosMixin, LiveVideosMixin
+):
     def get_info(
         self,
         group_id: str,

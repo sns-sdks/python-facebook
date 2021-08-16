@@ -10,13 +10,16 @@ from pyfacebook.api.facebook.connections import (
     AlbumsMixin,
     PhotosMixin,
     VideosMixin,
+    LiveVideosMixin,
 )
 from pyfacebook.models.user import User
 from pyfacebook.models.post import Post
 from pyfacebook.utils.params_utils import enf_comma_separated
 
 
-class FacebookUser(BaseResource, FeedMixin, AlbumsMixin, PhotosMixin, VideosMixin):
+class FacebookUser(
+    BaseResource, FeedMixin, AlbumsMixin, PhotosMixin, VideosMixin, LiveVideosMixin
+):
     def get_info(
         self,
         user_id: str,

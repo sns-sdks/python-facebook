@@ -10,6 +10,7 @@ from pyfacebook.api.facebook.connections import (
     AlbumsMixin,
     PhotosMixin,
     VideosMixin,
+    LiveVideosMixin,
 )
 from pyfacebook.exceptions import LibraryError
 from pyfacebook.models.page import Page
@@ -17,7 +18,9 @@ from pyfacebook.models.post import Post
 from pyfacebook.utils.params_utils import enf_comma_separated
 
 
-class FacebookPage(BaseResource, FeedMixin, AlbumsMixin, PhotosMixin, VideosMixin):
+class FacebookPage(
+    BaseResource, FeedMixin, AlbumsMixin, PhotosMixin, VideosMixin, LiveVideosMixin
+):
     def get_info(
         self,
         page_id: Optional[str] = None,
