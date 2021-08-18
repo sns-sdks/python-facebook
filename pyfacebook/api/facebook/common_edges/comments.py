@@ -18,6 +18,7 @@ class CommentsEdge:
         object_id: str,
         fields: Optional[Union[str, list, dict]] = None,
         filter_type: Optional[str] = None,
+        summary: Optional[bool] = None,
         since: Optional[str] = None,
         until: Optional[str] = None,
         count: Optional[int] = 10,
@@ -35,6 +36,7 @@ class CommentsEdge:
             It can be either:
                 - toplevel : Default, return all top-level comments
                 - stream : All-level comments in chronological order.
+        :param summary: Is return the aggregated information about the edge,
         :param since: A Unix timestamp or strtotime data value that points to the start of data.
         :param until: A Unix timestamp or strtotime data value that points to the end of data.
         :param count: The total count for you to get data.

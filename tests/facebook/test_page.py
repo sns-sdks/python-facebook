@@ -86,9 +86,9 @@ def test_get_feed(helpers, fb_api):
             ),
         )
 
-        feeds, _ = fb_api.page.get_feed(object_id=pid, count=None, limit=5)
-        assert len(feeds) == 10
-        assert feeds[0].id == "19292868552_10158349356748553"
+        feed = fb_api.page.get_feed(object_id=pid, count=None, limit=5)
+        assert len(feed.data) == 10
+        assert feed.data[0].id == "19292868552_10158349356748553"
 
 
 def test_get_posts(helpers, fb_api):
@@ -103,11 +103,11 @@ def test_get_posts(helpers, fb_api):
             ),
         )
 
-        feeds, _ = fb_api.page.get_posts(
+        feed_json = fb_api.page.get_posts(
             object_id=pid, count=4, limit=5, return_json=True
         )
-        assert len(feeds) == 4
-        assert feeds[0]["id"] == "19292868552_10158349356748553"
+        assert len(feed_json["data"]) == 4
+        assert feed_json["data"][0]["id"] == "19292868552_10158349356748553"
 
 
 def test_get_published_posts(helpers, fb_api):
@@ -122,9 +122,9 @@ def test_get_published_posts(helpers, fb_api):
             ),
         )
 
-        feeds, _ = fb_api.page.get_published_posts(object_id=pid, count=4)
-        assert len(feeds) == 4
-        assert feeds[0].id == "19292868552_10158349356748553"
+        feed = fb_api.page.get_published_posts(object_id=pid, count=4)
+        assert len(feed.data) == 4
+        assert feed.data[0].id == "19292868552_10158349356748553"
 
 
 def test_get_tagged_posts(helpers, fb_api):
@@ -139,9 +139,9 @@ def test_get_tagged_posts(helpers, fb_api):
             ),
         )
 
-        feeds, _ = fb_api.page.get_tagged_posts(object_id=pid, count=4)
-        assert len(feeds) == 4
-        assert feeds[0].id == "19292868552_10158349356748553"
+        feed = fb_api.page.get_tagged_posts(object_id=pid, count=4)
+        assert len(feed.data) == 4
+        assert feed.data[0].id == "19292868552_10158349356748553"
 
 
 def test_get_albums(helpers, fb_api):
@@ -163,14 +163,14 @@ def test_get_albums(helpers, fb_api):
             ),
         )
 
-        albums, _ = fb_api.page.get_albums(object_id=pid, count=None, limit=3)
-        assert len(albums) == 6
-        assert albums[0].id == "2312974342251050"
+        albums = fb_api.page.get_albums(object_id=pid, count=None, limit=3)
+        assert len(albums.data) == 6
+        assert albums.data[0].id == "2312974342251050"
 
-        albums_json, _ = fb_api.page.get_albums(
+        albums_json = fb_api.page.get_albums(
             object_id=pid, count=3, limit=3, return_json=True
         )
-        assert len(albums_json) == 3
+        assert len(albums_json["data"]) == 3
 
 
 def test_get_photos(helpers, fb_api):
@@ -188,14 +188,14 @@ def test_get_photos(helpers, fb_api):
             json=helpers.load_json("testdata/facebook/apidata/photos/photos_p2.json"),
         )
 
-        photos, _ = fb_api.page.get_photos(object_id=pid, count=None, limit=2)
-        assert len(photos) == 4
-        assert photos[0].id == "336596487901950"
+        photos = fb_api.page.get_photos(object_id=pid, count=None, limit=2)
+        assert len(photos.data) == 4
+        assert photos.data[0].id == "336596487901950"
 
-        photos_json, _ = fb_api.page.get_photos(
+        photos_json = fb_api.page.get_photos(
             object_id=pid, count=2, limit=2, return_json=True
         )
-        assert len(photos_json) == 2
+        assert len(photos_json["data"]) == 2
 
 
 def test_get_live_videos(helpers, fb_api):
@@ -217,14 +217,14 @@ def test_get_live_videos(helpers, fb_api):
             ),
         )
 
-        live_videos, _ = fb_api.page.get_live_videos(object_id=pid, count=None, limit=3)
-        assert len(live_videos) == 6
-        assert live_videos[0].id == "10160659411121729"
+        live_videos = fb_api.page.get_live_videos(object_id=pid, count=None, limit=3)
+        assert len(live_videos.data) == 6
+        assert live_videos.data[0].id == "10160659411121729"
 
-        live_videos_json, _ = fb_api.page.get_live_videos(
+        live_videos_json = fb_api.page.get_live_videos(
             object_id=pid, count=3, limit=3, return_json=True
         )
-        assert len(live_videos_json) == 3
+        assert len(live_videos_json["data"]) == 3
 
 
 def test_get_videos(helpers, fb_api):
@@ -242,11 +242,11 @@ def test_get_videos(helpers, fb_api):
             json=helpers.load_json("testdata/facebook/apidata/videos/videos_p2.json"),
         )
 
-        videos, _ = fb_api.page.get_videos(object_id=pid, count=None, limit=3)
-        assert len(videos) == 5
-        assert videos[0].id == "1002065083862711"
+        videos = fb_api.page.get_videos(object_id=pid, count=None, limit=3)
+        assert len(videos.data) == 5
+        assert videos.data[0].id == "1002065083862711"
 
-        videos_json, _ = fb_api.page.get_videos(
+        videos_json = fb_api.page.get_videos(
             object_id=pid, count=2, limit=3, return_json=True
         )
-        assert len(videos_json) == 2
+        assert len(videos_json["data"]) == 2

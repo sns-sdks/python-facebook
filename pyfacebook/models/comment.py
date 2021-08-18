@@ -80,4 +80,4 @@ class CommentsResponse(BaseModel):
 
     data: List[Comment] = field(repr=True, compare=True)
     paging: Optional[Paging] = field()
-    summary: Optional[CommentsSummary] = field()
+    summary: Optional[CommentsSummary] = field(repr=True)
