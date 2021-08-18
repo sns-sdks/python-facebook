@@ -5,13 +5,21 @@ from typing import Dict, List, Optional, Tuple, Union
 
 import pyfacebook.utils.constant as const
 from pyfacebook.api.base_resource import BaseResource
-from pyfacebook.api.facebook.connections import FeedMixin, AlbumsMixin, PhotosMixin
+from pyfacebook.api.facebook.connections import (
+    FeedMixin,
+    AlbumsMixin,
+    PhotosMixin,
+    VideosMixin,
+    LiveVideosMixin,
+)
 from pyfacebook.models.user import User
 from pyfacebook.models.post import Post
 from pyfacebook.utils.params_utils import enf_comma_separated
 
 
-class FacebookUser(BaseResource, FeedMixin, AlbumsMixin, PhotosMixin):
+class FacebookUser(
+    BaseResource, FeedMixin, AlbumsMixin, PhotosMixin, VideosMixin, LiveVideosMixin
+):
     def get_info(
         self,
         user_id: str,

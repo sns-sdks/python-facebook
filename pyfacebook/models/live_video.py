@@ -132,7 +132,7 @@ class LiveVideo(BaseModel):
     status: Optional[str] = field()
     stream_url: Optional[str] = field()
     targeting: Optional[dict] = field()  # TODO
-    title: Optional[str] = field()
+    title: Optional[str] = field(repr=True)
     video: Optional[
         dict
     ] = (

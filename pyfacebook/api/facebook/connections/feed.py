@@ -26,6 +26,7 @@ class FeedMixin:
         limit: Optional[int] = 10,
         source: Optional[str] = "feed",
         return_json: bool = False,
+        **kwargs,
     ) -> Tuple[List[Union[Post, dict]], dict]:
         """
         Get feed of a Facebook object.
@@ -41,6 +42,7 @@ class FeedMixin:
         :param source: Resource type. Valid values maybe feed/posts/tagged/published_posts depend on object type.
         :param return_json: Set to false will return a dataclass for post.
             Or return json data. Default is false.
+        :param kwargs: Additional parameters for different object.
         :return: Posts information and paging
         """
 
@@ -55,6 +57,7 @@ class FeedMixin:
             fields=enf_comma_separated(field="fields", value=fields),
             since=since,
             until=until,
+            **kwargs,
         )
         if return_json:
             return feeds, paging
@@ -70,6 +73,7 @@ class FeedMixin:
         count: Optional[int] = 10,
         limit: Optional[int] = 10,
         return_json: bool = False,
+        **kwargs,
     ) -> Tuple[List[Union[Post, dict]], dict]:
         """
         Get feed of a Facebook Page including posts and links published by this Page, or by visitors to this Page.
@@ -84,6 +88,7 @@ class FeedMixin:
             It should no more than 100. Default is None will use api default limit.
         :param return_json: Set to false will return a dataclass for post.
             Or return json data. Default is false.
+        :param kwargs: Additional parameters for different object.
         :return: Posts information and paging
         """
         return self._get_feed(
@@ -94,4 +99,5 @@ class FeedMixin:
             count=count,
             limit=limit,
             return_json=return_json,
+            **kwargs,
         )

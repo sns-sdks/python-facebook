@@ -6,12 +6,12 @@ from typing import Dict, Optional, Union
 
 import pyfacebook.utils.constant as const
 from pyfacebook.api.base_resource import BaseResource
-from pyfacebook.api.facebook.connections import PhotosMixin
+from pyfacebook.api.facebook.connections import PhotosMixin, LiveVideosMixin
 from pyfacebook.models.event import Event
 from pyfacebook.utils.params_utils import enf_comma_separated
 
 
-class FacebookEvent(BaseResource, PhotosMixin):
+class FacebookEvent(BaseResource, PhotosMixin, LiveVideosMixin):
     def get_info(
         self,
         event_id: Optional[str],
