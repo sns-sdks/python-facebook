@@ -5,11 +5,12 @@
 """
 
 from dataclasses import dataclass
-from typing import Optional
+from typing import List, Optional
 
 from dataclasses_json import config
 
 from pyfacebook.models.base import BaseModel, field
+from pyfacebook.models.extensions import Paging
 
 
 @dataclass
@@ -47,3 +48,15 @@ class Album(BaseModel):
     privacy: Optional[str] = field()
     type: Optional[str] = field()
     updated_time: Optional[str] = field()
+
+
+@dataclass
+class AlbumResponse(BaseModel):
+    """
+    A class representing the result for albums edge.
+
+    Refer: https://developers.facebook.com/docs/graph-api/reference/page/albums
+    """
+
+    data: List[Album] = field(repr=True, compare=True)
+    paging: Optional[Paging] = field()

@@ -1,14 +1,14 @@
 from .base import BaseModel
 from .user import User, UserExperience, UserAgeRange
 from .page import Page
-from .post import Post
+from .post import Post, FeedResponse
 from .group import Group
 from .event import Event
-from .photo import Photo
-from .album import Album
-from .video import Video
-from .live_video import LiveVideo
-from .comment import Comment
+from .photo import Photo, PhotosResponse
+from .album import Album, AlbumResponse
+from .video import Video, VideosResponse
+from .live_video import LiveVideo, LiveVideosResponse
+from .comment import Comment, CommentsResponse
 from .conversation import Conversation
 from .message import Message
 from .ig_business_models import (

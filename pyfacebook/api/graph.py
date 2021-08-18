@@ -302,7 +302,7 @@ class GraphAPI:
         count: Optional[int] = 10,
         limit: Optional[int] = None,
         **kwargs,
-    ) -> Tuple[List[dict], Optional[dict]]:
+    ) -> dict:
         """
         Get connections objects for object by id. Like get page medias by page id.
 
@@ -312,10 +312,10 @@ class GraphAPI:
         :param limit: Each request retrieve objects count.
             For most connections should no more than 100. Default is None will use api default limit.
         :param kwargs: Additional parameters for different connections.
-        :return: Response data and latest paging info.
+        :return: Combined Response data
         """
 
-        data_set, paging = [], None
+        data, data_set, paging = {}, [], None
         while True:
             # sometimes may not return limit.
             if limit is not None:
@@ -341,7 +341,9 @@ class GraphAPI:
             # parse next url args as new args
             kwargs = dict(parse_qsl(urlparse(_next).query))
 
-        return data_set, paging
+        # Replace the data list in data.
+        data["data"] = data_set
+        return data
 
     def _get_oauth_session(
         self,

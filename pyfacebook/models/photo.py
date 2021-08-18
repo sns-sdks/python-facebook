@@ -10,6 +10,7 @@ from typing import List, Optional
 from dataclasses_json import config
 
 from pyfacebook.models.base import BaseModel, field
+from pyfacebook.models.extensions import Paging
 from pyfacebook.models.attachment import EntityAtTextRange
 
 
@@ -72,3 +73,15 @@ class Photo(BaseModel):
     updated_time: Optional[str] = field()
     webp_images: Optional[List[PlatformImageSource]] = field()
     width: Optional[int] = field()
+
+
+@dataclass
+class PhotosResponse(BaseModel):
+    """
+    A class representing the result for photos edge.
+
+    Refer: https://developers.facebook.com/docs/graph-api/reference/page/photos
+    """
+
+    data: List[Photo] = field(repr=True, compare=True)
+    paging: Optional[Paging] = field()

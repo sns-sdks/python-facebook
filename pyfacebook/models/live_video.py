@@ -9,6 +9,7 @@ from typing import List, Optional
 from dataclasses_json import config
 
 from pyfacebook.models.base import BaseModel, field
+from pyfacebook.models.extensions import Paging
 
 
 @dataclass
@@ -138,3 +139,15 @@ class LiveVideo(BaseModel):
     ] = (
         field()
     )  # TODO Refer: https://developers.facebook.com/docs/graph-api/reference/video/
+
+
+@dataclass
+class LiveVideosResponse(BaseModel):
+    """
+    A class representing the result for live videos edge.
+
+    Refer: https://developers.facebook.com/docs/graph-api/reference/page/live_videos
+    """
+
+    data: List[LiveVideo] = field(repr=True, compare=True)
+    paging: Optional[Paging] = field()
