@@ -10,7 +10,7 @@ from typing import List, Optional
 from dataclasses_json import config
 
 from pyfacebook.models.base import BaseModel, field
-from pyfacebook.models.extensions import Privacy
+from pyfacebook.models.extensions import Paging, Privacy
 
 
 @dataclass
@@ -88,3 +88,15 @@ class Video(BaseModel):
     title: Optional[str] = field()
     universal_video_id: Optional[str] = field()
     updated_time: Optional[str] = field()
+
+
+@dataclass
+class VideosResponse(BaseModel):
+    """
+    A class represent the result for videos edge.
+
+    Refer: https://developers.facebook.com/docs/graph-api/reference/page/videos
+    """
+
+    data: List[Video] = field(repr=True, compare=True)
+    paging: Optional[Paging] = field()

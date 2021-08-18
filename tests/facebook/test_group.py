@@ -67,7 +67,7 @@ def test_get_batch(helpers, fb_api):
 
 
 def test_get_feed(helpers, fb_api):
-    gp_id = ""
+    gp_id = "124"
 
     with responses.RequestsMock() as m:
         m.add(
@@ -81,5 +81,5 @@ def test_get_feed(helpers, fb_api):
             json=helpers.load_json("testdata/facebook/apidata/groups/feed_p2.json"),
         )
 
-        feeds, _ = fb_api.group.get_feed(object_id=gp_id)
-        assert len(feeds) == 10
+        feed = fb_api.group.get_feed(object_id=gp_id)
+        assert len(feed.data) == 10

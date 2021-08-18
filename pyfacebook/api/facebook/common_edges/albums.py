@@ -1,16 +1,15 @@
 """
-    Albums connections for resource.
+    Albums edge for resource.
 """
 
-from typing import List, Optional, Union, Tuple
+from typing import Optional, Union
 
 import pyfacebook.utils.constant as const
-from pyfacebook.models.album import Album
-from pyfacebook.models.extensions import Paging
+from pyfacebook.models.album import AlbumResponse
 from pyfacebook.utils.params_utils import enf_comma_separated
 
 
-class AlbumsMixin:
+class AlbumsEdge:
     __slots__ = ()
 
     def get_albums(
@@ -23,7 +22,7 @@ class AlbumsMixin:
         limit: Optional[int] = 10,
         return_json: bool = False,
         **kwargs,
-    ) -> Tuple[List[Union[Album, dict]], Union[Paging, dict]]:
+    ) -> Union[AlbumResponse, dict]:
         """
         Get a list of Albums on a Facebook object.
 
@@ -38,13 +37,13 @@ class AlbumsMixin:
         :param return_json: Set to false will return a dataclass for Album.
             Or return json data. Default is false.
         :param kwargs: Additional parameters for different object.
-        :return: Albums information and paging
+        :return: Albums response information
         """
 
         if fields is None:
             fields = const.ALBUM_PUBLIC_FIELDS
 
-        albums, paging = self.client.get_full_connections(
+        data = self.client.get_full_connections(
             object_id=object_id,
             connection="albums",
             count=count,
@@ -56,8 +55,6 @@ class AlbumsMixin:
         )
 
         if return_json:
-            return albums, paging
+            return data
         else:
-            return [
-                Album.new_from_json_dict(ab) for ab in albums
-            ], Paging.new_from_json_dict(paging)
+            return AlbumResponse.new_from_json_dict(data)

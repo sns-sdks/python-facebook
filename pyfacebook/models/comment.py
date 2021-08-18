@@ -10,6 +10,7 @@ from typing import List, Optional
 from dataclasses_json import config
 
 from pyfacebook.models.base import BaseModel, field
+from pyfacebook.models.extensions import Paging
 from pyfacebook.models.attachment import StoryAttachment
 
 
@@ -54,3 +55,29 @@ class Comment(BaseModel):
         field()
     )  # TODO Refer: https://developers.facebook.com/docs/graph-api/reference/conversation
     user_likes: Optional[bool] = field()
+
+
+@dataclass
+class CommentsSummary(BaseModel):
+    """
+    A class representing the summary for comments.
+
+    Refer: https://developers.facebook.com/docs/graph-api/reference/object/comments
+    """
+
+    order: Optional[str] = field(repr=True)
+    total_count: Optional[int] = field(repr=True)
+    can_comment: Optional[bool] = field()
+
+
+@dataclass
+class CommentsResponse(BaseModel):
+    """
+    A class representing the result for comments edge.
+
+    Refer: https://developers.facebook.com/docs/graph-api/reference/object/comments
+    """
+
+    data: List[Comment] = field(repr=True, compare=True)
+    paging: Optional[Paging] = field()
+    summary: Optional[CommentsSummary] = field(repr=True)

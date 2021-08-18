@@ -1,25 +1,32 @@
 """
     Apis for page.
 """
-from typing import Dict, List, Optional, Union, Tuple
+from typing import Dict, Optional, Union
 
 import pyfacebook.utils.constant as const
 from pyfacebook.api.base_resource import BaseResource
-from pyfacebook.api.facebook.connections import (
-    FeedMixin,
-    AlbumsMixin,
-    PhotosMixin,
-    VideosMixin,
-    LiveVideosMixin,
+from pyfacebook.api.facebook.common_edges import (
+    FeedEdge,
+    AlbumsEdge,
+    PhotosEdge,
+    VideosEdge,
+    LiveVideosEdge,
+    CommentsEdge,
 )
 from pyfacebook.exceptions import LibraryError
 from pyfacebook.models.page import Page
-from pyfacebook.models.post import Post
+from pyfacebook.models.post import FeedResponse
 from pyfacebook.utils.params_utils import enf_comma_separated
 
 
 class FacebookPage(
-    BaseResource, FeedMixin, AlbumsMixin, PhotosMixin, VideosMixin, LiveVideosMixin
+    BaseResource,
+    FeedEdge,
+    AlbumsEdge,
+    PhotosEdge,
+    VideosEdge,
+    LiveVideosEdge,
+    CommentsEdge,
 ):
     def get_info(
         self,
@@ -101,7 +108,7 @@ class FacebookPage(
         count: Optional[int] = 10,
         limit: Optional[int] = 10,
         return_json: bool = False,
-    ) -> Tuple[List[Union[Post, dict]], dict]:
+    ) -> Union[FeedResponse, dict]:
         """
         Get the page's own posts.
 
@@ -115,7 +122,7 @@ class FacebookPage(
             It should no more than 100. Default is None will use api default limit.
         :param return_json: Set to false will return a dataclass for post.
             Or return json data. Default is false.
-        :return: Posts information and paging
+        :return: Posts response information
         """
         return self._get_feed(
             object_id=object_id,
@@ -137,7 +144,7 @@ class FacebookPage(
         count: Optional[int] = 10,
         limit: Optional[int] = 10,
         return_json: bool = False,
-    ) -> Tuple[List[Union[Post, dict]], dict]:
+    ) -> Union[FeedResponse, dict]:
         """
         Get all published posts by this page.
 
@@ -151,7 +158,7 @@ class FacebookPage(
             It should no more than 100. Default is None will use api default limit.
         :param return_json: Set to false will return a dataclass for post.
             Or return json data. Default is false.
-        :return: Posts information and paging
+        :return: Posts response information
         """
         return self._get_feed(
             object_id=object_id,
@@ -173,7 +180,7 @@ class FacebookPage(
         count: Optional[int] = 10,
         limit: Optional[int] = 10,
         return_json: bool = False,
-    ) -> Tuple[List[Union[Post, dict]], dict]:
+    ) -> Union[FeedResponse, dict]:
         """
         Get posts which tagged the target page.
 
@@ -187,7 +194,7 @@ class FacebookPage(
             It should no more than 100. Default is None will use api default limit.
         :param return_json: Set to false will return a dataclass for post.
             Or return json data. Default is false.
-        :return: Posts information and paging
+        :return: Posts response information.
         """
         return self._get_feed(
             object_id=object_id,

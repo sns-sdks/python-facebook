@@ -160,14 +160,14 @@ def test_get_full_connections(helpers):
             json=helpers.load_json("testdata/base/full_connecions_p1.json"),
         )
 
-        feeds, paging = api.get_full_connections(
+        feed = api.get_full_connections(
             object_id=obj_id,
             connection="feed",
             count=3,
             limit=5,
             fields="created_time,id,message",
         )
-        assert len(feeds) == 3
+        assert len(feed["data"]) == 3
 
     # test with no next
     with responses.RequestsMock() as m:
@@ -182,14 +182,14 @@ def test_get_full_connections(helpers):
             json=helpers.load_json("testdata/base/full_connecions_p2.json"),
         )
 
-        feeds, paging = api.get_full_connections(
+        feed = api.get_full_connections(
             object_id=obj_id,
             connection="feed",
             count=None,
             limit=5,
             fields="created_time,id,message",
         )
-        assert len(feeds) == 8
+        assert len(feed["data"]) == 8
 
 
 def test_oauth_flow(helpers):

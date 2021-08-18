@@ -6,12 +6,12 @@ from typing import Dict, Optional, Union
 
 import pyfacebook.utils.constant as const
 from pyfacebook.api.base_resource import BaseResource
-from pyfacebook.api.facebook.connections import PhotosMixin
+from pyfacebook.api.facebook.common_edges import PhotosEdge
 from pyfacebook.models.album import Album
 from pyfacebook.utils.params_utils import enf_comma_separated
 
 
-class FacebookAlbum(BaseResource, PhotosMixin):
+class FacebookAlbum(BaseResource, PhotosEdge):
     def get_info(
         self,
         album_id: Optional[str],

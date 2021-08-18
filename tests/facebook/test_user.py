@@ -69,9 +69,9 @@ def test_get_feed(helpers, fb_api):
             ),
         )
 
-        feeds, _ = fb_api.user.get_feed(object_id=uid, count=None, limit=5)
-        assert len(feeds) == 10
-        assert feeds[0].id == "4_10113477241177441"
+        feed = fb_api.user.get_feed(object_id=uid, count=None, limit=5)
+        assert len(feed.data) == 10
+        assert feed.data[0].id == "4_10113477241177441"
 
 
 def test_get_posts(helpers, fb_api):
@@ -86,8 +86,8 @@ def test_get_posts(helpers, fb_api):
             ),
         )
 
-        feeds, _ = fb_api.user.get_posts(
+        feed_json = fb_api.user.get_posts(
             object_id=uid, count=4, limit=5, return_json=True
         )
-        assert len(feeds) == 4
-        assert feeds[0]["id"] == "4_10113477241177441"
+        assert len(feed_json["data"]) == 4
+        assert feed_json["data"][0]["id"] == "4_10113477241177441"

@@ -10,7 +10,7 @@ from typing import List, Optional
 from dataclasses_json import config
 
 from pyfacebook.models.base import BaseModel, field
-from pyfacebook.models.extensions import Privacy, Reactions
+from pyfacebook.models.extensions import Paging, Privacy, Reactions
 from pyfacebook.models.attachment import Attachments
 from pyfacebook.models.place import Place
 
@@ -130,3 +130,15 @@ class Post(BaseModel):
         # Message shorten
         message = f"{self.message[:30]}..."
         return f"Post(id={self.id},message={message})"
+
+
+@dataclass
+class FeedResponse(BaseModel):
+    """
+    A class representing the post response.
+
+    Refer: https://developers.facebook.com/docs/graph-api/reference/page/feed/#read
+    """
+
+    data: List[Post] = field(repr=True, compare=True)
+    paging: Optional[Paging] = field()

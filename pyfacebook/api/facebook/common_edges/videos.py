@@ -1,16 +1,15 @@
 """
-    Videos connections for resource.
+    Videos edge for resource.
 """
 
-from typing import List, Optional, Union, Tuple
+from typing import Optional, Union
 
 import pyfacebook.utils.constant as const
-from pyfacebook.models.video import Video
-from pyfacebook.models.extensions import Paging
+from pyfacebook.models.video import VideosResponse
 from pyfacebook.utils.params_utils import enf_comma_separated
 
 
-class VideosMixin:
+class VideosEdge:
     __slots__ = ()
 
     def get_videos(
@@ -23,7 +22,7 @@ class VideosMixin:
         limit: Optional[int] = 10,
         return_json: bool = False,
         **kwargs,
-    ) -> Tuple[List[Union[Video, dict]], Union[Paging, dict]]:
+    ) -> Union[VideosResponse, dict]:
         """
         Get a list of videos on a Facebook object.
 
@@ -38,13 +37,13 @@ class VideosMixin:
         :param return_json: Set to false will return a list dataclass for Videos.
             Or return json data. Default is false.
         :param kwargs: Additional parameters for different object.
-        :return: Videos information and paging
+        :return: Videos response information
         """
 
         if fields is None:
             fields = const.VIDEO_PUBLIC_FIELDS
 
-        videos, paging = self.client.get_full_connections(
+        data = self.client.get_full_connections(
             object_id=object_id,
             connection="videos",
             count=count,
@@ -56,8 +55,6 @@ class VideosMixin:
         )
 
         if return_json:
-            return videos, paging
+            return data
         else:
-            return [
-                Video.new_from_json_dict(v) for v in videos
-            ], Paging.new_from_json_dict(paging)
+            return VideosResponse.new_from_json_dict(data)
