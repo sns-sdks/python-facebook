@@ -196,3 +196,57 @@ def test_get_photos(helpers, fb_api):
             object_id=pid, count=2, limit=2, return_json=True
         )
         assert len(photos_json) == 2
+
+
+def test_get_live_videos(helpers, fb_api):
+    pid = "20531316728"
+
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{fb_api.version}/{pid}/live_videos",
+            json=helpers.load_json(
+                "testdata/facebook/apidata/live_videos/live_videos_p1.json"
+            ),
+        )
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{fb_api.version}/{pid}/live_videos",
+            json=helpers.load_json(
+                "testdata/facebook/apidata/live_videos/live_videos_p2.json"
+            ),
+        )
+
+        live_videos, _ = fb_api.page.get_live_videos(object_id=pid, count=None, limit=3)
+        assert len(live_videos) == 6
+        assert live_videos[0].id == "10160659411121729"
+
+        live_videos_json, _ = fb_api.page.get_live_videos(
+            object_id=pid, count=3, limit=3, return_json=True
+        )
+        assert len(live_videos_json) == 3
+
+
+def test_get_videos(helpers, fb_api):
+    pid = "19292868552"
+
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{fb_api.version}/{pid}/videos",
+            json=helpers.load_json("testdata/facebook/apidata/videos/videos_p1.json"),
+        )
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{fb_api.version}/{pid}/videos",
+            json=helpers.load_json("testdata/facebook/apidata/videos/videos_p2.json"),
+        )
+
+        videos, _ = fb_api.page.get_videos(object_id=pid, count=None, limit=3)
+        assert len(videos) == 5
+        assert videos[0].id == "1002065083862711"
+
+        videos_json, _ = fb_api.page.get_videos(
+            object_id=pid, count=2, limit=3, return_json=True
+        )
+        assert len(videos_json) == 2
