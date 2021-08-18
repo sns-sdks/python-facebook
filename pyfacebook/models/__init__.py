@@ -14,6 +14,7 @@ from .message import Message
 from .ig_business_models import (
     IgBusUser,
     IgBusMedia,
+    IgBusMediaResponse,
     IgBusMediaChildren,
     IgBusReply,
     IgBusComment,

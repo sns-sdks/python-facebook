@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from typing import List, Optional
 
 from pyfacebook.models.base import BaseModel, field
+from pyfacebook.models.extensions import Paging
 
 
 @dataclass
@@ -82,6 +83,18 @@ class IgBusMedia(BaseModel):
     timestamp: Optional[str] = field()
     username: Optional[str] = field()
     video_title: Optional[str] = field()
+
+
+@dataclass
+class IgBusMediaResponse(BaseModel):
+    """
+    A class representing the Business Medias response.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-user/media
+    """
+
+    data: List[IgBusMedia] = field(repr=True, compare=True)
+    paging: Optional[Paging] = field(repr=True)
 
 
 @dataclass
