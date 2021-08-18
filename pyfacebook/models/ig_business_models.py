@@ -158,3 +158,25 @@ class IgBusContainer(BaseModel):
     id: Optional[str] = field(repr=True, compare=True)
     status: Optional[str] = field()
     status_code: Optional[str] = field()
+
+
+@dataclass
+class IgBusPublishLimitConfig(BaseModel):
+    """
+    A class representing the content publish limit config.
+    """
+
+    quota_total: Optional[int] = field(repr=True)
+    quota_duration: Optional[int] = field()
+
+
+@dataclass
+class IgBusPublishLimit(BaseModel):
+    """
+    A class representing the content publish limit.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-user/content_publishing_limit
+    """
+
+    config: Optional[IgBusPublishLimitConfig] = field(repr=True)
+    quota_usage: Optional[int] = field(repr=True)

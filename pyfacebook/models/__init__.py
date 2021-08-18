@@ -20,4 +20,5 @@ from .ig_business_models import (
     IgBusComment,
     IgBusHashtag,
     IgBusContainer,
+    IgBusPublishLimit,
 )
