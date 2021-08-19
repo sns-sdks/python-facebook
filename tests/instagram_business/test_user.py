@@ -190,3 +190,55 @@ def test_get_mentioned_media(helpers, api):
 
         media_json = api.user.get_mentioned_media(media_id=media_id, return_json=True)
         assert media_json["mentioned_media"]["id"] == media_id
+
+
+def test_get_recently_searched_hashtags(helpers, api):
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{api.version}/{api.instagram_business_id}/recently_searched_hashtags",
+            json=helpers.load_json(
+                "testdata/instagram/apidata/users/recently_searched_hashtags.json"
+            ),
+        )
+
+        hashtags = api.user.get_recently_searched_hashtags()
+        assert len(hashtags.data) == 2
+        assert hashtags.data[0].id == "17841562426109234"
+
+        hashtags_json = api.user.get_recently_searched_hashtags(return_json=True)
+        assert len(hashtags_json["data"]) == 2
+
+
+def test_get_stories(helpers, api):
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{api.version}/{api.instagram_business_id}/stories",
+            json=helpers.load_json("testdata/instagram/apidata/users/stories.json"),
+        )
+
+        stories = api.user.get_stories()
+        assert len(stories.data) == 2
+        assert stories.data[0].id == "17879450117512729"
+
+        stories_json = api.user.get_stories(return_json=True)
+        assert len(stories_json["data"]) == 2
+
+
+def test_get_tagged_media(helpers, api):
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{api.version}/{api.instagram_business_id}/tags",
+            json=helpers.load_json(
+                "testdata/instagram/apidata/users/tagged_medias.json"
+            ),
+        )
+
+        medias = api.user.get_tagged_media()
+        assert len(medias.data) == 5
+        assert medias.data[0].id == "17892354025952911"
+
+        medias_json = api.user.get_tagged_media(return_json=True)
+        assert len(medias_json["data"]) == 5
