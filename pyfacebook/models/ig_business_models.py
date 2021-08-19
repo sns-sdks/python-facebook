@@ -261,3 +261,27 @@ class IgBusDiscoveryUserMediaResponse(BaseModel):
 
     business_discovery: Optional[IgBusDiscoveryUserMedia] = field(repr=True)
     id: Optional[str] = field(repr=True)
+
+
+@dataclass
+class IgBusMentionedCommentResponse(BaseModel):
+    """
+    A class representing the response for mentioned comment.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-user/mentioned_comment
+    """
+
+    mentioned_comment: Optional[IgBusReply] = field(repr=True)
+    id: Optional[str] = field(repr=True)
+
+
+@dataclass
+class IgBusMentionedMediaResponse(BaseModel):
+    """
+    A class representing the response for mentioned media.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-user/mentioned_media
+    """
+
+    mentioned_media: Optional[IgBusMedia] = field(repr=True)
+    id: Optional[str] = field(repr=True)

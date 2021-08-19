@@ -26,4 +26,6 @@ from .ig_business_models import (
     IgBusInsightsResponse,
     IgBusDiscoveryUserResponse,
     IgBusDiscoveryUserMediaResponse,
+    IgBusMentionedCommentResponse,
+    IgBusMentionedMediaResponse,
 )

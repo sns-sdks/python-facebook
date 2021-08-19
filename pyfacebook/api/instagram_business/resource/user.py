@@ -13,6 +13,8 @@ from pyfacebook.models.ig_business_models import (
     IgBusDiscoveryUserMediaResponse,
     IgBusPublishLimitResponse,
     IgBusInsightsResponse,
+    IgBusMentionedCommentResponse,
+    IgBusMentionedMediaResponse,
 )
 from pyfacebook.utils.params_utils import enf_comma_separated
 
@@ -244,3 +246,64 @@ class IGBusinessUser(BaseResource):
             return data
         else:
             return IgBusMediaResponse.new_from_json_dict(data)
+
+    def get_mentioned_comment(
+        self,
+        comment_id: str,
+        fields: Optional[Union[str, list, tuple]] = None,
+        return_json=False,
+    ) -> Union[IgBusMentionedCommentResponse, dict]:
+        """
+        Get data on an IG Comment in which user has been @mentioned by another Instagram user
+
+        :param comment_id: ID for comment which the user has been @mentioned.
+        :param fields: Comma-separated id string for data fields which you want.
+            You can also pass this with an id list, tuple.
+        :param return_json: Set to false will return a dataclass for IgBusMentionedCommentResponse.
+            Or return json data. Default is false.
+        :return: Mentioned comment response.
+        """
+
+        if fields is None:
+            fields = const.IG_BUSINESS_COMMENT_PUBLIC_FIELDS
+        fields_inline = enf_comma_separated(field="fields", value=fields)
+
+        data = self.client.get_object(
+            object_id=self.client.instagram_business_id,
+            fields=f"mentioned_comment.comment_id({comment_id}){{{fields_inline}}}",
+        )
+
+        if return_json:
+            return data
+        else:
+            return IgBusMentionedCommentResponse.new_from_json_dict(data)
+
+    def get_mentioned_media(
+        self,
+        media_id: str,
+        fields: Optional[Union[str, list, tuple]] = None,
+        return_json=False,
+    ) -> Union[IgBusMentionedMediaResponse, dict]:
+        """
+        Get data on an IG Media in which user has been @mentioned in a caption by another Instagram user.
+
+        :param media_id: ID for media which the user has been @mentioned in a caption
+        :param fields: Comma-separated id string for data fields which you want.
+            You can also pass this with an id list, tuple.
+        :param return_json: Set to false will return a dataclass for IgBusMentionedMediaResponse.
+            Or return json data. Default is false.
+        :return: Mentioned media response.
+        """
+
+        if fields is None:
+            fields = const.IG_BUSINESS_MENTION_MEDIA_FIELDS
+        fields_inline = enf_comma_separated(field="fields", value=fields)
+
+        data = self.client.get_object(
+            object_id=self.client.instagram_business_id,
+            fields=f"mentioned_media.media_id({media_id}){{{fields_inline}}}",
+        )
+        if return_json:
+            return data
+        else:
+            return IgBusMentionedMediaResponse.new_from_json_dict(data)
