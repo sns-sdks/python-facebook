@@ -136,6 +136,18 @@ class IgBusComment(IgBusReply):
 
 
 @dataclass
+class IgBusCommentResponse(BaseModel):
+    """
+    A class representing the comments response.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-media/comments
+    """
+
+    data: List[IgBusComment] = field(repr=True)
+    paging: Optional[Paging] = field(repr=True)
+
+
+@dataclass
 class IgBusHashtag(BaseModel):
     """
     A class representing the hashtag.
