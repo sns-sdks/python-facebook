@@ -128,3 +128,27 @@ def test_get_user_insights(helpers, api):
             return_json=True,
         )
         assert len(insights_json["data"]) == 3
+
+
+def test_get_user_media(helpers, api):
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{api.version}/{api.instagram_business_id}/media",
+            json=helpers.load_json("testdata/instagram/apidata/users/medias_p1.json"),
+        )
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{api.version}/{api.instagram_business_id}/media",
+            json=helpers.load_json("testdata/instagram/apidata/users/medias_p2.json"),
+        )
+
+        medias = api.user.get_media(count=3, limit=2)
+        assert len(medias.data) == 3
+        assert medias.data[0].id == "17895731045244887"
+
+        medias_json = api.user.get_media(
+            limit=2,
+            return_json=True,
+        )
+        assert len(medias_json["data"]) == 2
