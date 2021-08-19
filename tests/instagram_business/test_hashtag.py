@@ -49,3 +49,71 @@ def test_get_batch(helpers, api):
             return_json=True,
         )
         assert hashtags_json[hashtag_ids[0]]["id"] == hashtag_ids[0]
+
+
+def test_get_top_media(helpers, api):
+    hashtag_id = "17841562426109234"
+
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{api.version}/{hashtag_id}/top_media",
+            json=helpers.load_json(
+                "testdata/instagram/apidata/hashtags/hashtag_top_medias_p1.json"
+            ),
+        )
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{api.version}/{hashtag_id}/top_media",
+            json=helpers.load_json(
+                "testdata/instagram/apidata/hashtags/hashtag_top_medias_p2.json"
+            ),
+        )
+
+        top_media = api.hashtag.get_top_media(
+            hashtag_id=hashtag_id,
+            count=None,
+            limit=25,
+        )
+        assert len(top_media.data) == 50
+
+        top_media_json = api.hashtag.get_top_media(
+            hashtag_id=hashtag_id,
+            count=10,
+            return_json=True,
+        )
+        assert len(top_media_json["data"]) == 10
+
+
+def test_get_recent_media(helpers, api):
+    hashtag_id = "17841562426109234"
+
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{api.version}/{hashtag_id}/recent_media",
+            json=helpers.load_json(
+                "testdata/instagram/apidata/hashtags/hashtag_recent_medias_p1.json"
+            ),
+        )
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{api.version}/{hashtag_id}/recent_media",
+            json=helpers.load_json(
+                "testdata/instagram/apidata/hashtags/hashtag_recent_medias_p2.json"
+            ),
+        )
+
+        top_media = api.hashtag.get_recent_media(
+            hashtag_id=hashtag_id,
+            count=None,
+            limit=5,
+        )
+        assert len(top_media.data) == 10
+
+        top_media_json = api.hashtag.get_recent_media(
+            hashtag_id=hashtag_id,
+            count=5,
+            return_json=True,
+        )
+        assert len(top_media_json["data"]) == 5
