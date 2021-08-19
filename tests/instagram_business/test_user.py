@@ -152,3 +152,41 @@ def test_get_user_media(helpers, api):
             return_json=True,
         )
         assert len(medias_json["data"]) == 2
+
+
+def test_get_mentioned_comment(helpers, api):
+    cm_id = "17967008497439572"
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{api.version}/{api.instagram_business_id}",
+            json=helpers.load_json(
+                "testdata/instagram/apidata/users/mentioned_comment.json"
+            ),
+        )
+
+        comment = api.user.get_mentioned_comment(comment_id=cm_id)
+        assert comment.mentioned_comment.id == cm_id
+
+        comment_json = api.user.get_mentioned_comment(
+            comment_id=cm_id, return_json=True
+        )
+        assert comment_json["mentioned_comment"]["id"] == cm_id
+
+
+def test_get_mentioned_media(helpers, api):
+    media_id = "17889114512354744"
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{api.version}/{api.instagram_business_id}",
+            json=helpers.load_json(
+                "testdata/instagram/apidata/users/mentioned_media.json"
+            ),
+        )
+
+        media = api.user.get_mentioned_media(media_id=media_id)
+        assert media.mentioned_media.id == media_id
+
+        media_json = api.user.get_mentioned_media(media_id=media_id, return_json=True)
+        assert media_json["mentioned_media"]["id"] == media_id
