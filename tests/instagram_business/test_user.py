@@ -84,3 +84,20 @@ def test_discovery_media(helpers, api):
             username=username, limit=2, before="before", return_json=True
         )
         assert len(media["data"]) == 2
+
+
+def test_get_content_publishing_limit(helpers, api):
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{api.version}/{api.instagram_business_id}/content_publishing_limit",
+            json=helpers.load_json(
+                "testdata/instagram/apidata/users/content_publish_limit.json"
+            ),
+        )
+
+        limit = api.user.get_content_publishing_limit()
+        assert limit.config.quota_total == 25
+
+        limit_json = api.user.get_content_publishing_limit(return_json=True)
+        assert limit_json["quota_usage"] == 0
