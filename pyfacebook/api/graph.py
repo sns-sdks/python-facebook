@@ -238,6 +238,21 @@ class GraphAPI:
             error_data = data["error"]
             raise FacebookError(error_data)
 
+    def get(self, path, args):
+        """
+        Send GET request.
+
+        :param path: path for resource.
+        :param args: args for request.
+        :return: Response data
+        """
+        resp = self._request(
+            url=f"{self.version}/{path}",
+            args=args,
+        )
+        data = self._parse_response(resp)
+        return data
+
     def get_object(self, object_id: str, fields: str = "", **kwargs) -> dict:
         """
         Get object information by object id.

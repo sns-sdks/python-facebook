@@ -197,7 +197,18 @@ IG_BUSINESS_COMMENT_PUBLIC_FIELDS = [
 
 IG_BUSINESS_REPLY_PUBLIC_FIELDS = IG_BUSINESS_COMMENT_PUBLIC_FIELDS
 
-
 IG_BUSINESS_HASHTAG_PUBLIC_FIELDS = ["id", "name"]
 
 IG_BUSINESS_CONTAINER_PUBLIC_FIELDS = ["id", "status_code"]
+
+IG_BUSINESS_CONTENT_PUBLISH_LIMIT_FIELDS = ["config", "quota_usage"]
+
+IG_BUSINESS_MENTION_MEDIA_FIELDS = [
+    "caption",
+    "comments_count",
+    "id",
+    "like_count",
+    "media_type",
+    "media_url",
+    "timestamp",
+]
