@@ -192,6 +192,23 @@ def test_get_mentioned_media(helpers, api):
         assert media_json["mentioned_media"]["id"] == media_id
 
 
+def test_get_hashtag_search(helpers, api):
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{api.version}/ig_hashtag_search",
+            json=helpers.load_json(
+                "testdata/instagram/apidata/users/hashtag_search.json"
+            ),
+        )
+
+        hashtag = api.user.get_hashtag_search(q="developers")
+        assert hashtag.data[0].id == "17841562426109234"
+
+        hashtag_json = api.user.get_hashtag_search(q="developers", return_json=True)
+        assert hashtag_json["data"][0]["id"] == "17841562426109234"
+
+
 def test_get_recently_searched_hashtags(helpers, api):
     with responses.RequestsMock() as m:
         m.add(

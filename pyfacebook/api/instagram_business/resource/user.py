@@ -309,6 +309,32 @@ class IGBusinessUser(BaseResource):
         else:
             return IgBusMentionedMediaResponse.new_from_json_dict(data)
 
+    def get_hashtag_search(
+        self,
+        q: str,
+        return_json=False,
+    ) -> Union[IgBusHashtagsResponse, dict]:
+        """
+        Get ID for hashtag.
+
+        :param q: The hashtag name to query.
+        :param return_json: Set to false will return a dataclass for IgBusHashtagsResponse.
+            Or return json data. Default is false.
+        :return: User stories response information.
+        """
+        data = self.client.get(
+            path="ig_hashtag_search",
+            args={
+                "fields": "id,name",
+                "user_id": self.client.instagram_business_id,
+                "q": q,
+            },
+        )
+        if return_json:
+            return data
+        else:
+            return IgBusHashtagsResponse.new_from_json_dict(data)
+
     def get_recently_searched_hashtags(
         self,
         fields: Optional[Union[str, list, tuple]] = None,
