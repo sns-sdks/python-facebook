@@ -166,3 +166,18 @@ def test_ig_bus_container(helpers):
     container = md.IgBusContainer.new_from_json_dict(data)
     assert container.id == "17889615691921648"
     assert container.status_code == "FINISHED"
+
+
+def test_ig_bus_publish_limit(helpers):
+    data = helpers.load_json("testdata/instagram/models/ig_publish_limit.json")
+
+    limit = md.IgBusPublishLimit.new_from_json_dict(data)
+    assert limit.config.quota_total == 25
+
+
+def test_ig_bus_insight(helpers):
+    data = helpers.load_json("testdata/instagram/models/ig_insight.json")
+
+    insight = md.IgBusInsight.new_from_json_dict(data)
+    assert insight.name == "impressions"
+    assert insight.values[0].value == 32

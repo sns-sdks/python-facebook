@@ -36,13 +36,13 @@ def test_discovery_user(helpers, api):
         )
 
         user = api.user.discovery_user(username=username)
-        assert user.id == "17841407673135339"
+        assert user.business_discovery.id == "17841407673135339"
 
         user_json = api.user.discovery_user(
             username=username,
             return_json=True,
         )
-        assert user_json["id"] == "17841407673135339"
+        assert user_json["business_discovery"]["id"] == "17841407673135339"
 
 
 def test_discovery_media(helpers, api):
@@ -66,10 +66,12 @@ def test_discovery_media(helpers, api):
 
         media_p1 = api.user.discovery_user_medias(username=username, limit=2)
         media_p2 = api.user.discovery_user_medias(
-            username=username, limit=2, after=media_p1.paging.cursors.after
+            username=username,
+            limit=2,
+            after=media_p1.business_discovery.media.paging.cursors.after,
         )
-        assert len(media_p1.data) == 2
-        assert len(media_p2.data) == 2
+        assert len(media_p1.business_discovery.media.data) == 2
+        assert len(media_p2.business_discovery.media.data) == 2
 
     with responses.RequestsMock() as m:
         m.add(
@@ -83,7 +85,7 @@ def test_discovery_media(helpers, api):
         media = api.user.discovery_user_medias(
             username=username, limit=2, before="before", return_json=True
         )
-        assert len(media["data"]) == 2
+        assert len(media["business_discovery"]["media"]["data"]) == 2
 
 
 def test_get_content_publishing_limit(helpers, api):
@@ -97,7 +99,7 @@ def test_get_content_publishing_limit(helpers, api):
         )
 
         limit = api.user.get_content_publishing_limit()
-        assert limit.config.quota_total == 25
+        assert limit.data[0].config.quota_total == 25
 
         limit_json = api.user.get_content_publishing_limit(return_json=True)
-        assert limit_json["quota_usage"] == 0
+        assert limit_json["data"][0]["quota_usage"] == 0

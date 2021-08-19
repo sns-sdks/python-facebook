@@ -21,4 +21,9 @@ from .ig_business_models import (
     IgBusHashtag,
     IgBusContainer,
     IgBusPublishLimit,
+    IgBusPublishLimitResponse,
+    IgBusInsight,
+    IgBusInsightsResponse,
+    IgBusDiscoveryUserResponse,
+    IgBusDiscoveryUserMediaResponse,
 )

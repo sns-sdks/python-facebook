@@ -3,7 +3,7 @@
 """
 
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from pyfacebook.models.base import BaseModel, field
 from pyfacebook.models.extensions import Paging
@@ -180,3 +180,84 @@ class IgBusPublishLimit(BaseModel):
 
     config: Optional[IgBusPublishLimitConfig] = field(repr=True)
     quota_usage: Optional[int] = field(repr=True)
+
+
+@dataclass
+class IgBusPublishLimitResponse(BaseModel):
+    """
+    A class representing the content publish limit response.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-user/content_publishing_limit
+    """
+
+    data: List[IgBusPublishLimit] = field(repr=True)
+
+
+@dataclass
+class IgBusInsightValue(BaseModel):
+    """
+    A class representing the Instagram insight value info.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-user/insights
+    """
+
+    value: Optional[Union[int, dict]] = field(repr=True)
+    end_time: Optional[str] = field(repr=True)
+
+
+@dataclass
+class IgBusInsight(BaseModel):
+    """
+    A class representing the Instagram insight.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-user/insights
+    """
+
+    id: Optional[str] = field()
+    name: Optional[str] = field(repr=True)
+    period: Optional[str] = field(repr=True)
+    title: Optional[str] = field()
+    description: Optional[str] = field()
+    values: Optional[List[IgBusInsightValue]] = field()
+
+
+@dataclass
+class IgBusInsightsResponse(BaseModel):
+    """
+    A class representing the Instagram insights response.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-user/insights
+    """
+
+    data: List[IgBusInsight] = field(repr=True)
+    paging: Optional[Paging] = field()
+
+
+@dataclass
+class IgBusDiscoveryUserResponse(BaseModel):
+    """
+    A class representing the response for discovery user.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-user/business_discovery#sample-response
+    """
+
+    business_discovery: Optional[IgBusUser] = field(repr=True)
+    id: Optional[str] = field(repr=True)
+
+
+@dataclass
+class IgBusDiscoveryUserMedia(BaseModel):
+    media: Optional[IgBusMediaResponse] = field(repr=True)
+    id: Optional[str] = field()
+
+
+@dataclass
+class IgBusDiscoveryUserMediaResponse(BaseModel):
+    """
+    A class representing the response for discovery user.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-user/business_discovery#sample-response
+    """
+
+    business_discovery: Optional[IgBusDiscoveryUserMedia] = field(repr=True)
+    id: Optional[str] = field(repr=True)
