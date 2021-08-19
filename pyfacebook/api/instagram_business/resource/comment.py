@@ -5,7 +5,7 @@ from typing import Dict, Optional, Union
 
 import pyfacebook.utils.constant as const
 from pyfacebook.api.base_resource import BaseResource
-from pyfacebook.models.ig_business_models import IgBusComment, IgBusReply
+from pyfacebook.models.ig_business_models import IgBusComment, IgBusReply, IgBusReplies
 from pyfacebook.utils.params_utils import enf_comma_separated
 
 
@@ -69,6 +69,43 @@ class IGBusinessComment(BaseResource):
                 comment_id: IgBusComment.new_from_json_dict(item)
                 for comment_id, item in data.items()
             }
+
+    def get_replies(
+        self,
+        comment_id: str,
+        fields: Optional[Union[str, list, tuple]] = None,
+        count: Optional[int] = 10,
+        limit: Optional[int] = 10,
+        return_json: bool = False,
+    ) -> Union[IgBusReplies, dict]:
+        """
+        Getting All Replies (Comments) on a Comment
+
+        :param comment_id: ID for the comment.
+        :param fields: Comma-separated id string for data fields which you want.
+            You can also pass this with an id list, tuple.
+        :param count: The total count for you to get data.
+        :param limit: Each request retrieve objects count.
+            It should no more than 100. Default is None will use api default limit.
+        :param return_json: Set to false will return a dataclass for IgBusReplies.
+            Or return json data. Default is false.
+        :return: Comment replies response information.
+        """
+
+        if fields is None:
+            fields = const.IG_BUSINESS_REPLY_PUBLIC_FIELDS
+
+        data = self.client.get_full_connections(
+            object_id=comment_id,
+            connection="replies",
+            fields=enf_comma_separated(field="fields", value=fields),
+            count=count,
+            limit=limit,
+        )
+        if return_json:
+            return data
+        else:
+            return IgBusReplies.new_from_json_dict(data)
 
 
 class IGBusinessReply(BaseResource):

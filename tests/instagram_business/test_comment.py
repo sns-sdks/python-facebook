@@ -51,6 +51,23 @@ def test_comment_get_batch(helpers, api):
         assert comments_json[comment_ids[0]]["id"] == comment_ids[0]
 
 
+def test_comment_get_replies(helpers, api):
+    comment_id = "17874875428706419"
+
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{api.version}/{comment_id}/replies",
+            json=helpers.load_json("testdata/instagram/apidata/comments/replies.json"),
+        )
+
+        replies = api.comment.get_replies(comment_id=comment_id)
+        assert len(replies.data) == 1
+
+        replies_json = api.comment.get_replies(comment_id=comment_id, return_json=True)
+        assert replies_json["data"][0]["id"] == "17847314687296283"
+
+
 def test_reply_get_info(helpers, api):
     reply_id = "17892250648466172"
 
