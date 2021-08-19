@@ -103,3 +103,28 @@ def test_get_content_publishing_limit(helpers, api):
 
         limit_json = api.user.get_content_publishing_limit(return_json=True)
         assert limit_json["data"][0]["quota_usage"] == 0
+
+
+def test_get_user_insights(helpers, api):
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{api.version}/{api.instagram_business_id}/insights",
+            json=helpers.load_json(
+                "testdata/instagram/apidata/users/user_insights.json"
+            ),
+        )
+
+        insights = api.user.get_insights(
+            metric="impressions,reach,profile_views",
+            period="day",
+            access_token=api.access_token,
+        )
+        assert len(insights.data) == 3
+
+        insights_json = api.user.get_insights(
+            metric="impressions,reach,profile_views",
+            period="day",
+            return_json=True,
+        )
+        assert len(insights_json["data"]) == 3
