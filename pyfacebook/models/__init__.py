@@ -28,4 +28,5 @@ from .ig_business_models import (
     IgBusDiscoveryUserMediaResponse,
     IgBusMentionedCommentResponse,
     IgBusMentionedMediaResponse,
+    IgBusHashtagsResponse,
 )

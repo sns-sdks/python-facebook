@@ -15,6 +15,7 @@ from pyfacebook.models.ig_business_models import (
     IgBusInsightsResponse,
     IgBusMentionedCommentResponse,
     IgBusMentionedMediaResponse,
+    IgBusHashtagsResponse,
 )
 from pyfacebook.utils.params_utils import enf_comma_separated
 
@@ -307,3 +308,107 @@ class IGBusinessUser(BaseResource):
             return data
         else:
             return IgBusMentionedMediaResponse.new_from_json_dict(data)
+
+    def get_recently_searched_hashtags(
+        self,
+        fields: Optional[Union[str, list, tuple]] = None,
+        count: Optional[int] = 25,
+        limit: Optional[int] = 25,
+        return_json=False,
+    ) -> Union[IgBusHashtagsResponse, dict]:
+        """
+        Get the IG Hashtags that user has searched for within the last 7 days.
+
+        :param fields: Comma-separated id string for data fields which you want.
+            You can also pass this with an id list, tuple.
+        :param count: The total count for you to get data. Maximum is 30.
+        :param limit: Each request retrieve objects count. Up to 30.
+        :param return_json: Set to false will return a dataclass for IgBusHashtagsResponse.
+            Or return json data. Default is false.
+        :return: Recently searched hashtags response information.
+        """
+
+        if fields is None:
+            fields = const.IG_BUSINESS_HASHTAG_PUBLIC_FIELDS
+
+        data = self.client.get_full_connections(
+            object_id=self.client.instagram_business_id,
+            connection="recently_searched_hashtags",
+            fields=enf_comma_separated(field="fields", value=fields),
+            count=count,
+            limit=limit,
+        )
+        if return_json:
+            return data
+        else:
+            return IgBusHashtagsResponse.new_from_json_dict(data)
+
+    def get_stories(
+        self,
+        fields: Optional[Union[str, list, tuple]] = None,
+        count: Optional[int] = 10,
+        limit: Optional[int] = 10,
+        return_json=False,
+    ) -> Union[IgBusMediaResponse, dict]:
+        """
+        Get list of story IG Media objects on user.
+
+        :param fields: Comma-separated id string for data fields which you want.
+            You can also pass this with an id list, tuple.
+        :param count: The total count for you to get data.
+        :param limit: Each request retrieve objects count.
+            It should no more than 100. Default is None will use api default limit.
+        :param return_json: Set to false will return a dataclass for IgBusMediaResponse.
+            Or return json data. Default is false.
+        :return: User stories response information.
+        """
+
+        if fields is None:
+            fields = const.IG_BUSINESS_MEDIA_PUBLIC_FIELDS
+
+        data = self.client.get_full_connections(
+            object_id=self.client.instagram_business_id,
+            connection="stories",
+            count=count,
+            limit=limit,
+            fields=enf_comma_separated(field="fields", value=fields),
+        )
+        if return_json:
+            return data
+        else:
+            return IgBusMediaResponse.new_from_json_dict(data)
+
+    def get_tagged_media(
+        self,
+        fields: Optional[Union[str, list, tuple]] = None,
+        count: Optional[int] = 25,
+        limit: Optional[int] = 25,
+        return_json=False,
+    ) -> Union[IgBusMediaResponse, dict]:
+        """
+        Get list of Media objects in which user has been tagged by another Instagram user.
+
+        :param fields: Comma-separated id string for data fields which you want.
+            You can also pass this with an id list, tuple.
+        :param count: The total count for you to get data.
+        :param limit: Each request retrieve objects count.
+            It should no more than 100. Default is None will use api default limit.
+        :param return_json: Set to false will return a dataclass for IgBusMediaResponse.
+            Or return json data. Default is false.
+        :return: Tagged user medias response information.
+        """
+
+        if fields is None:
+            fields = const.IG_BUSINESS_MEDIA_PUBLIC_FIELDS
+
+        data = self.client.get_full_connections(
+            object_id=self.client.instagram_business_id,
+            connection="tags",
+            count=count,
+            limit=limit,
+            fields=enf_comma_separated(field="fields", value=fields),
+        )
+        if return_json:
+            return data
+        else:
+            return IgBusMediaResponse.new_from_json_dict(data)

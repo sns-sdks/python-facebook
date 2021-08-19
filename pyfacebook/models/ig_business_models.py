@@ -285,3 +285,15 @@ class IgBusMentionedMediaResponse(BaseModel):
 
     mentioned_media: Optional[IgBusMedia] = field(repr=True)
     id: Optional[str] = field(repr=True)
+
+
+@dataclass
+class IgBusHashtagsResponse(BaseModel):
+    """
+    A class representing the hashtag.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-user/recently_searched_hashtags
+    """
+
+    data: List[IgBusHashtag] = field(repr=True)
+    paging: Optional[Paging] = field(repr=True)
