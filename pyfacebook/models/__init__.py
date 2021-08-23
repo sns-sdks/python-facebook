@@ -33,4 +33,7 @@ from .ig_business_models import (
 )
 from .ig_basic_models import (
     IgBasicUser,
+    IgBasicMediaChildren,
+    IgBasicMedia,
+    IgBasicMediaResponse,
 )
