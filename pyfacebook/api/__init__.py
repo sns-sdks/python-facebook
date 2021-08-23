@@ -1,1 +1,1 @@
-from .graph import GraphAPI
+from .graph import GraphAPI, BasicDisplayAPI
