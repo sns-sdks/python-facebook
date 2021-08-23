@@ -1,10 +1,16 @@
 # Changelog
 
-## [0.10.0](https://github.com/sns-sdks/python-facebook/v0.10.0) (2021-07-7)
+## [0.10.1](https://github.com/sns-sdks/python-facebook/v0.10.0) (2021-08-23)
+
+- New structure for Facebook Graph API
+- New structure for Instagram Graph API
+- New structure for Instagram Basic Display API
+
+## [0.10.0](https://github.com/sns-sdks/python-facebook/v0.10.0) (2021-07-07)
 
 ### Features
 
-- New structure for API.
+- New structure for Graph API.
 
 ### Broken Change
 

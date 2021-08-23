@@ -23,11 +23,11 @@ A Python wrapper for the Facebook Common API.
 Introduction
 ============
 
-We are working for refactor library. If you want to use old version, please see branch ``v0``.
+We have refactored this library after v0.10.0. If you want to use old version, please see branch ``v0``.
 
 The new structure we will provide like follow show.
 
-.. image:: docs/docs/images/new-structure.png
+.. image:: docs/docs/images/structure.png
 
 
 .. note::
@@ -106,26 +106,28 @@ Get page data::
     >>> fb.page.get_info(page_id="20531316728")
     >>> Page(id='20531316728', name='Facebook App')
 
-====
-TODO
-====
+See more in documents.
 
-Facebook:
+========
+Features
+========
 
-- Page
-- User
-- ...
 
-IG Business:
+Now library has cover follows features
 
-- User
-- Media
-- ...
+Facebook Graph API:
+- Page and Page's edges
+- User and User's edges
+- Group and Group's edges
+- Event and Event's edges
 
-IG Basic:
+IG Business Graph API:
+- User and User's edges
+- Media and Media's edges
 
-- User
-- Media
+IG Basic Display API:
+- User and User's edges
+- Media and Media's edges
 
 =======
 SUPPORT
