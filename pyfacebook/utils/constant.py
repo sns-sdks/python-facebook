@@ -219,3 +219,16 @@ IG_BASIC_USER_FIELDS = [
     "media_count",
     "username",
 ]
+
+IG_BASIC_MEDIA_CHILDREN_FIELDS = ["id", "media_type", "media_url"]
+
+IG_BASIC_MEDIA_FIELDS = [
+    "caption",
+    "id",
+    "media_type",
+    "media_url",
+    "permalink",
+    "thumbnail_url",
+    "timestamp",
+    "username",
+]

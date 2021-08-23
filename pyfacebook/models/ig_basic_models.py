@@ -61,3 +61,15 @@ class IgBasicMedia(IgBasicMediaChild):
     """
 
     username: Optional[str] = field()
+
+
+@dataclass
+class IgBasicMediaResponse(IgBasicMediaChild):
+    """
+    A class representing the Basic display medias response.
+
+    Refer: https://developers.facebook.com/docs/instagram-basic-display-api/reference/user/media
+    """
+
+    data: Optional[List[IgBasicMedia]] = field(repr=True, compare=True)
+    paging: Optional[Paging] = field(repr=True)
