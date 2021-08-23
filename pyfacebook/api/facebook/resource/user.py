@@ -110,7 +110,7 @@ class FacebookUser(
         if fields is None:
             fields = const.PAGE_PUBLIC_FIELDS
 
-        data = self.client.get_connection(
+        data = self.client.get_full_connections(
             object_id=user_id,
             connection="accounts",
             count=count,

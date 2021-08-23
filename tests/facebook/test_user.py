@@ -91,3 +91,35 @@ def test_get_posts(helpers, fb_api):
         )
         assert len(feed_json["data"]) == 4
         assert feed_json["data"][0]["id"] == "4_10113477241177441"
+
+
+def test_get_accounts(helpers, fb_api):
+    uid = "4"
+
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{fb_api.version}/{uid}/accounts",
+            json=helpers.load_json(
+                "testdata/facebook/apidata/users/user_accounts_p1.json"
+            ),
+        )
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{fb_api.version}/{uid}/accounts",
+            json=helpers.load_json(
+                "testdata/facebook/apidata/users/user_accounts_p2.json"
+            ),
+        )
+
+        accounts = fb_api.user.get_accounts(user_id=uid, count=None, limit=4)
+        assert len(accounts.data) == 6
+        assert accounts.data[0].access_token == "access_token"
+
+        accounts_json = fb_api.user.get_accounts(
+            user_id=uid,
+            count=2,
+            limit=2,
+            return_json=True,
+        )
+        assert len(accounts_json["data"]) == 2
