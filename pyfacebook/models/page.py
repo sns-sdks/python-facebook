@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from typing import List, Optional
 
 from pyfacebook.models.base import BaseModel, field
-from pyfacebook.models.extensions import VOIPInfo
+from pyfacebook.models.extensions import VOIPInfo, Paging
 from pyfacebook.models.place import Location
 from pyfacebook.models.image import CoverPhoto, Picture
 
@@ -271,6 +271,7 @@ class Page(BaseModel):
     release_date: Optional[dict] = field()
     restaurant_services: Optional[PageRestaurantServices] = field()
     restaurant_specialties: Optional[PageRestaurantSpecialties] = field()
+    tasks: Optional[List[str]] = field()
     schedule: Optional[str] = field()
     screenplay_by: Optional[str] = field()
     season: Optional[str] = field()
@@ -298,3 +299,25 @@ class Page(BaseModel):
 
     # common connection
     picture: Optional[Picture] = field()
+
+
+@dataclass
+class PagesSummary(BaseModel):
+    """
+    A class representing the aggregated information for pages
+    """
+
+    total_count: Optional[int] = field(repr=True)
+
+
+@dataclass
+class PagesResponse(BaseModel):
+    """
+    A class representing the pages response.
+
+    Refer: https://developers.facebook.com/docs/graph-api/reference/user/accounts/
+    """
+
+    data: Optional[List[Page]] = field(repr=True)
+    paging: Optional[Paging] = field()
+    summary: Optional[PagesSummary] = field()

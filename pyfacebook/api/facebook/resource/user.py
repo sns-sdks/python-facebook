@@ -13,7 +13,8 @@ from pyfacebook.api.facebook.common_edges import (
     LiveVideosEdge,
 )
 from pyfacebook.models.user import User
-from pyfacebook.models.post import Post
+from pyfacebook.models.page import PagesResponse
+from pyfacebook.models.post import FeedResponse
 from pyfacebook.utils.params_utils import enf_comma_separated
 
 
@@ -79,6 +80,51 @@ class FacebookUser(
                 user_id: User.new_from_json_dict(item) for user_id, item in data.items()
             }
 
+    def get_accounts(
+        self,
+        user_id: str,
+        fields: Optional[Union[str, list, tuple]] = None,
+        is_place: Optional[bool] = None,
+        is_promotable: Optional[bool] = None,
+        summary: Optional[bool] = None,
+        count: Optional[int] = 10,
+        limit: Optional[int] = 10,
+        return_json: bool = False,
+    ) -> Union[PagesResponse, dict]:
+        """
+        Get the Facebook Pages that a person owns or is able to perform tasks on.
+
+        :param user_id: ID for the user.
+        :param fields: Comma-separated id string for data fields which you want.
+            You can also pass this with an id list, tuple.
+        :param is_place: If specified,filter pages based on whetherthey are places or not.
+        :param is_promotable: If specified, filter pages based on whether they can be promoted or not.
+        :param summary: Whether aggregated information about the edge, such as counts.
+        :param count: The total count for you to get data.
+        :param limit: Each request retrieve objects count.
+            It should no more than 100. Default is None will use api default limit.
+        :param return_json: Set to false will return a dataclass for Page.
+            Or return json data. Default is false.
+        :return: Pages information and paging
+        """
+        if fields is None:
+            fields = const.PAGE_PUBLIC_FIELDS
+
+        data = self.client.get_full_connections(
+            object_id=user_id,
+            connection="accounts",
+            count=count,
+            limit=limit,
+            fields=enf_comma_separated(field="fields", value=fields),
+            is_place=is_place,
+            is_promotable=is_promotable,
+            summary=summary,
+        )
+        if return_json:
+            return data
+        else:
+            return PagesResponse.new_from_json_dict(data)
+
     def get_posts(
         self,
         object_id: str,
@@ -88,7 +134,7 @@ class FacebookUser(
         count: Optional[int] = 10,
         limit: Optional[int] = 10,
         return_json: bool = False,
-    ) -> Tuple[List[Union[Post, dict]], dict]:
+    ) -> Union[FeedResponse, dict]:
         """
         Get the posts published by the person themselves.
 
