@@ -3,7 +3,7 @@
 """
 import inspect
 
-from pyfacebook import GraphAPI
+from pyfacebook import GraphAPI, BasicDisplayAPI
 from pyfacebook.api.base_resource import BaseResource
 
 
@@ -20,3 +20,7 @@ class BaseApi(GraphAPI):
             resource = resource_cls(self)
             setattr(self, name, resource)
         return self
+
+
+class BaseBasicDisplayApi(BasicDisplayAPI, BaseApi):
+    ...

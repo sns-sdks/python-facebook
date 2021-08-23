@@ -31,3 +31,6 @@ from .ig_business_models import (
     IgBusHashtagsResponse,
     IgBusCommentResponse,
 )
+from .ig_basic_models import (
+    IgBasicUser,
+)

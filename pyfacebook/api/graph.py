@@ -653,17 +653,17 @@ class BasicDisplayAPI(GraphAPI):
     def exchange_page_access_token(
         self, page_id: str, access_token: Optional[str] = None
     ) -> str:
-        raise NotImplementedError
+        raise LibraryError({"message": "Method not support"})
 
     def exchange_long_lived_page_access_token(
         self, user_id: str, access_token: Optional[str] = None
     ) -> dict:
-        raise NotImplementedError
+        raise LibraryError({"message": "Method not support"})
 
     def get_app_token(
         self, app_id: Optional[str] = None, app_secret: Optional[str] = None
     ) -> dict:
-        raise NotImplementedError
+        raise LibraryError({"message": "Method not support"})
 
     def debug_token(self, input_token: str, access_token: Optional[str] = None) -> dict:
-        raise NotImplementedError
+        raise LibraryError({"message": "Method not support"})

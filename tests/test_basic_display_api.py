@@ -5,6 +5,7 @@ import pytest
 import responses
 
 from pyfacebook import BasicDisplayAPI
+from pyfacebook.exceptions import LibraryError
 
 
 def test_oath_flow(helpers):
@@ -59,14 +60,14 @@ def test_refresh_token(helpers):
 
 def test_not_implemented_methods():
     api = BasicDisplayAPI(access_token="token")
-    with pytest.raises(NotImplementedError):
+    with pytest.raises(LibraryError):
         api.exchange_page_access_token(page_id="id")
 
-    with pytest.raises(NotImplementedError):
+    with pytest.raises(LibraryError):
         api.exchange_long_lived_page_access_token(user_id="id")
 
-    with pytest.raises(NotImplementedError):
+    with pytest.raises(LibraryError):
         api.get_app_token()
 
-    with pytest.raises(NotImplementedError):
+    with pytest.raises(LibraryError):
         api.debug_token(input_token="token")

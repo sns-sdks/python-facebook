@@ -212,3 +212,10 @@ IG_BUSINESS_MENTION_MEDIA_FIELDS = [
     "media_url",
     "timestamp",
 ]
+
+IG_BASIC_USER_FIELDS = [
+    "account_type",
+    "id",
+    "media_count",
+    "username",
+]
