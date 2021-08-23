@@ -48,7 +48,7 @@ class IgBasicMediaChildren(BaseModel):
     Refer: https://developers.facebook.com/docs/instagram-basic-display-api/reference/media/children
     """
 
-    data: Optional[List[IgBasicMediaChild]] = field()
+    data: Optional[List[IgBasicMediaChild]] = field(repr=True)
     paging: Optional[Paging] = field()
 
 

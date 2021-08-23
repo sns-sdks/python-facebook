@@ -12,3 +12,4 @@ class IGBasicDisplayApi(BaseBasicDisplayApi):
     """
 
     user = rs.IGBasicUser()
+    media = rs.IGBasicMedia()
