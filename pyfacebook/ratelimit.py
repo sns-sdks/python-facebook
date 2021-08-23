@@ -31,13 +31,21 @@ class RateLimitHeader(object):
     call_count: int = 0
     total_cputime: int = 0
     total_time: int = 0
+    call_volume: int = 0  # IG basic display has return this, but have no docs for this.
+    cpu_time: int = 0  # IG basic display has return this, but have no docs for this.
     type: Optional[str] = None  # only for Business Use Case Rate Limits
     estimated_time_to_regain_access: Optional[
         str
     ] = None  # only for Business Use Case Rate Limits
 
     def max_percent(self):
-        return max(self.call_count, self.total_cputime, self.total_time)
+        return max(
+            self.call_count,
+            self.total_cputime,
+            self.total_time,
+            self.call_volume,
+            self.cpu_time,
+        )
 
 
 class RateLimit(object):

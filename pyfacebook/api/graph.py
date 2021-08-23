@@ -417,8 +417,8 @@ class GraphAPI:
         self, response: str, redirect_uri: Optional[str] = None
     ) -> dict:
         """
-        :param response: The redirect response url for
-        :param redirect_uri:
+        :param response: The redirect response url for authorize redirect
+        :param redirect_uri: Url for your redirect.
         :return:
         """
         session = self._get_oauth_session(redirect_uri=redirect_uri)
@@ -551,3 +551,119 @@ class GraphAPI:
         )
         data = self._parse_response(resp)
         return data
+
+
+class BasicDisplayAPI(GraphAPI):
+    GRAPH_URL = "https://graph.instagram.com/"
+    AUTHORIZATION_URL = "https://api.instagram.com/oauth/authorize"
+    EXCHANGE_ACCESS_TOKEN_URL = "https://api.instagram.com/oauth/access_token"
+
+    DEFAULT_SCOPE = ["user_profile", "user_media"]
+
+    def __init__(
+        self,
+        app_id: Optional[str] = None,
+        app_secret: Optional[str] = None,
+        access_token: Optional[str] = None,
+        oauth_flow: bool = False,
+        version: Optional[str] = None,
+        sleep_on_rate_limit: bool = True,
+        sleep_seconds_mapping: Optional[Dict[int, int]] = None,
+        timeout: Optional[int] = None,
+        proxies: Optional[dict] = None,
+    ):
+        super().__init__(
+            app_id=app_id,
+            app_secret=app_secret,
+            access_token=access_token,
+            oauth_flow=oauth_flow,
+            version=version,
+            sleep_on_rate_limit=sleep_on_rate_limit,
+            sleep_seconds_mapping=sleep_seconds_mapping,
+            timeout=timeout,
+            proxies=proxies,
+        )
+
+    @staticmethod
+    def _generate_secret_proof(
+        access_token: str, secret: Optional[str] = None
+    ) -> Optional[str]:
+        """
+        :param access_token: Access token
+        :param secret: App secret
+        :return:
+        """
+        return None
+
+    def exchange_user_access_token(
+        self, response: str, redirect_uri: Optional[str] = None
+    ) -> dict:
+        """
+        :param response: The redirect response url for authorize redirect
+        :param redirect_uri: Url for your redirect.
+        :return:
+        """
+        session = self._get_oauth_session(redirect_uri=redirect_uri)
+
+        session.fetch_token(
+            self.EXCHANGE_ACCESS_TOKEN_URL,
+            client_secret=self.app_secret,
+            authorization_response=response,
+            include_client_id=True,
+        )
+        self.access_token = session.access_token
+
+        return session.token
+
+    def exchange_long_lived_user_access_token(self, access_token=None) -> dict:
+        """
+        Exchange short-lived Instagram User Access Tokens for long-lived Instagram User Access Tokens.
+        :param access_token: short-lived user token.
+        :return: Long-lived user access token info.
+        """
+        if access_token is None:
+            access_token = self.access_token
+
+        args = {
+            "grant_type": "ig_exchange_token",
+            "client_secret": self.app_secret,
+            "access_token": access_token,
+        }
+        resp = self._request(
+            url=f"access_token",
+            args=args,
+            auth_need=False,
+        )
+        data = self._parse_response(resp)
+        return data
+
+    def refresh_access_token(self, access_token: str):
+        """
+        :param access_token: The valid (unexpired) long-lived Instagram User Access Token that you want to refresh.
+        :return: New access token.
+        """
+        args = {"grant_type": "ig_refresh_token", "access_token": access_token}
+        resp = self._request(
+            url="refresh_access_token",
+            args=args,
+        )
+        data = self._parse_response(resp)
+        return data
+
+    def exchange_page_access_token(
+        self, page_id: str, access_token: Optional[str] = None
+    ) -> str:
+        raise LibraryError({"message": "Method not support"})
+
+    def exchange_long_lived_page_access_token(
+        self, user_id: str, access_token: Optional[str] = None
+    ) -> dict:
+        raise LibraryError({"message": "Method not support"})
+
+    def get_app_token(
+        self, app_id: Optional[str] = None, app_secret: Optional[str] = None
+    ) -> dict:
+        raise LibraryError({"message": "Method not support"})
+
+    def debug_token(self, input_token: str, access_token: Optional[str] = None) -> dict:
+        raise LibraryError({"message": "Method not support"})
