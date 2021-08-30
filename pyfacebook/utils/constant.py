@@ -101,6 +101,17 @@ PHOTO_PUBLIC_FIELDS = ["id", "created_time", "name", "updated_time", "link"]
 
 ALBUM_PUBLIC_FIELDS = ["id", "created_time", "count", "name", "updated_time", "link"]
 
+APPLICATION_PUBLIC_FIELDS = [
+    "id",
+    "category",
+    "description",
+    "link",
+    "name",
+    "namespace",
+]
+
+APPLICATION_ACCOUNT_PUBLIC_FIELDS = ["id", "login_url"]
+
 VIDEO_PUBLIC_FIELDS = [
     "id",
     "created_time",

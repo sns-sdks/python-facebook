@@ -116,16 +116,20 @@ Features
 Now library has cover follows features
 
 Facebook Graph API:
+
+- Application and Application's edges
 - Page and Page's edges
 - User and User's edges
 - Group and Group's edges
 - Event and Event's edges
 
 IG Business Graph API:
+
 - User and User's edges
 - Media and Media's edges
 
 IG Basic Display API:
+
 - User and User's edges
 - Media and Media's edges
 
