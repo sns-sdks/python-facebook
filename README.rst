@@ -117,6 +117,7 @@ Now library has cover follows features
 
 Facebook Graph API:
 
+- Application and Application's edges
 - Page and Page's edges
 - User and User's edges
 - Group and Group's edges
