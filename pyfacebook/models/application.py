@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from typing import Any, List, Optional
 
 from pyfacebook.models.base import BaseModel, field
+from pyfacebook.models.extensions import Paging
 
 
 @dataclass
@@ -130,3 +131,28 @@ class Application(BaseModel):
     user_support_url: Optional[str] = field()
     website_url: Optional[str] = field()
     weekly_active_users: Optional[int] = field()
+
+
+@dataclass
+class ApplicationTestAccount(BaseModel):
+    """
+    A class representing the test account for the application.
+
+    Refer: https://developers.facebook.com/docs/graph-api/reference/test-account/
+    """
+
+    id: Optional[str] = field(repr=True, compare=True)
+    login_url: Optional[str] = field(repr=True)
+    access_token: Optional[str] = field()
+
+
+@dataclass
+class ApplicationAccountsResponse(BaseModel):
+    """
+    A class representing the application edge accounts response.
+
+    Refer: https://developers.facebook.com/docs/graph-api/reference/application/accounts/
+    """
+
+    data: Optional[List[ApplicationTestAccount]] = field(repr=True)
+    paging: Optional[Paging] = field()

@@ -10,6 +10,7 @@ class FacebookApi(BaseApi):
     Api class for facebook
     """
 
+    application = rs.FacebookApplication()
     user = rs.FacebookUser()
     page = rs.FacebookPage()
     post = rs.FacebookPost()
