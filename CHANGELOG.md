@@ -1,6 +1,14 @@
 # Changelog
 
-## [0.9.3](https://github.com/sns-sdks/python-facebook/compare/v0.9.1...v0.9.2) (2021-04-28)
+## [0.9.4](https://github.com/sns-sdks/python-facebook/compare/v0.9.3...v0.9.4) (2021-09-02)
+
+### Features
+
+- Add follower field for page
+- Remove Api version v3.3
+
+
+## [0.9.3](https://github.com/sns-sdks/python-facebook/compare/v0.9.2...v0.9.3) (2021-04-28)
 
 ### Features
 
