@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.11.2](https://github.com/sns-sdks/python-facebook/v0.11.2) (2021-09-02)
+
+- GraphAPI for post and delete object.
+- Add application apis.
+- Remove Api version v3.3
+
 ## [0.11.1](https://github.com/sns-sdks/python-facebook/v0.11.1) (2021-08-23)
 
 - New structure for Facebook Graph API
@@ -16,6 +22,14 @@
 
 - Remove python2 support.
 - Refactor all methods.
+
+
+## [0.9.5](https://github.com/sns-sdks/python-facebook/compare/v0.9.3...v0.9.5) (2021-09-02)
+
+### Features
+
+- Add follower field for page
+- Remove Api version v3.3
 
 
 ## [0.9.3](https://github.com/sns-sdks/python-facebook/compare/v0.9.1...v0.9.2) (2021-04-28)
