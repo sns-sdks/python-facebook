@@ -60,6 +60,7 @@ class CommentsEdge:
             since=since,
             until=until,
             filter=filter_type,
+            summary=summary,
             **kwargs,
         )
 
