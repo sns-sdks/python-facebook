@@ -116,6 +116,7 @@ class Page(BaseModel):
     emails = attrib(default=None, type=Optional[List[str]], repr=False)
     engagement = attrib(default=None, type=Optional[PageEngagement], repr=False)
     fan_count = attrib(default=None, type=Optional[int], repr=False)
+    followers_count = attrib(default=None, type=Optional[int], repr=False)
     founded = attrib(default=None, type=Optional[str], repr=False)
     general_info = attrib(default=None, type=Optional[str], repr=False)
     global_brand_page_name = attrib(default=None, type=Optional[str], repr=False)
