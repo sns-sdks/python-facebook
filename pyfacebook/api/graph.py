@@ -169,6 +169,7 @@ class GraphAPI:
         post_args: Optional[dict] = None,
         verb: str = "GET",
         auth_need: bool = True,
+        **kwargs,
     ) -> Response:
         """
         :param url: Resource url for Graph.
@@ -176,6 +177,7 @@ class GraphAPI:
         :param post_args: Form parameters.
         :param verb: HTTP method
         :param auth_need: Whether need access token.
+        :param kwargs: Additional parameters.
         :return:
         """
         if auth_need:
@@ -195,6 +197,7 @@ class GraphAPI:
                 params=args,
                 data=post_args,
                 proxies=self.proxies,
+                **kwargs,
             )
         except requests.HTTPError as ex:
             raise LibraryError({"message": ex.args})
@@ -358,6 +361,58 @@ class GraphAPI:
 
         # Replace the data list in data.
         data["data"] = data_set
+        return data
+
+    def post_object(
+        self,
+        object_id: str,
+        connection: Optional[str] = None,
+        params: Optional[dict] = None,
+        data: Optional[dict] = None,
+        **kwargs,
+    ) -> dict:
+        """
+        Create or update data for a facebook object or it's edge.
+
+        :param object_id: ID for the facebook object(page,user.. and so on).
+        :param connection: Edge for the object.
+        :param params: Parameters for url path.
+        :param data: Parameters for Form data.
+        :param kwargs: Additional parameters.
+        :return: Response data.
+        """
+        path = f"{self.version}/{object_id}"
+        if connection:
+            path += f"/{connection}"
+
+        resp = self._request(
+            url=path,
+            args=params,
+            post_args=data,
+            verb="POST",
+            **kwargs,
+        )
+        data = self._parse_response(resp)
+        return data
+
+    def delete_object(
+        self,
+        object_id: str,
+        **kwargs,
+    ) -> dict:
+        """
+        Delete the facebook object.
+
+        :param object_id: ID for the facebook object(page,user..and so on)
+        :param kwargs: Additional parameters.
+        :return: Delete status.
+        """
+        resp = self._request(
+            url=f"{self.version}/{object_id}",
+            verb="DELETE",
+            **kwargs,
+        )
+        data = self._parse_response(resp)
         return data
 
     def _get_oauth_session(
