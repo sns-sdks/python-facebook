@@ -25,3 +25,8 @@ def helpers():
 @pytest.fixture
 def pubg_api():
     return GraphAPI(app_id="123456", app_secret="xxxxx", access_token="token")
+
+
+@pytest.fixture
+def user_api():
+    return GraphAPI(app_id="123456", app_secret="xxxxx", access_token="page token")

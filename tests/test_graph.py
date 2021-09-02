@@ -192,8 +192,39 @@ def test_get_full_connections(helpers):
         assert len(feed["data"]) == 8
 
 
-def test_oauth_flow(helpers):
+def test_post_object(helpers, user_api):
+    obj_id = "123456789"
+    with responses.RequestsMock() as m:
+        m.add(
+            method="POST",
+            url=f"https://graph.facebook.com/{user_api.version}/{obj_id}/comments",
+            json={"success": True},
+        )
 
+        res = user_api.post_object(
+            object_id=obj_id,
+            connection="comments",
+            data={"message": "data"},
+        )
+        assert res["success"]
+
+
+def test_delete_object(helpers, user_api):
+    obj_id = "123456789"
+    with responses.RequestsMock() as m:
+        m.add(
+            method="DELETE",
+            url=f"https://graph.facebook.com/{user_api.version}/{obj_id}",
+            json={"success": True},
+        )
+
+        res = user_api.delete_object(
+            object_id=obj_id,
+        )
+        assert res["success"]
+
+
+def test_oauth_flow(helpers):
     with pytest.raises(LibraryError):
         api = GraphAPI(access_token="token")
         api.get_authorization_url()
