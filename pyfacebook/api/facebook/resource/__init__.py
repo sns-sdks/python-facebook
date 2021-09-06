@@ -3,6 +3,7 @@
 """
 
 from pyfacebook.api.facebook.resource.application import FacebookApplication
+from pyfacebook.api.facebook.resource.business import FacebookBusiness
 from pyfacebook.api.facebook.resource.user import FacebookUser
 from pyfacebook.api.facebook.resource.page import FacebookPage
 from pyfacebook.api.facebook.resource.group import FacebookGroup

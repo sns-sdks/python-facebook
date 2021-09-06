@@ -6,6 +6,16 @@
 # Follows is Facebook graph fields to get data
 # =============================================
 
+BUSINESS_PUBLIC_FIELDS = [
+    "id",
+    "name",
+    "link",
+    "created_time",
+    "updated_time",
+    "verification_status",
+    "profile_picture_uri",
+]
+
 USER_PUBLIC_FIELDS = [
     "id",
     "first_name",
