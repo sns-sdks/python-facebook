@@ -19,6 +19,7 @@ class FacebookBusiness(BaseResource):
     ) -> Union[Business, dict]:
         """
         Get information about a Facebook business.
+
         :param business_id: ID for the business.
         :param fields: Comma-separated id string for data fields which you want.
             You can also pass this with an id list, tuple.

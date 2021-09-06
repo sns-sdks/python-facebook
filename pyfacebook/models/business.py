@@ -37,6 +37,7 @@ class Business(BaseModel):
     verification_status: Optional[str] = field()
     vertical: Optional[str] = field()
     vertical_id: Optional[int] = field()
+    permitted_roles: Optional[List[str]] = field()
 
 
 @dataclass
