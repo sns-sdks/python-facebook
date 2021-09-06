@@ -123,6 +123,14 @@ def test_message(helpers):
     assert message.attachments.data[0].id == "651143212510248"
 
 
+def test_business(helpers):
+    business_data = helpers.load_json("testdata/facebook/models/business.json")
+
+    business = md.Business.new_from_json_dict(business_data)
+    assert business.id == "987654321"
+    assert business.created_by["id"] == "123456789"
+
+
 def test_ig_bus_user(helpers):
     data = helpers.load_json("testdata/instagram/models/ig_user.json")
 
