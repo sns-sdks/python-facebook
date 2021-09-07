@@ -1,4 +1,5 @@
 from .base import BaseModel
+from .business import Business
 from .user import User, UserExperience, UserAgeRange
 from .page import Page
 from .post import Post, FeedResponse

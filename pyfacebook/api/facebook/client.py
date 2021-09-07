@@ -11,6 +11,7 @@ class FacebookApi(BaseApi):
     """
 
     application = rs.FacebookApplication()
+    business = rs.FacebookBusiness()
     user = rs.FacebookUser()
     page = rs.FacebookPage()
     post = rs.FacebookPost()

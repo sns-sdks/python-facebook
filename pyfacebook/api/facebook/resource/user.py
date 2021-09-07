@@ -1,7 +1,7 @@
 """
     Apis for User.
 """
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Dict, Optional, Union
 
 import pyfacebook.utils.constant as const
 from pyfacebook.api.base_resource import BaseResource
@@ -15,6 +15,7 @@ from pyfacebook.api.facebook.common_edges import (
 from pyfacebook.models.user import User
 from pyfacebook.models.page import PagesResponse
 from pyfacebook.models.post import FeedResponse
+from pyfacebook.models.business import BusinessResponse
 from pyfacebook.utils.params_utils import enf_comma_separated
 
 
@@ -160,3 +161,40 @@ class FacebookUser(
             source="posts",
             return_json=return_json,
         )
+
+    def get_businesses(
+        self,
+        user_id: str,
+        fields: Optional[Union[str, list, dict]] = None,
+        count: Optional[int] = 10,
+        limit: Optional[int] = 10,
+        return_json: bool = False,
+    ) -> Union[BusinessResponse, dict]:
+        """
+        Get the businesses for the user.
+
+        :param user_id: ID for the user.
+        :param fields: Comma-separated id string for data fields which you want.
+            You can also pass this with an id list, tuple.
+        :param count: The total count for you to get data.
+        :param limit: Each request retrieve objects count.
+            It should no more than 100. Default is None will use api default limit.
+        :param return_json: Set to false will return a list of dataclass for Businesses.
+            Or return json data. Default is false.
+        :return: Response for the user businesses.
+        """
+
+        if fields is None:
+            fields = const.BUSINESS_PUBLIC_FIELDS
+
+        data = self.client.get_full_connections(
+            object_id=user_id,
+            connection="businesses",
+            count=count,
+            limit=limit,
+            fields=enf_comma_separated(field="fields", value=fields),
+        )
+        if return_json:
+            return data
+        else:
+            return BusinessResponse.new_from_json_dict(data)
