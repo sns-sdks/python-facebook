@@ -123,3 +123,28 @@ def test_get_accounts(helpers, fb_api):
             return_json=True,
         )
         assert len(accounts_json["data"]) == 2
+
+
+def test_get_businesses(helpers, fb_api):
+    uid = "123"
+
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{fb_api.version}/{uid}/businesses",
+            json=helpers.load_json(
+                "testdata/facebook/apidata/users/user_businesses.json"
+            ),
+        )
+
+        businesses = fb_api.user.get_businesses(user_id=uid, count=None, limit=2)
+        assert len(businesses.data) == 2
+        assert businesses.data[0].id == "123456789"
+
+        businesses_json = fb_api.user.get_businesses(
+            user_id=uid,
+            count=2,
+            limit=2,
+            return_json=True,
+        )
+        assert len(businesses_json["data"]) == 2
