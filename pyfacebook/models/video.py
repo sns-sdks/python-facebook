@@ -79,6 +79,7 @@ class Video(BaseModel):
     ] = (
         field()
     )  # TODO Refer: https://developers.facebook.com/docs/graph-api/reference/place/
+    post_views: Optional[int] = field()
     premiere_living_room_status: Optional[str] = field()
     privacy: Optional[Privacy] = field()
     published: Optional[bool] = field()
@@ -88,6 +89,7 @@ class Video(BaseModel):
     title: Optional[str] = field()
     universal_video_id: Optional[str] = field()
     updated_time: Optional[str] = field()
+    views: Optional[int] = field()
 
 
 @dataclass
