@@ -50,6 +50,8 @@ PAGE_PUBLIC_FIELDS = [
     "website",
 ]
 
+SEARCH_PAGES_PUBLIC_FIELDS = ["id", "name", "location", "link", "verification_status"]
+
 GROUP_PUBLIC_FIELDS = [
     "id",
     "name",

@@ -321,3 +321,32 @@ class PagesResponse(BaseModel):
     data: Optional[List[Page]] = field(repr=True)
     paging: Optional[Paging] = field()
     summary: Optional[PagesSummary] = field()
+
+
+@dataclass
+class SearchPage(BaseModel):
+    """
+    A class represent the page for search.
+
+    Refer: https://developers.facebook.com/docs/pages/searching
+    """
+
+    id: Optional[str] = field(repr=True, compare=True)
+    is_eligible_for_branded_content: Optional[bool] = field()
+    is_unclaimed: Optional[bool] = field()
+    link: Optional[str] = field(repr=True)
+    location: Optional[Location] = field()
+    name: Optional[str] = field(repr=True)
+    verification_status: Optional[str] = field()
+
+
+@dataclass
+class SearchPagesResponse(BaseModel):
+    """
+    A class representing the search pages response.
+
+    Refer: https://developers.facebook.com/docs/pages/searching
+    """
+
+    data: Optional[List[Page]] = field(repr=True)
+    paging: Optional[Paging] = field()

@@ -14,7 +14,7 @@ from pyfacebook.api.facebook.common_edges import (
     CommentsEdge,
 )
 from pyfacebook.exceptions import LibraryError
-from pyfacebook.models.page import Page
+from pyfacebook.models.page import Page, SearchPagesResponse
 from pyfacebook.models.post import FeedResponse
 from pyfacebook.utils.params_utils import enf_comma_separated
 
@@ -206,3 +206,40 @@ class FacebookPage(
             source="tagged",
             return_json=return_json,
         )
+
+    def search(
+        self,
+        q: str,
+        fields: Optional[Union[str, list, dict]] = None,
+        count: Optional[int] = 25,
+        limit: Optional[int] = 25,
+        return_json: bool = False,
+    ) -> Union[SearchPagesResponse, dict]:
+        """
+        Returns a list of Pages that meet the query's criteria.
+
+        :param q: Value to a keyword or search term.
+        :param fields: Comma-separated id string for data fields which you want.
+            You can also pass this with an id list, tuple.
+        :param count: The total count for you to get data.
+        :param limit: Each request retrieve objects count.
+            It should no more than 100. Default is None will use api default limit.
+        :param return_json: Set to false will return a dataclass for page.
+            Or return json data. Default is false.
+        :return: Pages search response.
+        """
+        if fields is None:
+            fields = const.SEARCH_PAGES_PUBLIC_FIELDS
+
+        data = self.client.get_full_connections(
+            object_id="pages",
+            connection="search",
+            count=count,
+            limit=limit,
+            q=q,
+            fields=enf_comma_separated(field="fields", value=fields),
+        )
+        if return_json:
+            return data
+        else:
+            return SearchPagesResponse.new_from_json_dict(data)

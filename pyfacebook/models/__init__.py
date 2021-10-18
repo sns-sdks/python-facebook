@@ -1,7 +1,7 @@
 from .base import BaseModel
 from .business import Business
 from .user import User, UserExperience, UserAgeRange
-from .page import Page
+from .page import Page, PagesResponse, SearchPage, SearchPagesResponse
 from .post import Post, FeedResponse
 from .group import Group
 from .event import Event
