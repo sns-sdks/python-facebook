@@ -82,6 +82,7 @@ class IgBusMedia(BaseModel):
     thumbnail_url: Optional[str] = field()
     timestamp: Optional[str] = field()
     username: Optional[str] = field()
+    # TODO Starting with v14.0, the video_title field will no longer be supported
     video_title: Optional[str] = field()
 
 
