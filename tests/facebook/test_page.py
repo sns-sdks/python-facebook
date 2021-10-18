@@ -250,3 +250,19 @@ def test_get_videos(helpers, fb_api):
             object_id=pid, count=2, limit=3, return_json=True
         )
         assert len(videos_json["data"]) == 2
+
+
+def test_search_pages(helpers, fb_api):
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{fb_api.version}/pages/search",
+            json=helpers.load_json("testdata/facebook/apidata/pages/search_pages.json"),
+        )
+
+        pages = fb_api.page.search(q="facebook", count=5, limit=5)
+        assert len(pages.data) == 5
+        assert pages.data[0].id == "108824017345866"
+
+        pages_json = fb_api.page.search(q="facebook", count=4, return_json=True)
+        assert len(pages_json["data"]) == 4
