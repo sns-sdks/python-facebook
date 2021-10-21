@@ -17,6 +17,7 @@ classifiers = [
     "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: Implementation :: CPython",
 ]
 
@@ -33,8 +34,8 @@ requests-oauthlib = "^1.3.0"
 dataclasses-json = "^0.5.4"
 
 [tool.poetry.dev-dependencies]
-pytest = "^4.6.11"
-pytest-cov = "^2.10.1"
+pytest = "^6.2.5"
+pytest-cov = "^3.0.0"
 responses = ">=0.11"
 tox = "^3.20.1"
 
