@@ -5,6 +5,8 @@
 from dataclasses import dataclass
 from typing import List, Optional, Union
 
+from dataclasses_json import config
+
 from pyfacebook.models.base import BaseModel, field
 from pyfacebook.models.extensions import Paging
 
@@ -112,6 +114,7 @@ class IgBusReply(BaseModel):
     timestamp: Optional[str] = field()
     user: Optional[IgBusUser] = field()
     username: Optional[str] = field()
+    _from: Optional[IgBusUser] = field(metadata=config(field_name="from"))
 
 
 @dataclass
