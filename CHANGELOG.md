@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.12.0](https://github.com/sns-sdks/python-facebook/v0.12.0) (2021-10-21)
+
+- Add api for business object.
+- Add api for search pages.
+- Support new graph version `v12.0`.
+- Update for new `from` field for ig business comment.
+- Add tests for `Python 3.10`.
+
 ## [0.11.2](https://github.com/sns-sdks/python-facebook/v0.11.2) (2021-09-02)
 
 - GraphAPI for post and delete object.
