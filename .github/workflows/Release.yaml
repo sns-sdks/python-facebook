@@ -15,6 +15,6 @@ jobs:
     - name: Publish
       uses: softprops/action-gh-release@v1
       with:
-        body: '[More see Changlog](https://github.com/sns-sdks/python-facebook/blob/master/CHANGELOG.md)'
+        body: '[More see Changelog](https://github.com/sns-sdks/python-facebook/blob/master/CHANGELOG.md)'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
