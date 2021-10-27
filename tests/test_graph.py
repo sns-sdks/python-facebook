@@ -192,6 +192,49 @@ def test_get_full_connections(helpers):
         assert len(feed["data"]) == 8
 
 
+def test_discovery_user_media(helpers):
+    username = "facebook"
+
+    api = GraphAPI(access_token="token", instagram_business_id="id")
+    # test with count
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{api.version}/id",
+            json=helpers.load_json("testdata/base/discovery_medias_p1.json"),
+        )
+
+        media = api.discovery_user_media(
+            username=username,
+            fields="comments_count,id,like_count,media_type,media_url,permalink,timestamp",
+            count=3,
+            limit=5,
+        )
+        assert len(media["data"]) == 3
+
+    # test with no next
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{api.version}/id",
+            json=helpers.load_json("testdata/base/discovery_medias_p1.json"),
+        )
+
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{api.version}/id",
+            json=helpers.load_json("testdata/base/discovery_medias_p2.json"),
+        )
+
+        media = api.discovery_user_media(
+            username=username,
+            fields="comments_count,id,like_count,media_type,media_url,permalink,timestamp",
+            count=None,
+            limit=5,
+        )
+        assert len(media["data"]) == 10
+
+
 def test_post_object(helpers, user_api):
     obj_id = "123456789"
     with responses.RequestsMock() as m:
