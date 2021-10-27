@@ -6,4 +6,4 @@ from pyfacebook.api.facebook.client import FacebookApi
 from pyfacebook.api.instagram_business.client import IGBusinessApi
 from pyfacebook.api.instagram_basic.client import IGBasicDisplayApi
 
-__version__ = "0.12.0"
+__version__ = "0.12.1"
