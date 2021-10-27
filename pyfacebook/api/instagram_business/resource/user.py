@@ -87,6 +87,8 @@ class IGBusinessUser(BaseResource):
         username: str,
         fields: Optional[Union[str, list, tuple]] = None,
         limit: Optional[int] = None,
+        since: Optional[str] = None,
+        until: Optional[str] = None,
         after: Optional[str] = None,
         before: Optional[str] = None,
         return_json: bool = False,
@@ -99,6 +101,8 @@ class IGBusinessUser(BaseResource):
             You can also pass this with an id list, tuple.
         :param limit: Each request retrieve objects count.
             It should no more than 100. Default is None will use api default limit.
+        :param since: A Unix timestamp or strtotime data value that points to the start of data.
+        :param until: A Unix timestamp or strtotime data value that points to the end of data.
         :param after: The cursor that points to the end of the page of data that has been returned.
         :param before: The cursor that points to the start of the page of data that has been returned.
         :param return_json: Set to false will return a dataclass for IgBusDiscoveryUserMediaResponse.
@@ -110,19 +114,18 @@ class IGBusinessUser(BaseResource):
             fields = const.IG_BUSINESS_MEDIA_PUBLIC_FIELDS
         metric = enf_comma_separated(field="fields", value=fields)
 
-        limit_str, after_str, before_str = "", "", ""
-        if limit is not None:
-            limit_str = f".limit({limit})"
-
-        if after is not None:
-            after_str = f".after({after})"
-
-        if before is not None:
-            before_str = f".before({before})"
+        limit_str = f".limit({limit})" if limit is not None else ""
+        after_str = f".after({after})" if after is not None else ""
+        before_str = f".before({before})" if before is not None else ""
+        since_str = f".since({since})" if since is not None else ""
+        until_str = f".until({until})" if until is not None else ""
 
         data = self.client.get_object(
             object_id=self.client.instagram_business_id,
-            fields=f"business_discovery.username({username}){{media{after_str}{before_str}{limit_str}{{{metric}}}}}",
+            fields=(
+                f"business_discovery.username({username})"
+                f"{{media{after_str}{before_str}{since_str}{until_str}{limit_str}{{{metric}}}}}"
+            ),
         )
 
         if return_json:
