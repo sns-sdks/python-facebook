@@ -363,6 +363,71 @@ class GraphAPI:
         data["data"] = data_set
         return data
 
+    def discovery_user_media(
+        self,
+        username: str,
+        fields: str = "",
+        count: Optional[int] = 10,
+        limit: Optional[int] = 10,
+        since: Optional[str] = None,
+        until: Optional[str] = None,
+        **kwargs,
+    ) -> dict:
+        """
+        Discovery other business account media.
+        :param username: Username for the instagram account.
+        :param fields: Comma-separated string for object fields which you want.
+        :param count: The count will retrieve objects. Default is None will get all data.
+        :param limit: Each request retrieve objects count.
+            For most connections should no more than 100. Default is None will use api default limit.
+        :param since: A Unix timestamp or strtotime data value that points to the start of data.
+        :param until: A Unix timestamp or strtotime data value that points to the end of data.
+        :return: Combined Response data
+        """
+        limit = f".limit({limit})" if limit is not None else ""
+        since = f".since({since})" if since is not None else ""
+        until = f".until({until})" if until is not None else ""
+        after = kwargs.get("after", "")
+
+        base_query = "business_discovery.username({username}){{media{after}{limit}{since}{until}{{{fields}}}}}"
+        data, media_set, paging = {}, [], None
+        while True:
+            # next page for result
+            after = f".after({after})" if after else ""
+
+            fds = base_query.format(
+                username=username,
+                fields=fields,
+                after=after,
+                limit=limit,
+                since=since,
+                until=until,
+            )
+            args = {"fields": fds}
+
+            data = self.get(
+                path=self.instagram_business_id,
+                args=args,
+            )
+            data = data.get("business_discovery", {}).get("media", {})
+            # Append this request data
+            if data:
+                media_set.extend(data.get("data", []))
+            if count is not None and len(media_set) > count:
+                media_set = media_set[:count]
+                break
+
+            # check next pagination
+            paging, after = data.get("paging"), None
+            if paging is not None:
+                after = paging.get("cursors", {}).get("after")
+            if not after:
+                break
+
+        # Replace the data list in data.
+        data["data"] = media_set
+        return data
+
     def post_object(
         self,
         object_id: str,
