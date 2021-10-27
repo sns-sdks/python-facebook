@@ -16,6 +16,7 @@ class LibraryError(PyFacebookException):
 
     def __init__(self, kwargs: dict):
         self.code = -1  # error code in library inside
+        self.message = "exception in library"
         for key, value in kwargs.items():
             setattr(self, key, value)
 
