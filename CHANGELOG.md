@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.12.1](https://github.com/sns-sdks/python-facebook/v0.12.1) (2021-10-27)
+
+- Add api to discover instagram user media to `GraphAPI`.
+- Add parameters for discover instagram user media
+
 ## [0.12.0](https://github.com/sns-sdks/python-facebook/v0.12.0) (2021-10-21)
 
 - Add api for business object.
