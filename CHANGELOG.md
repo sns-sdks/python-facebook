@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.12.2](https://github.com/sns-sdks/python-facebook/v0.12.2) (2021-10-28)
+
+- Update for exception.
+
 ## [0.12.1](https://github.com/sns-sdks/python-facebook/v0.12.1) (2021-10-27)
 
 - Add api to discover instagram user media to `GraphAPI`.
