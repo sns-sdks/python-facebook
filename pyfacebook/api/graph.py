@@ -238,8 +238,7 @@ class GraphAPI:
         :param data: Data from response
         """
         if "error" in data:
-            error_data = data["error"]
-            raise FacebookError(error_data)
+            raise FacebookError(data)
 
     def get(self, path, args):
         """

@@ -16,11 +16,14 @@ class LibraryError(PyFacebookException):
 
     def __init__(self, kwargs: dict):
         self.code = -1  # error code in library inside
+        self.message = "exception in library"
         for key, value in kwargs.items():
             setattr(self, key, value)
 
     def __repr__(self):
-        msg = ",".join([f"{k}={v}" for k, v in self.__dict__.items()])
+        msg = ",".join(
+            [f"{k}={v}" for k, v in self.__dict__.items() if not k.startswith("_")]
+        )
         return f"{self.__class__.__name__}({msg})"
 
     def __str__(self):
@@ -35,7 +38,10 @@ class FacebookError(LibraryError):
     Common fields are: message,code,error_subcode,error_user_msg,error_user_title,fbtrace_id
     """
 
-    pass
+    def __init__(self, kwargs: dict):
+        self._data = kwargs
+        error = kwargs["error"]
+        super().__init__(kwargs=error)
 
 
 class PyFacebookDeprecationWaring(DeprecationWarning):
