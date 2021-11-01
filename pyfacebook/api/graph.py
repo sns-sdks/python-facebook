@@ -61,7 +61,9 @@ class GraphAPI:
         self.__timeout = timeout
         self.proxies = proxies
         self.sleep_on_rate_limit = sleep_on_rate_limit
-        self.sleep_seconds_mapping = sleep_seconds_mapping
+        self.sleep_seconds_mapping = self._build_sleep_seconds_resource(
+            sleep_seconds_mapping=sleep_seconds_mapping
+        )
         self.rate_limit = RateLimit()
         self.instagram_business_id = instagram_business_id
 
