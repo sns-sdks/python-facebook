@@ -9,9 +9,9 @@ import requests
 from requests_oauthlib import OAuth2Session
 from requests_oauthlib.compliance_fixes import facebook_compliance_fix
 
-DEFAULT_GRAPH_URL = 'https://graph.facebook.com/v4.0/'
-DEFAULT_OAUTH_URL = 'https://www.facebook.com/v4.0/dialog/oauth'
-DEFAULT_TOKEN_URL = 'https://graph.facebook.com/v4.0/oauth/access_token'
+DEFAULT_GRAPH_URL = 'https://graph.facebook.com/'
+DEFAULT_OAUTH_URL = 'https://www.facebook.com/dialog/oauth'
+DEFAULT_TOKEN_URL = 'https://graph.facebook.com/oauth/access_token'
 DEFAULT_REDIRECT_URL = 'https://localhost:5000/'
 
 
