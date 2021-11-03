@@ -9,9 +9,8 @@ import requests
 from requests_oauthlib import OAuth2Session
 from requests_oauthlib.compliance_fixes import facebook_compliance_fix
 
-DEFAULT_GRAPH_URL = "https://graph.facebook.com/v4.0/"
-DEFAULT_OAUTH_URL = "https://www.facebook.com/v4.0/dialog/oauth"
-DEFAULT_TOKEN_URL = "https://graph.facebook.com/v4.0/oauth/access_token"
+DEFAULT_OAUTH_URL = "https://www.facebook.com/dialog/oauth"
+DEFAULT_TOKEN_URL = "https://graph.facebook.com/oauth/access_token"
 DEFAULT_REDIRECT_URL = "https://localhost:5000/"
 
 
@@ -29,7 +28,7 @@ def long_term_token():
 
     try:
         resp = requests.get(
-            url=DEFAULT_GRAPH_URL + "oauth/access_token",
+            url=DEFAULT_TOKEN_URL,
             params={
                 "grant_type": "fb_exchange_token",
                 "client_id": app_id,
@@ -60,7 +59,7 @@ def app_token():
     click.echo("Begin to retrieve app access token...")
     try:
         resp = requests.get(
-            url=DEFAULT_GRAPH_URL + "oauth/access_token",
+            url=DEFAULT_TOKEN_URL,
             params={
                 "grant_type": "client_credentials",
                 "client_id": app_id,
