@@ -1,4 +1,4 @@
-This library supports Python 3.5 and newer.
+This library supports Python 3.6 and newer.
 
 ## Dependencies
 

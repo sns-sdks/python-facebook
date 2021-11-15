@@ -30,16 +30,21 @@ theme:
 nav:
   - Introduction: index.md
   - Installation: installation.md
+  - Authorization:
+      - Facebook Graph API: authrizations/facebook_auth.md
+      - Instagram Graph API: authrizations/facebook_auth.md
+      - Instagram Basic API: authrizations/facebook_auth.md
   - Changelog: CHANGELOG.md
-
+  - Previous Version Docs:
+      - README: previous-version/readme.md
+      - usage-en: previous-version/usage_en.md
+      - 基础教程: previous-version/usage_zh.md
 extra:
   social:
     - icon: fontawesome/brands/twitter
       link: https://twitter.com/realllkk520
     - icon: fontawesome/brands/github
       link: https://github.com/sns-sdks/python-facebook
-  version:
-    provider: mike
 
 markdown_extensions:
   - codehilite
