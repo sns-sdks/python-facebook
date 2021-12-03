@@ -259,3 +259,19 @@ def test_get_tagged_media(helpers, api):
 
         medias_json = api.user.get_tagged_media(return_json=True)
         assert len(medias_json["data"]) == 5
+
+
+def test_get_live_media(helpers, api):
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{api.version}/{api.instagram_business_id}/live_media",
+            json=helpers.load_json("testdata/instagram/apidata/users/live_medias.json"),
+        )
+
+        medias = api.user.get_live_media()
+        assert len(medias.data) == 1
+        assert medias.data[0].id == "90010498116233"
+
+        medias_json = api.user.get_live_media(return_json=True)
+        assert len(medias_json["data"]) == 1
