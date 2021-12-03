@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.12.4](https://github.com/sns-sdks/python-facebook/v0.12.4) (2021-12-03)
+
+- Remove v4.0 support.
+- Update docs for usage.
+- Add new changes for instagram business.
+
 ## [0.12.3](https://github.com/sns-sdks/python-facebook/v0.12.3) (2021-10-28)
 
 - Fix the rate limit not working.
