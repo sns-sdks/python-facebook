@@ -30,10 +30,8 @@ theme:
 nav:
   - Introduction: index.md
   - Installation: installation.md
-  - Authorization:
-      - Facebook Graph API: authrizations/facebook_auth.md
-      - Instagram Graph API: authrizations/facebook_auth.md
-      - Instagram Basic API: authrizations/facebook_auth.md
+  - Usage:
+      - Graph API: usage/graph-api.md
   - Changelog: CHANGELOG.md
   - Previous Version Docs:
       - README: previous-version/readme.md
