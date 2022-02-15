@@ -12,9 +12,15 @@ jobs:
       uses: JRubics/poetry-publish@v1.8
       with:
         pypi_token: ${{ secrets.PYPI_TOKEN }}
+
+    - name: Generate Changelog
+      run: |
+        VERSION=$(.github/hack/version.sh)
+        .github/hack/changelog.sh $VERSION > NEW-VERSION-CHANGELOG.md
+
     - name: Publish
       uses: softprops/action-gh-release@v1
       with:
-        body: '[More see Changelog](https://github.com/sns-sdks/python-facebook/blob/master/CHANGELOG.md)'
+        body: NEW-VERSION-CHANGELOG.md
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
