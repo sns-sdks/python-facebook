@@ -21,6 +21,6 @@ jobs:
     - name: Publish
       uses: softprops/action-gh-release@v1
       with:
-        body: NEW-VERSION-CHANGELOG.md
+        body_path: NEW-VERSION-CHANGELOG.md
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
