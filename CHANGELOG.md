@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.13.1](https://github.com/sns-sdks/python-facebook/v0.13.1) (2022-03-15)
+
+### Fix
+
+- Fix version for `v13.0` in check, thanks for [@pietzschke](https://github.com/pietzschke) and [@pobk](https://github.com/pobk).
+
 ## [0.13.0](https://github.com/sns-sdks/python-facebook/v0.13.0) (2022-02-15)
 
 ### Features
