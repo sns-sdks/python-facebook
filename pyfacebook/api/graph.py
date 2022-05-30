@@ -29,6 +29,7 @@ class GraphAPI:
         "v11.0",
         "v12.0",
         "v13.0",
+        "v14.0",
     ]
     GRAPH_URL = "https://graph.facebook.com/"
     AUTHORIZATION_URL = "https://www.facebook.com/dialog/oauth"
