@@ -21,7 +21,6 @@ logger = logging.getLogger(__name__)
 
 class GraphAPI:
     VALID_API_VERSIONS = [
-        "v6.0",
         "v7.0",
         "v8.0",
         "v9.0",
