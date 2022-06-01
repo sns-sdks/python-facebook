@@ -1,12 +1,16 @@
 """
+This is an example for instagram business account to publish an image media.
 
 Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-user/media
 """
+import os
 
 from pyfacebook import GraphAPI
 
-ACCESS_TOKEN = ""  # Replace with your access token
-INSTAGRAM_BUSINESS_ID = ""  # Your instagram business id
+ACCESS_TOKEN = os.environ.get("ACCESS_TOKEN")  # Your Access Token
+INSTAGRAM_BUSINESS_ID = os.environ.get(
+    "INSTAGRAM_BUSINESS_ID"
+)  # Your instagram business id
 
 api = GraphAPI(access_token=ACCESS_TOKEN)
 
