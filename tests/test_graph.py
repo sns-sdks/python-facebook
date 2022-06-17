@@ -319,7 +319,7 @@ def test_exchange_token(helpers):
     with responses.RequestsMock() as m:
         m.add(
             method=responses.GET,
-            url=f"https://graph.facebook.com/{api.version}/oauth/access_token",
+            url=f"https://graph.facebook.com/oauth/access_token",
             json={
                 "access_token": "token",
                 "token_type": "bearer",
@@ -350,7 +350,7 @@ def test_get_app_token():
     with responses.RequestsMock() as m:
         m.add(
             method=responses.GET,
-            url=f"https://graph.facebook.com/{api.version}/oauth/access_token",
+            url=f"https://graph.facebook.com/oauth/access_token",
             json={"access_token": "access_token", "token_type": "bearer"},
         )
 

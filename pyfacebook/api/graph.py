@@ -51,6 +51,8 @@ class GraphAPI:
         timeout: Optional[int] = None,
         proxies: Optional[dict] = None,
         instagram_business_id: Optional[str] = None,
+        authorization_url: Optional[str] = None,
+        access_token_url: Optional[str] = None,
     ):
         self.app_id = app_id
         self.app_secret = app_secret
@@ -66,10 +68,14 @@ class GraphAPI:
         self.rate_limit = RateLimit()
         self.instagram_business_id = instagram_business_id
 
-        # if provide url override
-        self.base_url = self.GRAPH_URL
-        if base_url is not None:
-            self.base_url = base_url
+        # Override url for send request
+        self.base_url = base_url if base_url else self.GRAPH_URL
+        self.authorization_url = (
+            authorization_url if authorization_url else self.AUTHORIZATION_URL
+        )
+        self.access_token_url = (
+            access_token_url if access_token_url else self.EXCHANGE_ACCESS_TOKEN_URL
+        )
 
         # version check
         if version is None:
@@ -530,7 +536,7 @@ class GraphAPI:
         session = self._get_oauth_session(
             redirect_uri=redirect_uri, scope=scope, **kwargs
         )
-        authorization_url, state = session.authorization_url(url=self.AUTHORIZATION_URL)
+        authorization_url, state = session.authorization_url(url=self.authorization_url)
         return authorization_url, state
 
     def exchange_user_access_token(
@@ -544,7 +550,7 @@ class GraphAPI:
         session = self._get_oauth_session(redirect_uri=redirect_uri)
 
         session.fetch_token(
-            self.EXCHANGE_ACCESS_TOKEN_URL,
+            self.access_token_url,
             client_secret=self.app_secret,
             authorization_response=response,
         )
@@ -603,7 +609,7 @@ class GraphAPI:
         }
 
         resp = self._request(
-            url=f"{self.version}/oauth/access_token",
+            url=self.access_token_url,
             args=args,
             auth_need=False,
         )
@@ -643,7 +649,7 @@ class GraphAPI:
             app_secret = self.app_secret
 
         resp = self._request(
-            url=f"{self.version}/oauth/access_token",
+            url=self.access_token_url,
             args={
                 "grant_type": "client_credentials",
                 "client_id": app_id,
@@ -691,6 +697,9 @@ class BasicDisplayAPI(GraphAPI):
         sleep_seconds_mapping: Optional[Dict[int, int]] = None,
         timeout: Optional[int] = None,
         proxies: Optional[dict] = None,
+        base_url: Optional[str] = None,
+        authorization_url: Optional[str] = None,
+        access_token_url: Optional[str] = None,
     ):
         super().__init__(
             app_id=app_id,
@@ -702,6 +711,9 @@ class BasicDisplayAPI(GraphAPI):
             sleep_seconds_mapping=sleep_seconds_mapping,
             timeout=timeout,
             proxies=proxies,
+            base_url=base_url,
+            authorization_url=authorization_url,
+            access_token_url=access_token_url,
         )
 
     @staticmethod
@@ -726,7 +738,7 @@ class BasicDisplayAPI(GraphAPI):
         session = self._get_oauth_session(redirect_uri=redirect_uri)
 
         session.fetch_token(
-            self.EXCHANGE_ACCESS_TOKEN_URL,
+            self.access_token_url,
             client_secret=self.app_secret,
             authorization_response=response,
             include_client_id=True,
