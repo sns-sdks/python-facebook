@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.14.1](https://github.com/sns-sdks/python-facebook/v0.14.1) (2022-06-28)
+
+### Features
+
+- Support more url config in init api.
+- Remove version check to make version for support pre version.
+
 ## [0.14.0](https://github.com/sns-sdks/python-facebook/v0.14.0) (2022-06-01)
 
 ### Features
