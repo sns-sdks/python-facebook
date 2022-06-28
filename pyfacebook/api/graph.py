@@ -88,18 +88,11 @@ class GraphAPI:
             version_regex = re.compile(r"^v\d*.\d{1,2}$")
             match = version_regex.search(str(version))
             if match is not None:
-                if version not in self.VALID_API_VERSIONS:
-                    raise LibraryError(
-                        {
-                            "message": f"Valid API version are {','.join(self.VALID_API_VERSIONS)}"
-                        }
-                    )
-                else:
-                    self.version = version
+                self.version = version
             else:
                 raise LibraryError(
                     {
-                        "message": f"Invalid version {version}. You can provide with like: 5.0 or v5.0"
+                        "message": f"Invalid version {version}. You can provide with like: 14.0 or v14.0"
                     }
                 )
 
