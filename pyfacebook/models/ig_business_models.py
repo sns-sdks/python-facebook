@@ -27,6 +27,7 @@ class IgBusUser(BaseModel):
     media_count: Optional[int] = field()
     name: Optional[int] = field()
     profile_picture_url: Optional[str] = field()
+    shopping_product_tag_eligibility: Optional[bool] = field()
     username: Optional[str] = field(repr=True)
     website: Optional[str] = field()
 
@@ -314,3 +315,28 @@ class IgBusHashtagsResponse(BaseModel):
 
     data: List[IgBusHashtag] = field(repr=True)
     paging: Optional[Paging] = field(repr=True)
+
+
+@dataclass
+class IgBusCatalog(BaseModel):
+    """
+    A class representing the catalog.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-user/available_catalogs
+    """
+
+    catalog_id: Optional[str] = field(repr=True)
+    catalog_name: Optional[str] = field(repr=True)
+    shop_name: Optional[str] = field(repr=True)
+    product_count: Optional[int] = field(repr=True)
+
+
+@dataclass
+class IgBusCatalogsResponse(BaseModel):
+    """
+    A class representing the catalog list response.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-user/available_catalogs
+    """
+
+    data: List[IgBusCatalog] = field(repr=True)

@@ -16,6 +16,7 @@ from pyfacebook.models.ig_business_models import (
     IgBusMentionedCommentResponse,
     IgBusMentionedMediaResponse,
     IgBusHashtagsResponse,
+    IgBusCatalogsResponse,
 )
 from pyfacebook.utils.params_utils import enf_comma_separated
 
@@ -217,7 +218,7 @@ class IGBusinessUser(BaseResource):
         until: Optional[str] = None,
         count: Optional[int] = 10,
         limit: Optional[int] = 10,
-        return_json=False,
+        return_json: bool = False,
     ) -> Union[IgBusMediaResponse, dict]:
         """
         Get user's media. This only can return max 10k medias.
@@ -258,7 +259,7 @@ class IGBusinessUser(BaseResource):
         until: Optional[str] = None,
         count: Optional[int] = 10,
         limit: Optional[int] = 10,
-        return_json=False,
+        return_json: bool = False,
     ) -> Union[IgBusMediaResponse, dict]:
         """
         Represents a collection of live video IG Media on an IG User.
@@ -297,7 +298,7 @@ class IGBusinessUser(BaseResource):
         self,
         comment_id: str,
         fields: Optional[Union[str, list, tuple]] = None,
-        return_json=False,
+        return_json: bool = False,
     ) -> Union[IgBusMentionedCommentResponse, dict]:
         """
         Get data on an IG Comment in which user has been @mentioned by another Instagram user
@@ -328,7 +329,7 @@ class IGBusinessUser(BaseResource):
         self,
         media_id: str,
         fields: Optional[Union[str, list, tuple]] = None,
-        return_json=False,
+        return_json: bool = False,
     ) -> Union[IgBusMentionedMediaResponse, dict]:
         """
         Get data on an IG Media in which user has been @mentioned in a caption by another Instagram user.
@@ -357,7 +358,7 @@ class IGBusinessUser(BaseResource):
     def get_hashtag_search(
         self,
         q: str,
-        return_json=False,
+        return_json: bool = False,
     ) -> Union[IgBusHashtagsResponse, dict]:
         """
         Get ID for hashtag.
@@ -385,7 +386,7 @@ class IGBusinessUser(BaseResource):
         fields: Optional[Union[str, list, tuple]] = None,
         count: Optional[int] = 25,
         limit: Optional[int] = 25,
-        return_json=False,
+        return_json: bool = False,
     ) -> Union[IgBusHashtagsResponse, dict]:
         """
         Get the IG Hashtags that user has searched for within the last 7 days.
@@ -419,7 +420,7 @@ class IGBusinessUser(BaseResource):
         fields: Optional[Union[str, list, tuple]] = None,
         count: Optional[int] = 10,
         limit: Optional[int] = 10,
-        return_json=False,
+        return_json: bool = False,
     ) -> Union[IgBusMediaResponse, dict]:
         """
         Get list of story IG Media objects on user.
@@ -454,7 +455,7 @@ class IGBusinessUser(BaseResource):
         fields: Optional[Union[str, list, tuple]] = None,
         count: Optional[int] = 25,
         limit: Optional[int] = 25,
-        return_json=False,
+        return_json: bool = False,
     ) -> Union[IgBusMediaResponse, dict]:
         """
         Get list of Media objects in which user has been tagged by another Instagram user.
@@ -483,3 +484,22 @@ class IGBusinessUser(BaseResource):
             return data
         else:
             return IgBusMediaResponse.new_from_json_dict(data)
+
+    def get_available_catalogs(
+        self, return_json: bool = False
+    ) -> Union[IgBusCatalogsResponse, dict]:
+        """
+        Get the product catalog in an IG User's Instagram Shop.
+
+        :param: return_json
+        :return: catalog data
+        """
+
+        data = self.client.get_connection(
+            object_id=self.client.instagram_business_id,
+            connection="available_catalogs",
+        )
+        if return_json:
+            return data
+        else:
+            return IgBusCatalogsResponse.new_from_json_dict(data)
