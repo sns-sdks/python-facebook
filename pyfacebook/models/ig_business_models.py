@@ -74,6 +74,7 @@ class IgBusMedia(BaseModel):
     children: Optional[IgBusMediaChildren] = field()
     comments_count: Optional[int] = field()
     is_comment_enabled: Optional[bool] = field()
+    is_shared_to_feed: Optional[bool] = field()
     like_count: Optional[int] = field()
     media_product_type: Optional[str] = field()
     media_type: Optional[str] = field()
