@@ -340,3 +340,39 @@ class IgBusCatalogsResponse(BaseModel):
     """
 
     data: List[IgBusCatalog] = field(repr=True)
+
+
+@dataclass
+class IgBusProductVariant(BaseModel):
+    product_id: Optional[int] = field(repr=True)
+    variant_name: Optional[str] = field(repr=True)
+
+
+@dataclass
+class IgBusProduct(BaseModel):
+    """
+    A class representing the catalog product.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-user/catalog_product_search
+    """
+
+    product_id: Optional[int] = field(repr=True)
+    merchant_id: Optional[int] = field(repr=True)
+    product_name: Optional[str] = field(repr=True)
+    image_url: Optional[str] = field()
+    retailer_id: Optional[str] = field()
+    review_status: Optional[str] = field()
+    is_checkout_flow: Optional[bool] = field()
+    product_variants: Optional[List[IgBusProductVariant]] = field()
+
+
+@dataclass
+class IgBusProductsResponse(BaseModel):
+    """
+    A class representing the catalog product list response.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-user/catalog_product_search
+    """
+
+    data: List[IgBusProduct] = field(repr=True)
+    paging: Optional[Paging] = field(repr=True)

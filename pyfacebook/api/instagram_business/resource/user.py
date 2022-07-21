@@ -17,6 +17,7 @@ from pyfacebook.models.ig_business_models import (
     IgBusMentionedMediaResponse,
     IgBusHashtagsResponse,
     IgBusCatalogsResponse,
+    IgBusProductsResponse,
 )
 from pyfacebook.utils.params_utils import enf_comma_separated
 
@@ -491,7 +492,8 @@ class IGBusinessUser(BaseResource):
         """
         Get the product catalog in an IG User's Instagram Shop.
 
-        :param: return_json
+        :param: return_json:  Set to false will return a dataclass for IgBusCatalogsResponse.
+            Or return json data. Default is false.
         :return: catalog data
         """
 
@@ -503,3 +505,38 @@ class IGBusinessUser(BaseResource):
             return data
         else:
             return IgBusCatalogsResponse.new_from_json_dict(data)
+
+    def get_catalog_product_search(
+        self,
+        catalog_id: str,
+        q: Optional[str] = None,
+        count: Optional[int] = 10,
+        limit: int = 10,
+        return_json: bool = False,
+    ) -> Union[IgBusProductsResponse, dict]:
+        """
+        Get a collection of products that match a given search string within the targeted IG User's Instagram Shop catalog.
+
+        :param catalog_id: ID of catalog to search.
+        :param q: A string to search for in each product's name or SKU number (SKU numbers can be added in the Content ID column in the catalog management interface).
+            If no string is specified, all tag-eligible products will be returned.
+        :param count: The count will retrieve objects. Default is None will get all data.
+        :param limit: Each request retrieve objects count.
+            For most connections should no more than 100. Default is None will use api default limit.
+        :param return_json: Set to false will return a dataclass for IgBusProductsResponse.
+            Or return json data. Default is false.
+        :return: Catalog products data.
+        """
+
+        data = self.client.get_full_connections(
+            object_id=self.client.instagram_business_id,
+            connection="catalog_product_search",
+            catalog_id=catalog_id,
+            q=q,
+            count=count,
+            limit=limit,
+        )
+        if return_json:
+            return data
+        else:
+            return IgBusProductsResponse.new_from_json_dict(data)
