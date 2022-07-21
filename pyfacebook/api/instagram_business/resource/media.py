@@ -10,6 +10,7 @@ from pyfacebook.models.ig_business_models import (
     IgBusCommentResponse,
     IgBusMediaChildren,
     IgBusInsightsResponse,
+    IgBusProductTagsResponse,
 )
 from pyfacebook.utils.params_utils import enf_comma_separated
 
@@ -154,7 +155,7 @@ class IGBusinessMedia(BaseResource):
         :param media_id: ID for the media.
         :param metric: A comma-separated list of Metrics you want returned.
             You can also pass this with an id list, tuple.
-        :param return_json: Set to false will return a dataclass for IgBusPublishLimitResponse.
+        :param return_json: Set to false will return a dataclass for IgBusInsightsResponse.
             Or return json data. Default is false.
         :return: Media insights response information.
         """
@@ -168,3 +169,23 @@ class IGBusinessMedia(BaseResource):
             return data
         else:
             return IgBusInsightsResponse.new_from_json_dict(data)
+
+    def get_product_tags(
+        self, media_id: str, return_json: bool = False
+    ) -> Union[IgBusProductTagsResponse, dict]:
+        """
+        Get a collection of product tags on an IG Media.
+        :param media_id: ID for the media.
+        :param return_json: Set to false will return a dataclass for IgBusProductTagsResponse.
+            Or return json data. Default is false.
+        :return: Media product tags
+        """
+
+        data = self.client.get_connection(
+            object_id=media_id,
+            connection="product_tags",
+        )
+        if return_json:
+            return data
+        else:
+            return IgBusProductTagsResponse.new_from_json_dict(data)

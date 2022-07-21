@@ -376,3 +376,35 @@ class IgBusProductsResponse(BaseModel):
 
     data: List[IgBusProduct] = field(repr=True)
     paging: Optional[Paging] = field(repr=True)
+
+
+@dataclass
+class IgBusProductTag(BaseModel):
+    """
+    A class representing the product tag.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-media/product_tags#ig-media-product-tags
+    """
+
+    product_id: Optional[int] = field(repr=True)
+    merchant_id: Optional[int] = field(repr=True)
+    name: Optional[str] = field(repr=True)
+    price_string: Optional[str] = field()
+    image_url: Optional[str] = field()
+    review_status: Optional[str] = field()
+    is_checkout: Optional[bool] = field()
+    stripped_price_string: Optional[str] = field()
+    string_sale_price_string: Optional[str] = field()
+    x: Optional[float] = field()
+    y: Optional[float] = field()
+
+
+@dataclass
+class IgBusProductTagsResponse(BaseModel):
+    """
+    A class representing the product tag list response.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-media/product_tags#ig-media-product-tags
+    """
+
+    data: List[IgBusProductTag] = field(repr=True)
