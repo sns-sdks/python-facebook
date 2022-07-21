@@ -122,3 +122,22 @@ def test_get_insights(helpers, api):
             return_json=True,
         )
         assert insights_json["data"][0]["name"] == "impressions"
+
+
+def test_get_product_tags(helpers, api):
+    media_id = "90010778325754"
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{api.version}/{media_id}/product_tags",
+            json=helpers.load_json(
+                "testdata/instagram/apidata/medias/product_tags.json"
+            ),
+        )
+
+        tags = api.media.get_product_tags(media_id=media_id)
+        assert len(tags.data) == 1
+        assert tags.data[0].product_id == 3231775643511089
+
+        tags_json = api.media.get_product_tags(media_id=media_id, return_json=True)
+        assert tags_json["data"][0]["review_status"] == "approved"
