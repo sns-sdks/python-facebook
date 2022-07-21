@@ -18,6 +18,7 @@ from pyfacebook.models.ig_business_models import (
     IgBusHashtagsResponse,
     IgBusCatalogsResponse,
     IgBusProductsResponse,
+    IgBusProductAppealsResponse,
 )
 from pyfacebook.utils.params_utils import enf_comma_separated
 
@@ -540,3 +541,27 @@ class IGBusinessUser(BaseResource):
             return data
         else:
             return IgBusProductsResponse.new_from_json_dict(data)
+
+    def get_product_appeal(
+        self,
+        product_id: str,
+        return_json: bool = False,
+    ) -> Union[IgBusProductAppealsResponse, dict]:
+        """
+        Get appeal status of a rejected product.
+
+        :param product_id: Product ID.
+        :param return_json: Set to false will return a dataclass for IgBusProductAppealsResponse.
+            Or return json data. Default is false.
+        :return: Product appeals data.
+        """
+
+        data = self.client.get_connection(
+            object_id=self.client.instagram_business_id,
+            connection="product_appeal",
+            product_id=product_id,
+        )
+        if return_json:
+            return data
+        else:
+            return IgBusProductAppealsResponse.new_from_json_dict(data)

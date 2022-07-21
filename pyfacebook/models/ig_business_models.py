@@ -408,3 +408,27 @@ class IgBusProductTagsResponse(BaseModel):
     """
 
     data: List[IgBusProductTag] = field(repr=True)
+
+
+@dataclass
+class IgBusProductAppeal(BaseModel):
+    """
+    A class representing the product appeal.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-user/product_appeal
+    """
+
+    eligible_for_appeal: Optional[bool] = field(repr=True)
+    product_id: Optional[int] = field(repr=True)
+    review_status: Optional[str] = field(repr=True)
+
+
+@dataclass
+class IgBusProductAppealsResponse(BaseModel):
+    """
+    A class representing the product appeal list
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-user/product_appeal#response-2
+    """
+
+    data: List[IgBusProductAppeal] = field(repr=True)
