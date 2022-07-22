@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.14.2](https://github.com/sns-sdks/python-facebook/v0.14.2) (2022-07-22)
+
+### Features
+
+- Support reels for Instagram Business Account.
+- Support product tagging apis for Instagram Business Account.
+
 ## [0.14.1](https://github.com/sns-sdks/python-facebook/v0.14.1) (2022-06-28)
 
 ### Features
