@@ -16,6 +16,9 @@ from pyfacebook.models.ig_business_models import (
     IgBusMentionedCommentResponse,
     IgBusMentionedMediaResponse,
     IgBusHashtagsResponse,
+    IgBusCatalogsResponse,
+    IgBusProductsResponse,
+    IgBusProductAppealsResponse,
 )
 from pyfacebook.utils.params_utils import enf_comma_separated
 
@@ -217,7 +220,7 @@ class IGBusinessUser(BaseResource):
         until: Optional[str] = None,
         count: Optional[int] = 10,
         limit: Optional[int] = 10,
-        return_json=False,
+        return_json: bool = False,
     ) -> Union[IgBusMediaResponse, dict]:
         """
         Get user's media. This only can return max 10k medias.
@@ -258,7 +261,7 @@ class IGBusinessUser(BaseResource):
         until: Optional[str] = None,
         count: Optional[int] = 10,
         limit: Optional[int] = 10,
-        return_json=False,
+        return_json: bool = False,
     ) -> Union[IgBusMediaResponse, dict]:
         """
         Represents a collection of live video IG Media on an IG User.
@@ -297,7 +300,7 @@ class IGBusinessUser(BaseResource):
         self,
         comment_id: str,
         fields: Optional[Union[str, list, tuple]] = None,
-        return_json=False,
+        return_json: bool = False,
     ) -> Union[IgBusMentionedCommentResponse, dict]:
         """
         Get data on an IG Comment in which user has been @mentioned by another Instagram user
@@ -328,7 +331,7 @@ class IGBusinessUser(BaseResource):
         self,
         media_id: str,
         fields: Optional[Union[str, list, tuple]] = None,
-        return_json=False,
+        return_json: bool = False,
     ) -> Union[IgBusMentionedMediaResponse, dict]:
         """
         Get data on an IG Media in which user has been @mentioned in a caption by another Instagram user.
@@ -357,7 +360,7 @@ class IGBusinessUser(BaseResource):
     def get_hashtag_search(
         self,
         q: str,
-        return_json=False,
+        return_json: bool = False,
     ) -> Union[IgBusHashtagsResponse, dict]:
         """
         Get ID for hashtag.
@@ -385,7 +388,7 @@ class IGBusinessUser(BaseResource):
         fields: Optional[Union[str, list, tuple]] = None,
         count: Optional[int] = 25,
         limit: Optional[int] = 25,
-        return_json=False,
+        return_json: bool = False,
     ) -> Union[IgBusHashtagsResponse, dict]:
         """
         Get the IG Hashtags that user has searched for within the last 7 days.
@@ -419,7 +422,7 @@ class IGBusinessUser(BaseResource):
         fields: Optional[Union[str, list, tuple]] = None,
         count: Optional[int] = 10,
         limit: Optional[int] = 10,
-        return_json=False,
+        return_json: bool = False,
     ) -> Union[IgBusMediaResponse, dict]:
         """
         Get list of story IG Media objects on user.
@@ -454,7 +457,7 @@ class IGBusinessUser(BaseResource):
         fields: Optional[Union[str, list, tuple]] = None,
         count: Optional[int] = 25,
         limit: Optional[int] = 25,
-        return_json=False,
+        return_json: bool = False,
     ) -> Union[IgBusMediaResponse, dict]:
         """
         Get list of Media objects in which user has been tagged by another Instagram user.
@@ -483,3 +486,82 @@ class IGBusinessUser(BaseResource):
             return data
         else:
             return IgBusMediaResponse.new_from_json_dict(data)
+
+    def get_available_catalogs(
+        self, return_json: bool = False
+    ) -> Union[IgBusCatalogsResponse, dict]:
+        """
+        Get the product catalog in an IG User's Instagram Shop.
+
+        :param: return_json:  Set to false will return a dataclass for IgBusCatalogsResponse.
+            Or return json data. Default is false.
+        :return: catalog data
+        """
+
+        data = self.client.get_connection(
+            object_id=self.client.instagram_business_id,
+            connection="available_catalogs",
+        )
+        if return_json:
+            return data
+        else:
+            return IgBusCatalogsResponse.new_from_json_dict(data)
+
+    def get_catalog_product_search(
+        self,
+        catalog_id: str,
+        q: Optional[str] = None,
+        count: Optional[int] = 10,
+        limit: int = 10,
+        return_json: bool = False,
+    ) -> Union[IgBusProductsResponse, dict]:
+        """
+        Get a collection of products that match a given search string within the targeted IG User's Instagram Shop catalog.
+
+        :param catalog_id: ID of catalog to search.
+        :param q: A string to search for in each product's name or SKU number (SKU numbers can be added in the Content ID column in the catalog management interface).
+            If no string is specified, all tag-eligible products will be returned.
+        :param count: The count will retrieve objects. Default is None will get all data.
+        :param limit: Each request retrieve objects count.
+            For most connections should no more than 100. Default is None will use api default limit.
+        :param return_json: Set to false will return a dataclass for IgBusProductsResponse.
+            Or return json data. Default is false.
+        :return: Catalog products data.
+        """
+
+        data = self.client.get_full_connections(
+            object_id=self.client.instagram_business_id,
+            connection="catalog_product_search",
+            catalog_id=catalog_id,
+            q=q,
+            count=count,
+            limit=limit,
+        )
+        if return_json:
+            return data
+        else:
+            return IgBusProductsResponse.new_from_json_dict(data)
+
+    def get_product_appeal(
+        self,
+        product_id: str,
+        return_json: bool = False,
+    ) -> Union[IgBusProductAppealsResponse, dict]:
+        """
+        Get appeal status of a rejected product.
+
+        :param product_id: Product ID.
+        :param return_json: Set to false will return a dataclass for IgBusProductAppealsResponse.
+            Or return json data. Default is false.
+        :return: Product appeals data.
+        """
+
+        data = self.client.get_connection(
+            object_id=self.client.instagram_business_id,
+            connection="product_appeal",
+            product_id=product_id,
+        )
+        if return_json:
+            return data
+        else:
+            return IgBusProductAppealsResponse.new_from_json_dict(data)

@@ -275,3 +275,63 @@ def test_get_live_media(helpers, api):
 
         medias_json = api.user.get_live_media(return_json=True)
         assert len(medias_json["data"]) == 1
+
+
+def test_get_available_catalogs(helpers, api):
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{api.version}/{api.instagram_business_id}/available_catalogs",
+            json=helpers.load_json(
+                "testdata/instagram/apidata/users/available_catalogs.json"
+            ),
+        )
+
+        catalogs = api.user.get_available_catalogs()
+        assert len(catalogs.data) == 1
+        assert catalogs.data[0].catalog_id == "960179311066902"
+
+        catalogs_json = api.user.get_available_catalogs(return_json=True)
+        assert len(catalogs_json["data"]) == 1
+
+
+def test_get_catalog_product_search(helpers, api):
+    catalog_id = "960179311066902"
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{api.version}/{api.instagram_business_id}/catalog_product_search",
+            json=helpers.load_json(
+                "testdata/instagram/apidata/users/catalog_product_search.json"
+            ),
+        )
+
+        products = api.user.get_catalog_product_search(catalog_id=catalog_id)
+        assert len(products.data) == 1
+        assert products.data[0].product_id == 3231775643511089
+
+        products_json = api.user.get_catalog_product_search(
+            catalog_id=catalog_id, return_json=True
+        )
+        assert len(products_json["data"]) == 1
+
+
+def test_get_product_appeal(helpers, api):
+    product_id = 4029274203846188
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{api.version}/{api.instagram_business_id}/product_appeal",
+            json=helpers.load_json(
+                "testdata/instagram/apidata/users/product_appeal.json"
+            ),
+        )
+
+        appeals = api.user.get_product_appeal(product_id=product_id)
+        assert len(appeals.data) == 1
+        assert appeals.data[0].product_id == product_id
+
+        appeals_json = api.user.get_product_appeal(
+            product_id=product_id, return_json=True
+        )
+        assert len(appeals_json["data"]) == 1

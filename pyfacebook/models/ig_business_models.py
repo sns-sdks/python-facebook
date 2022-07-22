@@ -27,6 +27,7 @@ class IgBusUser(BaseModel):
     media_count: Optional[int] = field()
     name: Optional[int] = field()
     profile_picture_url: Optional[str] = field()
+    shopping_product_tag_eligibility: Optional[bool] = field()
     username: Optional[str] = field(repr=True)
     website: Optional[str] = field()
 
@@ -314,3 +315,120 @@ class IgBusHashtagsResponse(BaseModel):
 
     data: List[IgBusHashtag] = field(repr=True)
     paging: Optional[Paging] = field(repr=True)
+
+
+@dataclass
+class IgBusCatalog(BaseModel):
+    """
+    A class representing the catalog.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-user/available_catalogs
+    """
+
+    catalog_id: Optional[str] = field(repr=True)
+    catalog_name: Optional[str] = field(repr=True)
+    shop_name: Optional[str] = field(repr=True)
+    product_count: Optional[int] = field(repr=True)
+
+
+@dataclass
+class IgBusCatalogsResponse(BaseModel):
+    """
+    A class representing the catalog list response.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-user/available_catalogs
+    """
+
+    data: List[IgBusCatalog] = field(repr=True)
+
+
+@dataclass
+class IgBusProductVariant(BaseModel):
+    product_id: Optional[int] = field(repr=True)
+    variant_name: Optional[str] = field(repr=True)
+
+
+@dataclass
+class IgBusProduct(BaseModel):
+    """
+    A class representing the catalog product.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-user/catalog_product_search
+    """
+
+    product_id: Optional[int] = field(repr=True)
+    merchant_id: Optional[int] = field(repr=True)
+    product_name: Optional[str] = field(repr=True)
+    image_url: Optional[str] = field()
+    retailer_id: Optional[str] = field()
+    review_status: Optional[str] = field()
+    is_checkout_flow: Optional[bool] = field()
+    product_variants: Optional[List[IgBusProductVariant]] = field()
+
+
+@dataclass
+class IgBusProductsResponse(BaseModel):
+    """
+    A class representing the catalog product list response.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-user/catalog_product_search
+    """
+
+    data: List[IgBusProduct] = field(repr=True)
+    paging: Optional[Paging] = field(repr=True)
+
+
+@dataclass
+class IgBusProductTag(BaseModel):
+    """
+    A class representing the product tag.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-media/product_tags#ig-media-product-tags
+    """
+
+    product_id: Optional[int] = field(repr=True)
+    merchant_id: Optional[int] = field(repr=True)
+    name: Optional[str] = field(repr=True)
+    price_string: Optional[str] = field()
+    image_url: Optional[str] = field()
+    review_status: Optional[str] = field()
+    is_checkout: Optional[bool] = field()
+    stripped_price_string: Optional[str] = field()
+    string_sale_price_string: Optional[str] = field()
+    x: Optional[float] = field()
+    y: Optional[float] = field()
+
+
+@dataclass
+class IgBusProductTagsResponse(BaseModel):
+    """
+    A class representing the product tag list response.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-media/product_tags#ig-media-product-tags
+    """
+
+    data: List[IgBusProductTag] = field(repr=True)
+
+
+@dataclass
+class IgBusProductAppeal(BaseModel):
+    """
+    A class representing the product appeal.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-user/product_appeal
+    """
+
+    eligible_for_appeal: Optional[bool] = field(repr=True)
+    product_id: Optional[int] = field(repr=True)
+    review_status: Optional[str] = field(repr=True)
+
+
+@dataclass
+class IgBusProductAppealsResponse(BaseModel):
+    """
+    A class representing the product appeal list
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-user/product_appeal#response-2
+    """
+
+    data: List[IgBusProductAppeal] = field(repr=True)
