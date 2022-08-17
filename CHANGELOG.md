@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.14.3](https://github.com/sns-sdks/python-facebook/v0.14.3) (2022-08-17)
+
+### Fixs
+
+- Fix model repr if a post not have message
+
 ## [0.14.2](https://github.com/sns-sdks/python-facebook/v0.14.2) (2022-07-22)
 
 ### Features
