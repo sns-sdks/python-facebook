@@ -533,14 +533,22 @@ class GraphAPI:
         return authorization_url, state
 
     def exchange_user_access_token(
-        self, response: str, redirect_uri: Optional[str] = None
+        self,
+        response: str,
+        redirect_uri: Optional[str] = None,
+        scope: Optional[List[str]] = None,
+        **kwargs,
     ) -> dict:
         """
         :param response: The redirect response url for authorize redirect
+        :param scope: A list of permission string to request from the person using your app.
         :param redirect_uri: Url for your redirect.
+        :param kwargs: Additional parameters for oauth.
         :return:
         """
-        session = self._get_oauth_session(redirect_uri=redirect_uri)
+        session = self._get_oauth_session(
+            redirect_uri=redirect_uri, scope=scope, **kwargs
+        )
 
         session.fetch_token(
             self.access_token_url,
@@ -721,14 +729,22 @@ class BasicDisplayAPI(GraphAPI):
         return None
 
     def exchange_user_access_token(
-        self, response: str, redirect_uri: Optional[str] = None
+        self,
+        response: str,
+        redirect_uri: Optional[str] = None,
+        scope: Optional[List[str]] = None,
+        **kwargs,
     ) -> dict:
         """
         :param response: The redirect response url for authorize redirect
+        :param scope: A list of permission string to request from the person using your app.
         :param redirect_uri: Url for your redirect.
+        :param kwargs: Additional parameters for oauth.
         :return:
         """
-        session = self._get_oauth_session(redirect_uri=redirect_uri)
+        session = self._get_oauth_session(
+            redirect_uri=redirect_uri, scope=scope, **kwargs
+        )
 
         session.fetch_token(
             self.access_token_url,
