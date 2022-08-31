@@ -833,45 +833,40 @@ class ServerSentEventAPI:
 
         self.running = True
         retries, retry_interval, retry_wait = 1, 2, 2
-        try:
-            while self.running and retries <= self.max_retries:
-                with self.session.get(
-                    url=url,
-                    params=params,
-                    proxies=self.proxies,
-                    timeout=self.timeout,
-                    stream=True,
-                ) as resp:
-                    logger.debug(f"Response headers: {resp.headers}")
-                    if resp.ok:
-                        self.running = True
-                        for line in resp.iter_lines(chunk_size=self.chunk_size):
-                            if not line:
-                                continue
-                            print(line)
-                            if line != b': ping':
-                                self.on_data(data=line)
-                            else:
-                                self.on_keep_live()
 
-                            if not self.running:
-                                break
+        while self.running and retries <= self.max_retries:
+            with self.session.get(
+                url=url,
+                params=params,
+                proxies=self.proxies,
+                timeout=self.timeout,
+                stream=True,
+            ) as resp:
+                logger.debug(f"Response headers: {resp.headers}")
+                if resp.ok:
+                    self.running = True
+                    for line in resp.iter_lines(chunk_size=self.chunk_size):
+                        if line and line != b": ping":
+                            self.on_data(data=line)
+                        else:
+                            self.on_keep_live()
 
-                        if resp.raw.closed:
-                            self.on_closed(resp=resp)
+                        if not self.running:
+                            break
 
-                    else:
-                        self.on_request_error(resp)
-                        logger.debug(
-                            f"Request connection failed. "
-                            f"Trying again in {retry_wait} seconds... ({retries}/{self.max_retries})"
-                        )
-                        time.sleep(retry_wait)
-                        retries += 1
-                        retry_wait = retry_interval * retries
-        except Exception as exc:
-            logger.exception(f"Exception in request, exc: {exc}")
-        finally:
+                    if resp.raw.closed:
+                        self.on_closed(resp=resp)
+
+                else:
+                    self.on_request_error(resp)
+                    logger.debug(
+                        f"Request connection failed. "
+                        f"Trying again in {retry_wait} seconds... ({retries}/{self.max_retries})"
+                    )
+                    time.sleep(retry_wait)
+                    retries += 1
+                    retry_wait = retry_interval * retries
+        else:
             logger.debug("Request connection failed. exited")
             self.session.close()
             self.disconnect()
@@ -886,7 +881,9 @@ class ServerSentEventAPI:
         logger.info("ping to keep live")
 
     def on_request_error(self, resp):
-        logger.info(f"Received error status code: {resp.status_code}, text: {resp.text}")
+        logger.info(
+            f"Received error status code: {resp.status_code}, text: {resp.text}"
+        )
 
     def on_closed(self, resp):
         logger.debug("Received closed response")
@@ -915,7 +912,9 @@ class ServerSentEventAPI:
             },
         )
 
-    def live_reactions(self, live_video_id: str, fields: str = "reaction_stream") -> None:
+    def live_reactions(
+        self, live_video_id: str, fields: str = "reaction_stream"
+    ) -> None:
         """
         Returns reactions of a Live Video in real-time.
 
