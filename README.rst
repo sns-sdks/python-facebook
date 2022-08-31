@@ -122,6 +122,7 @@ Facebook Graph API:
 - User and User's edges
 - Group and Group's edges
 - Event and Event's edges
+- Server-Sent Events
 
 IG Business Graph API:
 

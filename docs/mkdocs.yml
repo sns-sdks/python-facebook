@@ -32,6 +32,7 @@ nav:
   - Installation: installation.md
   - Usage:
       - Graph API: usage/graph-api.md
+      - Server-Sent Events: usage/server-send-events.md
   - Changelog: CHANGELOG.md
   - Previous Version Docs:
       - README: previous-version/readme.md
