@@ -792,3 +792,138 @@ class BasicDisplayAPI(GraphAPI):
 
     def debug_token(self, input_token: str, access_token: Optional[str] = None) -> dict:
         raise LibraryError({"message": "Method not support"})
+
+
+class ServerSentEventAPI:
+    STREAM_GRAPH_URL = "https://streaming-graph.facebook.com"
+
+    def __init__(
+        self,
+        access_token: str,
+        chunk_size: int = 1024,
+        base_url: Optional[str] = None,
+        max_retries: int = 3,
+        timeout: Optional[int] = None,
+        proxies: Optional[dict] = None,
+    ) -> None:
+        """
+        :param access_token: Access token for page or user.
+        :param chunk_size: Chunk size to read response.
+        :param base_url: Base domain.
+        :param max_retries: Max retries times for request.
+        :param timeout: Timeout for request.
+        :param proxies: Proxies for request.
+        """
+        self.access_token = access_token
+        self.chunk_size = chunk_size
+        self.timeout = timeout
+        self.proxies = proxies
+        self.max_retries = max_retries
+        self.base_url = base_url if base_url else self.STREAM_GRAPH_URL
+
+        self.session = requests.Session()
+        self.running = False
+
+    def _connect(self, url: str, params: dict) -> None:
+        """
+        :param url: endpoint for facebook.
+        :param params: request parameters.
+        :return:
+        """
+
+        self.running = True
+        retries, retry_interval, retry_wait = 1, 2, 2
+        try:
+            while self.running and retries <= self.max_retries:
+                with self.session.get(
+                    url=url,
+                    params=params,
+                    proxies=self.proxies,
+                    timeout=self.timeout,
+                    stream=True,
+                ) as resp:
+                    logger.debug(f"Response headers: {resp.headers}")
+                    if resp.ok:
+                        self.running = True
+                        for line in resp.iter_lines(chunk_size=self.chunk_size):
+                            if not line:
+                                continue
+                            print(line)
+                            if line != b': ping':
+                                self.on_data(data=line)
+                            else:
+                                self.on_keep_live()
+
+                            if not self.running:
+                                break
+
+                        if resp.raw.closed:
+                            self.on_closed(resp=resp)
+
+                    else:
+                        self.on_request_error(resp)
+                        logger.debug(
+                            f"Request connection failed. "
+                            f"Trying again in {retry_wait} seconds... ({retries}/{self.max_retries})"
+                        )
+                        time.sleep(retry_wait)
+                        retries += 1
+                        retry_wait = retry_interval * retries
+        except Exception as exc:
+            logger.exception(f"Exception in request, exc: {exc}")
+        finally:
+            logger.debug("Request connection failed. exited")
+            self.session.close()
+            self.disconnect()
+
+    def disconnect(self):
+        self.running = False
+
+    def on_data(self, data):
+        logger.info(f"Data: {data}")
+
+    def on_keep_live(self):
+        logger.info("ping to keep live")
+
+    def on_request_error(self, resp):
+        logger.info(f"Received error status code: {resp.status_code}, text: {resp.text}")
+
+    def on_closed(self, resp):
+        logger.debug("Received closed response")
+
+    def live_comments(
+        self,
+        live_video_id: str,
+        comment_rate: str = "ten_per_second",
+        fields: str = "from{name,id},message",
+    ) -> None:
+        """
+        Returns comments of a Live Video in real-time.
+
+        :param live_video_id: ID for the live video.
+        :param comment_rate: the maximum comment rate that you want to receive.
+            Available parameters: one_per_two_seconds,ten_per_second,one_hundred_per_second.
+        :param fields: fields for comment data.
+        :return:
+        """
+        self._connect(
+            url=f"{self.base_url}/{live_video_id}/live_comments",
+            params={
+                "comment_rate": comment_rate,
+                "fields": fields,
+                "access_token": self.access_token,
+            },
+        )
+
+    def live_reactions(self, live_video_id: str, fields: str = "reaction_stream") -> None:
+        """
+        Returns reactions of a Live Video in real-time.
+
+        :param live_video_id: ID for the live video.
+        :param fields: fields for reaction data.
+        :return:
+        """
+        self._connect(
+            url=f"{self.base_url}/{live_video_id}/live_reactions",
+            params={"fields": fields, "access_token": self.access_token},
+        )
