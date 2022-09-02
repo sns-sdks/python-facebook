@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.14.4](https://github.com/sns-sdks/python-facebook/v0.14.4) (2022-09-02)
+
+### Feat
+
+- Add simple support for facebook server sent events api.
+- Make `scopes` work well in auth flow.
+
 ## [0.14.3](https://github.com/sns-sdks/python-facebook/v0.14.3) (2022-08-17)
 
 ### Fixs
