@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.14.4](https://github.com/sns-sdks/python-facebook/v0.14.4) (2022-09-02)
+## [0.14.5](https://github.com/sns-sdks/python-facebook/v0.14.5) (2022-09-02)
 
 ### Feat
 
