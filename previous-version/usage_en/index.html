@@ -1,0 +1,1446 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Docs for python-facebook library">
+      
+      
+      
+        <link rel="canonical" href="https://sns-sdks.github.io/python-facebook/previous-version/usage_en/">
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.3.1, mkdocs-material-8.5.3">
+    
+    
+      
+        <title>usage-en - Python Facebook Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.7a952b86.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.cbb835fc.min.css">
+        
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#thanks" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Python Facebook Docs" class="md-header__button md-logo" aria-label="Python Facebook Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Python Facebook Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              usage-en
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+            </label>
+          
+        
+          
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/sns-sdks/python-facebook" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../.." class="md-tabs__link">
+      Introduction
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../installation/" class="md-tabs__link">
+      Installation
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../usage/graph-api/" class="md-tabs__link">
+        Usage
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../CHANGELOG/" class="md-tabs__link">
+      Changelog
+    </a>
+  </li>
+
+      
+        
+  
+  
+    
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../readme/" class="md-tabs__link md-tabs__link--active">
+        Previous Version Docs
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Python Facebook Docs" class="md-nav__button md-logo" aria-label="Python Facebook Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Python Facebook Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/sns-sdks/python-facebook" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation/" class="md-nav__link">
+        Installation
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3">
+          Usage
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Usage" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Usage
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../usage/graph-api/" class="md-nav__link">
+        Graph API
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../usage/server-send-events/" class="md-nav__link">
+        Server-Sent Events
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CHANGELOG/" class="md-nav__link">
+        Changelog
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5">
+          Previous Version Docs
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Previous Version Docs" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Previous Version Docs
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../readme/" class="md-nav__link">
+        README
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          usage-en
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        usage-en
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#thanks" class="md-nav__link">
+    THANKS
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    Introduction
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installing" class="md-nav__link">
+    Installing
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    Documentation
+  </a>
+  
+    <nav class="md-nav" aria-label="Documentation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#facebook-graph-api" class="md-nav__link">
+    Facebook Graph API
+  </a>
+  
+    <nav class="md-nav" aria-label="Facebook Graph API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#initial-api" class="md-nav__link">
+    Initial Api
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-data" class="md-nav__link">
+    Get Data
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instagram-graph-api" class="md-nav__link">
+    Instagram Graph API
+  </a>
+  
+    <nav class="md-nav" aria-label="Instagram Graph API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#initial-api_1" class="md-nav__link">
+    Initial Api
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-data_1" class="md-nav__link">
+    Get Data
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instagram-basic-api" class="md-nav__link">
+    Instagram Basic API
+  </a>
+  
+    <nav class="md-nav" aria-label="Instagram Basic API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#initial-api_2" class="md-nav__link">
+    Initial Api
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-data_2" class="md-nav__link">
+    Get Data
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#support" class="md-nav__link">
+    SUPPORT
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#todo" class="md-nav__link">
+    TODO
+  </a>
+  
+    <nav class="md-nav" aria-label="TODO">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#now-features" class="md-nav__link">
+    Now features
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#todo_1" class="md-nav__link">
+    TODO
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../usage_zh/" class="md-nav__link">
+        基础教程
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#thanks" class="md-nav__link">
+    THANKS
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    Introduction
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installing" class="md-nav__link">
+    Installing
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    Documentation
+  </a>
+  
+    <nav class="md-nav" aria-label="Documentation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#facebook-graph-api" class="md-nav__link">
+    Facebook Graph API
+  </a>
+  
+    <nav class="md-nav" aria-label="Facebook Graph API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#initial-api" class="md-nav__link">
+    Initial Api
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-data" class="md-nav__link">
+    Get Data
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instagram-graph-api" class="md-nav__link">
+    Instagram Graph API
+  </a>
+  
+    <nav class="md-nav" aria-label="Instagram Graph API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#initial-api_1" class="md-nav__link">
+    Initial Api
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-data_1" class="md-nav__link">
+    Get Data
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instagram-basic-api" class="md-nav__link">
+    Instagram Basic API
+  </a>
+  
+    <nav class="md-nav" aria-label="Instagram Basic API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#initial-api_2" class="md-nav__link">
+    Initial Api
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-data_2" class="md-nav__link">
+    Get Data
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#support" class="md-nav__link">
+    SUPPORT
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#todo" class="md-nav__link">
+    TODO
+  </a>
+  
+    <nav class="md-nav" aria-label="TODO">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#now-features" class="md-nav__link">
+    Now features
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#todo_1" class="md-nav__link">
+    TODO
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  <a href="https://github.com/sns-sdks/python-facebook/edit/master/docs/previous-version/usage_en.md" title="Edit this page" class="md-content__button md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
+  </a>
+
+
+  <h1>usage-en</h1>
+
+<p align="center">
+  <strong>
+    Python Facebook
+  </strong>
+    <br>
+    A Python wrapper for the Facebook Common API.
+</p>
+
+<p align="center">
+    <a href="https://github.com/sns-sdks/python-facebook/actions">
+        <img src="https://github.com/sns-sdks/python-facebook/workflows/Test/badge.svg" alt="Build Status"/>
+    </a>
+    <a href="https://sns-sdks.github.io/python-facebook/">
+        <img src="https://img.shields.io/badge/Docs-passing-brightgreen" alt="Documentation Status"/>
+    </a>
+    <a href="https://codecov.io/gh/sns-sdks/python-facebook">
+        <img src="https://codecov.io/gh/sns-sdks/python-facebook/branch/master/graph/badge.svg" alt="Codecov">
+    </a>
+    <a href="https://pypi.org/project/python-facebook-api">
+        <img src="https://img.shields.io/pypi/v/python-facebook-api.svg" alt="PyPI"/>
+    </a>
+</p>
+
+<h2 id="thanks">THANKS</h2>
+<p>Inspired by <a href="https://github.com/bear/python-twitter">Python-Twitter</a>.</p>
+<h2 id="introduction">Introduction</h2>
+<p>Library provides a service to easily use Facebook Graph API.</p>
+<p>It currently includes the use of <code>Facebook</code>,  <code>Instagram Business</code>, and <code>Instagram Basic Display</code> product data.</p>
+<h2 id="installing">Installing</h2>
+<p>You can install this library from <code>pypi</code></p>
+<div class="highlight"><pre><span></span><code>$ pip install --upgrade python-facebook-api
+<span class="c1"># ✨🍰✨</span>
+</code></pre></div>
+<h2 id="documentation">Documentation</h2>
+<p>You can view the latest <code>python-facebook</code> documentation at: https://sns-sdks.github.io/python-facebook/</p>
+<p>Also view the full <code>Facebook Graph API</code> docs at: https://developers.facebook.com/docs/graph-api/</p>
+<p>And full <code>Instagram Graph API</code> docs at: https://developers.facebook.com/docs/instagram-api/</p>
+<p>And full <code>Instagram Basic Display API</code> docs at: https://developers.facebook.com/docs/instagram-basic-display-api/</p>
+<h3 id="facebook-graph-api">Facebook Graph API</h3>
+<p>The API is exposed via the `pyfacebook.Api`` class.</p>
+<p>To get data, you need to have a facebook app first. You can get more information about create, apply permissions for app
+at <a href="https://developers.facebook.com/docs/apps">App docs</a>.</p>
+<p>Also, you can get some examples for this library
+at <a href="https://github.com/sns-sdks/python-facebook/tree/v0/examples">Example folder</a>.</p>
+<h4 id="initial-api">Initial Api</h4>
+<p>Facebook has different types of access tokens. You can use different access tokens to get different data.</p>
+<ol>
+<li>User Access Token</li>
+<li>App Access Token</li>
+<li>Page Access Token</li>
+<li>Client Token (library not support)</li>
+</ol>
+<p>You can see the docs <a href="https://developers.facebook.com/docs/facebook-login/access-tokens">Access-Token</a> to get more
+information.</p>
+<p>If you want to get user access token by authorize. You can follow the
+docs <a href="https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow">Authorization-Manually</a> to
+initial the api.</p>
+<p>If you just want to use app access token to get some public data. You can initial an api as follows.</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span> <span class="o">=</span> <span class="n">Api</span><span class="p">(</span><span class="n">app_id</span><span class="o">=</span><span class="s2">&quot;your app id&quot;</span><span class="p">,</span> <span class="n">app_secret</span><span class="o">=</span><span class="s2">&quot;your app secret&quot;</span><span class="p">,</span> <span class="n">application_only_auth</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">api</span><span class="o">.</span><span class="n">get_token_info</span><span class="p">()</span>
+<span class="c1"># AccessToken(app_id=&#39;id&#39;, application=&#39;app name&#39;, user_id=None)</span>
+</code></pre></div>
+<p>If you have a short-lived token you can initial an api as follows.</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span> <span class="o">=</span> <span class="n">Api</span><span class="p">(</span><span class="n">app_id</span><span class="o">=</span><span class="s2">&quot;your app id&quot;</span><span class="p">,</span> <span class="n">app_secret</span><span class="o">=</span><span class="s2">&quot;your app secret&quot;</span><span class="p">,</span> <span class="n">short_token</span><span class="o">=</span><span class="s2">&quot;short-lived token&quot;</span><span class="p">)</span>
+<span class="n">api</span><span class="o">.</span><span class="n">get_token_info</span><span class="p">()</span>
+<span class="c1"># AccessToken(app_id=&#39;id&#39;, application=&#39;app name&#39;, user_id=&#39;token user id&#39;)</span>
+</code></pre></div>
+<p>If you have a long term token you can initial an api as follows (Just provide only <code>long_term_token</code> parameter enough.
+but for security need provide with app credentials).</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span> <span class="o">=</span> <span class="n">Api</span><span class="p">(</span><span class="n">app_id</span><span class="o">=</span><span class="s2">&quot;your app id&quot;</span><span class="p">,</span> <span class="n">app_secret</span><span class="o">=</span><span class="s2">&quot;your app secret&quot;</span><span class="p">,</span> <span class="n">long_term_token</span><span class="o">=</span><span class="s2">&quot;long-term token&quot;</span><span class="p">)</span>
+<span class="n">api</span><span class="o">.</span><span class="n">get_token_info</span><span class="p">()</span>
+<span class="c1"># AccessToken(app_id=&#39;id&#39;, application=&#39;app name&#39;, user_id=&#39;token user id&#39;)</span>
+<span class="c1"># this need token have additional manage_pages permission.</span>
+<span class="n">api</span> <span class="o">=</span> <span class="n">Api</span><span class="p">(</span><span class="n">long_term_token</span><span class="o">=</span><span class="s2">&quot;long-term token&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>the difference between initialize with parameter <code>short_token</code> or <code>long_term_token</code> is that short token will auto
+exchange a long term token inside.</p>
+<p>Facebook rate limit is very vague, it is related to the number of users of your app. So the library provides the custom
+sleep times in requests. You can only set parameter <code>sleep_on_rate_limit</code> with <code>True</code> to let api sleep two seconds
+between two requests. Or you can set parameter <code>sleep_seconds_mapping</code> with a dict that contains your custom data. ex:</p>
+<div class="highlight"><pre><span></span><code><span class="n">mapping</span> <span class="o">=</span> <span class="p">{</span><span class="mi">10</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">20</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">50</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">70</span><span class="p">:</span> <span class="mi">30</span><span class="p">}</span>  <span class="c1"># key is api limit reached percent and value is seconds to sleep.</span>
+<span class="n">api</span> <span class="o">=</span> <span class="n">Api</span><span class="p">(</span>
+    <span class="n">app_id</span><span class="o">=</span><span class="s2">&quot;your app id&quot;</span><span class="p">,</span> <span class="n">app_secret</span><span class="o">=</span><span class="s2">&quot;your app secret&quot;</span><span class="p">,</span> <span class="n">long_term_token</span><span class="o">=</span><span class="s2">&quot;long-term token&quot;</span><span class="p">,</span>
+    <span class="n">sleep_on_rate_limit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sleep_seconds_mapping</span><span class="o">=</span><span class="n">mapping</span>
+<span class="p">)</span>
+</code></pre></div>
+<h4 id="get-data">Get Data</h4>
+<p>You can get a facebook page information by the following methods.</p>
+<p>To fetch one facebook page's public data:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_page_info</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s1">&#39;facebookapp&#39;</span><span class="p">)</span>
+<span class="c1"># Page(id=&#39;20531316728&#39;, name=&#39;Facebook&#39;, username=&#39;facebookapp&#39;)</span>
+</code></pre></div>
+<p>To fetch multi pages by one request, you can pass the page username list or page id list with the <code>ids</code> parameter as
+follows.</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_pages_info</span><span class="p">(</span><span class="n">ids</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;20531316728&quot;</span><span class="p">,</span> <span class="s2">&quot;nba&quot;</span><span class="p">])</span>
+<span class="c1"># {&#39;20531316728&#39;: Page(id=&#39;20531316728&#39;, name=&#39;Facebook&#39;, username=&#39;facebookapp&#39;), &#39;nba&#39;: Page(id=&#39;8245623462&#39;, name=&#39;NBA&#39;, username=&#39;nba&#39;)}</span>
+</code></pre></div>
+<p>There are multiple methods to retrieve one page's posts data.</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_page_feeds</span><span class="p">()</span>
+<span class="n">api</span><span class="o">.</span><span class="n">get_page_posts</span><span class="p">()</span>
+<span class="n">api</span><span class="o">.</span><span class="n">get_page_published_posts</span><span class="p">()</span>
+<span class="n">api</span><span class="o">.</span><span class="n">get_page_tagged_posts</span><span class="p">()</span>
+</code></pre></div>
+<p>Page feeds can get feed of posts (including status updates) and links published by this page, or by others on this page.
+You can call with the following:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_page_feeds</span><span class="p">(</span><span class="n">page_id</span><span class="o">=</span><span class="s2">&quot;20531316728&quot;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="c1"># [Post(id=&#39;20531316728_587455038708591&#39;, permalink_url=&#39;https://www.facebook.com/facebookapp/videos/587455038708591/&#39;),</span>
+<span class="c1">#    Post(id=&#39;20531316728_10159023836696729&#39;, permalink_url=&#39;https://www.facebook.com/20531316728/posts/10159023836696729/&#39;)]</span>
+</code></pre></div>
+<p>Page posts can only get the posts that were published by this page:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_page_posts</span><span class="p">(</span><span class="n">page_id</span><span class="o">=</span><span class="s2">&quot;20531316728&quot;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="c1"># [Post(id=&#39;20531316728_587455038708591&#39;, permalink_url=&#39;https://www.facebook.com/facebookapp/videos/587455038708591/&#39;), </span>
+<span class="c1">#   Post(id=&#39;20531316728_10159023836696729&#39;, permalink_url=&#39;https://www.facebook.com/20531316728/posts/10159023836696729/&#39;)]</span>
+</code></pre></div>
+<p>Because of facebook graph api limit <a href="https://developers.facebook.com/docs/graph-api/reference/v5.0/page/feed">Page Feed</a>
+. Using public token can only get approximately 600 ranked, published posts per year.</p>
+<p>So if you want to get all of a page's posts or posts which tagged the page. you need use
+method <code>get_page_published_posts</code>, and this needs a page's access token with permission <code>manage_pages</code>.</p>
+<p>You can use authorization to get that page access token. Just follows
+docs <a href="https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow">Authorization-Manually</a>. Then you
+can get all published posts:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_published_posts</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s1">&#39;facebookapp&#39;</span><span class="p">,</span> <span class="n">access_token</span><span class="o">=</span><span class="s1">&#39;page access token&#39;</span><span class="p">)</span>
+<span class="c1"># [Post...]</span>
+</code></pre></div>
+<p>You can get tagged posts:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_tagged_posts</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s1">&#39;facebookapp&#39;</span><span class="p">,</span> <span class="n">access_token</span><span class="o">=</span><span class="s1">&#39;page access token&#39;</span><span class="p">)</span>
+<span class="c1"># [Post...]</span>
+</code></pre></div>
+<p>If you also have the post id, you can get post detail info by the following methods.</p>
+<p>To fetch a post info:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_post_info</span><span class="p">(</span><span class="n">post_id</span><span class="o">=</span><span class="s2">&quot;20531316728_587455038708591&quot;</span><span class="p">)</span>
+<span class="c1"># Post(id=&#39;20531316728_587455038708591&#39;, permalink_url=&#39;https://www.facebook.com/facebookapp/videos/587455038708591/&#39;)</span>
+</code></pre></div>
+<p>To fetch multi posts by one requests:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_posts_info</span><span class="p">(</span><span class="n">ids</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;20531316728_587455038708591&quot;</span><span class="p">,</span> <span class="s2">&quot;20531316728_10159023836696729&quot;</span><span class="p">])</span>
+<span class="c1"># {&#39;20531316728_587455038708591&#39;: Post(id=&#39;20531316728_587455038708591&#39;, permalink_url=&#39;https://www.facebook.com/facebookapp/videos/587455038708591/&#39;),</span>
+<span class="c1">#    &#39;20531316728_10159023836696729&#39;: Post(id=&#39;20531316728_10159023836696729&#39;, permalink_url=&#39;https://www.facebook.com/20531316728/posts/10159023836696729/&#39;)}</span>
+</code></pre></div>
+<p>You can get comments data by the object(post, page and so on) id:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_comments_by_object</span><span class="p">(</span><span class="n">object_id</span><span class="o">=</span><span class="s2">&quot;20531316728_587455038708591&quot;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="c1"># ([Comment(id=&#39;587455038708591_587460942041334&#39;, can_like=True, can_comment=True, comment_count=2, like_count=1),</span>
+<span class="c1">#    Comment(id=&#39;587455038708591_587464298707665&#39;, can_like=True, can_comment=True, comment_count=2, like_count=14)],</span>
+<span class="c1">#    CommentSummary(total_count=392, can_comment=True))</span>
+</code></pre></div>
+<p>If you already have the comment id, you can get comment details info with the following methods.</p>
+<p>To fetch one comment info:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_comment_info</span><span class="p">(</span><span class="n">comment_id</span><span class="o">=</span><span class="s2">&quot;587455038708591_587460942041334&quot;</span><span class="p">)</span>
+<span class="c1"># Comment(id=&#39;587455038708591_587460942041334&#39;, comment_count=2, like_count=1)</span>
+</code></pre></div>
+<p>To fetch multi comment info by one request:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_comments_info</span><span class="p">(</span><span class="n">ids</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;587455038708591_587460942041334&quot;</span><span class="p">,</span> <span class="s2">&quot;587455038708591_587464298707665&quot;</span><span class="p">])</span>
+<span class="c1"># {&#39;587455038708591_587460942041334&#39;: Comment(id=&#39;587455038708591_587460942041334&#39;, comment_count=2, like_count=1),</span>
+<span class="c1">#  &#39;587455038708591_587464298707665&#39;: Comment(id=&#39;587455038708591_587464298707665&#39;, comment_count=2, like_count=14)}</span>
+</code></pre></div>
+<p>You can get the page's profile picture by the following methods.</p>
+<p>To fetch a page picture:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_picture</span><span class="p">(</span><span class="n">page_id</span><span class="o">=</span><span class="s2">&quot;20531316728&quot;</span><span class="p">)</span>
+<span class="c1"># ProfilePictureSource(url=&#39;https://scontent.xx.fbcdn.net/v/t1.0-1/p100x100/58978526_10158354585751729_7411073224387067904_o.png?_nc_cat=1&amp;_nc_oc=AQmaFO7eND-DVRoArrQLUZVDpmemw8nMPmHJWvoCyXId_MKLLHQdsS8UbTOX4oaEfeQ&amp;_nc_ht=scontent.xx&amp;oh=128f57c4dc65608993af62b562d92d84&amp;oe=5E942420&#39;, height=100, width=100)</span>
+</code></pre></div>
+<p>To fetch multi pages picture:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_pictures</span><span class="p">(</span><span class="n">ids</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;20531316728&quot;</span><span class="p">,</span> <span class="s2">&quot;nba&quot;</span><span class="p">])</span>
+<span class="c1"># {&#39;20531316728&#39;: ProfilePictureSource(url=&#39;https://scontent.xx.fbcdn.net/v/t1.0-1/p100x100/58978526_10158354585751729_7411073224387067904_o.png?_nc_cat=1&amp;_nc_oc=AQmaFO7eND-DVRoArrQLUZVDpmemw8nMPmHJWvoCyXId_MKLLHQdsS8UbTOX4oaEfeQ&amp;_nc_ht=scontent.xx&amp;oh=128f57c4dc65608993af62b562d92d84&amp;oe=5E942420&#39;, height=100, width=100),</span>
+<span class="c1">#  &#39;nba&#39;: ProfilePictureSource(url=&#39;https://scontent.xx.fbcdn.net/v/t1.0-1/p100x100/81204460_10158199356848463_5727214464013434880_n.jpg?_nc_cat=1&amp;_nc_oc=AQmcent57E-a-923C_VVpiX26nGqKDodImY1gsiu7h1czDmcpLHXR8D5hIh9g9Ao3wY&amp;_nc_ht=scontent.xx&amp;oh=1656771e6c11bd03147b69ee643238ba&amp;oe=5E66450C&#39;, height=100, width=100)}</span>
+</code></pre></div>
+<p>You can get videos data by the object(page, user...) id:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_videos_by_object</span><span class="p">(</span><span class="s2">&quot;ikaroskunlife&quot;</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">],</span> <span class="n">count</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="c1"># [Video(id=&#39;969222676905304&#39;, created_time=None, description=&#39;冬日&#39;),</span>
+<span class="c1">#  Video(id=&#39;210174653594254&#39;, created_time=None, description=&#39;Snowing&#39;),</span>
+<span class="c1">#  Video(id=&#39;674270653053120&#39;, created_time=None, description=&#39;Visible&#39;)]</span>
+</code></pre></div>
+<p>If you already have the id of videos, you can get more info by the following methods:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_video_info</span><span class="p">(</span><span class="s2">&quot;969222676905304&quot;</span><span class="p">)</span>
+<span class="c1"># Video(id=&#39;969222676905304&#39;, created_time=&#39;2020-09-12T09:53:06+0000&#39;, description=&#39;冬日&#39;)</span>
+<span class="n">api</span><span class="o">.</span><span class="n">get_videos</span><span class="p">(</span><span class="n">ids</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;210174653594254&quot;</span><span class="p">,</span> <span class="s2">&quot;674270653053120&quot;</span><span class="p">])</span>
+<span class="c1"># {&#39;210174653594254&#39;: Video(id=&#39;210174653594254&#39;, created_time=&#39;2020-03-31T08:13:14+0000&#39;, description=&#39;Snowing&#39;),</span>
+<span class="c1">#  &#39;674270653053120&#39;: Video(id=&#39;674270653053120&#39;, created_time=&#39;2019-09-02T06:13:17+0000&#39;, description=&#39;Visible&#39;)}</span>
+</code></pre></div>
+<p>You can get albums data by the object(page, user...) id:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_albums_by_object</span><span class="p">(</span><span class="s2">&quot;instagram&quot;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="c1"># [Album(id=&#39;372558296163354&#39;, created_time=&#39;2012-10-29T19:46:35+0000&#39;, name=&#39;时间线照片&#39;),</span>
+<span class="c1">#  Album(id=&#39;623202484432266&#39;, created_time=&#39;2014-04-12T15:28:26+0000&#39;, name=&#39;手机上传&#39;)...]</span>
+</code></pre></div>
+<p>If you already have the id of album, you can get more info by the following methods:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_album_info</span><span class="p">(</span><span class="s2">&quot;372558296163354&quot;</span><span class="p">)</span>
+<span class="c1"># Album(id=&#39;372558296163354&#39;, created_time=&#39;2012-10-29T19:46:35+0000&#39;, name=&#39;时间线照片&#39;)</span>
+<span class="n">api</span><span class="o">.</span><span class="n">get_albums</span><span class="p">(</span><span class="n">ids</span><span class="o">=</span><span class="s2">&quot;372558296163354,623202484432266&quot;</span><span class="p">)</span>
+<span class="c1"># {&#39;372558296163354&#39;: Album(id=&#39;372558296163354&#39;, created_time=&#39;2012-10-29T19:46:35+0000&#39;, name=&#39;时间线照片&#39;),</span>
+<span class="c1">#  &#39;623202484432266&#39;: Album(id=&#39;623202484432266&#39;, created_time=&#39;2014-04-12T15:28:26+0000&#39;, name=&#39;手机上传&#39;)}</span>
+</code></pre></div>
+<p>You can get photos data by the object(page, album, user...) id:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_photos_by_object</span><span class="p">(</span><span class="s2">&quot;372558296163354&quot;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="c1"># [Photo(id=&#39;3293405020745319&#39;, created_time=&#39;2020-09-10T19:11:01+0000&#39;, name=&#39;Roller skating = Black joy for Travis Reynolds. 🖤\n\nWatch our IGTV to catch some good vibes and see his 🔥🔥🔥 tricks. \n\n#ShareBlackStories\n\nhttps://www.instagram.com/tv/CE9xgF3jwS_/&#39;),</span>
+<span class="c1">#  Photo(id=&#39;3279789248773563&#39;, created_time=&#39;2020-09-06T16:23:17+0000&#39;, name=&#39;#HelloFrom Los Glaciares National Park, Argentina 👏👏👏\n\nhttps://www.instagram.com/p/CEzSoQNMdfH/&#39;),</span>
+<span class="c1">#  Photo(id=&#39;3276650595754095&#39;, created_time=&#39;2020-09-05T16:52:54+0000&#39;, name=None)...]</span>
+</code></pre></div>
+<p>If you already have the id of photos, you can get more info by the following methods:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_photo_info</span><span class="p">(</span><span class="s2">&quot;3293405020745319&quot;</span><span class="p">)</span>
+<span class="c1"># Photo(id=&#39;3293405020745319&#39;, created_time=&#39;2020-09-10T19:11:01+0000&#39;, name=&#39;Roller skating = Black joy for Travis Reynolds. 🖤\n\nWatch our IGTV to catch some good vibes and see his 🔥🔥🔥 tricks. \n\n#ShareBlackStories\n\nhttps://www.instagram.com/tv/CE9xgF3jwS_/&#39;)</span>
+<span class="n">api</span><span class="o">.</span><span class="n">get_photos</span><span class="p">(</span><span class="n">ids</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;3279789248773563&quot;</span><span class="p">,</span> <span class="s2">&quot;3276650595754095&quot;</span><span class="p">])</span>
+<span class="c1"># {&#39;3279789248773563&#39;: Photo(id=&#39;3279789248773563&#39;, created_time=&#39;2020-09-06T16:23:17+0000&#39;, name=&#39;#HelloFrom Los Glaciares National Park, Argentina 👏👏👏\n\nhttps://www.instagram.com/p/CEzSoQNMdfH/&#39;),</span>
+<span class="c1"># &#39;3276650595754095&#39;: Photo(id=&#39;3276650595754095&#39;, created_time=&#39;2020-09-05T16:52:54+0000&#39;, name=None)}</span>
+</code></pre></div>
+<p>You can get live videos' data by the object(page, user...) id:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_live_videos_by_object</span><span class="p">(</span><span class="n">object_id</span><span class="o">=</span><span class="s2">&quot;2121008874780932&quot;</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="c1"># [LiveVideo(id=&#39;2814245952123884&#39;, permalink_url=&#39;/IkaroskunLife/videos/710393869909608/&#39;),</span>
+<span class="c1">#  LiveVideo(id=&#39;2809188389296307&#39;, permalink_url=&#39;/IkaroskunLife/videos/706216360286730/&#39;)]</span>
+</code></pre></div>
+<p>If you already have the id of live videos, you can get more info by the following methods:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_live_video_info</span><span class="p">(</span><span class="n">live_video_id</span><span class="o">=</span><span class="s2">&quot;2814245952123884&quot;</span><span class="p">)</span>
+<span class="c1"># LiveVideo(id=&#39;2814245952123884&#39;, permalink_url=&#39;/IkaroskunLife/videos/710393869909608/&#39;)</span>
+</code></pre></div>
+<p>Same as get live video input stream data.</p>
+<h3 id="instagram-graph-api">Instagram Graph API</h3>
+<p>Instagram Graph API allows you to get <a href="https://help.instagram.com/502981923235522">instagram Professional accounts</a>
+data.</p>
+<h4 id="initial-api_1">Initial Api</h4>
+<p>As similar to facebook graph api. This api can be initialized by multiple methods. But can only use user access token,
+and needs your instagram business id.</p>
+<p>If you want to get user access token by authorize. You can follow the
+docs <a href="https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow">Authorization-Manually</a> to
+initialize the api.</p>
+<p>If you have a short-lived token you can initialize an api as follows:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span> <span class="o">=</span> <span class="n">IgProApi</span><span class="p">(</span><span class="n">app_id</span><span class="o">=</span><span class="s2">&quot;your app id&quot;</span><span class="p">,</span> <span class="n">app_secret</span><span class="o">=</span><span class="s2">&quot;your app secret&quot;</span><span class="p">,</span> <span class="n">short_token</span><span class="o">=</span><span class="s2">&quot;short-lived token&quot;</span><span class="p">,</span>
+               <span class="n">instagram_business_id</span><span class="o">=</span><span class="s2">&quot;17841406338772941&quot;</span><span class="p">)</span>
+<span class="n">api</span><span class="o">.</span><span class="n">get_token_info</span><span class="p">()</span>
+<span class="c1"># AccessToken(app_id=&#39;id&#39;, application=&#39;app name&#39;, user_id=&quot;token user id&quot;)</span>
+</code></pre></div>
+<p>If you have a long term token you can initialize an api as follows (Just providing only <code>long_term_token</code> parameter is
+enough, but for security you need to provide app credentials):</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span> <span class="o">=</span> <span class="n">IgProApi</span><span class="p">(</span><span class="n">app_id</span><span class="o">=</span><span class="s2">&quot;your app id&quot;</span><span class="p">,</span> <span class="n">app_secret</span><span class="o">=</span><span class="s2">&quot;your app secret&quot;</span><span class="p">,</span> <span class="n">long_term_token</span><span class="o">=</span><span class="s2">&quot;long-lived token&quot;</span><span class="p">)</span>
+<span class="n">api</span><span class="o">.</span><span class="n">get_token_info</span><span class="p">()</span>
+<span class="c1"># AccessToken(app_id=&#39;id&#39;, application=&#39;app name&#39;, user_id=&#39;token user id&#39;)</span>
+</code></pre></div>
+<h4 id="get-data_1">Get Data</h4>
+<p>If you want to search other's business account basic info and medias. You can use methods as follows:</p>
+<ul>
+<li>discovery_user: retrieve user basic data</li>
+<li>discovery_user_medias: retrieve user medias data</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Use discovery only support search by instagram username.</p>
+</div>
+<p>Retrieve other user info by username:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">discovery_user</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;facebook&quot;</span><span class="p">)</span>
+<span class="c1"># IgProUser(id=&#39;17841400455970028&#39;, name=&#39;Facebook&#39;, username=&#39;facebook&#39;)</span>
+</code></pre></div>
+<p>Retrieve other user medias by username:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">discovery_user_medias</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;facebook&quot;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="c1"># [IgProMedia(comments=None, id=&#39;17859633232647524&#39;, permalink=&#39;https://www.instagram.com/p/B6jje2UnoH8/&#39;),</span>
+<span class="c1">#  IgProMedia(comments=None, id=&#39;18076151185161297&#39;, permalink=&#39;https://www.instagram.com/p/B6ji-PZH2V1/&#39;)]</span>
+</code></pre></div>
+<p>Get your account info:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_user_info</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="s2">&quot;your instagram business id&quot;</span><span class="p">)</span>
+<span class="c1"># IgProUser(id=&#39;17841406338772941&#39;, name=&#39;LiuKun&#39;, username=&#39;ikroskun&#39;)</span>
+</code></pre></div>
+<p>Get your medias:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_user_medias</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">api</span><span class="o">.</span><span class="n">instagram_business_id</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="c1"># [IgProMedia(comments=None, id=&#39;18075344632131157&#39;, permalink=&#39;https://www.instagram.com/p/B38X8BzHsDi/&#39;),</span>
+<span class="c1">#  IgProMedia(comments=None, id=&#39;18027939643230671&#39;, permalink=&#39;https://www.instagram.com/p/B38Xyp6nqsS/&#39;)]</span>
+</code></pre></div>
+<p>If you already have some medias id, you can get media info by the following methods.</p>
+<p>To fetch a post info:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_media_info</span><span class="p">(</span><span class="n">media_id</span><span class="o">=</span><span class="s2">&quot;18075344632131157&quot;</span><span class="p">)</span>
+<span class="c1"># IgProMedia(comments=None, id=&#39;18075344632131157&#39;, permalink=&#39;https://www.instagram.com/p/B38X8BzHsDi/&#39;)</span>
+</code></pre></div>
+<p>To fetch multi medias by one requests:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_medias_info</span><span class="p">(</span><span class="n">media_ids</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;18075344632131157&quot;</span><span class="p">,</span> <span class="s2">&quot;18027939643230671&quot;</span><span class="p">])</span>
+<span class="c1"># {&#39;18075344632131157&#39;: IgProMedia(comments=None, id=&#39;18075344632131157&#39;, permalink=&#39;https://www.instagram.com/p/B38X8BzHsDi/&#39;),</span>
+<span class="c1">#  &#39;18027939643230671&#39;: IgProMedia(comments=None, id=&#39;18027939643230671&#39;, permalink=&#39;https://www.instagram.com/p/B38Xyp6nqsS/&#39;)}</span>
+</code></pre></div>
+<p>Get comments for media:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_comments_by_media</span><span class="p">(</span><span class="n">media_id</span><span class="o">=</span><span class="s2">&quot;17955956875141196&quot;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="c1"># [IgProComment(id=&#39;17862949873623188&#39;, timestamp=&#39;2020-01-05T05:58:47+0000&#39;),</span>
+<span class="c1">#  IgProComment(id=&#39;17844360649889631&#39;, timestamp=&#39;2020-01-05T05:58:42+0000&#39;)]</span>
+</code></pre></div>
+<p>If you already have some comments' id, you can get comment details info by the following methods.</p>
+<p>To fetch a comment info:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_comment_info</span><span class="p">(</span><span class="n">comment_id</span><span class="o">=</span><span class="s2">&quot;17862949873623188&quot;</span><span class="p">)</span>
+<span class="c1"># IgProComment(id=&#39;17862949873623188&#39;, timestamp=&#39;2020-01-05T05:58:47+0000&#39;)</span>
+</code></pre></div>
+<p>To fetch multi comments by one requests:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_comments_info</span><span class="p">(</span><span class="n">comment_ids</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;17862949873623188&quot;</span><span class="p">,</span> <span class="s2">&quot;17844360649889631&quot;</span><span class="p">])</span>
+<span class="c1"># {&#39;17862949873623188&#39;: IgProComment(id=&#39;17862949873623188&#39;, timestamp=&#39;2020-01-05T05:58:47+0000&#39;),</span>
+<span class="c1">#  &#39;17844360649889631&#39;: IgProComment(id=&#39;17844360649889631&#39;, timestamp=&#39;2020-01-05T05:58:42+0000&#39;)}</span>
+</code></pre></div>
+<p>Get replies for a comments:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_replies_by_comment</span><span class="p">(</span><span class="s2">&quot;17984127178281340&quot;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="c1"># [IgProReply(id=&#39;18107567341036926&#39;, timestamp=&#39;2019-10-15T07:06:09+0000&#39;),</span>
+<span class="c1">#  IgProReply(id=&#39;17846106427692294&#39;, timestamp=&#39;2019-10-15T07:05:17+0000&#39;)]</span>
+</code></pre></div>
+<p>If you already have some replies' id, you can get replies details info by the following methods.</p>
+<p>To fetch a reply info:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_reply_info</span><span class="p">(</span><span class="n">reply_id</span><span class="o">=</span><span class="s2">&quot;18107567341036926&quot;</span><span class="p">)</span>
+<span class="c1"># IgProReply(id=&#39;18107567341036926&#39;, timestamp=&#39;2019-10-15T07:06:09+0000&#39;)</span>
+</code></pre></div>
+<p>To fetch multi replies info by one requests:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_replies_info</span><span class="p">(</span><span class="n">reply_ids</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;18107567341036926&quot;</span><span class="p">,</span> <span class="s2">&quot;17846106427692294&quot;</span><span class="p">])</span>
+<span class="c1"># {&#39;18107567341036926&#39;: IgProReply(id=&#39;18107567341036926&#39;, timestamp=&#39;2019-10-15T07:06:09+0000&#39;),</span>
+<span class="c1">#  &#39;17846106427692294&#39;: IgProReply(id=&#39;17846106427692294&#39;, timestamp=&#39;2019-10-15T07:05:17+0000&#39;)}</span>
+</code></pre></div>
+<p>Use <code>get_user_insights</code> method, you can get account insights data.</p>
+<p>If you want to get your account insights, just provide <code>user_id</code> with your id.</p>
+<p>If you have other account's access token, you can provide with <code>user_id</code> and <code>access_token</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_user_insights</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">api</span><span class="o">.</span><span class="n">instagram_business_id</span><span class="p">,</span> <span class="n">period</span><span class="o">=</span><span class="s2">&quot;day&quot;</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;impressions&quot;</span><span class="p">,</span> <span class="s2">&quot;reach&quot;</span><span class="p">])</span>
+<span class="c1"># [IgProInsight(name=&#39;impressions&#39;, period=&#39;day&#39;), IgProInsight(name=&#39;reach&#39;, period=&#39;day&#39;)]</span>
+</code></pre></div>
+<p>The same as <code>get_user_insights</code>, you can custom provide <code>media_id</code> and <code>access_token</code>.</p>
+<p>Get your media insights data:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_media_insights</span><span class="p">(</span><span class="n">media_id</span><span class="o">=</span><span class="s2">&quot;media_id&quot;</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;engagement&quot;</span><span class="p">,</span> <span class="s2">&quot;impressions&quot;</span><span class="p">])</span>
+<span class="c1"># [IgProInsight(name=&#39;engagement&#39;, period=&#39;lifetime&#39;), IgProInsight(name=&#39;impressions&#39;, period=&#39;lifetime&#39;)]</span>
+</code></pre></div>
+<p>Get hashtag id:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">search_hashtag</span><span class="p">(</span><span class="n">q</span><span class="o">=</span><span class="s2">&quot;love&quot;</span><span class="p">)</span>
+<span class="c1"># [IgProHashtag(id=&#39;17843826142012701&#39;, name=None)]</span>
+</code></pre></div>
+<p>Get hashtag info:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_hashtag_info</span><span class="p">(</span><span class="n">hashtag_id</span><span class="o">=</span><span class="s2">&quot;17843826142012701&quot;</span><span class="p">)</span>
+<span class="c1"># IgProHashtag(id=&#39;17843826142012701&#39;, name=&#39;love&#39;)</span>
+</code></pre></div>
+<p>Get hashtag's top medias:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_hashtag_top_medias</span><span class="p">(</span><span class="n">hashtag_id</span><span class="o">=</span><span class="s2">&quot;17843826142012701&quot;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="c1"># [IgProMedia(comments=None, id=&#39;18086291068155608&#39;, permalink=&#39;https://www.instagram.com/p/B8ielBPpHaw/&#39;),</span>
+<span class="c1">#  IgProMedia(comments=None, id=&#39;17935250359346228&#39;, permalink=&#39;https://www.instagram.com/p/B8icUmwoF0Y/&#39;),</span>
+<span class="c1">#  IgProMedia(comments=None, id=&#39;17847031435934181&#39;, permalink=&#39;https://www.instagram.com/p/B8icycxKEn-/&#39;),</span>
+<span class="c1">#  IgProMedia(comments=None, id=&#39;18000940699302502&#39;, permalink=&#39;https://www.instagram.com/p/B8ieNN7Cv6S/&#39;),</span>
+<span class="c1">#  IgProMedia(comments=None, id=&#39;18025516372248793&#39;, permalink=&#39;https://www.instagram.com/p/B8iduQJgSyO/&#39;)]</span>
+</code></pre></div>
+<p>Get hashtag's recent medias:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_hashtag_recent_medias</span><span class="p">(</span><span class="n">hashtag_id</span><span class="o">=</span><span class="s2">&quot;17843826142012701&quot;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="c1"># [IgProMedia(comments=None, id=&#39;18128248021002097&#39;, permalink=&#39;https://www.instagram.com/p/B8ifnoWA5Ru/&#39;),</span>
+<span class="c1">#  IgProMedia(comments=None, id=&#39;18104579776105272&#39;, permalink=&#39;https://www.instagram.com/p/B8ifwfsgBw2/&#39;),</span>
+<span class="c1">#  IgProMedia(comments=None, id=&#39;17898846532442427&#39;, permalink=&#39;https://www.instagram.com/p/B8ifwZ4ltqP/&#39;),</span>
+<span class="c1">#  IgProMedia(comments=None, id=&#39;17891698510462453&#39;, permalink=&#39;https://www.instagram.com/p/B8ifwepgf_E/&#39;),</span>
+<span class="c1">#  IgProMedia(comments=None, id=&#39;17883544606492965&#39;, permalink=&#39;https://www.instagram.com/p/B8ifwabgiPf/&#39;)]</span>
+</code></pre></div>
+<p>If you have other account's access token, you can provide it with <code>user_id</code> and <code>access_token</code> to get its search
+hashtags. Or just get your account recent searched hashtags:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_user_recently_searched_hashtags</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="s2">&quot;17841406338772941&quot;</span><span class="p">)</span>
+<span class="c1"># [IgProHashtag(id=&#39;17843826142012701&#39;, name=&#39;love&#39;), IgProHashtag(id=&#39;17841562447105233&#39;, name=&#39;loveyou&#39;)]</span>
+</code></pre></div>
+<p>Get the media objects in which a Business or Creator Account has been tagged. If you have another account authorized
+access token, you can provide it with <code>user_id</code> and <code>access_token</code> to get its data. Or only get your account's data:</p>
+<div class="highlight"><pre><span></span><code><span class="n">medias</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_tagged_user_medias</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">api</span><span class="o">.</span><span class="n">instagram_business_id</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="c1"># [IgProMedia(id=&#39;18027939643230671&#39;, permalink=&#39;https://www.instagram.com/p/B38Xyp6nqsS/&#39;),</span>
+<span class="c1">#  IgProMedia(id=&#39;17846368219941692&#39;, permalink=&#39;https://www.instagram.com/p/B8gQCApHMT-/&#39;)]</span>
+</code></pre></div>
+<p>Get data about a comment that a Business or Creator Account has been @mentioned in comment text:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_mentioned_comment_info</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">api</span><span class="o">.</span><span class="n">instagram_business_id</span><span class="p">,</span> <span class="n">comment_id</span><span class="o">=</span><span class="s2">&quot;17892250648466172&quot;</span><span class="p">)</span>
+<span class="c1"># IgProComment(id=&#39;17892250648466172&#39;, timestamp=&#39;2020-02-24T09:15:16+0000&#39;)</span>
+</code></pre></div>
+<p>Get data about a media object on which a Business or Creator Account has been @mentioned in a caption::</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_mentioned_media_info</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">api</span><span class="o">.</span><span class="n">instagram_business_id</span><span class="p">,</span> <span class="n">media_id</span><span class="o">=</span><span class="s2">&quot;18027939643230671&quot;</span><span class="p">)</span>
+<span class="c1"># IgProMedia(id=&#39;18027939643230671&#39;, permalink=&#39;https://www.instagram.com/p/B38Xyp6nqsS/&#39;)</span>
+</code></pre></div>
+<p>Now you can publish instagram content if your app have published permission.</p>
+<p>for publish, you need create a container first, the make the container publish.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># create photo</span>
+<span class="n">api</span><span class="o">.</span><span class="n">create_photo</span><span class="p">(</span>
+    <span class="n">image_url</span><span class="o">=</span><span class="s2">&quot;https://www.example.com/images/gugges.jpg&quot;</span><span class="p">,</span>
+    <span class="n">caption</span><span class="o">=</span><span class="s2">&quot;publish test&quot;</span><span class="p">,</span>
+    <span class="n">location_id</span><span class="o">=</span><span class="s2">&quot;7640348500&quot;</span><span class="p">,</span>
+    <span class="n">user_tags</span><span class="o">=</span><span class="s1">&#39;[{&quot;username&quot;: &quot;somebody&quot;, &quot;x&quot;: 0.5, &quot;y&quot;: 0.8}]&#39;</span>
+<span class="p">)</span>
+<span class="c1"># IgProContainer(id=&#39;17877174857201040&#39;, status_code=None)</span>
+
+<span class="c1"># create video</span>
+<span class="n">api</span><span class="o">.</span><span class="n">create_video</span><span class="p">(</span>
+    <span class="n">video_url</span><span class="o">=</span><span class="s2">&quot;https://www.example.com/videos/hungry-fonzes.mov&quot;</span><span class="p">,</span>
+    <span class="n">caption</span><span class="o">=</span><span class="s2">&quot;video test&quot;</span><span class="p">,</span>
+    <span class="n">location_id</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">thumb_offset</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="c1"># IgProContainer(id=&#39;17877174857201041&#39;, status_code=None)</span>
+</code></pre></div>
+<p>Then you can get container status, if container is ready, You can make it published.</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_container_info</span><span class="p">(</span><span class="n">container_id</span><span class="o">=</span><span class="s2">&quot;17877174857201040&quot;</span><span class="p">)</span>
+<span class="c1"># IgProContainer(id=&#39;17877174857201040&#39;, status_code=&#39;FINISHED&#39;)</span>
+</code></pre></div>
+<p>Then you can publish it.</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">publish_container</span><span class="p">(</span><span class="n">creation_id</span><span class="o">=</span><span class="s2">&quot;17877174857201040&quot;</span><span class="p">)</span>
+<span class="c1"># {&#39;id&#39;: &#39;17892354025952911&#39;}</span>
+</code></pre></div>
+<p>If success, will return the media id.</p>
+<p>For now, Instagram accounts are limited to 25 API-published posts within a 24 hours moving period.</p>
+<p>So you can get current limit info.</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_publish_limit</span><span class="p">()</span>
+<span class="c1"># IgProPublishLimit(quota_usage=4)</span>
+</code></pre></div>
+<h3 id="instagram-basic-api">Instagram Basic API</h3>
+<p>Instagram Basic Display API can be used to access any type of Instagram account but only provides read-access to basic
+data.</p>
+<p>You need to authorize first, and get access token which has permission to retrieve data.</p>
+<p>All docs on <a href="https://developers.facebook.com/docs/instagram-basic-display-api">Basic Display API</a>.</p>
+<h4 id="initial-api_2">Initial Api</h4>
+<p>Now provide three methods to init api.</p>
+<p>If you have long-lived access token, can just initial by token:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">pyfacebook</span> <span class="kn">import</span> <span class="n">IgBasicApi</span>
+
+<span class="n">api</span> <span class="o">=</span> <span class="n">IgBasicApi</span><span class="p">(</span><span class="n">long_term_token</span><span class="o">=</span><span class="s2">&quot;token&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>If you have short-lived access token, can provide with app credentials:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span> <span class="o">=</span> <span class="n">IgBasicApi</span><span class="p">(</span><span class="n">app_id</span><span class="o">=</span><span class="s2">&quot;app id&quot;</span><span class="p">,</span> <span class="n">app_secret</span><span class="o">=</span><span class="s2">&quot;app secret&quot;</span><span class="p">,</span> <span class="n">short_token</span><span class="o">=</span><span class="s2">&quot;token&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>If you want to authorized by user on hand. You can use authorize flow:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span> <span class="o">=</span> <span class="n">IgBasicApi</span><span class="p">(</span><span class="n">app_id</span><span class="o">=</span><span class="s2">&quot;app id&quot;</span><span class="p">,</span> <span class="n">app_secret</span><span class="o">=</span><span class="s2">&quot;app secret&quot;</span><span class="p">,</span> <span class="n">initial_access_token</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">api</span><span class="o">.</span><span class="n">get_authorization_url</span><span class="p">()</span>
+<span class="c1"># (&#39;https://api.instagram.com/oauth/authorize?response_type=code&amp;client_id=app+id&amp;redirect_uri=https%3A%2F%2Flocalhost%2F&amp;scope=user_profile+user_media&amp;state=PyFacebook&#39;, &#39;PyFacebook&#39;)</span>
+<span class="c1"># give permission and copy the redirect full url.</span>
+<span class="n">api</span><span class="o">.</span><span class="n">exchange_access_token</span><span class="p">(</span><span class="n">response</span><span class="o">=</span><span class="s2">&quot;the full url&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="get-data_2">Get Data</h4>
+<p>You can get user basic info:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_user_info</span><span class="p">()</span>
+<span class="c1"># IgBasicUser(id=&#39;17841406338772941&#39;, username=&#39;ikroskun&#39;)</span>
+</code></pre></div>
+<p>You can get user medias:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_user_medias</span><span class="p">()</span>
+<span class="c1"># [IgBasicMedia(id=&#39;17846368219941692&#39;, media_type=&#39;IMAGE&#39;, permalink=&#39;https://www.instagram.com/p/B8gQCApHMT-/&#39;),</span>
+<span class="c1">#  IgBasicMedia(id=&#39;17970645226046242&#39;, media_type=&#39;IMAGE&#39;, permalink=&#39;https://www.instagram.com/p/Bme0cU1giOH/&#39;)]</span>
+</code></pre></div>
+<p>You can get just one media info:</p>
+<div class="highlight"><pre><span></span><code><span class="n">api</span><span class="o">.</span><span class="n">get_media_info</span><span class="p">(</span><span class="n">media_id</span><span class="o">=</span><span class="s2">&quot;18027939643230671&quot;</span><span class="p">)</span>
+<span class="c1"># IgBasicMedia(id=&#39;18027939643230671&#39;, media_type=&#39;CAROUSEL_ALBUM&#39;, permalink=&#39;https://www.instagram.com/p/B38Xyp6nqsS/&#39;)</span>
+</code></pre></div>
+<h2 id="support">SUPPORT</h2>
+<p><code>python-facebook-api</code> had been being developed with Pycharm under the free JetBrains Open Source license(s) granted by
+JetBrains s.r.o., hence I would like to express my thanks here.</p>
+<p><img alt="Jetbrains" src="../../images/jetbrains.svg" /></p>
+<h2 id="todo">TODO</h2>
+<h3 id="now-features">Now features</h3>
+<p>Facebook Api:</p>
+<ul>
+<li>Page Info.</li>
+<li>Page Picture Info.</li>
+<li>Feed Info (public posts, published posts, tagged posts).</li>
+<li>Comment Info.</li>
+<li>Video Info.</li>
+<li>Album Info.</li>
+<li>Photo Info.</li>
+<li>Live Video Info.</li>
+</ul>
+<p>Instagram Professional Api:</p>
+<ul>
+<li>Other business account info and media.</li>
+<li>Authorized business account info</li>
+<li>Authorized account medias</li>
+<li>Authorized account comments</li>
+<li>Authorized account replies</li>
+<li>Authorized account insights and media insights</li>
+<li>Search hashtag id</li>
+<li>Get hashtag info</li>
+<li>Get top medias with hashtag</li>
+<li>Get recent medias with hashtag</li>
+<li>Get Authorized account recent searched hashtags</li>
+<li>Get medias which tagged account</li>
+<li>Get comment info mentioned user.</li>
+<li>Get media info mentioned user.</li>
+<li>Publish Content</li>
+</ul>
+<p>Instagram Basic display api:</p>
+<ul>
+<li>Get user info</li>
+<li>Get user medias</li>
+<li>Get media info</li>
+</ul>
+<h3 id="todo_1">TODO</h3>
+<ul>
+<li>publish</li>
+</ul>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+        
+        <a href="../readme/" class="md-footer__link md-footer__link--prev" aria-label="Previous: README" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              README
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../usage_zh/" class="md-footer__link md-footer__link--next" aria-label="Next: 基础教程" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              基础教程
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2019 - 2021 Ikaros kun
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+      
+      
+    
+    <a href="https://twitter.com/realllkk520" target="_blank" rel="noopener" title="twitter.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg>
+    </a>
+  
+    
+    
+      
+      
+    
+    <a href="https://github.com/sns-sdks/python-facebook" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs"], "search": "../../assets/javascripts/workers/search.5bf1dace.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.37e9125f.min.js"></script>
+      
+    
+  </body>
+</html>
