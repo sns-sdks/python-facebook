@@ -59,7 +59,7 @@ Now you can use ``GraphApi`` class to communicate with Facebook Graph Api.
 
 You can instantiate ``GraphApi`` with three different methods.
 
-1. using an access token::
+1. Using an access token::
 
     >>> from pyfacebook import GraphAPI
     >>> api = GraphAPI(access_token="token")
@@ -71,7 +71,7 @@ You can instantiate ``GraphApi`` with three different methods.
 
     app_id and app secret: Are Facebook application identification and secret credentials respectively for your app 
 
-3. Authorization users to Facebook app::
+3. Authorize users to your Facebook app::
 
     >>> from pyfacebook import GraphAPI
     >>> api = GraphAPI(app_id="id", app_secret="secret", oauth_flow=True)
