@@ -254,6 +254,25 @@ class GraphAPI:
         )
         data = self._parse_response(resp)
         return data
+    
+    def get_endpoint(self, endpoint,args=None):
+        """
+        Send GET request to provided endpoint.
+
+        param endpoint: path to user profile resource endpoint
+            allowed values (birthday,location, hometown,
+            age_range and link)
+        :param args: args for request eg access token for get request
+        :return: Response data from the chosen endpoint
+        """
+        resp = self._request(
+            url=f"{self.base_url}/{self.version}/me?fields={endpoint}",
+            args=args,
+        )
+        data = self._parse_response(resp)
+        data.pop('id', None)
+        if data:
+           return pd.json_normalize(data).to_dict('records')[0] 
 
     def get_object(self, object_id: str, fields: str = "", **kwargs) -> dict:
         """
