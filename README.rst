@@ -25,28 +25,27 @@ Introduction
 
 We have refactored this library after v0.10.0. If you want to use old version, please see branch ``v0``.
 
-The new structure we will provide like follow show.
+The new structure we are providing is as shown in this diagram.
 
 .. image:: docs/docs/images/structure.png
 
 
 .. note::
 
-    This new structure still in developing.
+    This new structure is still in development.
 
-    Now You can use base class ``GraphApi`` to get data.
+    Now you can use base classes ``GraphApi`` or ``FacebookAPI`` to get data.
 
 ==========
 Installing
 ==========
 
-If you want to use old version you can set version to ``0.9.*``, And this series will also support with python2.7
+If you want to use old version you can set version to ``0.9.*``, And this series will also support python2.7
 
-You can install this library from ``pypi``::
+Install this library from ``pypi``::
 
     $pip install --upgrade python-facebook-api
     ✨🍰✨
-
 
 =====
 Usage
@@ -58,19 +57,21 @@ GraphAPI
 
 Now you can use ``GraphApi`` class to communicate with Facebook Graph Api.
 
-You can initial ``GraphApi`` with three different methods.
+You can instantiate ``GraphApi`` with three different methods.
 
-1. if you already have an access token, you can initial with it::
+1. using an access token::
 
     >>> from pyfacebook import GraphAPI
     >>> api = GraphAPI(access_token="token")
 
-2. if you want to use app credentials to generate app token::
+2. Using your app credentials to generate app token::
 
     >>> from pyfacebook import GraphAPI
     >>> api = GraphAPI(app_id="id", app_secret="secret", application_only_auth=True)
 
-3. if you want to perform an authorization process to a user::
+    app_id and app secret: Are Facebook application identification and secret credentials respectively for your app 
+
+3. Authorization users to Facebook app::
 
     >>> from pyfacebook import GraphAPI
     >>> api = GraphAPI(app_id="id", app_secret="secret", oauth_flow=True)
@@ -88,18 +89,40 @@ Get object data::
     >>> api.get_object(object_id="20531316728")
     >>> {'name': 'Facebook App', 'id': '20531316728'}
 
-More you can see the code because we still working on new structure.
+More code for the new structure is till in development
 
 -----------
 FacebookAPI
 -----------
+Get user data
 
-Initial methods same with ``GraphAPI``.
+To allow your app to access public data for users who have authorized your app to do so by providing their access token.    
 
-Get user data::
+1. Instantiate the api as follows::
+        
+   >>> from pyfacebook import FacebookApi
+   >>> fb = FacebookApi(app_id=APP_ID, app_secret=APP_SECRET, 
+                    access_token='user_access_token')
+  APP_ID and APP_SECRET: Facebook approved application ID and application secret respectively
+  User_access_token: User provided access_token both short and long lived tokens accepted. However,
+  short lived tokens are invalid two hours after submission.
 
-    >>> fb.user.get_info(user_id="413140042878187")
-    >>> User(id='413140042878187', name='Kun Liu')
+2. To get user information::
+   
+   >>> fb.user.get_info(user_id="413140042878187")
+   >>> User(id='413140042878187', name='Kun Liu')
+
+3. To get user posts::
+   
+   >>>fb.user.get_posts("413140042878187")
+ 
+3. To get user likes::
+   
+   >>>fb.user.get_likes("413140042878187")
+
+4. To get user public profile data i.e (birthday,location, hometown,age_range,and link)::
+
+   >>>fb.get_endpoint('birthday')
 
 Get page data::
 
@@ -112,8 +135,7 @@ See more in documents.
 Features
 ========
 
-
-Now library has cover follows features
+Now the library covers the following features
 
 Facebook Graph API:
 
