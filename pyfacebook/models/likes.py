@@ -20,12 +20,13 @@ class Likes(BaseModel):
     id: Optional[str] = field(repr=True, compare=True)
     name: Optional[str] = field(repr=True)
     created_time: Optional[str] = field()
-    
+
 
 @dataclass
 class LikesResponse(BaseModel):
     """
     A class representing Likes
     """
+
     data: List[Likes] = field(repr=True, compare=True)
     paging: Optional[Paging] = field()

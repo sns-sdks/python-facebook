@@ -49,7 +49,7 @@ class FeedEdge:
 
         if fields is None:
             fields = const.POST_PUBLIC_FIELDS + const.POST_CONNECTIONS_SUMMERY_FIELDS
-            
+
         data = self.client.get_full_connections(
             object_id=object_id,
             connection=source,

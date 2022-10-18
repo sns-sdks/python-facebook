@@ -21,7 +21,7 @@ from pyfacebook.utils.params_utils import enf_comma_separated
 
 
 class FacebookUser(
-    BaseResource, FeedEdge, AlbumsEdge, PhotosEdge, VideosEdge, LiveVideosEdge 
+    BaseResource, FeedEdge, AlbumsEdge, PhotosEdge, VideosEdge, LiveVideosEdge
 ):
     def get_info(
         self,
@@ -43,8 +43,7 @@ class FacebookUser(
             fields = const.USER_PUBLIC_FIELDS
 
         data = self.client.get_object(
-            object_id=user_id,
-            fields=enf_comma_separated(field="fields", value=fields),
+            object_id=user_id, fields=enf_comma_separated(field="fields", value=fields),
         )
         if return_json:
             return data
@@ -159,7 +158,7 @@ class FacebookUser(
             until=until,
             count=count,
             limit=limit,
-            source='posts',
+            source="posts",
             return_json=return_json,
         )
 
@@ -195,9 +194,10 @@ class FacebookUser(
             until=until,
             count=count,
             limit=limit,
-            source='likes',
+            source="likes",
             return_json=return_json,
         )
+
     def get_businesses(
         self,
         user_id: str,
@@ -234,5 +234,3 @@ class FacebookUser(
             return data
         else:
             return BusinessResponse.new_from_json_dict(data)
-
-
