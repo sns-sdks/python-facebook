@@ -3,6 +3,7 @@ from .business import Business
 from .user import User, UserExperience, UserAgeRange
 from .page import Page, PagesResponse, SearchPage, SearchPagesResponse
 from .post import Post, FeedResponse
+from .likes import Likes, LikesResponse
 from .group import Group
 from .event import Event
 from .photo import Photo, PhotosResponse

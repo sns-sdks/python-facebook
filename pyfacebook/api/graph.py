@@ -248,12 +248,27 @@ class GraphAPI:
         :param args: args for request.
         :return: Response data
         """
-        resp = self._request(
-            url=f"{self.version}/{path}",
-            args=args,
-        )
+        resp = self._request(url=f"{self.version}/{path}", args=args,)
         data = self._parse_response(resp)
         return data
+
+    def get_endpoint(self, endpoint, args=None):
+        """
+        Send GET request to provided endpoint.
+
+        param endpoint: path to user profile resource endpoint
+            allowed values (birthday,location, hometown,
+            age_range and link)
+        :param args: args for request eg access token for get request
+        :return: Response data from the chosen endpoint
+        """
+        resp = self._request(
+            url=f"{self.base_url}/{self.version}/me?fields={endpoint}", args=args,
+        )
+        data = self._parse_response(resp)
+        data.pop("id", None)
+        if data:
+            return pd.json_normalize(data).to_dict("records")[0]
 
     def get_object(self, object_id: str, fields: str = "", **kwargs) -> dict:
         """
@@ -268,10 +283,7 @@ class GraphAPI:
         if kwargs:
             args.update(kwargs)
 
-        resp = self._request(
-            url=f"{self.version}/{object_id}",
-            args=args,
-        )
+        resp = self._request(url=f"{self.version}/{object_id}", args=args,)
         data = self._parse_response(resp)
         return data
 
@@ -292,12 +304,7 @@ class GraphAPI:
         data = self._parse_response(resp)
         return data
 
-    def get_connection(
-        self,
-        object_id: str,
-        connection: str,
-        **kwargs,
-    ) -> dict:
+    def get_connection(self, object_id: str, connection: str, **kwargs,) -> dict:
         """
         Get connections objects for object by id. Like get page medias by page id.
 
@@ -339,9 +346,7 @@ class GraphAPI:
                 kwargs["limit"] = limit
 
             data = self.get_connection(
-                object_id=object_id,
-                connection=connection,
-                **kwargs,
+                object_id=object_id, connection=connection, **kwargs,
             )
             # Append this request data
             data_set.extend(data["data"])
@@ -404,10 +409,7 @@ class GraphAPI:
             )
             args = {"fields": fds}
 
-            data = self.get(
-                path=self.instagram_business_id,
-                args=args,
-            )
+            data = self.get(path=self.instagram_business_id, args=args,)
             data = data.get("business_discovery", {}).get("media", {})
             # Append this request data
             if data:
@@ -450,20 +452,12 @@ class GraphAPI:
             path += f"/{connection}"
 
         resp = self._request(
-            url=path,
-            args=params,
-            post_args=data,
-            verb="POST",
-            **kwargs,
+            url=path, args=params, post_args=data, verb="POST", **kwargs,
         )
         data = self._parse_response(resp)
         return data
 
-    def delete_object(
-        self,
-        object_id: str,
-        **kwargs,
-    ) -> dict:
+    def delete_object(self, object_id: str, **kwargs,) -> dict:
         """
         Delete the facebook object.
 
@@ -472,9 +466,7 @@ class GraphAPI:
         :return: Delete status.
         """
         resp = self._request(
-            url=f"{self.version}/{object_id}",
-            verb="DELETE",
-            **kwargs,
+            url=f"{self.version}/{object_id}", verb="DELETE", **kwargs,
         )
         data = self._parse_response(resp)
         return data
@@ -609,11 +601,7 @@ class GraphAPI:
             "fb_exchange_token": access_token,
         }
 
-        resp = self._request(
-            url=self.access_token_url,
-            args=args,
-            auth_need=False,
-        )
+        resp = self._request(url=self.access_token_url, args=args, auth_need=False,)
         data = self._parse_response(resp)
         return data
 
@@ -629,9 +617,7 @@ class GraphAPI:
         """
 
         data = self.get_connection(
-            object_id=user_id,
-            connection="accounts",
-            access_token=access_token,
+            object_id=user_id, connection="accounts", access_token=access_token,
         )
         return data
 
@@ -770,11 +756,7 @@ class BasicDisplayAPI(GraphAPI):
             "client_secret": self.app_secret,
             "access_token": access_token,
         }
-        resp = self._request(
-            url=f"access_token",
-            args=args,
-            auth_need=False,
-        )
+        resp = self._request(url=f"access_token", args=args, auth_need=False,)
         data = self._parse_response(resp)
         return data
 
@@ -784,10 +766,7 @@ class BasicDisplayAPI(GraphAPI):
         :return: New access token.
         """
         args = {"grant_type": "ig_refresh_token", "access_token": access_token}
-        resp = self._request(
-            url="refresh_access_token",
-            args=args,
-        )
+        resp = self._request(url="refresh_access_token", args=args,)
         data = self._parse_response(resp)
         return data
 

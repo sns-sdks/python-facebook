@@ -1,5 +1,5 @@
 """
-    Apis for User.
+    Apis for User posts, likes, accounts, business, info.
 """
 from typing import Dict, Optional, Union
 
@@ -15,6 +15,7 @@ from pyfacebook.api.facebook.common_edges import (
 from pyfacebook.models.user import User
 from pyfacebook.models.page import PagesResponse
 from pyfacebook.models.post import FeedResponse
+from pyfacebook.models.likes import LikesResponse
 from pyfacebook.models.business import BusinessResponse
 from pyfacebook.utils.params_utils import enf_comma_separated
 
@@ -42,8 +43,7 @@ class FacebookUser(
             fields = const.USER_PUBLIC_FIELDS
 
         data = self.client.get_object(
-            object_id=user_id,
-            fields=enf_comma_separated(field="fields", value=fields),
+            object_id=user_id, fields=enf_comma_separated(field="fields", value=fields),
         )
         if return_json:
             return data
@@ -134,7 +134,7 @@ class FacebookUser(
         until: Optional[str] = None,
         count: Optional[int] = 10,
         limit: Optional[int] = 10,
-        return_json: bool = False,
+        return_json: bool = True,
     ) -> Union[FeedResponse, dict]:
         """
         Get the posts published by the person themselves.
@@ -159,6 +159,42 @@ class FacebookUser(
             count=count,
             limit=limit,
             source="posts",
+            return_json=return_json,
+        )
+
+    def get_likes(
+        self,
+        object_id: str,
+        fields: Optional[Union[str, list, dict]] = None,
+        since: Optional[str] = None,
+        until: Optional[str] = None,
+        count: Optional[int] = 10000,
+        limit: Optional[int] = 100,
+        return_json: bool = True,
+    ) -> Union[LikesResponse, dict]:
+        """
+        Get the likes posted by the person themselves.
+
+        :param object_id: ID for the user.
+        :param fields: Comma-separated id string for data fields which you want.
+            You can also pass this with an id list, tuple.
+        :param since: A Unix timestamp or strtotime data value that points to the start of data.
+        :param until: A Unix timestamp or strtotime data value that points to the end of data.
+        :param count: The total count for you to get data.
+        :param limit: Each request retrieve objects count.
+            It should no more than 100. Default is None will use api default limit.
+        :param return_json: Set to false will return a dataclass for post.
+            Or return json data. Default is true.
+        :return: Likes information and paging
+        """
+        return self._get_likes(
+            object_id=object_id,
+            fields=fields,
+            since=since,
+            until=until,
+            count=count,
+            limit=limit,
+            source="likes",
             return_json=return_json,
         )
 

@@ -109,6 +109,8 @@ POST_CONNECTIONS_SUMMERY_FIELDS = [
     "reactions.type(ANGRY).limit(0).summary(total_count).as(angry)",
 ]
 
+USER_LIKES_FIELDS = ["id", "created_time", "name"]
+
 PHOTO_PUBLIC_FIELDS = ["id", "created_time", "name", "updated_time", "link"]
 
 ALBUM_PUBLIC_FIELDS = ["id", "created_time", "count", "name", "updated_time", "link"]
