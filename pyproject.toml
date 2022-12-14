@@ -43,3 +43,8 @@ tomli = "1.2.3"
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
+
+[tool.black]
+line-length = 90
+target-version = ['py39']
+preview = true

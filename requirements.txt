@@ -1,0 +1,12 @@
+requests
+requests-oauthlib
+dataclasses-json
+responses
+tox
+tomli
+flake8
+flake8-isort
+coverage
+black
+mypy
+pytest

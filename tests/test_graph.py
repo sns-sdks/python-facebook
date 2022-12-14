@@ -25,7 +25,6 @@ def test_api_initial():
         app_id="app id",
         app_secret="app secret",
         oauth_flow=True,
-        base_url="https://graph.facebook.com/",
     )
 
 

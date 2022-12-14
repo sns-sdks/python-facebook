@@ -1,4 +1,6 @@
-.PHONY: clean lint test
+.PHONY: clean lint test check
+
+FOLDERS=pyfacebook tests
 
 help:
 	@echo "  env         install all dependencies"
@@ -39,11 +41,15 @@ cov-term: clean-pyc
 cov-html: clean-pyc
 	pytest -s --cov=pyfacebook --cov-report html
 
-lint-check:
-	 black --check .
-
 lint:
-	 black .
+	isort ${FOLDERS} 
+	black ${FOLDERS}
+
+check:
+	isort --df -c ${FOLDERS}
+	black ${FOLDERS} --check
+	flake8 ${FOLDERS}
+	mypy ${FOLDERS}
 
 test:
 	pytest -s
