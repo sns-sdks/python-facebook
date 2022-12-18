@@ -1,7 +1,6 @@
 """
     Base Graph API impl
 """
-import os
 import hashlib
 import hmac
 import logging
@@ -17,39 +16,49 @@ from requests_oauthlib.compliance_fixes.facebook import facebook_compliance_fix
 
 from pyfacebook import RateLimit, PercentSecond, FacebookError, LibraryError
 
-from .constants import (
-    GRAPH_VERSION_15,
-    VALID_API_VERSIONS,
-    GRAPH_URL,
-    AUTHORIZATION_URL,
-    EXCHANGE_ACCESS_TOKEN_URL,
-    DEFAULT_REDIRECT_URI,
-    DEFAULT_SCOPE,
-    STATE,
-    STREAM_GRAPH_URL,
-)
+from . import constants
 
 logger = logging.getLogger(__name__)
 
 
 class GraphAPI:
+    VALID_API_VERSIONS = [
+        "v8.0",
+        "v9.0",
+        "v10.0",
+        "v11.0",
+        "v12.0",
+        "v13.0",
+        "v14.0",
+        "v15.0",
+    ]
+    GRAPH_URL = "https://graph.facebook.com/"
+    AUTHORIZATION_URL = "https://www.facebook.com/dialog/oauth"
+    EXCHANGE_ACCESS_TOKEN_URL = "https://graph.facebook.com/oauth/access_token"
+    DEFAULT_REDIRECT_URI = "https://localhost/"
+    DEFAULT_SCOPE = ["public_profile"]
+    STATE = "PyFacebook"
+
     def __init__(
         self,
-        app_id: str = os.environ.get("APP_ID", ""),
-        app_secret: str = os.environ.get("APP_SECRET", ""),
-        access_token: str = os.environ.get("ACCESS_TOKEN", ""),
+        app_id: Optional[str] = None,
+        app_secret: Optional[str] = None,
+        access_token: Optional[str] = None,
         application_only_auth: bool = False,
         oauth_flow: bool = False,
-        version: str = GRAPH_VERSION_15,
+        version: Optional[str] = None,
         sleep_on_rate_limit: bool = True,
         sleep_seconds_mapping: Optional[Dict[int, int]] = None,
+        base_url: Optional[str] = None,
         timeout: Optional[int] = None,
         proxies: Optional[dict] = None,
-        instagram_business_id: str = "",
+        instagram_business_id: Optional[str] = None,
+        authorization_url: Optional[str] = None,
+        access_token_url: Optional[str] = None,
     ):
-        self.app_id = self._get_app_id(app_id)
-        self.app_secret = self._get_app_secret(app_secret)
-        self.access_token = self._verify_access_token(access_token, application_only_auth, oauth_flow)
+        self.app_id = app_id
+        self.app_secret = app_secret
+        self.access_token = access_token
         self.session = requests.Session()
         self.__timeout = timeout
         self.proxies = proxies
@@ -59,42 +68,48 @@ class GraphAPI:
         )
         self.rate_limit = RateLimit()
         self.instagram_business_id = instagram_business_id
-        self.version = self._return_verified_version(version)
-                
 
-    def _verify_access_token(self, access_token:str, application_only_auth:bool, oauth_flow:bool,)->str:
-        # TODO needs to be tested and refactored
+        # Override url for send request
+        self.base_url = base_url if base_url else self.GRAPH_URL
+        self.authorization_url = (
+            authorization_url if authorization_url else self.AUTHORIZATION_URL
+        )
+        self.access_token_url = (
+            access_token_url if access_token_url else self.EXCHANGE_ACCESS_TOKEN_URL
+        )
+
+        # version check
+        if version is None:
+            # default version is last new.
+            self.version = self.VALID_API_VERSIONS[-1]
+        else:
+            version = str(version)
+            if not version.startswith("v"):
+                version = "v" + version
+            version_regex = re.compile(r"^v\d*.\d{1,2}$")
+            match = version_regex.search(str(version))
+            if match is not None:
+                self.version = version
+            else:
+                raise LibraryError(
+                    {
+                        "message": (
+                            f"Invalid version {version}. You can provide with like: 14.0"
+                            " or v14.0"
+                        )
+                    }
+                )
+
+        # Token
         if access_token:
-            return access_token
+            self.access_token = access_token
         elif application_only_auth and all([self.app_id, self.app_secret]):
-            app_token = self.get_app_token()
-            return app_token["access_token"]
+            data = self.get_app_token()
+            self.access_token = data["access_token"]
         elif oauth_flow and all([self.app_id, self.app_secret]):
             pass
         else:
             raise LibraryError({"message": "Need access token"})
-    
-    def _return_verified_version(self, version:str)->str:
-        # TODO test it is really necessary?
-        if version not in VALID_API_VERSIONS:
-            raise LibraryError(
-                    {
-                        "message": f"Invalid version {version}. You can find the versions in constants.py"
-                    }
-                )
-        return version
-    
-    def _get_app_id(self, app_id: str)->str:
-        # TODO test
-        if not app_id:
-            raise Exception("You need to specify an app id")
-        return app_id
-    
-    def _get_app_secret(self, app_secret: str)->str:
-        # TODO test
-        if not app_secret:
-            raise Exception("You need to specify an app secret")
-        return app_secret
 
     @staticmethod
     def _build_sleep_seconds_resource(
@@ -108,8 +123,7 @@ class GraphAPI:
         if sleep_seconds_mapping is None:
             return None
         mapping_list = [
-            PercentSecond(percent=p, seconds=s)
-            for p, s in sleep_seconds_mapping.items()
+            PercentSecond(percent=p, seconds=s) for p, s in sleep_seconds_mapping.items()
         ]
         return sorted(mapping_list, key=lambda ps: ps.percent)
 
@@ -117,10 +131,15 @@ class GraphAPI:
     def _generate_secret_proof(
         access_token: str, secret: Optional[str] = None
     ) -> Optional[str]:
+        """
+        :param access_token:
+        :param secret: App secret
+        :return:
+        """
         if secret is None:
             logger.debug(
-                "Calls from a server can be better secured by adding a parameter called appsecret_proof. "
-                "And need your app secret."
+                "Calls from a server can be better secured by adding a parameter called"
+                " appsecret_proof. And need your app secret."
             )
             return None
         return hmac.new(
@@ -140,14 +159,9 @@ class GraphAPI:
             args["access_token"] = self.access_token
         # Begin with v5.0, appsecret_proof parameter can improve requests secure.
         # Refer: https://developers.facebook.com/docs/graph-api/securing-requests/
-        secret_proof = self._generate_secret_proof(
-            args["access_token"], self.app_secret
-        )
+        secret_proof = self._generate_secret_proof(args["access_token"], self.app_secret)
         args["appsecret_proof"] = secret_proof
         return args
-    
-    def _build_request_url(self, path:str)->str:
-        return f"{GRAPH_URL}{self.version}/{path}"
 
     def _request(
         self,
@@ -173,10 +187,13 @@ class GraphAPI:
             elif verb == "POST":
                 post_args = self._append_token(args=post_args)
 
+        if not url.startswith("http"):
+            url = self.base_url + url
+
         try:
             response = self.session.request(
                 method=verb,
-                url=self._build_request_url(url),
+                url=url,
                 timeout=self.__timeout,
                 params=args,
                 data=post_args,
@@ -196,8 +213,7 @@ class GraphAPI:
             time.sleep(sleep_seconds)
         return response
 
-    @classmethod
-    def _parse_response(cls, response: Response) -> dict:
+    def _parse_response(self, response: Response) -> dict:
         """
         :param response: Response from graph api.
         :return: json data
@@ -205,7 +221,7 @@ class GraphAPI:
         content_type = response.headers["Content-Type"]
         if "json" in content_type:
             data = response.json()
-            cls._check_graph_error(data=data)
+            self._check_graph_error(data=data)
             return data
         elif "image/" in content_type:
             data = {
@@ -233,11 +249,12 @@ class GraphAPI:
         :param args: args for request.
         :return: Response data
         """
-        response = self._request(
-            url=path,
+        resp = self._request(
+            url=f"{self.version}/{path}",
             args=args,
         )
-        return self._parse_response(response)
+        data = self._parse_response(resp)
+        return data
 
     def get_object(self, object_id: str, fields: str = "", **kwargs) -> dict:
         """
@@ -252,11 +269,12 @@ class GraphAPI:
         if kwargs:
             args.update(kwargs)
 
-        response = self._request(
-            url=object_id,
+        resp = self._request(
+            url=f"{self.version}/{object_id}",
             args=args,
         )
-        return self._parse_response(response)
+        data = self._parse_response(resp)
+        return data
 
     def get_objects(self, ids: str, fields: str = "", **kwargs) -> dict:
         """
@@ -271,8 +289,9 @@ class GraphAPI:
         if kwargs:
             args.update(kwargs)
 
-        response = self._request(url="", args=args)
-        return self._parse_response(response)
+        resp = self._request(url=f"{self.version}", args=args)
+        data = self._parse_response(resp)
+        return data
 
     def get_connection(
         self,
@@ -288,10 +307,9 @@ class GraphAPI:
         :param kwargs: Additional parameters for different connections.
         :return: Response data
         """
-        response = self._request(
-            url=f"{object_id}/{connection}", args=kwargs
-        )
-        return self._parse_response(response)
+        resp = self._request(url=f"{self.version}/{object_id}/{connection}", args=kwargs)
+        data = self._parse_response(resp)
+        return data
 
     def get_full_connections(
         self,
@@ -430,14 +448,15 @@ class GraphAPI:
         if connection:
             path += f"/{connection}"
 
-        response = self._request(
+        resp = self._request(
             url=path,
             args=params,
             post_args=data,
             verb="POST",
             **kwargs,
         )
-        return self._parse_response(response)
+        data = self._parse_response(resp)
+        return data
 
     def delete_object(
         self,
@@ -451,17 +470,18 @@ class GraphAPI:
         :param kwargs: Additional parameters.
         :return: Delete status.
         """
-        response = self._request(
-            url=object_id,
+        resp = self._request(
+            url=f"{self.version}/{object_id}",
             verb="DELETE",
             **kwargs,
         )
-        return self._parse_response(response)
+        data = self._parse_response(resp)
+        return data
 
     def _get_oauth_session(
         self,
-        redirect_uri: str = "",
-        scope: List[str] = [],
+        redirect_uri: Optional[str] = None,
+        scope: Optional[List[str]] = None,
         **kwargs,
     ) -> OAuth2Session:
         """
@@ -479,16 +499,11 @@ class GraphAPI:
         if scope is None:
             scope = self.DEFAULT_SCOPE
 
-        try:
-            state = kwargs.pop("state")
-        except KeyError:
-            state = self.STATE
-
         session = OAuth2Session(
             client_id=self.app_id,
             scope=scope,
             redirect_uri=redirect_uri,
-            state=state,
+            state=self.STATE,
             **kwargs,
         )
         session = facebook_compliance_fix(session)
@@ -513,7 +528,7 @@ class GraphAPI:
         session = self._get_oauth_session(
             redirect_uri=redirect_uri, scope=scope, **kwargs
         )
-        authorization_url, state = session.authorization_url(url=AUTHORIZATION_URL)
+        authorization_url, state = session.authorization_url(url=self.authorization_url)
         return authorization_url, state
 
     def exchange_user_access_token(
@@ -535,7 +550,7 @@ class GraphAPI:
         )
 
         session.fetch_token(
-            EXCHANGE_ACCESS_TOKEN_URL,
+            self.access_token_url,
             client_secret=self.app_secret,
             authorization_response=response,
         )
@@ -544,7 +559,7 @@ class GraphAPI:
         return session.token
 
     def exchange_page_access_token(
-        self, page_id: str, access_token: str = ""
+        self, page_id: str, access_token: Optional[str] = None
     ) -> str:
         """
         Get page access token by page administrator's user access token.
@@ -560,24 +575,24 @@ class GraphAPI:
         if access_token is None:
             access_token = self.access_token
 
-        response = self._request(
-            url=page_id,
+        resp = self._request(
+            url=f"{self.version}/{page_id}",
             args={"fields": "access_token", "access_token": access_token},
             auth_need=False,
         )
 
-        data = self._parse_response(response)
-        try:
-            return data["access_token"]
-        except KeyError:
+        data = self._parse_response(resp)
+        if "access_token" not in data:
             raise LibraryError(
                 {
-                    "message": "Can not get page access token. Reason maybe: \n"
-                    "1. Your user access token has `page_show_list` or `manage_pages` permission.\n"
-                    "2. You have the target page's manage permission."
+                    "message": (
+                        "Can not get page access token. Reason maybe: \n1. Your user"
+                        " access token has `page_show_list` or `manage_pages`"
+                        " permission.\n2. You have the target page's manage permission."
+                    )
                 }
             )
-        
+        return data["access_token"]
 
     def exchange_long_lived_user_access_token(self, access_token=None) -> dict:
         """
@@ -595,12 +610,13 @@ class GraphAPI:
             "fb_exchange_token": access_token,
         }
 
-        response = self._request(
-            url=EXCHANGE_ACCESS_TOKEN_URL,
+        resp = self._request(
+            url=self.access_token_url,
             args=args,
             auth_need=False,
         )
-        return self._parse_response(response)
+        data = self._parse_response(resp)
+        return data
 
     def exchange_long_lived_page_access_token(
         self, user_id: str, access_token: Optional[str] = None
@@ -620,19 +636,33 @@ class GraphAPI:
         )
         return data
 
-    def get_app_token(self) -> dict:
-        response = self._request(
-            url=EXCHANGE_ACCESS_TOKEN_URL,
+    def get_app_token(
+        self, app_id: Optional[str] = None, app_secret: Optional[str] = None
+    ) -> dict:
+        """
+        Generate
+        :param app_id: ID for app
+        :param app_secret:  Secret for app
+        :return: app access token
+        """
+        if app_id is None:
+            app_id = self.app_id
+        if app_secret is None:
+            app_secret = self.app_secret
+
+        resp = self._request(
+            url=self.access_token_url,
             args={
                 "grant_type": "client_credentials",
-                "client_id": self.app_id,
-                "client_secret": self.app_secret,
+                "client_id": app_id,
+                "client_secret": app_secret,
             },
             auth_need=False,
         )
-        return self._parse_response(response)
+        data = self._parse_response(resp)
+        return data
 
-    def debug_token(self, input_token: str, access_token: str = "") -> dict:
+    def debug_token(self, input_token: str, access_token: Optional[str] = None) -> dict:
         """
         Get input token info by issued app administrator's access token
         :param input_token: Access token to debug.
@@ -642,12 +672,13 @@ class GraphAPI:
         if access_token is None:
             access_token = self.access_token
 
-        response = self._request(
-            url="debug_token",
+        resp = self._request(
+            url=f"{self.version}/debug_token",
             args={"input_token": input_token, "access_token": access_token},
             auth_need=False,
         )
-        return self._parse_response(response)
+        data = self._parse_response(resp)
+        return data
 
 
 class BasicDisplayAPI(GraphAPI):
@@ -656,36 +687,6 @@ class BasicDisplayAPI(GraphAPI):
     EXCHANGE_ACCESS_TOKEN_URL = "https://api.instagram.com/oauth/access_token"
 
     DEFAULT_SCOPE = ["user_profile", "user_media"]
-
-    def __init__(
-        self,
-        app_id: Optional[str] = None,
-        app_secret: Optional[str] = None,
-        access_token: Optional[str] = None,
-        oauth_flow: bool = False,
-        version: Optional[str] = None,
-        sleep_on_rate_limit: bool = True,
-        sleep_seconds_mapping: Optional[Dict[int, int]] = None,
-        timeout: Optional[int] = None,
-        proxies: Optional[dict] = None,
-        base_url: Optional[str] = None,
-        authorization_url: Optional[str] = None,
-        access_token_url: Optional[str] = None,
-    ):
-        super().__init__(
-            app_id=app_id,
-            app_secret=app_secret,
-            access_token=access_token,
-            oauth_flow=oauth_flow,
-            version=version,
-            sleep_on_rate_limit=sleep_on_rate_limit,
-            sleep_seconds_mapping=sleep_seconds_mapping,
-            timeout=timeout,
-            proxies=proxies,
-            base_url=base_url,
-            authorization_url=authorization_url,
-            access_token_url=access_token_url,
-        )
 
     @staticmethod
     def _generate_secret_proof(
@@ -717,7 +718,7 @@ class BasicDisplayAPI(GraphAPI):
         )
 
         session.fetch_token(
-            EXCHANGE_ACCESS_TOKEN_URL,
+            self.access_token_url,
             client_secret=self.app_secret,
             authorization_response=response,
             include_client_id=True,
@@ -726,7 +727,7 @@ class BasicDisplayAPI(GraphAPI):
 
         return session.token
 
-    def exchange_long_lived_user_access_token(self, access_token: str= "") -> dict:
+    def exchange_long_lived_user_access_token(self, access_token=None) -> dict:
         """
         Exchange short-lived Instagram User Access Tokens for long-lived Instagram User Access Tokens.
         :param access_token: short-lived user token.
@@ -740,12 +741,13 @@ class BasicDisplayAPI(GraphAPI):
             "client_secret": self.app_secret,
             "access_token": access_token,
         }
-        response = self._request(
+        resp = self._request(
             url=f"access_token",
             args=args,
             auth_need=False,
         )
-        return self._parse_response(response)
+        data = self._parse_response(resp)
+        return data
 
     def refresh_access_token(self, access_token: str):
         """
@@ -753,20 +755,38 @@ class BasicDisplayAPI(GraphAPI):
         :return: New access token.
         """
         args = {"grant_type": "ig_refresh_token", "access_token": access_token}
-        response = self._request(
+        resp = self._request(
             url="refresh_access_token",
             args=args,
         )
-        return self._parse_response(response)
+        data = self._parse_response(resp)
+        return data
+
+    def exchange_page_access_token(
+        self, page_id: str, access_token: Optional[str] = None
+    ) -> str:
+        raise LibraryError({"message": "Method not support"})
+
+    def exchange_long_lived_page_access_token(
+        self, user_id: str, access_token: Optional[str] = None
+    ) -> dict:
+        raise LibraryError({"message": "Method not support"})
+
+    def get_app_token(
+        self, app_id: Optional[str] = None, app_secret: Optional[str] = None
+    ) -> dict:
+        raise LibraryError({"message": "Method not support"})
+
+    def debug_token(self, input_token: str, access_token: Optional[str] = None) -> dict:
+        raise LibraryError({"message": "Method not support"})
 
 
 class ServerSentEventAPI:
-    
-
     def __init__(
         self,
         access_token: str,
         chunk_size: int = 1024,
+        base_url: str = constants.STREAM_GRAPH_URL,
         max_retries: int = 3,
         timeout: Optional[int] = None,
         proxies: Optional[dict] = None,
@@ -784,8 +804,10 @@ class ServerSentEventAPI:
         self.timeout = timeout
         self.proxies = proxies
         self.max_retries = max_retries
+        self.base_url = base_url
 
         self.session = requests.Session()
+        self.running = False
 
     def _connect(self, url: str, params: dict) -> None:
         """
@@ -823,8 +845,8 @@ class ServerSentEventAPI:
                 else:
                     self.on_request_error(resp)
                     logger.debug(
-                        f"Request connection failed. "
-                        f"Trying again in {retry_wait} seconds... ({retries}/{self.max_retries})"
+                        "Request connection failed. Trying again in"
+                        f" {retry_wait} seconds... ({retries}/{self.max_retries})"
                     )
                     time.sleep(retry_wait)
                     retries += 1
@@ -844,17 +866,15 @@ class ServerSentEventAPI:
         logger.info("ping to keep live")
 
     def on_request_error(self, resp):
-        logger.info(
-            f"Received error status code: {resp.status_code}, text: {resp.text}"
-        )
+        logger.info(f"Received error status code: {resp.status_code}, text: {resp.text}")
 
     def on_closed(self, resp):
         logger.debug("Received closed response")
-    
+
     @classmethod
-    def build_live_video_url(cls, live_video_id: str, object_retrieve: str)->str:
+    def build_live_video_url(cls, live_video_id: str, object_retrieve: str) -> str:
         # TODO test it
-        return f"{STREAM_GRAPH_URL}/{live_video_id}/{object_retrieve}"
+        return f"{constants.STREAM_GRAPH_URL}/{live_video_id}/{object_retrieve}"
 
     def live_comments(
         self,
@@ -872,7 +892,7 @@ class ServerSentEventAPI:
         :return:
         """
         self._connect(
-            url=self.build_live_video_url(live_video_id, "live_comments"),
+            url=f"{self.base_url}/{live_video_id}/live_comments",
             params={
                 "comment_rate": comment_rate,
                 "fields": fields,
@@ -880,9 +900,7 @@ class ServerSentEventAPI:
             },
         )
 
-    def live_reactions(
-        self, live_video_id: str, fields: str = "reaction_stream",
-    ) -> None:
+    def live_reactions(self, live_video_id: str, fields: str = "reaction_stream") -> None:
         """
         Returns reactions of a Live Video in real-time.
 
@@ -891,6 +909,6 @@ class ServerSentEventAPI:
         :return:
         """
         self._connect(
-            url=self.build_live_video_url(live_video_id, "live_reactions"),
+            url=f"{self.base_url}/{live_video_id}/live_reactions",
             params={"fields": fields, "access_token": self.access_token},
         )
