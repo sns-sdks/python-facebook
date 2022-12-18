@@ -22,22 +22,9 @@ logger = logging.getLogger(__name__)
 
 
 class GraphAPI:
-    VALID_API_VERSIONS = [
-        "v8.0",
-        "v9.0",
-        "v10.0",
-        "v11.0",
-        "v12.0",
-        "v13.0",
-        "v14.0",
-        "v15.0",
-    ]
-    GRAPH_URL = "https://graph.facebook.com/"
-    AUTHORIZATION_URL = "https://www.facebook.com/dialog/oauth"
-    EXCHANGE_ACCESS_TOKEN_URL = "https://graph.facebook.com/oauth/access_token"
-    DEFAULT_REDIRECT_URI = "https://localhost/"
-    DEFAULT_SCOPE = ["public_profile"]
-    STATE = "PyFacebook"
+    base_url = constants.GRAPH_URL
+    authorization_url = constants.AUTHORIZATION_URL
+    access_token_url = constants.EXCHANGE_ACCESS_TOKEN_URL
 
     def __init__(
         self,
@@ -46,15 +33,12 @@ class GraphAPI:
         access_token: Optional[str] = None,
         application_only_auth: bool = False,
         oauth_flow: bool = False,
-        version: Optional[str] = None,
+        version: str = constants.CURRENT_GRAPH_VERSION,
         sleep_on_rate_limit: bool = True,
         sleep_seconds_mapping: Optional[Dict[int, int]] = None,
-        base_url: Optional[str] = None,
         timeout: Optional[int] = None,
         proxies: Optional[dict] = None,
         instagram_business_id: Optional[str] = None,
-        authorization_url: Optional[str] = None,
-        access_token_url: Optional[str] = None,
     ):
         self.app_id = app_id
         self.app_secret = app_secret
@@ -68,39 +52,16 @@ class GraphAPI:
         )
         self.rate_limit = RateLimit()
         self.instagram_business_id = instagram_business_id
+        self.version = version
+        self.set_access_token(access_token, application_only_auth, oauth_flow)
 
-        # Override url for send request
-        self.base_url = base_url if base_url else self.GRAPH_URL
-        self.authorization_url = (
-            authorization_url if authorization_url else self.AUTHORIZATION_URL
-        )
-        self.access_token_url = (
-            access_token_url if access_token_url else self.EXCHANGE_ACCESS_TOKEN_URL
-        )
-
-        # version check
-        if version is None:
-            # default version is last new.
-            self.version = self.VALID_API_VERSIONS[-1]
-        else:
-            version = str(version)
-            if not version.startswith("v"):
-                version = "v" + version
-            version_regex = re.compile(r"^v\d*.\d{1,2}$")
-            match = version_regex.search(str(version))
-            if match is not None:
-                self.version = version
-            else:
-                raise LibraryError(
-                    {
-                        "message": (
-                            f"Invalid version {version}. You can provide with like: 14.0"
-                            " or v14.0"
-                        )
-                    }
-                )
-
-        # Token
+    def set_access_token(
+        self,
+        access_token: str,
+        application_only_auth: bool,
+        oauth_flow: bool,
+    ) -> None:
+        # TODO test it
         if access_token:
             self.access_token = access_token
         elif application_only_auth and all([self.app_id, self.app_secret]):
@@ -253,8 +214,7 @@ class GraphAPI:
             url=f"{self.version}/{path}",
             args=args,
         )
-        data = self._parse_response(resp)
-        return data
+        return self._parse_response(resp)
 
     def get_object(self, object_id: str, fields: str = "", **kwargs) -> dict:
         """
@@ -273,8 +233,7 @@ class GraphAPI:
             url=f"{self.version}/{object_id}",
             args=args,
         )
-        data = self._parse_response(resp)
-        return data
+        return self._parse_response(resp)
 
     def get_objects(self, ids: str, fields: str = "", **kwargs) -> dict:
         """
@@ -290,8 +249,7 @@ class GraphAPI:
             args.update(kwargs)
 
         resp = self._request(url=f"{self.version}", args=args)
-        data = self._parse_response(resp)
-        return data
+        return self._parse_response(resp)
 
     def get_connection(
         self,
@@ -480,8 +438,9 @@ class GraphAPI:
 
     def _get_oauth_session(
         self,
-        redirect_uri: Optional[str] = None,
-        scope: Optional[List[str]] = None,
+        redirect_uri: str = constants.DEFAULT_REDIRECT_URI,
+        scope: List[str] = constants.DEFAULT_SCOPE,
+        state: str = constants.DEFAULT_STATE,
         **kwargs,
     ) -> OAuth2Session:
         """
@@ -494,16 +453,11 @@ class GraphAPI:
         if not all([self.app_id, self.app_secret]):
             raise LibraryError({"message": "OAuth need your app credentials"})
 
-        if redirect_uri is None:
-            redirect_uri = self.DEFAULT_REDIRECT_URI
-        if scope is None:
-            scope = self.DEFAULT_SCOPE
-
         session = OAuth2Session(
             client_id=self.app_id,
             scope=scope,
             redirect_uri=redirect_uri,
-            state=self.STATE,
+            state=state,
             **kwargs,
         )
         session = facebook_compliance_fix(session)
@@ -511,8 +465,8 @@ class GraphAPI:
 
     def get_authorization_url(
         self,
-        redirect_uri: Optional[str] = None,
-        scope: Optional[List[str]] = None,
+        redirect_uri: str = constants.DEFAULT_REDIRECT_URI,
+        scope: List[str] = constants.DEFAULT_SCOPE,
         **kwargs,
     ) -> Tuple[str, str]:
         """
@@ -528,14 +482,13 @@ class GraphAPI:
         session = self._get_oauth_session(
             redirect_uri=redirect_uri, scope=scope, **kwargs
         )
-        authorization_url, state = session.authorization_url(url=self.authorization_url)
-        return authorization_url, state
+        return session.authorization_url(url=self.authorization_url)
 
     def exchange_user_access_token(
         self,
         response: str,
-        redirect_uri: Optional[str] = None,
-        scope: Optional[List[str]] = None,
+        redirect_uri: str = constants.DEFAULT_REDIRECT_URI,
+        scope: List[str] = constants.DEFAULT_SCOPE,
         **kwargs,
     ) -> dict:
         """
@@ -682,28 +635,15 @@ class GraphAPI:
 
 
 class BasicDisplayAPI(GraphAPI):
-    GRAPH_URL = "https://graph.instagram.com/"
-    AUTHORIZATION_URL = "https://api.instagram.com/oauth/authorize"
-    EXCHANGE_ACCESS_TOKEN_URL = "https://api.instagram.com/oauth/access_token"
-
-    DEFAULT_SCOPE = ["user_profile", "user_media"]
-
-    @staticmethod
-    def _generate_secret_proof(
-        access_token: str, secret: Optional[str] = None
-    ) -> Optional[str]:
-        """
-        :param access_token: Access token
-        :param secret: App secret
-        :return:
-        """
-        return None
+    base_url = constants.INSTAGRAM_GRAPH_URL
+    authorization_url = constants.INSTAGRAM_AUTHORIZATION_URL
+    access_token_url = constants.INSTAGRAM_EXCHANGE_ACCESS_TOKEN_URL
 
     def exchange_user_access_token(
         self,
         response: str,
         redirect_uri: Optional[str] = None,
-        scope: Optional[List[str]] = None,
+        scope: List[str] = constants.INSTAGRAM_DEFAULT_SCOPE,
         **kwargs,
     ) -> dict:
         """
@@ -727,13 +667,13 @@ class BasicDisplayAPI(GraphAPI):
 
         return session.token
 
-    def exchange_long_lived_user_access_token(self, access_token=None) -> dict:
+    def exchange_long_lived_user_access_token(self, access_token: str = "") -> dict:
         """
         Exchange short-lived Instagram User Access Tokens for long-lived Instagram User Access Tokens.
         :param access_token: short-lived user token.
         :return: Long-lived user access token info.
         """
-        if access_token is None:
+        if not access_token:
             access_token = self.access_token
 
         args = {
@@ -746,8 +686,7 @@ class BasicDisplayAPI(GraphAPI):
             args=args,
             auth_need=False,
         )
-        data = self._parse_response(resp)
-        return data
+        return self._parse_response(resp)
 
     def refresh_access_token(self, access_token: str):
         """
@@ -759,8 +698,7 @@ class BasicDisplayAPI(GraphAPI):
             url="refresh_access_token",
             args=args,
         )
-        data = self._parse_response(resp)
-        return data
+        return self._parse_response(resp)
 
     def exchange_page_access_token(
         self, page_id: str, access_token: Optional[str] = None
@@ -782,11 +720,12 @@ class BasicDisplayAPI(GraphAPI):
 
 
 class ServerSentEventAPI:
+    running: bool = False
+
     def __init__(
         self,
         access_token: str,
         chunk_size: int = 1024,
-        base_url: str = constants.STREAM_GRAPH_URL,
         max_retries: int = 3,
         timeout: Optional[int] = None,
         proxies: Optional[dict] = None,
@@ -804,10 +743,7 @@ class ServerSentEventAPI:
         self.timeout = timeout
         self.proxies = proxies
         self.max_retries = max_retries
-        self.base_url = base_url
-
         self.session = requests.Session()
-        self.running = False
 
     def _connect(self, url: str, params: dict) -> None:
         """

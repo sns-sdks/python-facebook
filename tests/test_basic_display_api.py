@@ -6,6 +6,7 @@ import responses
 
 from pyfacebook import BasicDisplayAPI
 from pyfacebook.exceptions import LibraryError
+from pyfacebook.api import constants
 
 
 def test_oath_flow(helpers):
@@ -20,7 +21,7 @@ def test_oath_flow(helpers):
     with responses.RequestsMock() as m:
         m.add(
             method=responses.POST,
-            url=api.EXCHANGE_ACCESS_TOKEN_URL,
+            url=constants.INSTAGRAM_EXCHANGE_ACCESS_TOKEN_URL,
             json=helpers.load_json("testdata/base/basic_display_api_user_token.json"),
         )
 

@@ -6,6 +6,7 @@ import requests
 import responses
 
 from pyfacebook import GraphAPI, LibraryError, FacebookError
+from pyfacebook.api import constants
 
 
 def test_api_initial():
@@ -284,7 +285,7 @@ def test_oauth_flow(helpers):
     with responses.RequestsMock() as m:
         m.add(
             method=responses.POST,
-            url=api.EXCHANGE_ACCESS_TOKEN_URL,
+            url=constants.EXCHANGE_ACCESS_TOKEN_URL,
             json=helpers.load_json("testdata/base/long_term_token.json"),
         )
 
