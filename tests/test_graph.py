@@ -39,9 +39,7 @@ def test_sleep_seconds_mapping(pubg_api):
 def test_request_error(pubg_api):
     with pytest.raises(LibraryError):
         with responses.RequestsMock() as m:
-            m.add(
-                "GET", "https://graph.facebook.com/", body=requests.HTTPError("Wrong")
-            )
+            m.add("GET", "https://graph.facebook.com/", body=requests.HTTPError("Wrong"))
 
             pubg_api._request(
                 url="https://graph.facebook.com/",
@@ -205,7 +203,9 @@ def test_discovery_user_media(helpers):
 
         media = api.discovery_user_media(
             username=username,
-            fields="comments_count,id,like_count,media_type,media_url,permalink,timestamp",
+            fields=(
+                "comments_count,id,like_count,media_type,media_url,permalink,timestamp"
+            ),
             count=3,
             limit=5,
         )
@@ -227,7 +227,9 @@ def test_discovery_user_media(helpers):
 
         media = api.discovery_user_media(
             username=username,
-            fields="comments_count,id,like_count,media_type,media_url,permalink,timestamp",
+            fields=(
+                "comments_count,id,like_count,media_type,media_url,permalink,timestamp"
+            ),
             count=None,
             limit=5,
         )

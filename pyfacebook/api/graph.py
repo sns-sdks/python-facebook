@@ -873,7 +873,6 @@ class ServerSentEventAPI:
 
     @classmethod
     def build_live_video_url(cls, live_video_id: str, object_retrieve: str) -> str:
-        # TODO test it
         return f"{constants.STREAM_GRAPH_URL}/{live_video_id}/{object_retrieve}"
 
     def live_comments(
@@ -892,7 +891,7 @@ class ServerSentEventAPI:
         :return:
         """
         self._connect(
-            url=f"{self.base_url}/{live_video_id}/live_comments",
+            url=self.build_live_video_url(live_video_id, "live_comments"),
             params={
                 "comment_rate": comment_rate,
                 "fields": fields,
@@ -909,6 +908,6 @@ class ServerSentEventAPI:
         :return:
         """
         self._connect(
-            url=f"{self.base_url}/{live_video_id}/live_reactions",
+            url=self.build_live_video_url(live_video_id, "live_reactions"),
             params={"fields": fields, "access_token": self.access_token},
         )

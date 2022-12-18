@@ -4,8 +4,6 @@
 import random
 from unittest.mock import patch
 
-import pytest
-import requests
 import responses
 from responses import matchers
 
@@ -56,7 +54,12 @@ def test_live_reactions():
 @responses.activate
 def test_live_comments():
     live_video_id = "380505100913581"
-    comments_data = b'data: {"id":"610800597327576_364546219223792","created_time":"2022-08-31T09:09:39+0000","from":{"id":"413140042878187","name":"Kun Liu"},"message":"wow","object":{"description":"section 1, 1","updated_time":"2022-08-31T09:09:20+0000","id":"610800597327576"}}'
+    comments_data = (
+        b"data:"
+        b' {"id":"610800597327576_364546219223792","created_time":"2022-08-31T09:09:39+0000","from":{"id":"413140042878187","name":"Kun'
+        b' Liu"},"message":"wow","object":{"description":"section 1,'
+        b' 1","updated_time":"2022-08-31T09:09:20+0000","id":"610800597327576"}}'
+    )
 
     def callback(request):
         s = random.randint(1, 2)
@@ -95,3 +98,8 @@ def test_stream_retry_connect(patched_time_sleep):
 
     stream_api = MyEvent(access_token="token")
     stream_api.live_reactions(live_video_id=live_video_id)
+
+
+def test_build_live_video_url():
+    result = ServerSentEventAPI("x").build_live_video_url("123456", "live_reactions")
+    assert result == "https://streaming-graph.facebook.com/123456/live_reactions"
