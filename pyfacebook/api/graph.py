@@ -21,14 +21,14 @@ logger = logging.getLogger(__name__)
 
 class GraphAPI:
     VALID_API_VERSIONS = [
-        "v8.0",
-        "v9.0",
         "v10.0",
         "v11.0",
         "v12.0",
         "v13.0",
         "v14.0",
         "v15.0",
+        "v16.0",
+        "v17.0",
     ]
     GRAPH_URL = "https://graph.facebook.com/"
     AUTHORIZATION_URL = "https://www.facebook.com/dialog/oauth"
@@ -45,6 +45,7 @@ class GraphAPI:
         application_only_auth: bool = False,
         oauth_flow: bool = False,
         version: Optional[str] = None,
+        ignore_version_check: Optional[bool] = False,
         sleep_on_rate_limit: bool = True,
         sleep_seconds_mapping: Optional[Dict[int, int]] = None,
         base_url: Optional[str] = None,
@@ -77,12 +78,10 @@ class GraphAPI:
             access_token_url if access_token_url else self.EXCHANGE_ACCESS_TOKEN_URL
         )
 
-        # version check
         if version is None:
             # default version is last new.
             self.version = self.VALID_API_VERSIONS[-1]
-        else:
-            version = str(version)
+        elif not ignore_version_check:
             if not version.startswith("v"):
                 version = "v" + version
             version_regex = re.compile(r"^v\d*.\d{1,2}$")
@@ -95,6 +94,8 @@ class GraphAPI:
                         "message": f"Invalid version {version}. You can provide with like: 14.0 or v14.0"
                     }
                 )
+        else:
+            self.version = version
 
         # Token
         if access_token:
@@ -694,6 +695,7 @@ class BasicDisplayAPI(GraphAPI):
         access_token: Optional[str] = None,
         oauth_flow: bool = False,
         version: Optional[str] = None,
+        ignore_version_check: Optional[bool] = False,
         sleep_on_rate_limit: bool = True,
         sleep_seconds_mapping: Optional[Dict[int, int]] = None,
         timeout: Optional[int] = None,
@@ -708,6 +710,7 @@ class BasicDisplayAPI(GraphAPI):
             access_token=access_token,
             oauth_flow=oauth_flow,
             version=version,
+            ignore_version_check=ignore_version_check,
             sleep_on_rate_limit=sleep_on_rate_limit,
             sleep_seconds_mapping=sleep_seconds_mapping,
             timeout=timeout,
