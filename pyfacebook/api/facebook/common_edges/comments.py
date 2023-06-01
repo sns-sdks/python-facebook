@@ -10,7 +10,6 @@ from pyfacebook.utils.params_utils import enf_comma_separated
 
 
 class CommentsEdge:
-
     __slots__ = ()
 
     def get_comments(
