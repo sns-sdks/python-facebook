@@ -64,12 +64,20 @@ class Privacy(BaseModel):
 
 
 @dataclass
-class ReactionSummary(BaseModel):
+class BaseSummary(BaseModel):
     """
-    A class representing
+    A class representing the summary base.
     """
 
     total_count: Optional[int] = field()
+
+
+@dataclass
+class ReactionSummary(BaseSummary):
+    """
+    A class representing the reactions summary
+    """
+
     viewer_reaction: Optional[str] = field()
 
 

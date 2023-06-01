@@ -59,3 +59,18 @@ class ImageSource(BaseModel):
     height: Optional[int] = field()
     width: Optional[int] = field()
     src: Optional[str] = field(repr=True)
+
+
+@dataclass
+class PicCrop(BaseModel):
+    """
+    A class representing the pic crop.
+    """
+
+    height: Optional[int] = field()
+    width: Optional[int] = field()
+    left: Optional[int] = field()
+    top: Optional[int] = field()
+    right: Optional[int] = field()
+    bottom: Optional[int] = field()
+    url: Optional[str] = field(repr=True)

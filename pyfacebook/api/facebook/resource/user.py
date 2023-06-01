@@ -10,6 +10,7 @@ from pyfacebook.api.facebook.common_edges import (
     AlbumsEdge,
     PhotosEdge,
     VideosEdge,
+    LikesEdge,
     LiveVideosEdge,
 )
 from pyfacebook.models.user import User
@@ -20,7 +21,13 @@ from pyfacebook.utils.params_utils import enf_comma_separated
 
 
 class FacebookUser(
-    BaseResource, FeedEdge, AlbumsEdge, PhotosEdge, VideosEdge, LiveVideosEdge
+    BaseResource,
+    FeedEdge,
+    AlbumsEdge,
+    PhotosEdge,
+    VideosEdge,
+    LikesEdge,
+    LiveVideosEdge,
 ):
     def get_info(
         self,

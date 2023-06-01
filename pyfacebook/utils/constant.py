@@ -174,6 +174,21 @@ MESSAGE_FIELDS = [
     "tags",
 ]
 
+LIKES_FIELDS = [
+    "id",
+    "can_post",
+    "link",
+    "name",
+    "pic",
+    "pic_crop",
+    "pic_large",
+    "pic_small",
+    "pic_square",
+    "profile_type",
+    "username",
+    "picture",
+]
+
 # =============================================
 # Follows is Instagram graph fields to get data
 # =============================================
