@@ -11,53 +11,43 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10']
+        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11']
         include:
-          - python-version: 3.8
+          - python-version: 3.10
             update-coverage: true
 
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+      - name: Install poetry
+        run: pipx install poetry
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Cache venv
-        uses: actions/cache@v2
-        with:
-          path: ~/.cache/pypoetry/virtualenvs
-          key: ${{ matrix.python-version }}-poetry-${{ hashFiles('pyproject.toml') }}
+          cache: 'poetry'
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip poetry
-          poetry install
-          python -c "import sys; print(sys.version)"
-          pip list
+        run: poetry install
       - name: Test with pytest
-        run: |
-          poetry run pytest
+        run: poetry run pytest
       - name: Upload coverage to Codecov
         if: ${{ matrix.update-coverage }}
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v3
         with:
-          file: ./coverage.xml
+          files: ./coverage.xml
           fail_ci_if_error: true
+          verbose: true
 
   lint:
     name: black
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
         with:
-          python-version: 3.8
-      - name: Cache pip
-        uses: actions/cache@v2
-        with:
-          path: ~/.cache/pip
-          key: lintenv-v2
+          python-version: '3.10'
+          cache: 'pip'
       - name: Install dependencies
         run: python -m pip install --upgrade pip black
       - name: Black test
