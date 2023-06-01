@@ -437,7 +437,7 @@ class GraphAPI:
         **kwargs,
     ) -> dict:
         """
-        Create or update data for a facebook object or it's edge.
+        Create or update data for a facebook object, or it's edge.
 
         :param object_id: ID for the facebook object(page,user.. and so on).
         :param connection: Edge for the object.
@@ -463,17 +463,23 @@ class GraphAPI:
     def delete_object(
         self,
         object_id: str,
+        connection: Optional[str] = None,
         **kwargs,
     ) -> dict:
         """
-        Delete the facebook object.
+        Delete the facebook object, or it's edge
 
         :param object_id: ID for the facebook object(page,user..and so on)
+        :param connection: Edge for the object.
         :param kwargs: Additional parameters.
         :return: Delete status.
         """
+        path = f"{self.version}/{object_id}"
+        if connection:
+            path += f"/{connection}"
+
         resp = self._request(
-            url=f"{self.version}/{object_id}",
+            url=path,
             verb="DELETE",
             **kwargs,
         )
