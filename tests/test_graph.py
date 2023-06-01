@@ -16,6 +16,9 @@ def test_api_initial():
     with pytest.raises(LibraryError):
         GraphAPI(version="1.0")
 
+    # just set version
+    GraphAPI(version="v1.0", ignore_version_check=True, access_token="access token")
+
     # test without access token
     with pytest.raises(LibraryError):
         GraphAPI()
