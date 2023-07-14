@@ -168,6 +168,7 @@ class GraphAPI:
         url: str,
         args: Optional[dict] = None,
         post_args: Optional[dict] = None,
+        files: Optional[dict] = None,
         verb: str = "GET",
         auth_need: bool = True,
         **kwargs,
@@ -176,8 +177,10 @@ class GraphAPI:
         :param url: Resource url for Graph.
         :param args: Query parameters.
         :param post_args: Form parameters.
+        :param files:  Dictionary of ``'filename': file-like-objects``
+            for multipart encoding upload.
         :param verb: HTTP method
-        :param auth_need: Whether need access token.
+        :param auth_need: Whether request need access token.
         :param kwargs: Additional parameters.
         :return:
         """
@@ -197,6 +200,7 @@ class GraphAPI:
                 timeout=self.__timeout,
                 params=args,
                 data=post_args,
+                files=files,
                 proxies=self.proxies,
                 **kwargs,
             )
@@ -434,6 +438,7 @@ class GraphAPI:
         connection: Optional[str] = None,
         params: Optional[dict] = None,
         data: Optional[dict] = None,
+        files: Optional[dict] = None,
         **kwargs,
     ) -> dict:
         """
@@ -443,6 +448,8 @@ class GraphAPI:
         :param connection: Edge for the object.
         :param params: Parameters for url path.
         :param data: Parameters for Form data.
+        :param files: Dictionary of ``'filename': file-like-objects``
+            for multipart encoding upload.
         :param kwargs: Additional parameters.
         :return: Response data.
         """
@@ -454,6 +461,7 @@ class GraphAPI:
             url=path,
             args=params,
             post_args=data,
+            files=files,
             verb="POST",
             **kwargs,
         )
