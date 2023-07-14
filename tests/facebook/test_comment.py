@@ -53,3 +53,106 @@ def test_get_batch(helpers, fb_api):
             return_json=True,
         )
         assert comments_json[cm_ids[1]]["id"] == cm_ids[1]
+
+
+def test_create_comment(helpers, fb_api):
+    object_id = "post_id"
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.POST,
+            url=f"https://graph.facebook.com/{fb_api.version}/{object_id}/comments",
+            json=helpers.load_json(
+                "testdata/facebook/apidata/comments/create_resp.json"
+            ),
+        )
+        comment = fb_api.comment.create(object_id=object_id, message="message from api")
+        assert comment.id
+
+        comment = fb_api.comment.create(
+            object_id=object_id,
+            message="message from api",
+            attachment_url="photo url",
+        )
+        assert comment.id
+
+        comment = fb_api.comment.create(
+            object_id=object_id,
+            message="message from api",
+            attachment_share_url="gif url",
+        )
+        assert comment.id
+
+        comment_json = fb_api.comment.create(
+            object_id=object_id,
+            attachment_id="123245",
+            message="message from api",
+            return_json=True,
+        )
+        assert comment_json["id"]
+
+
+def test_update_comment(helpers, fb_api):
+    comment_id = "245778718206154_229887283291835"
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.POST,
+            url=f"https://graph.facebook.com/{fb_api.version}/{comment_id}",
+            json=helpers.load_json(
+                "testdata/facebook/apidata/comments/create_resp.json"
+            ),
+        )
+        comment = fb_api.comment.update(
+            comment_id=comment_id,
+            attachment_id="123245",
+            message="message from api",
+            fields="id,message,permalink_url,created_time",
+        )
+        assert comment.id
+
+        comment = fb_api.comment.update(
+            comment_id=comment_id,
+            attachment_url="photo url",
+            message="message from api",
+            fields="id,message,permalink_url,created_time",
+        )
+        assert comment.id
+
+        comment = fb_api.comment.update(
+            comment_id=comment_id,
+            message="message from api",
+            files={"image data": b"bytes for open files"},
+            fields="id,message,permalink_url,created_time",
+            return_json=True,
+        )
+        assert comment["id"]
+
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.POST,
+            url=f"https://graph.facebook.com/{fb_api.version}/{comment_id}",
+            json={"success": True},
+        )
+        comment = fb_api.comment.update(
+            comment_id=comment_id,
+            message="message from api",
+            attachment_share_url="gif url",
+        )
+        assert comment["success"]
+
+        comment_hidden = fb_api.comment.update(
+            comment_id=comment_id,
+            is_hidden=True,
+        )
+        assert comment_hidden["success"]
+
+
+def test_delete_comment(fb_api):
+    comment_id = "245778718206154_229887283291835"
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.DELETE,
+            url=f"https://graph.facebook.com/{fb_api.version}/{comment_id}",
+            json={"success": True},
+        )
+        data = fb_api.comment.delete(comment_id=comment_id)
+        assert data["success"]

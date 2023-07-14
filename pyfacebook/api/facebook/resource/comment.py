@@ -75,7 +75,7 @@ class FacebookComment(BaseResource, LikesEdge):
                 for comment_id, item in data.items()
             }
 
-    def create_comment(
+    def create(
         self,
         object_id: str,
         attachment_id: Optional[str] = None,
@@ -129,7 +129,7 @@ class FacebookComment(BaseResource, LikesEdge):
         else:
             return Comment.new_from_json_dict(data=data)
 
-    def update_comment(
+    def update(
         self,
         comment_id: str,
         attachment_id: Optional[str] = None,
@@ -187,7 +187,7 @@ class FacebookComment(BaseResource, LikesEdge):
         else:
             return Comment.new_from_json_dict(data=data)
 
-    def delete_comment(self, comment_id: str):
+    def delete(self, comment_id: str):
         """
         Delete a comment by using this endpoint
 
