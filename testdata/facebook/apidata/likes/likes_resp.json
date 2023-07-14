@@ -1,0 +1,64 @@
+{
+  "data": [
+    {
+      "id": "6367583273279158",
+      "can_post": false,
+      "name": "Wea Joklena",
+      "pic": "https://platform-lookaside.fbsbx.com/platform/profilepic/?psid=6367583273279158&height=100&width=100&ext=1691916048&hash=AeThbyYxv83S27KsuPE",
+      "pic_crop": {
+        "height": 320,
+        "width": 320,
+        "left": 0,
+        "top": 0,
+        "right": 1,
+        "bottom": 1,
+        "url": "https://platform-lookaside.fbsbx.com/platform/profilepic/?psid=6367583273279158&height=320&width=320&ext=1691916048&hash=AeThbNuaFyDv5x0UXFk"
+      },
+      "pic_large": "https://platform-lookaside.fbsbx.com/platform/profilepic/?psid=6367583273279158&height=200&width=200&ext=1691916048&hash=AeTQTSrZs7v2qJd14qU",
+      "pic_small": "https://platform-lookaside.fbsbx.com/platform/profilepic/?psid=6367583273279158&height=50&width=50&ext=1691916048&hash=AeQuRZ5Nfc_2p59ACTQ",
+      "pic_square": "https://platform-lookaside.fbsbx.com/platform/profilepic/?psid=6367583273279158&height=50&width=50&ext=1691916048&hash=AeQuRZ5Nfc_2p59AgpI",
+      "profile_type": "user",
+      "picture": {
+        "data": {
+          "height": 50,
+          "is_silhouette": false,
+          "url": "https://platform-lookaside.fbsbx.com/platform/profilepic/?psid=6367583273279158&height=50&width=50&ext=1691916048&hash=AeQuRZ5Nfc_2p59AbaI",
+          "width": 50
+        }
+      }
+    },
+    {
+      "id": "6398330613585175",
+      "can_post": false,
+      "name": "Richard Faraday",
+      "pic": "https://platform-lookaside.fbsbx.com/platform/profilepic/?psid=6398330613585175&height=100&width=100&ext=1691916048&hash=AeQI7UpKrSkJYKwYcM4",
+      "pic_crop": {
+        "height": 320,
+        "width": 320,
+        "left": 0,
+        "top": 0,
+        "right": 1,
+        "bottom": 1,
+        "url": "https://platform-lookaside.fbsbx.com/platform/profilepic/?psid=6398330613585175&height=320&width=320&ext=1691916048&hash=AeSr2zdlqKDkKd5ZRlY"
+      },
+      "pic_large": "https://platform-lookaside.fbsbx.com/platform/profilepic/?psid=6398330613585175&height=200&width=200&ext=1691916048&hash=AeSGGUAo0th4zvfL2QM",
+      "pic_small": "https://platform-lookaside.fbsbx.com/platform/profilepic/?psid=6398330613585175&height=50&width=50&ext=1691916048&hash=AeSNfR-YhSjeosnWQls",
+      "pic_square": "https://platform-lookaside.fbsbx.com/platform/profilepic/?psid=6398330613585175&height=50&width=50&ext=1691916048&hash=AeSNfR-YhSjeosnWoSw",
+      "profile_type": "user",
+      "picture": {
+        "data": {
+          "height": 50,
+          "is_silhouette": false,
+          "url": "https://platform-lookaside.fbsbx.com/platform/profilepic/?psid=6398330613585175&height=50&width=50&ext=1691916048&hash=AeSNfR-YhSjeosnWz2w",
+          "width": 50
+        }
+      }
+    }
+  ],
+  "paging": {
+    "cursors": {
+      "before": "xxx",
+      "after": "xxxx"
+    }
+  }
+}

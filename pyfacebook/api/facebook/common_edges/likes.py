@@ -19,7 +19,7 @@ class LikesEdge:
         object_id: str,
         fields: Optional[Union[str, list, dict]] = None,
         limit: Optional[int] = 10,
-        return_json: bool = True,
+        return_json: bool = False,
         **kwargs,
     ) -> Union[LikesResponse, dict]:
         """
