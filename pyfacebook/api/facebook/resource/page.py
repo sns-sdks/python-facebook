@@ -10,6 +10,7 @@ from pyfacebook.api.facebook.common_edges import (
     AlbumsEdge,
     PhotosEdge,
     VideosEdge,
+    LikesEdge,
     LiveVideosEdge,
     CommentsEdge,
 )
@@ -25,6 +26,7 @@ class FacebookPage(
     AlbumsEdge,
     PhotosEdge,
     VideosEdge,
+    LikesEdge,
     LiveVideosEdge,
     CommentsEdge,
 ):

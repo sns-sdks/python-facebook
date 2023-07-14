@@ -10,7 +10,8 @@ from typing import List, Optional
 from dataclasses_json import config
 
 from pyfacebook.models.base import BaseModel, field
-from pyfacebook.models.image import Picture
+from pyfacebook.models.extensions import Paging, BaseSummary
+from pyfacebook.models.image import Picture, PicCrop
 
 
 @dataclass
@@ -46,6 +47,7 @@ class User(BaseModel):
     about: Optional[str] = field()
     age_range: Optional[UserAgeRange] = field()
     birthday: Optional[str] = field()
+    can_post: Optional[bool] = field()
     email: Optional[str] = field()
     favorite_athletes: Optional[List[UserExperience]] = field()
     favorite_teams: Optional[List[UserExperience]] = field()
@@ -65,13 +67,33 @@ class User(BaseModel):
     name: Optional[str] = field(repr=True)
     name_format: Optional[str] = field()
     payment_pricepoints: Optional[dict] = field()
+    pic: Optional[str] = field()
+    pic_crop: Optional[PicCrop] = field()
+    pic_large: Optional[str] = field()
+    pic_small: Optional[str] = field()
+    pic_square: Optional[str] = field()
     profile_pic: Optional[str] = field()
+    profile_type: Optional[str] = field()
     quotes: Optional[str] = field()
     shared_login_upgrade_required_by: Optional[str] = field()
     short_name: Optional[str] = field()
     significant_other: Optional[dict] = field()
     supports_donate_button_in_live_video: Optional[bool] = field()
+    username: Optional[str] = field()
     video_upload_limits: Optional[dict] = field()
 
     # connections fields
     picture: Optional[Picture] = field()
+
+
+@dataclass
+class LikesResponse(BaseModel):
+    """
+    A class representing the object likes response.
+
+    Refer: https://developers.facebook.com/docs/graph-api/reference/object/likes#read
+    """
+
+    data: List[User] = field(repr=True, compare=True)
+    paging: Optional[Paging] = field()
+    summary: Optional[BaseSummary] = field()

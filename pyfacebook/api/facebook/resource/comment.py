@@ -6,11 +6,12 @@ from typing import Dict, Optional, Union
 
 import pyfacebook.utils.constant as const
 from pyfacebook.api.base_resource import BaseResource
+from pyfacebook.api.facebook.common_edges import LikesEdge
 from pyfacebook.models.comment import Comment
 from pyfacebook.utils.params_utils import enf_comma_separated
 
 
-class FacebookComment(BaseResource):
+class FacebookComment(BaseResource, LikesEdge):
     def get_info(
         self,
         comment_id: Optional[str],
