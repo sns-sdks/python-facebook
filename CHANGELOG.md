@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.17.0](https://github.com/sns-sdks/python-facebook/v0.17.0) (2023-08-07)
+
+### Feat
+
+- Add [v16.0](https://developers.facebook.com/docs/graph-api/changelog/version16.0) support.
+- Add [v17.0](https://developers.facebook.com/docs/graph-api/changelog/version17.0) support.
+- Add more resource support for facebook.
+
+
 ## [0.15.0](https://github.com/sns-sdks/python-facebook/v0.15.0) (2022-09-26)
 
 ### Feat
