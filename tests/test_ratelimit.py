@@ -33,7 +33,7 @@ def test_app_limit():
 def test_business_limit():
     headers = CaseInsensitiveDict(
         {
-            "x-business-use-case-usage": '{"112130216863063":[{"type":"pages","call_count":1,"total_cputime":1,"total_time":1,"estimated_time_to_regain_access":0}]}'
+            "x-business-use-case-usage": '{"112130216863063":[{"type":"pages","call_count":1,"total_cputime":1,"total_time":1,"estimated_time_to_regain_access":0,"ads_api_access_tier":"development_access"}]}'
         }
     )
 
@@ -41,3 +41,15 @@ def test_business_limit():
     r.set_limit(headers)
 
     assert r.get_limit("112130216863063", "pages").call_count == 1
+
+
+def test_ad_account_limit():
+    headers = CaseInsensitiveDict(
+        {
+            "x-ad-account-usage": '{"acc_id_util_pct":9.67,"reset_time_duration":100,"ads_api_access_tier":"standard_access"}'
+        }
+    )
+    r = RateLimit()
+    r.set_limit(headers)
+
+    assert r.get_limit(ad_account_limit=True).acc_id_util_pct == 9.67

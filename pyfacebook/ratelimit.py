@@ -31,12 +31,19 @@ class RateLimitHeader(object):
     call_count: int = 0
     total_cputime: int = 0
     total_time: int = 0
-    call_volume: int = 0  # IG basic display has return this, but have no docs for this.
-    cpu_time: int = 0  # IG basic display has return this, but have no docs for this.
+    call_volume: int = (
+        0  # IG basic display has returned this, but have no docs for this.
+    )
+    cpu_time: int = 0  # IG basic display has returned this, but have no docs for this.
+    acc_id_util_pct: int = 0  # only for X-Ad-Account-Usage
     type: Optional[str] = None  # only for Business Use Case Rate Limits
     estimated_time_to_regain_access: Optional[
         str
     ] = None  # only for Business Use Case Rate Limits
+    reset_time_duration: Optional[int] = None  # only for X-Ad-Account-Usage
+    ads_api_access_tier: Optional[
+        str
+    ] = None  # for X-Ad-Account-Usage and Business Use Case Rate Limits
 
     def max_percent(self):
         return max(
@@ -45,6 +52,7 @@ class RateLimitHeader(object):
             self.total_time,
             self.call_volume,
             self.cpu_time,
+            self.acc_id_util_pct,
         )
 
 
@@ -63,20 +71,26 @@ class RateLimit(object):
 
         {
             "app": {
-                "call_count": 10,
-                "total_cputime": 5,
-                "total_time": 4,
+                "call_count": 28,         //Percentage of calls made
+                "total_time": 25,         //Percentage of total time
+                "total_cputime": 25       //Percentage of total CPU time
             },
             "business: {
                 "business-object-id": {
                     "rate-limit-type": {
-                        "call_count": 10,
-                        "total_cputime": 5,
-                        "total_time": 4,
-                        "type": "pages",
-                        "estimated_time_to_regain_access": 0
+                        "type": "pages",                          //Type of BUC rate limit logic being applied.
+                        "call_count": 100,                        //Percentage of calls made.
+                        "total_cputime": 25,                      //Percentage of the total CPU time that has been used.
+                        "total_time": 25,                         //Percentage of the total time that has been used.
+                        "estimated_time_to_regain_access": 19,    //Time in minutes to regain access.
+                        "ads_api_access_tier": "standard_access"  //Tiers allows your app to access the Marketing API. standard_access enables lower rate limiting.
                     }
                 }
+            },
+            ad_account: {
+                "acc_id_util_pct": 9.67,   //Percentage of calls made for this ad account.
+                "reset_time_duration": 100,   //Time duration (in seconds) it takes to reset the current rate limit score.
+                "ads_api_access_tier": 'standard_access'   //Tiers allows your app to access the Marketing API. standard_access enables lower rate limiting.
             }
         }
 
@@ -90,6 +104,7 @@ class RateLimit(object):
         self.resources = {
             "app": RateLimitHeader(),
             "business": defaultdict(lambda: defaultdict(RateLimitHeader)),
+            "ad_account": RateLimitHeader(),
         }
 
     @staticmethod
@@ -130,8 +145,15 @@ class RateLimit(object):
                         item["type"]
                     ] = RateLimitHeader(**item)
 
+        ad_account_usage = self.parse_headers(headers, "x-ad-account-usage")
+        if ad_account_usage is not None:
+            self.resources["ad_account"] = RateLimitHeader(**ad_account_usage)
+
     def get_limit(
-        self, object_id: Optional[str] = None, rate_limit_type: Optional[str] = None
+        self,
+        object_id: Optional[str] = None,
+        rate_limit_type: Optional[str] = None,
+        ad_account_limit: bool = False,
     ) -> RateLimitHeader:
         """
         Get a business user case rate limit for object with type or get app rate limit data.
@@ -139,11 +161,13 @@ class RateLimit(object):
         :param object_id: business object id
         :param rate_limit_type: rate limit type, like pages,instagram,ads_insights...
             All type at https://developers.facebook.com/docs/graph-api/overview/rate-limiting#headers-2
+        :param ad_account_limit: Whether to return x-Ad-Account-Usage limit.
         :return: RateLimitHeader object containing rate limit information.
         """
         if all([object_id, rate_limit_type]):
             return self.resources["business"][object_id][rate_limit_type]
-
+        if ad_account_limit:
+            return self.resources["ad_account"]
         return self.resources["app"]
 
     def get_max_percent(self) -> int:
