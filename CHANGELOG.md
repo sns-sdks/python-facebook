@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.17.1](https://github.com/sns-sdks/python-facebook/v0.17.1) (2023-09-22)
+
+### Fix
+
+- Add support for new rate limit parameter
+
+
 ## [0.17.0](https://github.com/sns-sdks/python-facebook/v0.17.0) (2023-08-07)
 
 ### Feat
