@@ -8,6 +8,7 @@ import re
 import time
 from urllib.parse import parse_qsl, urlparse
 from typing import Dict, List, Optional, Tuple
+from warnings import warn
 
 import requests
 from requests import Response
@@ -827,6 +828,12 @@ class BasicDisplayAPI(GraphAPI):
 
 
 class ServerSentEventAPI:
+    """
+    Notice: Server-Sent Events are deprecated and will be removed December 31, 2023.
+
+    Refer: https://developers.facebook.com/docs/graph-api/changelog/version18.0#server-sent-events
+    """
+
     STREAM_GRAPH_URL = "https://streaming-graph.facebook.com"
 
     def __init__(
@@ -855,6 +862,21 @@ class ServerSentEventAPI:
 
         self.session = requests.Session()
         self.running = False
+
+        # Deprecation for this class
+        warn(
+            f"{self.__class__.__name__} will be removed at December 31, 2023.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+
+    def __init_subclass__(cls, **kwargs):
+        warn(
+            f"{cls.__name__} will be removed at December 31, 2023.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        super().__init_subclass__(**kwargs)
 
     def _connect(self, url: str, params: dict) -> None:
         """
