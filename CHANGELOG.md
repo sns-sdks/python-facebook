@@ -2,12 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.18.0](https://github.com/sns-sdks/python-facebook/v0.18.0) (2023-11-10)
+
+### Feat
+
+- Add [v18.0](https://developers.facebook.com/docs/graph-api/changelog/version18.0) support.
+- Add support for instagram new insight metrics
+- Add deprecation tip for Server-Sent-Event API.
+
+### Deprecations
+
+- Remove outdate versions [`v10.0`, `v11.0`]
+- Server-Sent Events are deprecated and will be removed December 31, 2023.
+
+
 ## [0.17.1](https://github.com/sns-sdks/python-facebook/v0.17.1) (2023-09-22)
 
 ### Fix
 
 - Add support for new rate limit parameter
-
 
 ## [0.17.0](https://github.com/sns-sdks/python-facebook/v0.17.0) (2023-08-07)
 
@@ -16,7 +29,6 @@ All notable changes to this project will be documented in this file.
 - Add [v16.0](https://developers.facebook.com/docs/graph-api/changelog/version16.0) support.
 - Add [v17.0](https://developers.facebook.com/docs/graph-api/changelog/version17.0) support.
 - Add more resource support for facebook.
-
 
 ## [0.15.0](https://github.com/sns-sdks/python-facebook/v0.15.0) (2022-09-26)
 
