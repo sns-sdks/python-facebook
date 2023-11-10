@@ -123,6 +123,20 @@ def test_get_insights(helpers, api):
         )
         assert insights_json["data"][0]["name"] == "impressions"
 
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{api.version}/{media_id}/insights",
+            json=helpers.load_json(
+                "testdata/instagram/apidata/medias/insights_new.json"
+            ),
+        )
+
+        insights = api.media.get_insights(
+            media_id=media_id, metric="profile_activity", breakdown=["action_type"]
+        )
+        assert insights.data[0].total_value.breakdowns[0].results[0].value == 11
+
 
 def test_get_product_tags(helpers, api):
     media_id = "90010778325754"

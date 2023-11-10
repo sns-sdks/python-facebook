@@ -25,7 +25,7 @@ class IgBusUser(BaseModel):
     followers_count: Optional[int] = field()
     follows_count: Optional[int] = field()
     media_count: Optional[int] = field()
-    name: Optional[int] = field()
+    name: Optional[str] = field()
     profile_picture_url: Optional[str] = field()
     shopping_product_tag_eligibility: Optional[bool] = field()
     username: Optional[str] = field(repr=True)

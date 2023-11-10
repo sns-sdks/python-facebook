@@ -129,6 +129,24 @@ def test_get_user_insights(helpers, api):
         )
         assert len(insights_json["data"]) == 3
 
+    with responses.RequestsMock() as m:
+        m.add(
+            method=responses.GET,
+            url=f"https://graph.facebook.com/{api.version}/{api.instagram_business_id}/insights",
+            json=helpers.load_json(
+                "testdata/instagram/apidata/users/user_insights_new.json"
+            ),
+        )
+        insights = api.user.get_insights(
+            metric="reach",
+            period="day",
+            metric_type="total_value",
+            timeframe="last_14_days",
+            breakdown=["media_product_type", "follow_type"],
+            access_token=api.access_token,
+        )
+        assert insights.data[0].total_value.value == 14516883
+
 
 def test_get_user_media(helpers, api):
     with responses.RequestsMock() as m:
