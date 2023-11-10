@@ -168,6 +168,9 @@ class IGBusinessUser(BaseResource):
         self,
         metric: Union[str, list, tuple],
         period: str,
+        breakdown: Optional[Union[str, list, tuple]] = None,
+        metric_type: Optional[str] = None,
+        timeframe: Optional[str] = None,
         since: Optional[str] = None,
         until: Optional[str] = None,
         user_id: Optional[str] = None,
@@ -181,6 +184,12 @@ class IGBusinessUser(BaseResource):
             You can also pass this with an id list, tuple.
         :param period: Period to aggregation data.
             Accepted parameters: lifetime,day,week,days_28
+        :param breakdown: If specified, the results will be broken down into smaller sets based on this.
+            Accepted parameters: contact_button_type, follow_type, media_product_type
+        :param metric_type: Designate how you want results aggregated.
+            Accepted parameters: time_series, total_value
+        :param timeframe: Tells the API how far to look back for data when requesting demographic-related metrics.
+            This value overrides the `since` and `until` parameters.
         :param since: Lower bound of the time range to fetch data. Need Unix timestamps.
         :param until: Upper bound of the time range to fetch data. Need Unix timestamps.
             Notice: time range may not more than 30 days.
@@ -200,6 +209,12 @@ class IGBusinessUser(BaseResource):
             "since": since,
             "until": until,
         }
+        if breakdown:
+            args["breakdown"] = enf_comma_separated(field="breakdown", value=breakdown)
+        if metric_type:
+            args["metric_type"] = metric_type
+        if timeframe:
+            args["timeframe"] = timeframe
         if access_token:
             args["access_token"] = access_token
 

@@ -25,7 +25,7 @@ class IgBusUser(BaseModel):
     followers_count: Optional[int] = field()
     follows_count: Optional[int] = field()
     media_count: Optional[int] = field()
-    name: Optional[int] = field()
+    name: Optional[str] = field()
     profile_picture_url: Optional[str] = field()
     shopping_product_tag_eligibility: Optional[bool] = field()
     username: Optional[str] = field(repr=True)
@@ -224,6 +224,42 @@ class IgBusInsightValue(BaseModel):
 
 
 @dataclass
+class IgBusInsightTotalValueBreakdownResult(BaseModel):
+    """
+    A class representing the Instagram insight total value breakdown result info.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-user/insights#--------
+    """
+
+    dimension_values: Optional[List[str]] = field(repr=True)
+    value: Optional[int] = field(repr=True)
+
+
+@dataclass
+class IgBusInsightTotalValueBreakdown(BaseModel):
+    """
+    A class representing the Instagram insight total value breakdown info.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-user/insights#--------
+    """
+
+    dimension_keys: Optional[List[str]] = field(repr=True)
+    results: Optional[List[IgBusInsightTotalValueBreakdownResult]] = field()
+
+
+@dataclass
+class IgBusInsightTotalValue(BaseModel):
+    """
+    A class representing the Instagram insight total value info.
+
+    Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-user/insights#--------
+    """
+
+    value: Optional[int] = field(repr=True)
+    breakdowns: Optional[List[IgBusInsightTotalValueBreakdown]] = field()
+
+
+@dataclass
 class IgBusInsight(BaseModel):
     """
     A class representing the Instagram insight.
@@ -237,6 +273,7 @@ class IgBusInsight(BaseModel):
     title: Optional[str] = field()
     description: Optional[str] = field()
     values: Optional[List[IgBusInsightValue]] = field()
+    total_value: Optional[IgBusInsightTotalValue] = field()
 
 
 @dataclass

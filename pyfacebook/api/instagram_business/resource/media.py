@@ -147,22 +147,28 @@ class IGBusinessMedia(BaseResource):
         self,
         media_id: str,
         metric: Union[str, list, tuple],
+        breakdown: Optional[Union[str, list, tuple]] = None,
         return_json: bool = False,
     ) -> Union[IgBusInsightsResponse, dict]:
         """
-        Get insights data on a media
+        Get insights data on a media.
+
+        Notice: Different type media may have different metrics.
 
         :param media_id: ID for the media.
         :param metric: A comma-separated list of Metrics you want returned.
             You can also pass this with an id list, tuple.
+        :param breakdown: If specified, the results will be broken down into smaller sets based on this.
         :param return_json: Set to false will return a dataclass for IgBusInsightsResponse.
             Or return json data. Default is false.
         :return: Media insights response information.
         """
+        args = {"metric": enf_comma_separated(field="metric", value=metric)}
+        if breakdown:
+            args["breakdown"] = enf_comma_separated(field="breakdown", value=breakdown)
+
         data = self.client.get_connection(
-            object_id=media_id,
-            connection="insights",
-            metric=enf_comma_separated(field="metric", value=metric),
+            object_id=media_id, connection="insights", **args
         )
 
         if return_json:
