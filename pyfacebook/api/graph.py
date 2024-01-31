@@ -697,7 +697,7 @@ class GraphAPI:
         :param input_token: The access token for which you would like to get information.
         :param access_token: The app token. 
                              You can get it by calling ``get_app_token``
-                             Alternatively, you can ``GraphAPI`` with the option 
+                             Alternatively, you can create ``GraphAPI`` with the option 
                              ``application_only_auth=True`` and the app token will
                              be generated automatically.
         :return: The debug information about the ``input_token``.
