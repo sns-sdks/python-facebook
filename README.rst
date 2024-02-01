@@ -66,7 +66,7 @@ You can initialize a ``GraphAPI`` object with three different methods, depending
     >>> from pyfacebook import GraphAPI
     >>> api = GraphAPI(access_token="token")
 
-2. If you need to generate an app token automatically usin the app/client ID and secret, you can do ::
+2. If you need to generate an app token automatically using the app/client ID and secret, you can do ::
 
     >>> from pyfacebook import GraphAPI
     >>> api = GraphAPI(app_id="id", app_secret="secret", application_only_auth=True)
