@@ -1,5 +1,5 @@
 """
-    Base Graph API impl
+This module contains the GraphAPI class, its subclass BasicDisplayAPI and the class ServerSentEventAPI.
 """
 import hashlib
 import hmac
@@ -654,10 +654,17 @@ class GraphAPI:
         self, app_id: Optional[str] = None, app_secret: Optional[str] = None
     ) -> dict:
         """
-        Generate
-        :param app_id: ID for app
-        :param app_secret:  Secret for app
-        :return: app access token
+        Generate the app token, which allows to make requests to certain endpoints.
+        For example, to request information about a user access token,
+        you would need an app token.
+
+        For more info about the different access tokens, see
+        https://developers.facebook.com/docs/facebook-login/guides/access-tokens/
+
+        :param app_id: The app/client ID.
+        :param app_secret: The app/client secret.
+
+        :return: The app access token.
         """
         if app_id is None:
             app_id = self.app_id
@@ -678,10 +685,22 @@ class GraphAPI:
 
     def debug_token(self, input_token: str, access_token: Optional[str] = None) -> dict:
         """
-        Get input token info by issued app administrator's access token
-        :param input_token: Access token to debug.
-        :param access_token:
-        :return: Issued app administrator's access token
+        Get information (such as the scopes or the token expiration dates) about the ``input_token``
+        given optionally the an ``access_token``, which is an app token.
+
+        This method is an interface to
+        https://developers.facebook.com/docs/facebook-login/guides/%20access-tokens/debugging.
+
+        For more info about the different access tokens, see
+        https://developers.facebook.com/docs/facebook-login/guides/access-tokens/.
+
+        :param input_token: The access token for which you would like to get information.
+        :param access_token: The app token.
+                             You can get it by calling ``get_app_token``
+                             Alternatively, you can create ``GraphAPI`` with the option
+                             ``application_only_auth=True`` and the app token will
+                             be generated automatically.
+        :return: The debug information about the ``input_token``.
         """
         if access_token is None:
             access_token = self.access_token
