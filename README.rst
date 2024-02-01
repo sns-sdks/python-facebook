@@ -1,6 +1,7 @@
 Python Facebook
+---------------
 
-A Python wrapper for the Facebook Common API.
+A Python wrapper for the Facebook & Instagram Graph APIs.
 
 .. image:: https://github.com/sns-sdks/python-facebook/workflows/Test/badge.svg
     :target: https://github.com/sns-sdks/python-facebook/actions
@@ -23,30 +24,30 @@ A Python wrapper for the Facebook Common API.
 Introduction
 ============
 
-We have refactored this library after v0.10.0. If you want to use old version, please see branch ``v0``.
+We have refactored this library after `v0.10.0`. If you want to use the old version, please, see branch ``v0``.
 
-The new structure we will provide like follow show.
+The new structure is as follows
 
 .. image:: docs/docs/images/structure.png
 
 
 .. note::
 
-    This new structure still in developing.
+    This new structure may still change.
 
-    Now You can use base class ``GraphApi`` to get data.
+    Now, you can use base class ``GraphAPI`` to get data.
 
 ==========
 Installing
 ==========
 
-If you want to use old version you can set version to ``0.9.*``, And this series will also support with python2.7
-
 You can install this library from ``pypi``::
 
-    $pip install --upgrade python-facebook-api
-    ✨🍰✨
+    pip install --upgrade python-facebook-api
 
+.. note::
+
+    If you want to use an old version, you can set the version to ``0.9.*``, which also supports Python 2.7.
 
 =====
 Usage
@@ -56,21 +57,21 @@ Usage
 GraphAPI
 --------
 
-Now you can use ``GraphApi`` class to communicate with Facebook Graph Api.
+You can use the ``GraphAPI`` class to communicate with the Facebook Graph API.
 
-You can initial ``GraphApi`` with three different methods.
+You can initialize a ``GraphAPI`` object with three different methods, depending on your needs.
 
-1. if you already have an access token, you can initial with it::
+1. If you already have an access token, you can initialize it with ::
 
     >>> from pyfacebook import GraphAPI
     >>> api = GraphAPI(access_token="token")
 
-2. if you want to use app credentials to generate app token::
+2. If you need to generate an app token automatically usin the app/client ID and secret, you can do ::
 
     >>> from pyfacebook import GraphAPI
     >>> api = GraphAPI(app_id="id", app_secret="secret", application_only_auth=True)
 
-3. if you want to perform an authorization process to a user::
+3. If you want to perform the authorization process for a user, you can do ::
 
     >>> from pyfacebook import GraphAPI
     >>> api = GraphAPI(app_id="id", app_secret="secret", oauth_flow=True)
@@ -81,39 +82,36 @@ You can initial ``GraphApi`` with three different methods.
     >>> api.exchange_user_access_token(response="url redirected")
     # Now the api will get the user access token.
 
-Then you can get data from facebook.
+For more info about the different access tokens, see https://developers.facebook.com/docs/facebook-login/guides/access-tokens.
 
-Get object data::
+Once you have the user access token, you can get the Facebook data. For example,
 
     >>> api.get_object(object_id="20531316728")
     >>> {'name': 'Facebook App', 'id': '20531316728'}
 
-More you can see the code because we still working on new structure.
+See the code for more operations.
 
 -----------
 FacebookAPI
 -----------
 
-Initial methods same with ``GraphAPI``.
-
-Get user data::
+To get the user data::
 
     >>> fb.user.get_info(user_id="413140042878187")
     >>> User(id='413140042878187', name='Kun Liu')
 
-Get page data::
+To get the page data::
 
     >>> fb.page.get_info(page_id="20531316728")
     >>> Page(id='20531316728', name='Facebook App')
 
-See more in documents.
+For more info, please, see the code or the docs.
 
 ========
 Features
 ========
 
-
-Now library has cover follows features
+The library has the following features.
 
 Facebook Graph API:
 
@@ -138,7 +136,7 @@ IG Basic Display API:
 SUPPORT
 =======
 
-``python-facebook-api`` had been being developed with Pycharm under the free JetBrains Open Source license(s) granted by JetBrains s.r.o.,
+``python-facebook-api`` has been developed with Pycharm under the free JetBrains Open Source license(s) granted by JetBrains s.r.o.,
 hence I would like to express my thanks here.
 
 .. image:: docs/docs/images/jetbrains.svg
