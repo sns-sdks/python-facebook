@@ -23,13 +23,13 @@ logger = logging.getLogger(__name__)
 
 class GraphAPI:
     VALID_API_VERSIONS = [
-        "v12.0",
         "v13.0",
         "v14.0",
         "v15.0",
         "v16.0",
         "v17.0",
         "v18.0",
+        "v19.0",
     ]
     GRAPH_URL = "https://graph.facebook.com/"
     AUTHORIZATION_URL = "https://www.facebook.com/dialog/oauth"

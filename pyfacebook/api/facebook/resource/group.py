@@ -20,6 +20,9 @@ from pyfacebook.utils.params_utils import enf_comma_separated
 class FacebookGroup(
     BaseResource, FeedEdge, AlbumsEdge, PhotosEdge, VideosEdge, LiveVideosEdge
 ):
+    """
+    Note: Groups Edge will be deprecated after April 22, 2024.
+    """
     def get_info(
         self,
         group_id: str,
