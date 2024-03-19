@@ -1,6 +1,7 @@
 """
     tests for ig basic display api
 """
+
 import pytest
 import responses
 

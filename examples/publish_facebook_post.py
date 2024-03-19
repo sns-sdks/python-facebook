@@ -3,6 +3,7 @@
 
     Refer: https://developers.facebook.com/docs/graph-api/reference/page/feed#publish
 """
+
 import os
 
 from pyfacebook import GraphAPI

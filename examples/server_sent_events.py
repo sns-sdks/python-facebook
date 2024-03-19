@@ -1,6 +1,7 @@
 """
     A demo for sample streaming api.
 """
+
 import json
 import logging
 

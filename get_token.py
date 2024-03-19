@@ -2,6 +2,7 @@
     Utility to get your access tokens.
     Refer: https://developers.facebook.com/docs/facebook-login/access-tokens/refreshing
 """
+
 import webbrowser
 
 import click

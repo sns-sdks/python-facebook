@@ -68,9 +68,7 @@ class Application(BaseModel):
     auth_referral_friend_perms: Optional[List[str]] = field()
     auth_referral_response_type: Optional[str] = field()
     auth_referral_user_perms: Optional[List[str]] = field()
-    business: Optional[
-        dict
-    ] = (
+    business: Optional[dict] = (
         field()
     )  # TODO Refer: https://developers.facebook.com/docs/marketing-api/reference/business/
     canvas_fluid_height: Optional[bool] = field()

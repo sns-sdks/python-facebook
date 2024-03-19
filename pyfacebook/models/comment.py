@@ -49,9 +49,7 @@ class Comment(BaseModel):
     object: Optional[dict] = field()  # TODO
     parent: Optional["Comment"] = field()
     permalink_url: Optional[str] = field()
-    private_reply_conversation: Optional[
-        dict
-    ] = (
+    private_reply_conversation: Optional[dict] = (
         field()
     )  # TODO Refer: https://developers.facebook.com/docs/graph-api/reference/conversation
     user_likes: Optional[bool] = field()

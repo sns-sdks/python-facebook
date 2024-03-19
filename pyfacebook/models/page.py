@@ -3,6 +3,7 @@
 
     Refer: https://developers.facebook.com/docs/graph-api/reference/page
 """
+
 from dataclasses import dataclass
 from typing import List, Optional
 

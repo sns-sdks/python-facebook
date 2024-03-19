@@ -1,6 +1,7 @@
 """
     tests for base graph api.
 """
+
 import pytest
 import requests
 import responses

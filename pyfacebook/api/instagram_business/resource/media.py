@@ -1,6 +1,7 @@
 """
     Apis for media.
 """
+
 from typing import Dict, Optional, Union
 
 import pyfacebook.utils.constant as const

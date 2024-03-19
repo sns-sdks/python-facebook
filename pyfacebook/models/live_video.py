@@ -3,6 +3,7 @@
 
     Refer: https://developers.facebook.com/docs/graph-api/reference/live-video/
 """
+
 from dataclasses import dataclass
 from typing import List, Optional
 
@@ -24,9 +25,7 @@ class VideoCopyrightRule(BaseModel):
     condition_groups: Optional[List[dict]] = field()  # TODO
     copyrights: Optional[List[str]] = field()
     created_date: Optional[str] = field()
-    creator: Optional[
-        dict
-    ] = (
+    creator: Optional[dict] = (
         field()
     )  # TODO Refer: https://developers.facebook.com/docs/graph-api/reference/user/
     is_in_migration: Optional[bool] = field()
@@ -44,9 +43,7 @@ class VideoCopyright(BaseModel):
     id: Optional[str] = field(repr=True, compare=True)
     content_category: Optional[str] = field()
     copyright_content_id: Optional[str] = field()
-    creator: Optional[
-        dict
-    ] = (
+    creator: Optional[dict] = (
         field()
     )  # TODO Refer: https://developers.facebook.com/docs/graph-api/reference/user/
     excluded_ownership_segments: Optional[List[dict]] = field()  # TODO
@@ -134,9 +131,7 @@ class LiveVideo(BaseModel):
     stream_url: Optional[str] = field()
     targeting: Optional[dict] = field()  # TODO
     title: Optional[str] = field(repr=True)
-    video: Optional[
-        dict
-    ] = (
+    video: Optional[dict] = (
         field()
     )  # TODO Refer: https://developers.facebook.com/docs/graph-api/reference/video/
 

@@ -1,6 +1,7 @@
 """
     Client for facebook graph api
 """
+
 from pyfacebook.api.base_client import BaseApi
 from pyfacebook.api.facebook import resource as rs
 

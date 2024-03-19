@@ -57,9 +57,7 @@ class Post(BaseModel):
     actions: Optional[List[PostAction]] = field()
     admin_creator: Optional[dict] = field()  # TODO
     allowed_advertising_objectives: Optional[List[str]] = field()
-    application: Optional[
-        dict
-    ] = (
+    application: Optional[dict] = (
         field()
     )  # TODO https://developers.facebook.com/docs/graph-api/reference/application/
     backdated_time: Optional[str] = field()
@@ -69,9 +67,9 @@ class Post(BaseModel):
     comments_mirroring_domain: Optional[str] = field()
     coordinates: Optional[List[dict]] = field()  # TODO
     created_time: Optional[str] = field()
-    event: Optional[
-        dict
-    ] = field()  # TODO https://developers.facebook.com/docs/graph-api/reference/event/
+    event: Optional[dict] = (
+        field()
+    )  # TODO https://developers.facebook.com/docs/graph-api/reference/event/
     expanded_height: Optional[int] = field()
     expanded_width: Optional[int] = field()
     feed_targeting: Optional[dict] = field()  # TODO

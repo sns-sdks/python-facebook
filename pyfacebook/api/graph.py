@@ -1,6 +1,7 @@
 """
 This module contains the GraphAPI class, its subclass BasicDisplayAPI and the class ServerSentEventAPI.
 """
+
 import hashlib
 import hmac
 import logging

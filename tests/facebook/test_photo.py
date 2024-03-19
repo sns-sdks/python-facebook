@@ -1,6 +1,7 @@
 """
     Tests for photo api
 """
+
 import pytest
 import responses
 
