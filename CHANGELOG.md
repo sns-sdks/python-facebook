@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.19.0](https://github.com/sns-sdks/python-facebook/v0.19.0) (2024-03-18)
+
+### Feat
+
+- Add [v19.0](https://developers.facebook.com/docs/graph-api/changelog/version19.0) support.
+- Add parameters for OAuth flow.
+
+### Deprecations
+
+- Remove outdate versions [`v12.0`]
+- Groups API will be deprecated April 22, 2024.
+
 ## [0.18.0](https://github.com/sns-sdks/python-facebook/v0.18.0) (2023-11-10)
 
 ### Feat
