@@ -1,6 +1,7 @@
 """
     Base model
 """
+
 from copy import deepcopy
 from dataclasses import dataclass, field as base_field
 from typing import (

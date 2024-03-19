@@ -34,9 +34,7 @@ class Photo(BaseModel):
     """
 
     id: Optional[str] = field(repr=True, compare=True)
-    album: Optional[
-        dict
-    ] = (
+    album: Optional[dict] = (
         field()
     )  # TODO Refer: https://developers.facebook.com/docs/graph-api/reference/album/
     alt_text: Optional[str] = field()
@@ -47,9 +45,7 @@ class Photo(BaseModel):
     can_delete: Optional[bool] = field()
     can_tag: Optional[bool] = field()
     created_time: Optional[str] = field()
-    event: Optional[
-        dict
-    ] = (
+    event: Optional[dict] = (
         field()
     )  # TODO Refer: https://developers.facebook.com/docs/graph-api/reference/event/
     _from: Optional[dict] = field(metadata=config(field_name="from"))
@@ -60,14 +56,10 @@ class Photo(BaseModel):
     name: Optional[str] = field(repr=True)
     name_tags: Optional[List[EntityAtTextRange]] = field()
     page_story_id: Optional[str] = field()
-    place: Optional[
-        dict
-    ] = (
+    place: Optional[dict] = (
         field()
     )  # TODO Refer: https://developers.facebook.com/docs/graph-api/reference/place/
-    target: Optional[
-        dict
-    ] = (
+    target: Optional[dict] = (
         field()
     )  # TODO Refer: https://developers.facebook.com/docs/graph-api/reference/profile/
     updated_time: Optional[str] = field()

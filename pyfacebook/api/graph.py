@@ -1,6 +1,7 @@
 """
 This module contains the GraphAPI class, its subclass BasicDisplayAPI and the class ServerSentEventAPI.
 """
+
 import hashlib
 import hmac
 import logging
@@ -54,6 +55,9 @@ class GraphAPI:
         instagram_business_id: Optional[str] = None,
         authorization_url: Optional[str] = None,
         access_token_url: Optional[str] = None,
+        redirect_uri: Optional[str] = None,
+        scope: Optional[List[str]] = None,
+        state: Optional[str] = None,
     ):
         self.app_id = app_id
         self.app_secret = app_secret
@@ -77,6 +81,9 @@ class GraphAPI:
         self.access_token_url = (
             access_token_url if access_token_url else self.EXCHANGE_ACCESS_TOKEN_URL
         )
+        self.redirect_uri = redirect_uri if redirect_uri else self.DEFAULT_REDIRECT_URI
+        self.scope = scope if scope else self.DEFAULT_SCOPE
+        self.state = state if state else self.STATE
 
         if version is None:
             # default version is last new.
@@ -498,11 +505,13 @@ class GraphAPI:
         self,
         redirect_uri: Optional[str] = None,
         scope: Optional[List[str]] = None,
+        state: Optional[str] = None,
         **kwargs,
     ) -> OAuth2Session:
         """
         :param redirect_uri: The URL that you want to redirect the person logging in back to.
         :param scope: A list of permission string to request from the person using your app.
+        :param state: A CSRF token that will be passed to the redirect URL.
         :param kwargs: Additional parameters for oauth.
         :return: OAuth Session
         """
@@ -511,15 +520,17 @@ class GraphAPI:
             raise LibraryError({"message": "OAuth need your app credentials"})
 
         if redirect_uri is None:
-            redirect_uri = self.DEFAULT_REDIRECT_URI
+            redirect_uri = self.redirect_uri
         if scope is None:
-            scope = self.DEFAULT_SCOPE
+            scope = self.scope
+        if state is None:
+            state = self.state
 
         session = OAuth2Session(
             client_id=self.app_id,
             scope=scope,
             redirect_uri=redirect_uri,
-            state=self.STATE,
+            state=state,
             **kwargs,
         )
         session = facebook_compliance_fix(session)
@@ -529,6 +540,7 @@ class GraphAPI:
         self,
         redirect_uri: Optional[str] = None,
         scope: Optional[List[str]] = None,
+        state: Optional[str] = None,
         **kwargs,
     ) -> Tuple[str, str]:
         """
@@ -538,11 +550,12 @@ class GraphAPI:
         :param redirect_uri: The URL that you want to redirect the person logging in back to.
             Note: Your redirect uri need be set to `Valid OAuth redirect URIs` items in App Dashboard.
         :param scope: A list of permission string to request from the person using your app.
+        :param state: A CSRF token that will be passed to the redirect URL.
         :param kwargs: Additional parameters for oauth.
         :return: URL to do oauth and state
         """
         session = self._get_oauth_session(
-            redirect_uri=redirect_uri, scope=scope, **kwargs
+            redirect_uri=redirect_uri, scope=scope, state=state, **kwargs
         )
         authorization_url, state = session.authorization_url(url=self.authorization_url)
         return authorization_url, state
@@ -552,17 +565,19 @@ class GraphAPI:
         response: str,
         redirect_uri: Optional[str] = None,
         scope: Optional[List[str]] = None,
+        state: Optional[str] = None,
         **kwargs,
     ) -> dict:
         """
         :param response: The redirect response url for authorize redirect
-        :param scope: A list of permission string to request from the person using your app.
         :param redirect_uri: Url for your redirect.
+        :param scope: A list of permission string to request from the person using your app.
+        :param state: A CSRF token that will be passed to the redirect URL.
         :param kwargs: Additional parameters for oauth.
         :return:
         """
         session = self._get_oauth_session(
-            redirect_uri=redirect_uri, scope=scope, **kwargs
+            redirect_uri=redirect_uri, scope=scope, state=state, **kwargs
         )
 
         session.fetch_token(
@@ -769,17 +784,19 @@ class BasicDisplayAPI(GraphAPI):
         response: str,
         redirect_uri: Optional[str] = None,
         scope: Optional[List[str]] = None,
+        state: Optional[str] = None,
         **kwargs,
     ) -> dict:
         """
         :param response: The redirect response url for authorize redirect
-        :param scope: A list of permission string to request from the person using your app.
         :param redirect_uri: Url for your redirect.
+        :param scope: A list of permission string to request from the person using your app.
+        :param state: A CSRF token that will be passed to the redirect URL.
         :param kwargs: Additional parameters for oauth.
         :return:
         """
         session = self._get_oauth_session(
-            redirect_uri=redirect_uri, scope=scope, **kwargs
+            redirect_uri=redirect_uri, scope=scope, state=state, **kwargs
         )
 
         session.fetch_token(

@@ -1,6 +1,7 @@
 """
     Apis for basic user
 """
+
 from typing import Optional, Union
 
 import pyfacebook.utils.constant as const

@@ -1,6 +1,7 @@
 """
     Base client for API.
 """
+
 import inspect
 
 from pyfacebook import GraphAPI, BasicDisplayAPI
@@ -23,4 +24,4 @@ class BaseApi(GraphAPI):
 
 
 class BaseBasicDisplayApi(BasicDisplayAPI, BaseApi):
-    ...
+    pass

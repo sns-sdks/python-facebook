@@ -3,6 +3,7 @@ This is an example for instagram business account to publish an image media.
 
 Refer: https://developers.facebook.com/docs/instagram-api/reference/ig-user/media
 """
+
 import os
 
 from pyfacebook import GraphAPI

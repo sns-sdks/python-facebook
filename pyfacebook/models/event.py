@@ -52,14 +52,10 @@ class Event(BaseModel):
     online_event_format: Optional[str] = field()
     online_event_third_party_url: Optional[str] = field()
     owner: Optional[dict] = field()
-    parent_group: Optional[
-        dict
-    ] = (
+    parent_group: Optional[dict] = (
         field()
     )  # TODO Refer: https://developers.facebook.com/docs/graph-api/reference/group/
-    place: Optional[
-        dict
-    ] = (
+    place: Optional[dict] = (
         field()
     )  # TODO Refer: https://developers.facebook.com/docs/graph-api/reference/place/
     scheduled_publish_time: Optional[str] = field()

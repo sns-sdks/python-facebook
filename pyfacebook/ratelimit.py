@@ -37,13 +37,13 @@ class RateLimitHeader(object):
     cpu_time: int = 0  # IG basic display has returned this, but have no docs for this.
     acc_id_util_pct: int = 0  # only for X-Ad-Account-Usage
     type: Optional[str] = None  # only for Business Use Case Rate Limits
-    estimated_time_to_regain_access: Optional[
-        str
-    ] = None  # only for Business Use Case Rate Limits
+    estimated_time_to_regain_access: Optional[str] = (
+        None  # only for Business Use Case Rate Limits
+    )
     reset_time_duration: Optional[int] = None  # only for X-Ad-Account-Usage
-    ads_api_access_tier: Optional[
-        str
-    ] = None  # for X-Ad-Account-Usage and Business Use Case Rate Limits
+    ads_api_access_tier: Optional[str] = (
+        None  # for X-Ad-Account-Usage and Business Use Case Rate Limits
+    )
 
     def max_percent(self):
         return max(
@@ -141,9 +141,9 @@ class RateLimit(object):
         if business_usage is not None:
             for business_id, items in business_usage.items():
                 for item in items:
-                    self.resources["business"][business_id][
-                        item["type"]
-                    ] = RateLimitHeader(**item)
+                    self.resources["business"][business_id][item["type"]] = (
+                        RateLimitHeader(**item)
+                    )
 
         ad_account_usage = self.parse_headers(headers, "x-ad-account-usage")
         if ad_account_usage is not None:

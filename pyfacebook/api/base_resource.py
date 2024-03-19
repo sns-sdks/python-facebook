@@ -1,6 +1,7 @@
 """
     Resource base class
 """
+
 from pyfacebook.api.graph import GraphAPI
 
 

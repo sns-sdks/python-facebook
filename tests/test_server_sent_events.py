@@ -1,6 +1,7 @@
 """
     Tests for ServerSentEventAPI
 """
+
 import random
 from unittest.mock import patch
 

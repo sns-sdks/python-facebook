@@ -24,25 +24,19 @@ class Album(BaseModel):
     backdated_time_granularity: Optional[str] = field()
     can_upload: Optional[bool] = field()
     count: Optional[int] = field()
-    cover_photo: Optional[
-        dict
-    ] = (
+    cover_photo: Optional[dict] = (
         field()
     )  # TODO Refer: https://developers.facebook.com/docs/graph-api/reference/photo/
     created_time: Optional[str] = field()
     description: Optional[str] = field()
-    event: Optional[
-        dict
-    ] = (
+    event: Optional[dict] = (
         field()
     )  # TODO Refer: https://developers.facebook.com/docs/graph-api/reference/event/
     _from: Optional[dict] = field(metadata=config(field_name="from"))
     link: Optional[str] = field()
     location: Optional[str] = field()
     name: Optional[str] = field(repr=True)
-    place: Optional[
-        dict
-    ] = (
+    place: Optional[dict] = (
         field()
     )  # TODO Refer: https://developers.facebook.com/docs/graph-api/reference/place/
     privacy: Optional[str] = field()

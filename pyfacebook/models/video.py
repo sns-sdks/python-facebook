@@ -57,9 +57,7 @@ class Video(BaseModel):
     description: Optional[str] = field(repr=True)
     embed_html: Optional[str] = field()
     embeddable: Optional[bool] = field()
-    event: Optional[
-        dict
-    ] = (
+    event: Optional[dict] = (
         field()
     )  # TODO Refer: https://developers.facebook.com/docs/graph-api/reference/event/
     format: Optional[List[VideoFormat]] = field()
@@ -74,9 +72,7 @@ class Video(BaseModel):
     live_status: Optional[str] = field()
     music_video_copyright: Optional[dict] = field()  # TODO
     permalink_url: Optional[str] = field()
-    place: Optional[
-        dict
-    ] = (
+    place: Optional[dict] = (
         field()
     )  # TODO Refer: https://developers.facebook.com/docs/graph-api/reference/place/
     post_views: Optional[int] = field()
