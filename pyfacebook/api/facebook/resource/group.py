@@ -23,6 +23,7 @@ class FacebookGroup(
     """
     Note: Groups Edge will be deprecated after April 22, 2024.
     """
+
     def get_info(
         self,
         group_id: str,
