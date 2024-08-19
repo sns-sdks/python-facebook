@@ -59,6 +59,9 @@ docs/_build/
 # pyenv
 .python-version
 
+# Poetry
+poetry.lock
+
 # Environments
 .env
 .venv
