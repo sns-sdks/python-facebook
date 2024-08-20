@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.20.0](https://github.com/sns-sdks/python-facebook/v0.20.0) (2024-08-20)
+
+### Feat
+
+- Add [v20.0](https://developers.facebook.com/docs/graph-api/changelog/version20.0) support.
+- update dataclasses-json version
+- Add Business login support, If you try oauth with configuration.
+
+```python
+api = GraphAPI(app_id=xxx, app_secret="xxxx", oauth_flow=True)
+api.get_authorization_url(redirect_uri="https://example.com/callback", url_kwargs={"config_id": "id"})
+# ('https://www.facebook.com/dialog/oauth?response_type=code&client_id=xxx&redirect_uri=https%3A%2F%2Fexample.com%2Fcallback&scope=public_profile&state=PyFacebook&config_id=id', 'PyFacebook')
+```
+
 ## [0.19.0](https://github.com/sns-sdks/python-facebook/v0.19.0) (2024-03-18)
 
 ### Feat
