@@ -30,7 +30,7 @@ class GraphAPI:
         "v17.0",
         "v18.0",
         "v19.0",
-        "v20.0"
+        "v20.0",
     ]
     GRAPH_URL = "https://graph.facebook.com/"
     AUTHORIZATION_URL = "https://www.facebook.com/dialog/oauth"
@@ -562,8 +562,7 @@ class GraphAPI:
         )
         url_kwargs = {} if url_kwargs is None else url_kwargs
         authorization_url, state = session.authorization_url(
-            url=self.authorization_url,
-            **url_kwargs
+            url=self.authorization_url, **url_kwargs
         )
         return authorization_url, state
 
