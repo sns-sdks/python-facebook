@@ -8,7 +8,7 @@ import logging
 import re
 import time
 from urllib.parse import parse_qsl, urlparse
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 from warnings import warn
 
 import requests
@@ -30,6 +30,7 @@ class GraphAPI:
         "v17.0",
         "v18.0",
         "v19.0",
+        "v20.0",
     ]
     GRAPH_URL = "https://graph.facebook.com/"
     AUTHORIZATION_URL = "https://www.facebook.com/dialog/oauth"
@@ -541,6 +542,7 @@ class GraphAPI:
         redirect_uri: Optional[str] = None,
         scope: Optional[List[str]] = None,
         state: Optional[str] = None,
+        url_kwargs: Optional[Dict[str, Any]] = None,
         **kwargs,
     ) -> Tuple[str, str]:
         """
@@ -551,13 +553,17 @@ class GraphAPI:
             Note: Your redirect uri need be set to `Valid OAuth redirect URIs` items in App Dashboard.
         :param scope: A list of permission string to request from the person using your app.
         :param state: A CSRF token that will be passed to the redirect URL.
+        :param url_kwargs: Additional parameters for generate authorization url. like config_id.
         :param kwargs: Additional parameters for oauth.
         :return: URL to do oauth and state
         """
         session = self._get_oauth_session(
             redirect_uri=redirect_uri, scope=scope, state=state, **kwargs
         )
-        authorization_url, state = session.authorization_url(url=self.authorization_url)
+        url_kwargs = {} if url_kwargs is None else url_kwargs
+        authorization_url, state = session.authorization_url(
+            url=self.authorization_url, **url_kwargs
+        )
         return authorization_url, state
 
     def exchange_user_access_token(
