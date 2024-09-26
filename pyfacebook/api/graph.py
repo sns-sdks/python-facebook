@@ -505,7 +505,7 @@ class GraphAPI:
     def _get_oauth_session(
         self,
         redirect_uri: Optional[str] = None,
-        scope: Optional[List[str]] = None,
+        scope: Optional[List[str]] | str = None,
         state: Optional[str] = None,
         **kwargs,
     ) -> OAuth2Session:
@@ -867,6 +867,122 @@ class BasicDisplayAPI(GraphAPI):
 
     def debug_token(self, input_token: str, access_token: Optional[str] = None) -> dict:
         raise LibraryError({"message": "Method not support"})
+
+
+class ThreadsGraphAPI(GraphAPI):
+    GRAPH_URL = "https://graph.threads.net/"
+    DEFAULT_SCOPE = ["threads_basic"]
+    AUTHORIZATION_URL = "https://threads.net/oauth/authorize"
+    EXCHANGE_ACCESS_TOKEN_URL = "https://graph.threads.net/oauth/access_token"
+
+    VALID_API_VERSIONS = ["v1.0"]
+
+    @staticmethod
+    def fix_scope(scope: List[str]):
+        """
+        Note: After tests, the api for threads only support for comma-separated list.
+        :param scope: A list of permission string to request from the person using your app.
+        :return: comma-separated scope string
+        """
+        return ",".join(scope) if scope else scope
+
+    def get_authorization_url(
+        self,
+        redirect_uri: Optional[str] = None,
+        scope: Optional[List[str]] = None,
+        state: Optional[str] = None,
+        url_kwargs: Optional[Dict[str, Any]] = None,
+        **kwargs,
+    ) -> Tuple[str, str]:
+        """
+        Build authorization url to do oauth.
+        Refer: https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow
+
+        :param redirect_uri: The URL that you want to redirect the person logging in back to.
+            Note: Your redirect uri need be set to `Valid OAuth redirect URIs` items in App Dashboard.
+        :param scope: A list of permission string to request from the person using your app.
+        :param state: A CSRF token that will be passed to the redirect URL.
+        :param url_kwargs: Additional parameters for generate authorization url. like config_id.
+        :param kwargs: Additional parameters for oauth.
+        :return: URL to do oauth and state
+        """
+        scope = self.fix_scope(scope)
+        session = self._get_oauth_session(
+            redirect_uri=redirect_uri, scope=scope, state=state, **kwargs
+        )
+        url_kwargs = {} if url_kwargs is None else url_kwargs
+        authorization_url, state = session.authorization_url(
+            url=self.authorization_url, **url_kwargs
+        )
+        return authorization_url, state
+
+    def exchange_user_access_token(
+        self,
+        response: str,
+        redirect_uri: Optional[str] = None,
+        scope: Optional[List[str]] = None,
+        state: Optional[str] = None,
+        **kwargs,
+    ) -> dict:
+        """
+        :param response: The redirect response url for authorize redirect
+        :param redirect_uri: Url for your redirect.
+        :param scope: A list of permission string to request from the person using your app.
+        :param state: A CSRF token that will be passed to the redirect URL.
+        :param kwargs: Additional parameters for oauth.
+        :return:
+        """
+        scope = self.fix_scope(scope)
+        session = self._get_oauth_session(
+            redirect_uri=redirect_uri, scope=scope, state=state, **kwargs
+        )
+
+        session.fetch_token(
+            self.access_token_url,
+            client_secret=self.app_secret,
+            authorization_response=response,
+            include_client_id=True,
+        )
+        self.access_token = session.access_token
+
+        return session.token
+
+    def exchange_long_lived_user_access_token(self, access_token=None) -> dict:
+        """
+        Generate long-lived token by short-lived token, Long-lived token generally lasts about 60 days.
+
+        :param access_token: Short-lived user access token
+        :return: Long-lived user access token info.
+        """
+        if access_token is None:
+            access_token = self.access_token
+        args = {
+            "grant_type": "th_exchange_token",
+            "client_id": self.app_id,
+            "client_secret": self.app_secret,
+            "access_token": access_token,
+        }
+
+        resp = self._request(
+            url=self.access_token_url,
+            args=args,
+            auth_need=False,
+        )
+        data = self._parse_response(resp)
+        return data
+
+    def refresh_access_token(self, access_token: str):
+        """
+        :param access_token: The valid (unexpired) long-lived Instagram User Access Token that you want to refresh.
+        :return: New access token.
+        """
+        args = {"grant_type": "th_refresh_token", "access_token": access_token}
+        resp = self._request(
+            url="refresh_access_token",
+            args=args,
+        )
+        data = self._parse_response(resp)
+        return data
 
 
 class ServerSentEventAPI:
