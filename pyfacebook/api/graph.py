@@ -8,7 +8,7 @@ import logging
 import re
 import time
 from urllib.parse import parse_qsl, urlparse
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Union
 from warnings import warn
 
 import requests
@@ -505,7 +505,7 @@ class GraphAPI:
     def _get_oauth_session(
         self,
         redirect_uri: Optional[str] = None,
-        scope: Optional[List[str]] | str = None,
+        scope: Optional[Union[List[str], str]] = None,
         state: Optional[str] = None,
         **kwargs,
     ) -> OAuth2Session:
@@ -878,9 +878,10 @@ class ThreadsGraphAPI(GraphAPI):
     VALID_API_VERSIONS = ["v1.0"]
 
     @staticmethod
-    def fix_scope(scope: List[str]):
+    def fix_scope(scope: Optional[List[str]] = None):
         """
         Note: After tests, the api for threads only support for comma-separated list.
+
         :param scope: A list of permission string to request from the person using your app.
         :return: comma-separated scope string
         """
@@ -906,7 +907,10 @@ class ThreadsGraphAPI(GraphAPI):
         :param kwargs: Additional parameters for oauth.
         :return: URL to do oauth and state
         """
-        scope = self.fix_scope(scope)
+        if scope:
+            self.scope = scope
+        scope = self.fix_scope(self.scope)
+
         session = self._get_oauth_session(
             redirect_uri=redirect_uri, scope=scope, state=state, **kwargs
         )
@@ -932,7 +936,10 @@ class ThreadsGraphAPI(GraphAPI):
         :param kwargs: Additional parameters for oauth.
         :return:
         """
-        scope = self.fix_scope(scope)
+        if scope:
+            self.scope = scope
+        scope = self.fix_scope(self.scope)
+
         session = self._get_oauth_session(
             redirect_uri=redirect_uri, scope=scope, state=state, **kwargs
         )
