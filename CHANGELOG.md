@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.20.1](https://github.com/sns-sdks/python-facebook/v0.20.1) (2024-10-08)
+
+### Feat
+
+- Add [Threads API](https://developers.facebook.com/docs/threads) support.
+
+
 ## [0.20.0](https://github.com/sns-sdks/python-facebook/v0.20.0) (2024-08-20)
 
 ### Feat
