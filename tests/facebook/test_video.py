@@ -28,20 +28,6 @@ async def test_get_info(helpers, fb_api):
                 )),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{video_id}",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/videos/video_info_fields.json"
-        #     ),
-        # )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{video_id}",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/videos/video_info_default.json"
-        #     ),
-        # )
 
         video = await fb_api.video.get_info(video_id=video_id)
         assert video.id == video_id
@@ -76,20 +62,6 @@ async def test_get_batch(helpers, fb_api):
                 )),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/videos/videos_info_fields.json"
-        #     ),
-        # )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/videos/videos_info_default.json"
-        #     ),
-        # )
 
         videos = await fb_api.video.get_batch(ids=video_ids)
         assert videos[video_ids[0]].id == video_ids[0]

@@ -26,20 +26,6 @@ async def test_get_info(helpers, fb_api):
                 ),
             ]
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{lv_id}",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/live_videos/live_video_fields.json"
-        #     ),
-        # )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{lv_id}",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/live_videos/live_video_default.json"
-        #     ),
-        # )
 
         live_video = await fb_api.live_video.get_info(live_video_id=lv_id)
         assert live_video.id == lv_id
@@ -75,20 +61,6 @@ async def test_get_batch(helpers, fb_api):
                 ),
             ]
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/live_videos/live_videos_fields.json"
-        #     ),
-        # )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/live_videos/live_videos_default.json"
-        #     ),
-        # )
 
         live_videos = await fb_api.live_video.get_batch(ids=lv_ids)
         assert live_videos[lv_ids[0]].id == lv_ids[0]

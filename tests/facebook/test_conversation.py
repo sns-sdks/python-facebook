@@ -18,13 +18,6 @@ async def test_get_info(helpers, fb_api):
                 ),
             ),
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{cvs_id}",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/conversations/cvs_info.json"
-        #     ),
-        # )
 
         cvs = await fb_api.conversation.get_info(conversation_id=cvs_id)
         assert cvs.id == cvs_id
@@ -51,13 +44,6 @@ async def test_get_batch(helpers, fb_api):
                 ),
             ),
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/conversations/cvses_info.json"
-        #     ),
-        # )
 
         cvses = await fb_api.conversation.get_batch(ids=cvs_ids)
         assert cvses[cvs_ids[0]].id == cvs_ids[0]

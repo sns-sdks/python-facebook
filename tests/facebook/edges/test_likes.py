@@ -15,11 +15,6 @@ async def test_get_likes(helpers, fb_api):
                 json=helpers.load_json("testdata/facebook/apidata/likes/likes_resp.json")
             ),
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{object_id}/likes",
-        #     json=helpers.load_json("testdata/facebook/apidata/likes/likes_resp.json"),
-        # )
 
         likes_resp = await fb_api.post.get_likes(
             object_id=object_id,
@@ -42,11 +37,7 @@ async def test_create_like(fb_api):
                 json={"success": True},
             ),
         )
-        # m.add(
-        #     method=responses.POST,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{object_id}/likes",
-        #     json={"success": True},
-        # )
+
         data = await fb_api.post.creat_like(object_id=object_id)
         assert data["success"]
 
@@ -61,10 +52,6 @@ async def test_delete_like(fb_api):
                 json={"success": True},
             ),
         )
-        # m.add(
-        #     method=responses.DELETE,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{object_id}/likes",
-        #     json={"success": True},
-        # )
+
         data = await fb_api.post.delete_like(object_id=object_id)
         assert data["success"]

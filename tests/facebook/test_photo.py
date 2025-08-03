@@ -27,20 +27,6 @@ async def test_get_info(helpers, fb_api):
                 ),
             ]
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{photo_id}",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/photos/photo_info_fields.json"
-        #     ),
-        # )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{photo_id}",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/photos/photo_info_default.json"
-        #     ),
-        # )
 
         photo = await fb_api.photo.get_info(photo_id=photo_id)
         assert photo.id == photo_id
@@ -74,20 +60,6 @@ async def test_get_batch(helpers, fb_api):
                 ),
             ]
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/photos/photos_info_fields.json"
-        #     ),
-        # )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/photos/photos_info_default.json"
-        #     ),
-        # )
 
         data = await fb_api.photo.get_batch(ids=ids)
         assert ids[0] in data.keys()

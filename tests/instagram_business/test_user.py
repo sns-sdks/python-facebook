@@ -16,11 +16,6 @@ async def test_get_info(helpers, api):
                 json=helpers.load_json("testdata/instagram/apidata/users/user_fields.json"),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/{api.instagram_business_id}",
-        #     json=helpers.load_json("testdata/instagram/apidata/users/user_fields.json"),
-        # )
 
         user = await api.user.get_info()
         assert user.id == api.instagram_business_id
@@ -45,13 +40,6 @@ async def test_discovery_user(helpers, api):
                 ),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/{api.instagram_business_id}",
-        #     json=helpers.load_json(
-        #         "testdata/instagram/apidata/discovery/medias_p1.json"
-        #     ),
-        # )
 
         user = await api.user.discovery_user(username=username)
         assert user.business_discovery.id == "17841407673135339"
@@ -84,20 +72,6 @@ async def test_discovery_media(helpers, api):
                 ),
             ]
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/{api.instagram_business_id}",
-        #     json=helpers.load_json(
-        #         "testdata/instagram/apidata/discovery/medias_p1.json"
-        #     ),
-        # )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/{api.instagram_business_id}",
-        #     json=helpers.load_json(
-        #         "testdata/instagram/apidata/discovery/medias_p2.json"
-        #     ),
-        # )
 
         media_p1 = await api.user.discovery_user_medias(username=username, limit=2)
         media_p2 = await api.user.discovery_user_medias(
@@ -117,13 +91,6 @@ async def test_discovery_media(helpers, api):
                 ),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/{api.instagram_business_id}",
-        #     json=helpers.load_json(
-        #         "testdata/instagram/apidata/discovery/medias_p2.json"
-        #     ),
-        # )
 
         media = await api.user.discovery_user_medias(
             username=username, limit=2, before="before", return_json=True
@@ -142,13 +109,6 @@ async def test_get_content_publishing_limit(helpers, api):
                 ),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/{api.instagram_business_id}/content_publishing_limit",
-        #     json=helpers.load_json(
-        #         "testdata/instagram/apidata/users/content_publish_limit.json"
-        #     ),
-        # )
 
         limit = await api.user.get_content_publishing_limit()
         assert limit.data[0].config.quota_total == 25
@@ -168,13 +128,6 @@ async def test_get_user_insights(helpers, api):
                 ),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/{api.instagram_business_id}/insights",
-        #     json=helpers.load_json(
-        #         "testdata/instagram/apidata/users/user_insights.json"
-        #     ),
-        # )
 
         insights = await api.user.get_insights(
             metric="impressions,reach,profile_views",
@@ -199,13 +152,7 @@ async def test_get_user_insights(helpers, api):
                 ),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/{api.instagram_business_id}/insights",
-        #     json=helpers.load_json(
-        #         "testdata/instagram/apidata/users/user_insights_new.json"
-        #     ),
-        # )
+
         insights = await api.user.get_insights(
             metric="reach",
             period="day",
@@ -232,17 +179,6 @@ async def test_get_user_media(helpers, api):
                 )),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/{api.instagram_business_id}/media",
-        #     json=helpers.load_json("testdata/instagram/apidata/users/medias_p1.json"),
-        # )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/{api.instagram_business_id}/media",
-        #     json=helpers.load_json("testdata/instagram/apidata/users/medias_p2.json"),
-        # )
-
         medias = await api.user.get_media(count=3, limit=2)
         assert len(medias.data) == 3
         assert medias.data[0].id == "17895731045244887"
@@ -266,13 +202,6 @@ async def test_get_mentioned_comment(helpers, api):
                 ),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/{api.instagram_business_id}",
-        #     json=helpers.load_json(
-        #         "testdata/instagram/apidata/users/mentioned_comment.json"
-        #     ),
-        # )
 
         comment = await api.user.get_mentioned_comment(comment_id=cm_id)
         assert comment.mentioned_comment.id == cm_id
@@ -295,13 +224,6 @@ async def test_get_mentioned_media(helpers, api):
                 ),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/{api.instagram_business_id}",
-        #     json=helpers.load_json(
-        #         "testdata/instagram/apidata/users/mentioned_media.json"
-        #     ),
-        # )
 
         media = await api.user.get_mentioned_media(media_id=media_id)
         assert media.mentioned_media.id == media_id
@@ -321,13 +243,6 @@ async def test_get_hashtag_search(helpers, api):
                 ),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/ig_hashtag_search",
-        #     json=helpers.load_json(
-        #         "testdata/instagram/apidata/users/hashtag_search.json"
-        #     ),
-        # )
 
         hashtag = await api.user.get_hashtag_search(q="developers")
         assert hashtag.data[0].id == "17841562426109234"
@@ -347,13 +262,6 @@ async def test_get_recently_searched_hashtags(helpers, api):
                 ),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/{api.instagram_business_id}/recently_searched_hashtags",
-        #     json=helpers.load_json(
-        #         "testdata/instagram/apidata/users/recently_searched_hashtags.json"
-        #     ),
-        # )
 
         hashtags = await api.user.get_recently_searched_hashtags()
         assert len(hashtags.data) == 2
@@ -372,11 +280,6 @@ async def test_get_stories(helpers, api):
                 json=helpers.load_json("testdata/instagram/apidata/users/stories.json"),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/{api.instagram_business_id}/stories",
-        #     json=helpers.load_json("testdata/instagram/apidata/users/stories.json"),
-        # )
 
         stories = await api.user.get_stories()
         assert len(stories.data) == 2
@@ -397,13 +300,6 @@ async def test_get_tagged_media(helpers, api):
                 ),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/{api.instagram_business_id}/tags",
-        #     json=helpers.load_json(
-        #         "testdata/instagram/apidata/users/tagged_medias.json"
-        #     ),
-        # )
 
         medias = await api.user.get_tagged_media()
         assert len(medias.data) == 5
@@ -422,11 +318,6 @@ async def test_get_live_media(helpers, api):
                 json=helpers.load_json("testdata/instagram/apidata/users/live_medias.json"),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/{api.instagram_business_id}/live_media",
-        #     json=helpers.load_json("testdata/instagram/apidata/users/live_medias.json"),
-        # )
 
         medias = await api.user.get_live_media()
         assert len(medias.data) == 1
@@ -447,13 +338,6 @@ async def test_get_available_catalogs(helpers, api):
                 ),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/{api.instagram_business_id}/available_catalogs",
-        #     json=helpers.load_json(
-        #         "testdata/instagram/apidata/users/available_catalogs.json"
-        #     ),
-        # )
 
         catalogs = await api.user.get_available_catalogs()
         assert len(catalogs.data) == 1
@@ -475,13 +359,6 @@ async def test_get_catalog_product_search(helpers, api):
                 ),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/{api.instagram_business_id}/catalog_product_search",
-        #     json=helpers.load_json(
-        #         "testdata/instagram/apidata/users/catalog_product_search.json"
-        #     ),
-        # )
 
         products = await api.user.get_catalog_product_search(catalog_id=catalog_id)
         assert len(products.data) == 1
@@ -505,13 +382,6 @@ async def test_get_product_appeal(helpers, api):
                 ),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/{api.instagram_business_id}/product_appeal",
-        #     json=helpers.load_json(
-        #         "testdata/instagram/apidata/users/product_appeal.json"
-        #     ),
-        # )
 
         appeals = await api.user.get_product_appeal(product_id=product_id)
         assert len(appeals.data) == 1

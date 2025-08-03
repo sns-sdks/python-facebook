@@ -3,7 +3,6 @@
 """
 import httpx
 import pytest
-import requests
 import respx
 
 from pyfacebook import GraphAPI, LibraryError, FacebookError
@@ -175,11 +174,6 @@ async def test_get_full_connections(helpers):
                 json=helpers.load_json("testdata/base/full_connecions_p1.json")
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url="https://graph.facebook.com/v11.0/19292868552/feed",
-        #     json=helpers.load_json("testdata/base/full_connecions_p1.json"),
-        # )
 
         feed = await api.get_full_connections(
             object_id=obj_id,
@@ -205,17 +199,6 @@ async def test_get_full_connections(helpers):
             ]
         )
 
-        # m.add(
-        #     method=responses.GET,
-        #     url="https://graph.facebook.com/v11.0/19292868552/feed",
-        #     json=helpers.load_json("testdata/base/full_connecions_p1.json"),
-        # )
-        # m.add(
-        #     method=responses.GET,
-        #     url="https://graph.facebook.com/v11.0/19292868552/feed",
-        #     json=helpers.load_json("testdata/base/full_connecions_p2.json"),
-        # )
-
         feed = await api.get_full_connections(
             object_id=obj_id,
             connection="feed",
@@ -239,11 +222,6 @@ async def test_discovery_user_media(helpers):
                 json=helpers.load_json("testdata/base/discovery_medias_p1.json")
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/id",
-        #     json=helpers.load_json("testdata/base/discovery_medias_p1.json"),
-        # )
 
         media = await api.discovery_user_media(
             username=username,
@@ -267,17 +245,6 @@ async def test_discovery_user_media(helpers):
                 ),
             ]
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/id",
-        #     json=helpers.load_json("testdata/base/discovery_medias_p1.json"),
-        # )
-
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/id",
-        #     json=helpers.load_json("testdata/base/discovery_medias_p2.json"),
-        # )
 
         media = await api.discovery_user_media(
             username=username,
@@ -298,11 +265,6 @@ async def test_post_object(helpers, user_api):
                 json={"success": True},
             )
         )
-        # m.add(
-        #     method="POST",
-        #     url=f"https://graph.facebook.com/{user_api.version}/{obj_id}/comments",
-        #     json={"success": True},
-        # )
 
         res = await user_api.post_object(
             object_id=obj_id,
@@ -322,11 +284,6 @@ async def test_delete_object(helpers, user_api):
                 json={"success": True},
             )
         )
-        # m.add(
-        #     method="DELETE",
-        #     url=f"https://graph.facebook.com/{user_api.version}/{obj_id}",
-        #     json={"success": True},
-        # )
 
         res = await user_api.delete_object(
             object_id=obj_id,
@@ -355,11 +312,6 @@ async def test_oauth_flow(helpers):
                 json=helpers.load_json("testdata/base/long_term_token.json"),
             )
         )
-        # m.add(
-        #     method=responses.POST,
-        #     url=api.EXCHANGE_ACCESS_TOKEN_URL,
-        #     json=helpers.load_json("testdata/base/long_term_token.json"),
-        # )
 
         r = await api.exchange_user_access_token(response=resp)
         assert r["access_token"] == "token"
@@ -379,11 +331,6 @@ async def test_exchange_token(helpers):
                 json={"id": "19292868552", "access_token": "token"},
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/{page_id}",
-        #     json={"id": "19292868552", "access_token": "token"},
-        # )
         token = await api.exchange_page_access_token(page_id=page_id)
         assert token == "token"
     # test can not exchange page access token
@@ -394,11 +341,6 @@ async def test_exchange_token(helpers):
                 json={"id": "19292868552"},
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/{page_id}",
-        #     json={"id": "19292868552"},
-        # )
         with pytest.raises(LibraryError):
             await api.exchange_page_access_token(page_id=page_id)
 
@@ -414,16 +356,6 @@ async def test_exchange_token(helpers):
                 },
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/oauth/access_token",
-        #     json={
-        #         "access_token": "token",
-        #         "token_type": "bearer",
-        #         "expires_in": 5184000,
-        #     },
-        # )
-
         res = await api.exchange_long_lived_user_access_token()
         assert res["access_token"] == "token"
 
@@ -436,11 +368,6 @@ async def test_exchange_token(helpers):
                 json=helpers.load_json("testdata/base/user_accounts_token.json"),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/{user_id}/accounts",
-        #     json=helpers.load_json("testdata/base/user_accounts_token.json"),
-        # )
 
         res = await api.exchange_long_lived_page_access_token(user_id=user_id)
         assert len(res["data"]) == 1
@@ -458,11 +385,6 @@ async def test_get_app_token():
                 json={"access_token": "access_token", "token_type": "bearer"},
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/oauth/access_token",
-        #     json={"access_token": "access_token", "token_type": "bearer"},
-        # )
 
         data = await api.get_app_token()
         assert data["access_token"] == "access_token"
@@ -479,11 +401,6 @@ async def test_debug_token(helpers, pubg_api):
                 json=helpers.load_json("testdata/base/token_info.json"),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{pubg_api.version}/debug_token",
-        #     json=helpers.load_json("testdata/base/token_info.json"),
-        # )
 
         res = await pubg_api.debug_token(input_token=input_token)
         assert res["data"]["type"] == "USER"

@@ -26,11 +26,6 @@ async def test_oath_flow(helpers):
                 json=helpers.load_json("testdata/base/basic_display_api_user_token.json"),
             )
         )
-        # m.add(
-        #     method=responses.POST,
-        #     url=api.EXCHANGE_ACCESS_TOKEN_URL,
-        #     json=helpers.load_json("testdata/base/basic_display_api_user_token.json"),
-        # )
 
         r = await api.exchange_user_access_token(response=resp)
         assert r["access_token"] == "token"
@@ -48,11 +43,6 @@ async def test_exchange_long_lived_token(helpers):
                 json=helpers.load_json("testdata/base/long_term_token.json"),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.instagram.com/access_token",
-        #     json=helpers.load_json("testdata/base/long_term_token.json"),
-        # )
 
         res = await api.exchange_long_lived_user_access_token()
         assert res["access_token"] == "token"
@@ -70,11 +60,6 @@ async def test_refresh_token(helpers):
                 json=helpers.load_json("testdata/base/long_term_token.json"),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.instagram.com/refresh_access_token",
-        #     json=helpers.load_json("testdata/base/long_term_token.json"),
-        # )
 
         res = await api.refresh_access_token(access_token=api.access_token)
         assert res["access_token"] == "token"

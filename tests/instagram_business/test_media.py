@@ -20,13 +20,6 @@ async def test_get_info(helpers, api):
                 ),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/{media_id}",
-        #     json=helpers.load_json(
-        #         "testdata/instagram/apidata/medias/media_default.json"
-        #     ),
-        # )
 
         media = await api.media.get_info(media_id=media_id)
         assert media.id == media_id
@@ -52,13 +45,6 @@ async def test_get_batch(helpers, api):
                 ),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}",
-        #     json=helpers.load_json(
-        #         "testdata/instagram/apidata/medias/medias_fields.json"
-        #     ),
-        # )
 
         medias = await api.media.get_batch(ids=media_ids)
         assert medias[media_ids[0]].id == media_ids[0]
@@ -91,20 +77,6 @@ async def test_get_comments(helpers, api):
                 )),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/{media_id}/comments",
-        #     json=helpers.load_json(
-        #         "testdata/instagram/apidata/medias/comments_p1.json"
-        #     ),
-        # )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/{media_id}/comments",
-        #     json=helpers.load_json(
-        #         "testdata/instagram/apidata/medias/comments_p2.json"
-        #     ),
-        # )
 
         comments = await api.media.get_comments(media_id=media_id)
         assert len(comments.data) == 4
@@ -127,11 +99,6 @@ async def test_get_children(helpers, api):
                 json=helpers.load_json("testdata/instagram/apidata/medias/children.json")
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/{media_id}/children",
-        #     json=helpers.load_json("testdata/instagram/apidata/medias/children.json"),
-        # )
 
         children = await api.media.get_children(media_id=media_id)
         assert len(children.data) == 2
@@ -154,11 +121,6 @@ async def test_get_insights(helpers, api):
                 json=helpers.load_json("testdata/instagram/apidata/medias/insights.json"),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/{media_id}/insights",
-        #     json=helpers.load_json("testdata/instagram/apidata/medias/insights.json"),
-        # )
 
         insights = await api.media.get_insights(
             media_id=media_id,
@@ -183,13 +145,6 @@ async def test_get_insights(helpers, api):
                 ),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/{media_id}/insights",
-        #     json=helpers.load_json(
-        #         "testdata/instagram/apidata/medias/insights_new.json"
-        #     ),
-        # )
 
         insights = await api.media.get_insights(
             media_id=media_id, metric="profile_activity", breakdown=["action_type"]
@@ -209,13 +164,6 @@ async def test_get_product_tags(helpers, api):
                 ),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/{media_id}/product_tags",
-        #     json=helpers.load_json(
-        #         "testdata/instagram/apidata/medias/product_tags.json"
-        #     ),
-        # )
 
         tags = await api.media.get_product_tags(media_id=media_id)
         assert len(tags.data) == 1

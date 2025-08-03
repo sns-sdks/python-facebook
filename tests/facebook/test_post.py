@@ -59,20 +59,6 @@ async def test_batch_posts(helpers, fb_api):
                 ),
             ]
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/posts/multi_posts_data.json"
-        #     ),
-        # )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/posts/multi_posts_data_fields.json"
-        #     ),
-        # )
 
         data = await fb_api.post.get_batch(ids=ids)
         assert ids[0] in data.keys()
@@ -104,20 +90,6 @@ async def test_get_comments(helpers, fb_api):
                 )),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{post_id}/comments",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/comments/comments_p1.json"
-        #     ),
-        # )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{post_id}/comments",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/comments/comments_p2.json"
-        #     ),
-        # )
 
         comments = await fb_api.post.get_comments(
             object_id=post_id,

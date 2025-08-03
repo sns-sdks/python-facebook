@@ -20,13 +20,6 @@ async def test_get_info(helpers, api):
                 ),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/{hashtag_id}",
-        #     json=helpers.load_json(
-        #         "testdata/instagram/apidata/hashtags/hashtag_info.json"
-        #     ),
-        # )
 
         hashtag = await api.hashtag.get_info(hashtag_id=hashtag_id)
         assert hashtag.id == hashtag_id
@@ -52,13 +45,6 @@ async def test_get_batch(helpers, api):
                 ),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}",
-        #     json=helpers.load_json(
-        #         "testdata/instagram/apidata/hashtags/hashtags_info.json"
-        #     ),
-        # )
 
         hashtags = await api.hashtag.get_batch(ids=hashtag_ids)
         assert hashtags[hashtag_ids[0]].id == hashtag_ids[0]
@@ -92,20 +78,6 @@ async def test_get_top_media(helpers, api):
                 )),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/{hashtag_id}/top_media",
-        #     json=helpers.load_json(
-        #         "testdata/instagram/apidata/hashtags/hashtag_top_medias_p1.json"
-        #     ),
-        # )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/{hashtag_id}/top_media",
-        #     json=helpers.load_json(
-        #         "testdata/instagram/apidata/hashtags/hashtag_top_medias_p2.json"
-        #     ),
-        # )
 
         top_media = await api.hashtag.get_top_media(
             hashtag_id=hashtag_id,
@@ -143,20 +115,6 @@ async def test_get_recent_media(helpers, api):
                 )),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/{hashtag_id}/recent_media",
-        #     json=helpers.load_json(
-        #         "testdata/instagram/apidata/hashtags/hashtag_recent_medias_p1.json"
-        #     ),
-        # )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/{hashtag_id}/recent_media",
-        #     json=helpers.load_json(
-        #         "testdata/instagram/apidata/hashtags/hashtag_recent_medias_p2.json"
-        #     ),
-        # )
 
         top_media = await api.hashtag.get_recent_media(
             hashtag_id=hashtag_id,

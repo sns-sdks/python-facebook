@@ -19,13 +19,6 @@ async def test_get_info(helpers, api):
                 ),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.instagram.com/{api.version}/me",
-        #     json=helpers.load_json(
-        #         "testdata/instagram_basic/apidata/user/user_info.json"
-        #     ),
-        # )
 
         user = await api.user.get_info()
         assert user.id == uid
@@ -58,20 +51,6 @@ async def test_user_media(helpers, api):
                 )),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.instagram.com/{api.version}/{uid}/media",
-        #     json=helpers.load_json(
-        #         "testdata/instagram_basic/apidata/user/user_medias_p1.json"
-        #     ),
-        # )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.instagram.com/{api.version}/{uid}/media",
-        #     json=helpers.load_json(
-        #         "testdata/instagram_basic/apidata/user/user_medias_p2.json"
-        #     ),
-        # )
 
         media = await api.user.get_media(
             user_id=uid,

@@ -16,11 +16,6 @@ async def test_get_info(helpers, fb_api):
                 json=helpers.load_json("testdata/facebook/apidata/events/event_info.json"),
             ),
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{evt_id}",
-        #     json=helpers.load_json("testdata/facebook/apidata/events/event_info.json"),
-        # )
 
         event = await fb_api.event.get_info(event_id=evt_id)
         assert event.id == evt_id
@@ -45,11 +40,6 @@ async def test_get_batch(helpers, fb_api):
                 json=helpers.load_json("testdata/facebook/apidata/events/events_info.json"),
             ),
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}",
-        #     json=helpers.load_json("testdata/facebook/apidata/events/events_info.json"),
-        # )
 
         events = await fb_api.event.get_batch(ids=et_ids)
         assert events[et_ids[0]].id == et_ids[0]

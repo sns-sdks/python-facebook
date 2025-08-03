@@ -16,13 +16,6 @@ async def test_get_info(helpers, fb_api):
             ),
             ),
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{fb_api.app_id}",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/applications/application_info.json"
-        #     ),
-        # )
 
         app = await fb_api.application.get_info()
         assert app.id == "123456789"
@@ -44,13 +37,6 @@ async def test_get_accounts(helpers, fb_api):
             ),
             ),
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{fb_api.app_id}/accounts",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/applications/application_accounts.json",
-        #     ),
-        # )
 
         accounts = await fb_api.application.get_accounts(count=None)
         assert len(accounts.data) == 4

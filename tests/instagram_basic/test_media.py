@@ -17,13 +17,6 @@ async def test_get_info(helpers, api):
                 ),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.instagram.com/{api.version}/{media_id}",
-        #     json=helpers.load_json(
-        #         "testdata/instagram_basic/apidata/media/media_info.json"
-        #     ),
-        # )
 
         media = await api.media.get_info(media_id=media_id)
         assert media.id == media_id
@@ -48,13 +41,6 @@ async def test_get_batch(helpers, api):
                 ),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.instagram.com/{api.version}",
-        #     json=helpers.load_json(
-        #         "testdata/instagram_basic/apidata/media/medias_info.json"
-        #     ),
-        # )
 
         medias = await api.media.get_batch(ids=ids)
         assert medias[ids[0]].id == ids[0]
@@ -80,13 +66,6 @@ async def test_get_children(helpers, api):
                 ),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.instagram.com/{api.version}/{media_id}/children",
-        #     json=helpers.load_json(
-        #         "testdata/instagram_basic/apidata/media/media_children.json"
-        #     ),
-        # )
 
         children = await api.media.get_children(media_id=media_id)
         assert len(children.data) == 2

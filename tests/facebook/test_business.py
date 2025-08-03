@@ -19,13 +19,6 @@ async def test_get_info(helpers, fb_api):
                 ),
             ),
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{b_id}",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/business/business_info.json"
-        #     ),
-        # )
 
         business = await fb_api.business.get_info(business_id=b_id)
         assert business.id == b_id
@@ -52,13 +45,6 @@ async def test_get_batch(helpers, fb_api):
             ),
             ),
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/business/businesses_info.json"
-        #     ),
-        # )
 
         businesses = await fb_api.business.get_batch(ids=b_ids)
         assert businesses[b_ids[0]].id == b_ids[0]

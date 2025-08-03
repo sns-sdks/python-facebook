@@ -18,13 +18,6 @@ async def test_comment_get_info(helpers, api):
                 ),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/{comment_id}",
-        #     json=helpers.load_json(
-        #         "testdata/instagram/apidata/comments/comment_fields.json"
-        #     ),
-        # )
 
         comment = await api.comment.get_info(comment_id=comment_id)
         assert comment.id == comment_id
@@ -50,13 +43,6 @@ async def test_comment_get_batch(helpers, api):
                 ),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}",
-        #     json=helpers.load_json(
-        #         "testdata/instagram/apidata/comments/comments_fields.json"
-        #     ),
-        # )
 
         comments = await api.comment.get_batch(ids=comment_ids)
         assert comments[comment_ids[0]].id == comment_ids[0]
@@ -80,11 +66,6 @@ async def test_comment_get_replies(helpers, api):
                 json=helpers.load_json("testdata/instagram/apidata/comments/replies.json"),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/{comment_id}/replies",
-        #     json=helpers.load_json("testdata/instagram/apidata/comments/replies.json"),
-        # )
 
         replies = await api.comment.get_replies(comment_id=comment_id)
         assert len(replies.data) == 1
@@ -106,13 +87,6 @@ async def test_reply_get_info(helpers, api):
                 ),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/{reply_id}",
-        #     json=helpers.load_json(
-        #         "testdata/instagram/apidata/comments/comment_fields.json"
-        #     ),
-        # )
 
         reply = await api.reply.get_info(reply_id=reply_id)
         assert reply.id == reply_id
@@ -138,13 +112,6 @@ async def test_reply_get_batch(helpers, api):
                 ),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}",
-        #     json=helpers.load_json(
-        #         "testdata/instagram/apidata/comments/comments_fields.json"
-        #     ),
-        # )
 
         replies = await api.reply.get_batch(ids=reply_ids)
         assert replies[reply_ids[0]].id == reply_ids[0]

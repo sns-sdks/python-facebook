@@ -19,13 +19,6 @@ async def test_get_info(helpers, fb_api):
                 ),
             ),
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{msg_id}",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/messages/message_info.json"
-        #     ),
-        # )
 
         message = await fb_api.message.get_info(message_id=msg_id)
         assert message.id == msg_id
@@ -55,13 +48,6 @@ async def test_get_batch(helpers, fb_api):
                 ),
             ),
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/messages/messages_info.json"
-        #     ),
-        # )
 
         messages = await fb_api.message.get_batch(ids=msg_ids)
         assert messages[msg_ids[0]].id == msg_ids[0]

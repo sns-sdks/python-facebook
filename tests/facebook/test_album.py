@@ -27,20 +27,6 @@ async def test_get_info(helpers, fb_api):
                 ),
             ],
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{ab_id}",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/albums/album_info_fields.json"
-        #     ),
-        # )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{ab_id}",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/albums/album_info_default.json"
-        #     ),
-        # )
 
         album = await fb_api.album.get_info(album_id=ab_id)
         assert album.id == ab_id
@@ -75,20 +61,6 @@ async def test_get_batch(helpers, fb_api):
                 ),
             ],
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/albums/albums_info_fields.json"
-        #     ),
-        # )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/albums/albums_info_default.json"
-        #     ),
-        # )
 
         albums = await fb_api.album.get_batch(ids=ab_ids)
         assert albums[ab_ids[0]].id == ab_ids[0]

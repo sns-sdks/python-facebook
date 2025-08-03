@@ -31,11 +31,6 @@ async def test_threads_exchange_user_access_token(helpers):
                 json=helpers.load_json("testdata/base/threads_user_token.json"),
             )
         )
-        # m.add(
-        #     method=responses.POST,
-        #     url=api.EXCHANGE_ACCESS_TOKEN_URL,
-        #     json=helpers.load_json("testdata/base/threads_user_token.json"),
-        # )
 
         r = await api.exchange_user_access_token(response=resp, scope=["threads_basic"])
         assert r["access_token"] == "THQVJ..."
@@ -51,11 +46,6 @@ async def test_threads_exchange_long_lived_user_access_token(helpers):
                 json=helpers.load_json("testdata/base/threads_user_long_lived_token.json"),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.threads.net/oauth/access_token",
-        #     json=helpers.load_json("testdata/base/threads_user_long_lived_token.json"),
-        # )
 
         r = await api.exchange_long_lived_user_access_token()
         assert r["access_token"] == "THQVJ..."
@@ -71,11 +61,6 @@ async def test_threads_refresh_access_token(helpers):
                 json=helpers.load_json("testdata/base/threads_user_long_lived_token.json"),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.threads.net/refresh_access_token",
-        #     json=helpers.load_json("testdata/base/threads_user_long_lived_token.json"),
-        # )
 
         r = await api.refresh_access_token(access_token=api.access_token)
         assert r["access_token"] == "THQVJ..."

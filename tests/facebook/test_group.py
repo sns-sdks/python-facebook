@@ -26,20 +26,6 @@ async def test_get_info(helpers, fb_api):
                 ),
             ]
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{gp_id}",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/groups/group_default_fields.json"
-        #     ),
-        # )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{gp_id}",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/groups/group_fields.json"
-        #     ),
-        # )
 
         gp = await fb_api.group.get_info(group_id=gp_id)
         assert gp.id == gp_id
@@ -74,20 +60,6 @@ async def test_get_batch(helpers, fb_api):
                 ),
             ]
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/groups/groups_default_fields.json"
-        #     ),
-        # )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/groups/groups_fields.json"
-        #     ),
-        # )
 
         gps = await fb_api.group.get_batch(ids=gp_ids)
         assert gps[gp_ids[0]].id == gp_ids[0]
@@ -117,16 +89,6 @@ async def test_get_feed(helpers, fb_api):
                 ),
             ]
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{gp_id}/feed",
-        #     json=helpers.load_json("testdata/facebook/apidata/groups/feed_p1.json"),
-        # )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{gp_id}/feed",
-        #     json=helpers.load_json("testdata/facebook/apidata/groups/feed_p2.json"),
-        # )
 
         feed = await fb_api.group.get_feed(object_id=gp_id)
         assert len(feed.data) == 10

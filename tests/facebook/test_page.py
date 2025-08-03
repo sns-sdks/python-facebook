@@ -35,22 +35,6 @@ async def test_get_info(helpers, fb_api):
             ]
         )
 
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{pid}",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/pages/single_fields_page.json"
-        #     ),
-        # )
-        #
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/facebookapp",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/pages/single_default_page.json"
-        #     ),
-        # )
-
         page = await fb_api.page.get_info(page_id=pid)
         assert page.id == pid
 
@@ -84,18 +68,6 @@ async def test_get_batch(helpers, fb_api):
                 )),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/pages/multi_default_fields.json"
-        #     ),
-        # )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}",
-        #     json=helpers.load_json("testdata/facebook/apidata/pages/multi_pages.json"),
-        # )
 
         data = await fb_api.page.get_batch(ids=page_ids)
         assert page_ids[0] in data.keys()
@@ -127,20 +99,6 @@ async def test_get_feed(helpers, fb_api):
                 )),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{pid}/feed",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/posts/feeds_default_fields_p1.json"
-        #     ),
-        # )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{pid}/feed",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/posts/feeds_default_fields_p2.json"
-        #     ),
-        # )
 
         feed = await fb_api.page.get_feed(object_id=pid, count=None, limit=5)
         assert len(feed.data) == 10
@@ -162,13 +120,6 @@ async def test_get_posts(helpers, fb_api):
                 ),
             ]
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{pid}/posts",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/posts/feeds_default_fields_p1.json"
-        #     ),
-        # )
 
         feed_json = await fb_api.page.get_posts(
             object_id=pid, count=4, limit=5, return_json=True
@@ -192,13 +143,6 @@ async def test_get_published_posts(helpers, fb_api):
                 ),
             ]
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{pid}/published_posts",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/posts/feeds_default_fields_p1.json"
-        #     ),
-        # )
 
         feed = await fb_api.page.get_published_posts(object_id=pid, count=4)
         assert len(feed.data) == 4
@@ -220,13 +164,6 @@ async def test_get_tagged_posts(helpers, fb_api):
                 ),
             ]
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{pid}/tagged",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/posts/feeds_default_fields_p1.json"
-        #     ),
-        # )
 
         feed = await fb_api.page.get_tagged_posts(object_id=pid, count=4)
         assert len(feed.data) == 4
@@ -254,20 +191,6 @@ async def test_get_albums(helpers, fb_api):
                 )),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{pid}/albums",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/albums/albums_list_p1.json"
-        #     ),
-        # )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{pid}/albums",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/albums/albums_list_p2.json"
-        #     ),
-        # )
 
         albums = await fb_api.page.get_albums(object_id=pid, count=None, limit=3)
         assert len(albums.data) == 6
@@ -296,16 +219,6 @@ async def test_get_photos(helpers, fb_api):
                 )),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{pid}/photos",
-        #     json=f"https://graph.facebook.com/{fb_api.version}/{pid}/photos",
-        # )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{pid}/photos",
-        #     json=helpers.load_json("testdata/facebook/apidata/photos/photos_p2.json"),
-        # )
 
         photos = await fb_api.page.get_photos(object_id=pid, count=None, limit=2)
         assert len(photos.data) == 4
@@ -338,20 +251,6 @@ async def test_get_live_videos(helpers, fb_api):
                 )),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{pid}/live_videos",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/live_videos/live_videos_p1.json"
-        #     ),
-        # )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{pid}/live_videos",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/live_videos/live_videos_p2.json"
-        #     ),
-        # )
 
         live_videos = await fb_api.page.get_live_videos(object_id=pid, count=None, limit=3)
         assert len(live_videos.data) == 6
@@ -380,16 +279,6 @@ async def test_get_videos(helpers, fb_api):
                 )),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{pid}/videos",
-        #     json=helpers.load_json("testdata/facebook/apidata/videos/videos_p1.json"),
-        # )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{pid}/videos",
-        #     json=helpers.load_json("testdata/facebook/apidata/videos/videos_p2.json"),
-        # )
 
         videos = await fb_api.page.get_videos(object_id=pid, count=None, limit=3)
         assert len(videos.data) == 5
@@ -412,11 +301,6 @@ async def test_search_pages(helpers, fb_api):
                 )),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/pages/search",
-        #     json=helpers.load_json("testdata/facebook/apidata/pages/search_pages.json"),
-        # )
 
         pages = await fb_api.page.search(q="facebook", count=5, limit=5)
         assert len(pages.data) == 5

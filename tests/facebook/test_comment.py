@@ -18,13 +18,6 @@ async def test_get_info(helpers, fb_api):
                 ),
             ),
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{cm_id}",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/comments/comment_info.json"
-        #     ),
-        # )
 
         comment = await fb_api.comment.get_info(comment_id=cm_id)
         assert comment.id == cm_id
@@ -54,13 +47,6 @@ async def test_get_batch(helpers, fb_api):
                 ),
             ),
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{fb_api.version}",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/comments/comments_info.json"
-        #     ),
-        # )
 
         comments = await fb_api.comment.get_batch(ids=cm_ids)
         assert comments[cm_ids[0]].id == cm_ids[0]
@@ -85,13 +71,7 @@ async def test_create_comment(helpers, fb_api):
                 ),
             ),
         )
-        # m.add(
-        #     method=responses.POST,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{object_id}/comments",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/comments/create_resp.json"
-        #     ),
-        # )
+
         comment = await fb_api.comment.create(object_id=object_id, message="message from api")
         assert comment.id
 
@@ -130,13 +110,7 @@ async def test_update_comment(helpers, fb_api):
                 ),
             ),
         )
-        # m.add(
-        #     method=responses.POST,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{comment_id}",
-        #     json=helpers.load_json(
-        #         "testdata/facebook/apidata/comments/create_resp.json"
-        #     ),
-        # )
+
         comment = await fb_api.comment.update(
             comment_id=comment_id,
             attachment_id="123245",
@@ -169,11 +143,7 @@ async def test_update_comment(helpers, fb_api):
                 json={"success": True},
             ),
         )
-        # m.add(
-        #     method=responses.POST,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{comment_id}",
-        #     json={"success": True},
-        # )
+
         comment = await fb_api.comment.update(
             comment_id=comment_id,
             message="message from api",
@@ -198,10 +168,6 @@ async def test_delete_comment(fb_api):
                 json={"success": True},
             ),
         )
-        # m.add(
-        #     method=responses.DELETE,
-        #     url=f"https://graph.facebook.com/{fb_api.version}/{comment_id}",
-        #     json={"success": True},
-        # )
+
         data = await fb_api.comment.delete(comment_id=comment_id)
         assert data["success"]

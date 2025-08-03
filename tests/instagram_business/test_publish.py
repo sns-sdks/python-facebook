@@ -18,13 +18,6 @@ async def test_get_info(helpers, api):
                 ),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}/{container_id}",
-        #     json=helpers.load_json(
-        #         "testdata/instagram/apidata/publish/container_info.json"
-        #     ),
-        # )
 
         container = await api.container.get_info(container_id=container_id)
         assert container.id == container_id
@@ -50,13 +43,6 @@ async def test_get_batch(helpers, api):
                 ),
             )
         )
-        # m.add(
-        #     method=responses.GET,
-        #     url=f"https://graph.facebook.com/{api.version}",
-        #     json=helpers.load_json(
-        #         "testdata/instagram/apidata/publish/containers_info.json"
-        #     ),
-        # )
 
         containers = await api.container.get_batch(ids=container_ids)
         assert containers[container_ids[0]].id == container_ids[0]
