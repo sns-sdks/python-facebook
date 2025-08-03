@@ -57,7 +57,7 @@ class GraphAPI:
         sleep_seconds_mapping: Optional[Dict[int, int]] = None,
         base_url: Optional[str] = None,
         timeout: Optional[int] = None,
-        proxies: Optional[dict] = None,
+        proxy_mounts: Optional[dict] = None,
         instagram_business_id: Optional[str] = None,
         authorization_url: Optional[str] = None,
         access_token_url: Optional[str] = None,
@@ -68,11 +68,8 @@ class GraphAPI:
         self.app_id = app_id
         self.app_secret = app_secret
         self.access_token = access_token
-
-        self.session = requests.Session()
-        self.client = httpx.AsyncClient()
+        self.client = httpx.AsyncClient(mounts=proxy_mounts)
         self.__timeout = timeout
-        self.proxies = proxies
         self.sleep_on_rate_limit = sleep_on_rate_limit
         self.sleep_seconds_mapping = self._build_sleep_seconds_resource(
             sleep_seconds_mapping=sleep_seconds_mapping
@@ -216,7 +213,6 @@ class GraphAPI:
                 params=args,
                 data=post_args,
                 files=files,
-                # proxies=self.proxies, TODO: setup proxies
                 **kwargs,
             )
         except httpx.HTTPError as ex:
