@@ -79,14 +79,14 @@ You can initialize a ``GraphAPI`` object with three different methods, depending
     # ('https://www.facebook.com/dialog/oauth?response_type=code&client_id=id&redirect_uri=https%3A%2F%2Flocalhost%2F&scope=public_profile&state=PyFacebook', 'PyFacebook')
     # let user to do oauth at the browser opened by link.
     # then get the response url
-    >>> api.exchange_user_access_token(response="url redirected")
+    >>> await api.exchange_user_access_token(response="url redirected")
     # Now the api will get the user access token.
 
 For more info about the different access tokens, see https://developers.facebook.com/docs/facebook-login/guides/access-tokens.
 
 Once you have the user access token, you can get the Facebook data. For example,
 
-    >>> api.get_object(object_id="20531316728")
+    >>> await api.get_object(object_id="20531316728")
     >>> {'name': 'Facebook App', 'id': '20531316728'}
 
 See the code for more operations.
@@ -97,12 +97,12 @@ FacebookAPI
 
 To get the user data::
 
-    >>> fb.user.get_info(user_id="413140042878187")
+    >>> await fb.user.get_info(user_id="413140042878187")
     >>> User(id='413140042878187', name='Kun Liu')
 
 To get the page data::
 
-    >>> fb.page.get_info(page_id="20531316728")
+    >>> await fb.page.get_info(page_id="20531316728")
     >>> Page(id='20531316728', name='Facebook App')
 
 For more info, please, see the code or the docs.
