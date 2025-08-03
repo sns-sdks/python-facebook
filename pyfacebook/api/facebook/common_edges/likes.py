@@ -14,7 +14,7 @@ from pyfacebook.utils.params_utils import enf_comma_separated
 class LikesEdge:
     __slots__ = ()
 
-    def get_likes(
+    async def get_likes(
         self,
         object_id: str,
         fields: Optional[Union[str, list, dict]] = None,
@@ -39,7 +39,7 @@ class LikesEdge:
         if fields is None:
             fields = const.LIKES_FIELDS
 
-        data = self.client.get_connection(
+        data = await self.client.get_connection(
             object_id=object_id,
             connection="likes",
             fields=enf_comma_separated(field="fields", value=fields),
@@ -51,27 +51,27 @@ class LikesEdge:
         else:
             return LikesResponse.new_from_json_dict(data)
 
-    def creat_like(self, object_id: str) -> dict:
+    async def creat_like(self, object_id: str) -> dict:
         """
         Like an object.
 
         :param object_id: ID the facebook object.
         :return: status for the operation.
         """
-        data = self.client.post_object(
+        data = await self.client.post_object(
             object_id=object_id,
             connection="likes",
         )
         return data
 
-    def delete_like(self, object_id: str) -> dict:
+    async def delete_like(self, object_id: str) -> dict:
         """
         Delete likes on object using this endpoint.
 
         :param object_id: ID the facebook object.
         :return: status for the operation.
         """
-        data = self.client.delete_object(
+        data = await self.client.delete_object(
             object_id=object_id,
             connection="likes",
         )

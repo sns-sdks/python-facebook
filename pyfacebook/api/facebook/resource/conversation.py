@@ -11,7 +11,7 @@ from pyfacebook.utils.params_utils import enf_comma_separated
 
 
 class FacebookConversation(BaseResource):
-    def get_info(
+    async def get_info(
         self,
         conversation_id: Optional[str],
         fields: Optional[Union[str, list, tuple]] = None,
@@ -31,7 +31,7 @@ class FacebookConversation(BaseResource):
         if fields is None:
             fields = const.CONVERSATION_FIELDS
 
-        data = self.client.get_object(
+        data = await self.client.get_object(
             object_id=conversation_id,
             fields=enf_comma_separated(field="fields", value=fields),
         )
@@ -40,7 +40,7 @@ class FacebookConversation(BaseResource):
         else:
             return Conversation.new_from_json_dict(data=data)
 
-    def get_batch(
+    async def get_batch(
         self,
         ids: Optional[Union[str, list, tuple]],
         fields: Optional[Union[str, list, tuple]] = None,
@@ -62,7 +62,7 @@ class FacebookConversation(BaseResource):
         if fields is None:
             fields = const.CONVERSATION_FIELDS
 
-        data = self.client.get_objects(
+        data = await self.client.get_objects(
             ids=ids,
             fields=enf_comma_separated(field="fields", value=fields),
         )

@@ -24,7 +24,7 @@ from pyfacebook.utils.params_utils import enf_comma_separated
 
 
 class IGBusinessUser(BaseResource):
-    def get_info(
+    async def get_info(
         self,
         fields: Optional[Union[str, list, tuple]] = None,
         return_json: bool = False,
@@ -45,7 +45,7 @@ class IGBusinessUser(BaseResource):
         if fields is None:
             fields = const.IG_BUSINESS_USER_PUBLIC_FIELDS
 
-        data = self.client.get_object(
+        data = await self.client.get_object(
             object_id=self.client.instagram_business_id,
             fields=enf_comma_separated(field="fields", value=fields),
         )
@@ -54,7 +54,7 @@ class IGBusinessUser(BaseResource):
         else:
             return IgBusUser.new_from_json_dict(data=data)
 
-    def discovery_user(
+    async def discovery_user(
         self,
         username: str,
         fields: Optional[Union[str, list, tuple]] = None,
@@ -76,7 +76,7 @@ class IGBusinessUser(BaseResource):
 
         metric = enf_comma_separated(field="fields", value=fields)
 
-        data = self.client.get_object(
+        data = await self.client.get_object(
             object_id=self.client.instagram_business_id,
             fields=f"business_discovery.username({username}){{{metric}}}",
         )
@@ -85,7 +85,7 @@ class IGBusinessUser(BaseResource):
         else:
             return IgBusDiscoveryUserResponse.new_from_json_dict(data=data)
 
-    def discovery_user_medias(
+    async def discovery_user_medias(
         self,
         username: str,
         fields: Optional[Union[str, list, tuple]] = None,
@@ -123,7 +123,7 @@ class IGBusinessUser(BaseResource):
         since_str = f".since({since})" if since is not None else ""
         until_str = f".until({until})" if until is not None else ""
 
-        data = self.client.get_object(
+        data = await self.client.get_object(
             object_id=self.client.instagram_business_id,
             fields=(
                 f"business_discovery.username({username})"
@@ -136,7 +136,7 @@ class IGBusinessUser(BaseResource):
         else:
             return IgBusDiscoveryUserMediaResponse.new_from_json_dict(data)
 
-    def get_content_publishing_limit(
+    async def get_content_publishing_limit(
         self,
         fields: Optional[Union[str, list, tuple]] = None,
         return_json: bool = False,
@@ -154,7 +154,7 @@ class IGBusinessUser(BaseResource):
         if fields is None:
             fields = const.IG_BUSINESS_CONTENT_PUBLISH_LIMIT_FIELDS
 
-        data = self.client.get_connection(
+        data = await self.client.get_connection(
             object_id=self.client.instagram_business_id,
             connection="content_publishing_limit",
             fields=enf_comma_separated(field="fields", value=fields),
@@ -164,7 +164,7 @@ class IGBusinessUser(BaseResource):
         else:
             return IgBusPublishLimitResponse.new_from_json_dict(data)
 
-    def get_insights(
+    async def get_insights(
         self,
         metric: Union[str, list, tuple],
         period: str,
@@ -218,7 +218,7 @@ class IGBusinessUser(BaseResource):
         if access_token:
             args["access_token"] = access_token
 
-        data = self.client.get_connection(
+        data = await self.client.get_connection(
             object_id=user_id,
             connection="insights",
             **args,
@@ -228,7 +228,7 @@ class IGBusinessUser(BaseResource):
         else:
             return IgBusInsightsResponse.new_from_json_dict(data)
 
-    def get_media(
+    async def get_media(
         self,
         fields: Optional[Union[str, list, tuple]] = None,
         since: Optional[str] = None,
@@ -255,7 +255,7 @@ class IGBusinessUser(BaseResource):
         if fields is None:
             fields = const.IG_BUSINESS_MEDIA_PUBLIC_FIELDS
 
-        data = self.client.get_full_connections(
+        data = await self.client.get_full_connections(
             object_id=self.client.instagram_business_id,
             connection="media",
             count=count,
@@ -269,7 +269,7 @@ class IGBusinessUser(BaseResource):
         else:
             return IgBusMediaResponse.new_from_json_dict(data)
 
-    def get_live_media(
+    async def get_live_media(
         self,
         fields: Optional[Union[str, list, tuple]] = None,
         since: Optional[str] = None,
@@ -297,7 +297,7 @@ class IGBusinessUser(BaseResource):
         if fields is None:
             fields = const.IG_BUSINESS_MEDIA_PUBLIC_FIELDS
 
-        data = self.client.get_full_connections(
+        data = await self.client.get_full_connections(
             object_id=self.client.instagram_business_id,
             connection="live_media",
             count=count,
@@ -311,7 +311,7 @@ class IGBusinessUser(BaseResource):
         else:
             return IgBusMediaResponse.new_from_json_dict(data)
 
-    def get_mentioned_comment(
+    async def get_mentioned_comment(
         self,
         comment_id: str,
         fields: Optional[Union[str, list, tuple]] = None,
@@ -332,7 +332,7 @@ class IGBusinessUser(BaseResource):
             fields = const.IG_BUSINESS_COMMENT_PUBLIC_FIELDS
         fields_inline = enf_comma_separated(field="fields", value=fields)
 
-        data = self.client.get_object(
+        data = await self.client.get_object(
             object_id=self.client.instagram_business_id,
             fields=f"mentioned_comment.comment_id({comment_id}){{{fields_inline}}}",
         )
@@ -342,7 +342,7 @@ class IGBusinessUser(BaseResource):
         else:
             return IgBusMentionedCommentResponse.new_from_json_dict(data)
 
-    def get_mentioned_media(
+    async def get_mentioned_media(
         self,
         media_id: str,
         fields: Optional[Union[str, list, tuple]] = None,
@@ -363,7 +363,7 @@ class IGBusinessUser(BaseResource):
             fields = const.IG_BUSINESS_MENTION_MEDIA_FIELDS
         fields_inline = enf_comma_separated(field="fields", value=fields)
 
-        data = self.client.get_object(
+        data = await self.client.get_object(
             object_id=self.client.instagram_business_id,
             fields=f"mentioned_media.media_id({media_id}){{{fields_inline}}}",
         )
@@ -372,7 +372,7 @@ class IGBusinessUser(BaseResource):
         else:
             return IgBusMentionedMediaResponse.new_from_json_dict(data)
 
-    def get_hashtag_search(
+    async def get_hashtag_search(
         self,
         q: str,
         return_json: bool = False,
@@ -385,7 +385,7 @@ class IGBusinessUser(BaseResource):
             Or return json data. Default is false.
         :return: User stories response information.
         """
-        data = self.client.get(
+        data = await self.client.get(
             path="ig_hashtag_search",
             args={
                 "fields": "id,name",
@@ -398,7 +398,7 @@ class IGBusinessUser(BaseResource):
         else:
             return IgBusHashtagsResponse.new_from_json_dict(data)
 
-    def get_recently_searched_hashtags(
+    async def get_recently_searched_hashtags(
         self,
         fields: Optional[Union[str, list, tuple]] = None,
         count: Optional[int] = 25,
@@ -420,7 +420,7 @@ class IGBusinessUser(BaseResource):
         if fields is None:
             fields = const.IG_BUSINESS_HASHTAG_PUBLIC_FIELDS
 
-        data = self.client.get_full_connections(
+        data = await self.client.get_full_connections(
             object_id=self.client.instagram_business_id,
             connection="recently_searched_hashtags",
             fields=enf_comma_separated(field="fields", value=fields),
@@ -432,7 +432,7 @@ class IGBusinessUser(BaseResource):
         else:
             return IgBusHashtagsResponse.new_from_json_dict(data)
 
-    def get_stories(
+    async def get_stories(
         self,
         fields: Optional[Union[str, list, tuple]] = None,
         count: Optional[int] = 10,
@@ -455,7 +455,7 @@ class IGBusinessUser(BaseResource):
         if fields is None:
             fields = const.IG_BUSINESS_MEDIA_PUBLIC_FIELDS
 
-        data = self.client.get_full_connections(
+        data = await self.client.get_full_connections(
             object_id=self.client.instagram_business_id,
             connection="stories",
             count=count,
@@ -467,7 +467,7 @@ class IGBusinessUser(BaseResource):
         else:
             return IgBusMediaResponse.new_from_json_dict(data)
 
-    def get_tagged_media(
+    async def get_tagged_media(
         self,
         fields: Optional[Union[str, list, tuple]] = None,
         count: Optional[int] = 25,
@@ -490,7 +490,7 @@ class IGBusinessUser(BaseResource):
         if fields is None:
             fields = const.IG_BUSINESS_MEDIA_PUBLIC_FIELDS
 
-        data = self.client.get_full_connections(
+        data = await self.client.get_full_connections(
             object_id=self.client.instagram_business_id,
             connection="tags",
             count=count,
@@ -502,7 +502,7 @@ class IGBusinessUser(BaseResource):
         else:
             return IgBusMediaResponse.new_from_json_dict(data)
 
-    def get_available_catalogs(
+    async def get_available_catalogs(
         self, return_json: bool = False
     ) -> Union[IgBusCatalogsResponse, dict]:
         """
@@ -513,7 +513,7 @@ class IGBusinessUser(BaseResource):
         :return: catalog data
         """
 
-        data = self.client.get_connection(
+        data = await self.client.get_connection(
             object_id=self.client.instagram_business_id,
             connection="available_catalogs",
         )
@@ -522,7 +522,7 @@ class IGBusinessUser(BaseResource):
         else:
             return IgBusCatalogsResponse.new_from_json_dict(data)
 
-    def get_catalog_product_search(
+    async def get_catalog_product_search(
         self,
         catalog_id: str,
         q: Optional[str] = None,
@@ -544,7 +544,7 @@ class IGBusinessUser(BaseResource):
         :return: Catalog products data.
         """
 
-        data = self.client.get_full_connections(
+        data = await self.client.get_full_connections(
             object_id=self.client.instagram_business_id,
             connection="catalog_product_search",
             catalog_id=catalog_id,
@@ -557,7 +557,7 @@ class IGBusinessUser(BaseResource):
         else:
             return IgBusProductsResponse.new_from_json_dict(data)
 
-    def get_product_appeal(
+    async def get_product_appeal(
         self,
         product_id: str,
         return_json: bool = False,
@@ -571,7 +571,7 @@ class IGBusinessUser(BaseResource):
         :return: Product appeals data.
         """
 
-        data = self.client.get_connection(
+        data = await self.client.get_connection(
             object_id=self.client.instagram_business_id,
             connection="product_appeal",
             product_id=product_id,

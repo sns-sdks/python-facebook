@@ -12,7 +12,7 @@ from pyfacebook.utils.params_utils import enf_comma_separated
 
 
 class FacebookComment(BaseResource, LikesEdge):
-    def get_info(
+    async def get_info(
         self,
         comment_id: Optional[str],
         fields: Optional[Union[str, list, tuple]] = None,
@@ -32,7 +32,7 @@ class FacebookComment(BaseResource, LikesEdge):
         if fields is None:
             fields = const.COMMENT_PUBLIC_FIELDS
 
-        data = self.client.get_object(
+        data = await self.client.get_object(
             object_id=comment_id,
             fields=enf_comma_separated(field="fields", value=fields),
         )
@@ -41,7 +41,7 @@ class FacebookComment(BaseResource, LikesEdge):
         else:
             return Comment.new_from_json_dict(data=data)
 
-    def get_batch(
+    async def get_batch(
         self,
         ids: Optional[Union[str, list, tuple]],
         fields: Optional[Union[str, list, tuple]] = None,
@@ -63,7 +63,7 @@ class FacebookComment(BaseResource, LikesEdge):
         if fields is None:
             fields = const.COMMENT_PUBLIC_FIELDS
 
-        data = self.client.get_objects(
+        data = await self.client.get_objects(
             ids=ids,
             fields=enf_comma_separated(field="fields", value=fields),
         )
@@ -75,7 +75,7 @@ class FacebookComment(BaseResource, LikesEdge):
                 for comment_id, item in data.items()
             }
 
-    def create(
+    async def create(
         self,
         object_id: str,
         attachment_id: Optional[str] = None,
@@ -116,7 +116,7 @@ class FacebookComment(BaseResource, LikesEdge):
         if message is not None:
             data["message"] = message
 
-        data = self.client.post_object(
+        data = await self.client.post_object(
             object_id=object_id,
             connection="comments",
             params=params,
@@ -129,7 +129,7 @@ class FacebookComment(BaseResource, LikesEdge):
         else:
             return Comment.new_from_json_dict(data=data)
 
-    def update(
+    async def update(
         self,
         comment_id: str,
         attachment_id: Optional[str] = None,
@@ -175,7 +175,7 @@ class FacebookComment(BaseResource, LikesEdge):
         if is_hidden is not None:
             data["is_hidden"] = is_hidden
 
-        data = self.client.post_object(
+        data = await self.client.post_object(
             object_id=comment_id,
             params=params,
             data=data,
@@ -187,12 +187,12 @@ class FacebookComment(BaseResource, LikesEdge):
         else:
             return Comment.new_from_json_dict(data=data)
 
-    def delete(self, comment_id: str):
+    async def delete(self, comment_id: str):
         """
         Delete a comment by using this endpoint
 
         :param comment_id: ID for the comment.
         :return: status for delete comment.
         """
-        data = self.client.delete_object(object_id=comment_id)
+        data = await self.client.delete_object(object_id=comment_id)
         return data

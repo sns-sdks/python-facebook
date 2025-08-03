@@ -3,59 +3,80 @@
 """
 
 import pytest
-import responses
+import respx
 
 from pyfacebook import BasicDisplayAPI
 from pyfacebook.exceptions import LibraryError
 
 
-def test_oath_flow(helpers):
+@pytest.mark.asyncio
+async def test_oath_flow(helpers):
     api = BasicDisplayAPI(app_id="id", app_secret="secret", oauth_flow=True)
 
     # test get authorization url
     _, state = api.get_authorization_url()
 
     # if user give authorize.
-    resp = "https://localhost/?code=code&state=PyFacebook#_"
+    resp = "https://localhost/?code=code&state=PyFacebook"
 
-    with responses.RequestsMock() as m:
-        m.add(
-            method=responses.POST,
-            url=api.EXCHANGE_ACCESS_TOKEN_URL,
-            json=helpers.load_json("testdata/base/basic_display_api_user_token.json"),
+    with respx.mock:
+        respx.post(api.EXCHANGE_ACCESS_TOKEN_URL).mock(
+            return_value=respx.MockResponse(
+                status_code=200,
+                json=helpers.load_json("testdata/base/basic_display_api_user_token.json"),
+            )
         )
+        # m.add(
+        #     method=responses.POST,
+        #     url=api.EXCHANGE_ACCESS_TOKEN_URL,
+        #     json=helpers.load_json("testdata/base/basic_display_api_user_token.json"),
+        # )
 
-        r = api.exchange_user_access_token(response=resp)
+        r = await api.exchange_user_access_token(response=resp)
         assert r["access_token"] == "token"
 
 
-def test_exchange_long_lived_token(helpers):
+@pytest.mark.asyncio
+async def test_exchange_long_lived_token(helpers):
     api = BasicDisplayAPI(access_token="token")
 
     # test exchange long-lived page token
-    with responses.RequestsMock() as m:
-        m.add(
-            method=responses.GET,
-            url=f"https://graph.instagram.com/access_token",
-            json=helpers.load_json("testdata/base/long_term_token.json"),
+    with respx.mock:
+        respx.get(f"https://graph.instagram.com/access_token").mock(
+            return_value=respx.MockResponse(
+                status_code=200,
+                json=helpers.load_json("testdata/base/long_term_token.json"),
+            )
         )
+        # m.add(
+        #     method=responses.GET,
+        #     url=f"https://graph.instagram.com/access_token",
+        #     json=helpers.load_json("testdata/base/long_term_token.json"),
+        # )
 
-        res = api.exchange_long_lived_user_access_token()
+        res = await api.exchange_long_lived_user_access_token()
         assert res["access_token"] == "token"
 
 
-def test_refresh_token(helpers):
+@pytest.mark.asyncio
+async def test_refresh_token(helpers):
     api = BasicDisplayAPI(access_token="token")
 
     # test exchange long-lived page token
-    with responses.RequestsMock() as m:
-        m.add(
-            method=responses.GET,
-            url=f"https://graph.instagram.com/refresh_access_token",
-            json=helpers.load_json("testdata/base/long_term_token.json"),
+    with respx.mock:
+        respx.get(f"https://graph.instagram.com/refresh_access_token").mock(
+            return_value=respx.MockResponse(
+                status_code=200,
+                json=helpers.load_json("testdata/base/long_term_token.json"),
+            )
         )
+        # m.add(
+        #     method=responses.GET,
+        #     url=f"https://graph.instagram.com/refresh_access_token",
+        #     json=helpers.load_json("testdata/base/long_term_token.json"),
+        # )
 
-        res = api.refresh_access_token(access_token=api.access_token)
+        res = await api.refresh_access_token(access_token=api.access_token)
         assert res["access_token"] == "token"
 
 

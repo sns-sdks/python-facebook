@@ -1,26 +1,37 @@
 """
     Tests for media.
 """
+from itertools import chain, repeat
 
-import responses
+import pytest
+import respx
 
 
-def test_get_info(helpers, api):
+@pytest.mark.asyncio
+async def test_get_info(helpers, api):
     media_id = "17896129349106152"
 
-    with responses.RequestsMock() as m:
-        m.add(
-            method=responses.GET,
-            url=f"https://graph.facebook.com/{api.version}/{media_id}",
-            json=helpers.load_json(
-                "testdata/instagram/apidata/medias/media_default.json"
-            ),
+    with respx.mock:
+        respx.get(f"https://graph.facebook.com/{api.version}/{media_id}").mock(
+            return_value=respx.MockResponse(
+                status_code=200,
+                json=helpers.load_json(
+                    "testdata/instagram/apidata/medias/media_default.json"
+                ),
+            )
         )
+        # m.add(
+        #     method=responses.GET,
+        #     url=f"https://graph.facebook.com/{api.version}/{media_id}",
+        #     json=helpers.load_json(
+        #         "testdata/instagram/apidata/medias/media_default.json"
+        #     ),
+        # )
 
-        media = api.media.get_info(media_id=media_id)
+        media = await api.media.get_info(media_id=media_id)
         assert media.id == media_id
 
-        media_json = api.media.get_info(
+        media_json = await api.media.get_info(
             media_id=media_id,
             fields="id,caption,comments_count,children{id,media_type,media_url,permalink,shortcode,thumbnail_url,timestamp},like_count,media_type,media_url,permalink,timestamp",
             return_json=True,
@@ -28,22 +39,31 @@ def test_get_info(helpers, api):
         assert media_json["id"] == media_id
 
 
-def test_get_batch(helpers, api):
+@pytest.mark.asyncio
+async def test_get_batch(helpers, api):
     media_ids = ["17893085207160254", "17896129349106152"]
 
-    with responses.RequestsMock() as m:
-        m.add(
-            method=responses.GET,
-            url=f"https://graph.facebook.com/{api.version}",
-            json=helpers.load_json(
-                "testdata/instagram/apidata/medias/medias_fields.json"
-            ),
+    with respx.mock:
+        respx.get(f"https://graph.facebook.com/{api.version}").mock(
+            return_value=respx.MockResponse(
+                status_code=200,
+                json=helpers.load_json(
+                    "testdata/instagram/apidata/medias/medias_fields.json"
+                ),
+            )
         )
+        # m.add(
+        #     method=responses.GET,
+        #     url=f"https://graph.facebook.com/{api.version}",
+        #     json=helpers.load_json(
+        #         "testdata/instagram/apidata/medias/medias_fields.json"
+        #     ),
+        # )
 
-        medias = api.media.get_batch(ids=media_ids)
+        medias = await api.media.get_batch(ids=media_ids)
         assert medias[media_ids[0]].id == media_ids[0]
 
-        medias_json = api.media.get_batch(
+        medias_json = await api.media.get_batch(
             ids=media_ids,
             fields="id,caption,comments_count,children{id,media_type,media_url,permalink,shortcode,thumbnail_url,timestamp},like_count,media_type,media_url,permalink,timestamp",
             return_json=True,
@@ -51,107 +71,155 @@ def test_get_batch(helpers, api):
         assert medias_json[media_ids[0]]["id"] == media_ids[0]
 
 
-def test_get_comments(helpers, api):
+@pytest.mark.asyncio
+async def test_get_comments(helpers, api):
     media_id = "17846368219941692"
-    with responses.RequestsMock() as m:
-        m.add(
-            method=responses.GET,
-            url=f"https://graph.facebook.com/{api.version}/{media_id}/comments",
-            json=helpers.load_json(
-                "testdata/instagram/apidata/medias/comments_p1.json"
-            ),
+    with respx.mock:
+        respx.get(f"https://graph.facebook.com/{api.version}/{media_id}/comments").mock(
+            side_effect=chain(
+                [respx.MockResponse(
+                    status_code=200,
+                    json=helpers.load_json(
+                        "testdata/instagram/apidata/medias/comments_p1.json"
+                    ),
+                )],
+                repeat(respx.MockResponse(
+                    status_code=200,
+                    json=helpers.load_json(
+                        "testdata/instagram/apidata/medias/comments_p2.json"
+                    ),
+                )),
+            )
         )
-        m.add(
-            method=responses.GET,
-            url=f"https://graph.facebook.com/{api.version}/{media_id}/comments",
-            json=helpers.load_json(
-                "testdata/instagram/apidata/medias/comments_p2.json"
-            ),
-        )
+        # m.add(
+        #     method=responses.GET,
+        #     url=f"https://graph.facebook.com/{api.version}/{media_id}/comments",
+        #     json=helpers.load_json(
+        #         "testdata/instagram/apidata/medias/comments_p1.json"
+        #     ),
+        # )
+        # m.add(
+        #     method=responses.GET,
+        #     url=f"https://graph.facebook.com/{api.version}/{media_id}/comments",
+        #     json=helpers.load_json(
+        #         "testdata/instagram/apidata/medias/comments_p2.json"
+        #     ),
+        # )
 
-        comments = api.media.get_comments(media_id=media_id)
+        comments = await api.media.get_comments(media_id=media_id)
         assert len(comments.data) == 4
         assert comments.data[0].id == "17858154961981086"
 
-        comments_json = api.media.get_comments(
+        comments_json = await api.media.get_comments(
             media_id=media_id,
             return_json=True,
         )
         assert comments_json["data"][0]["id"] == "17892250648466172"
 
 
-def test_get_children(helpers, api):
+@pytest.mark.asyncio
+async def test_get_children(helpers, api):
     media_id = "17846368219941692"
-    with responses.RequestsMock() as m:
-        m.add(
-            method=responses.GET,
-            url=f"https://graph.facebook.com/{api.version}/{media_id}/children",
-            json=helpers.load_json("testdata/instagram/apidata/medias/children.json"),
+    with respx.mock:
+        respx.get(f"https://graph.facebook.com/{api.version}/{media_id}/children").mock(
+            return_value=respx.MockResponse(
+                status_code=200,
+                json=helpers.load_json("testdata/instagram/apidata/medias/children.json")
+            )
         )
+        # m.add(
+        #     method=responses.GET,
+        #     url=f"https://graph.facebook.com/{api.version}/{media_id}/children",
+        #     json=helpers.load_json("testdata/instagram/apidata/medias/children.json"),
+        # )
 
-        children = api.media.get_children(media_id=media_id)
+        children = await api.media.get_children(media_id=media_id)
         assert len(children.data) == 2
         assert children.data[0].media_type == "IMAGE"
 
-        children_json = api.media.get_children(
+        children_json = await api.media.get_children(
             media_id=media_id,
             return_json=True,
         )
         assert children_json["data"][0]["id"] == "17924318443748703"
 
 
-def test_get_insights(helpers, api):
+@pytest.mark.asyncio
+async def test_get_insights(helpers, api):
     media_id = "17846368219941692"
-    with responses.RequestsMock() as m:
-        m.add(
-            method=responses.GET,
-            url=f"https://graph.facebook.com/{api.version}/{media_id}/insights",
-            json=helpers.load_json("testdata/instagram/apidata/medias/insights.json"),
+    with respx.mock:
+        respx.get(f"https://graph.facebook.com/{api.version}/{media_id}/insights").mock(
+            return_value=respx.MockResponse(
+                status_code=200,
+                json=helpers.load_json("testdata/instagram/apidata/medias/insights.json"),
+            )
         )
+        # m.add(
+        #     method=responses.GET,
+        #     url=f"https://graph.facebook.com/{api.version}/{media_id}/insights",
+        #     json=helpers.load_json("testdata/instagram/apidata/medias/insights.json"),
+        # )
 
-        insights = api.media.get_insights(
+        insights = await api.media.get_insights(
             media_id=media_id,
             metric="impressions,reach,saved",
         )
         assert len(insights.data) == 3
         assert insights.data[0].name == "impressions"
 
-        insights_json = api.media.get_insights(
+        insights_json = await api.media.get_insights(
             media_id=media_id,
             metric="impressions,reach,saved",
             return_json=True,
         )
         assert insights_json["data"][0]["name"] == "impressions"
 
-    with responses.RequestsMock() as m:
-        m.add(
-            method=responses.GET,
-            url=f"https://graph.facebook.com/{api.version}/{media_id}/insights",
-            json=helpers.load_json(
-                "testdata/instagram/apidata/medias/insights_new.json"
-            ),
+    with respx.mock:
+        respx.get(f"https://graph.facebook.com/{api.version}/{media_id}/insights").mock(
+            return_value=respx.MockResponse(
+                status_code=200,
+                json=helpers.load_json(
+                    "testdata/instagram/apidata/medias/insights_new.json"
+                ),
+            )
         )
+        # m.add(
+        #     method=responses.GET,
+        #     url=f"https://graph.facebook.com/{api.version}/{media_id}/insights",
+        #     json=helpers.load_json(
+        #         "testdata/instagram/apidata/medias/insights_new.json"
+        #     ),
+        # )
 
-        insights = api.media.get_insights(
+        insights = await api.media.get_insights(
             media_id=media_id, metric="profile_activity", breakdown=["action_type"]
         )
         assert insights.data[0].total_value.breakdowns[0].results[0].value == 11
 
 
-def test_get_product_tags(helpers, api):
+@pytest.mark.asyncio
+async def test_get_product_tags(helpers, api):
     media_id = "90010778325754"
-    with responses.RequestsMock() as m:
-        m.add(
-            method=responses.GET,
-            url=f"https://graph.facebook.com/{api.version}/{media_id}/product_tags",
-            json=helpers.load_json(
-                "testdata/instagram/apidata/medias/product_tags.json"
-            ),
+    with respx.mock:
+        respx.get(f"https://graph.facebook.com/{api.version}/{media_id}/product_tags").mock(
+            return_value=respx.MockResponse(
+                status_code=200,
+                json=helpers.load_json(
+                    "testdata/instagram/apidata/medias/product_tags.json"
+                ),
+            )
         )
+        # m.add(
+        #     method=responses.GET,
+        #     url=f"https://graph.facebook.com/{api.version}/{media_id}/product_tags",
+        #     json=helpers.load_json(
+        #         "testdata/instagram/apidata/medias/product_tags.json"
+        #     ),
+        # )
 
-        tags = api.media.get_product_tags(media_id=media_id)
+        tags = await api.media.get_product_tags(media_id=media_id)
         assert len(tags.data) == 1
         assert tags.data[0].product_id == 3231775643511089
 
-        tags_json = api.media.get_product_tags(media_id=media_id, return_json=True)
+        tags_json = await api.media.get_product_tags(media_id=media_id, return_json=True)
         assert tags_json["data"][0]["review_status"] == "approved"

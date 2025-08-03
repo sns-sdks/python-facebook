@@ -12,7 +12,7 @@ from pyfacebook.utils.params_utils import enf_comma_separated
 class LiveVideosEdge:
     __slots__ = ()
 
-    def get_live_videos(
+    async def get_live_videos(
         self,
         object_id: str,
         fields: Optional[Union[str, list, dict]] = None,
@@ -43,7 +43,7 @@ class LiveVideosEdge:
         if fields is None:
             fields = const.LIVE_VIDEO_PUBLIC_FIELDS
 
-        data = self.client.get_full_connections(
+        data = await self.client.get_full_connections(
             object_id=object_id,
             connection="live_videos",
             count=count,

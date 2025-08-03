@@ -11,7 +11,7 @@ from pyfacebook.utils.params_utils import enf_comma_separated
 
 
 class IGBusinessHashtag(BaseResource):
-    def get_info(
+    async def get_info(
         self,
         hashtag_id: str,
         fields: Optional[Union[str, list, tuple]] = None,
@@ -30,7 +30,7 @@ class IGBusinessHashtag(BaseResource):
         if fields is None:
             fields = const.IG_BUSINESS_HASHTAG_PUBLIC_FIELDS
 
-        data = self.client.get_object(
+        data = await self.client.get_object(
             object_id=hashtag_id,
             fields=enf_comma_separated(field="fields", value=fields),
         )
@@ -39,7 +39,7 @@ class IGBusinessHashtag(BaseResource):
         else:
             return IgBusHashtag.new_from_json_dict(data=data)
 
-    def get_batch(
+    async def get_batch(
         self,
         ids: Optional[Union[str, list, tuple]],
         fields: Optional[Union[str, list, tuple]] = None,
@@ -60,7 +60,7 @@ class IGBusinessHashtag(BaseResource):
         if fields is None:
             fields = const.IG_BUSINESS_HASHTAG_PUBLIC_FIELDS
 
-        data = self.client.get_objects(
+        data = await self.client.get_objects(
             ids=ids, fields=enf_comma_separated(field="fields", value=fields)
         )
         if return_json:
@@ -71,7 +71,7 @@ class IGBusinessHashtag(BaseResource):
                 for tag_id, item in data.items()
             }
 
-    def get_top_media(
+    async def get_top_media(
         self,
         hashtag_id: str,
         fields: Optional[Union[str, list, tuple]] = None,
@@ -96,7 +96,7 @@ class IGBusinessHashtag(BaseResource):
         if fields is None:
             fields = const.IG_BUSINESS_MEDIA_PUBLIC_FIELDS
 
-        data = self.client.get_full_connections(
+        data = await self.client.get_full_connections(
             object_id=hashtag_id,
             connection="top_media",
             user_id=self.client.instagram_business_id,
@@ -110,7 +110,7 @@ class IGBusinessHashtag(BaseResource):
         else:
             return IgBusMediaResponse.new_from_json_dict(data)
 
-    def get_recent_media(
+    async def get_recent_media(
         self,
         hashtag_id: str,
         fields: Optional[Union[str, list, tuple]] = None,
@@ -135,7 +135,7 @@ class IGBusinessHashtag(BaseResource):
         if fields is None:
             fields = const.IG_BUSINESS_MEDIA_PUBLIC_FIELDS
 
-        data = self.client.get_full_connections(
+        data = await self.client.get_full_connections(
             object_id=hashtag_id,
             connection="recent_media",
             user_id=self.client.instagram_business_id,

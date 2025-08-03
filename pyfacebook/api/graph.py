@@ -1,22 +1,27 @@
 """
 This module contains the GraphAPI class, its subclass BasicDisplayAPI and the class ServerSentEventAPI.
 """
-
+import asyncio
 import hashlib
 import hmac
 import logging
 import re
 import time
+from json import dumps
 from urllib.parse import parse_qsl, urlparse
 from typing import Any, Dict, List, Optional, Tuple, Union
 from warnings import warn
 
 import requests
+import httpx
+from authlib.common.encoding import to_unicode
 from requests import Response
+from authlib.integrations.httpx_client import AsyncOAuth2Client
 from requests_oauthlib.oauth2_session import OAuth2Session
 from requests_oauthlib.compliance_fixes.facebook import facebook_compliance_fix
 
 from pyfacebook import RateLimit, PercentSecond, FacebookError, LibraryError
+from pyfacebook.utils.facebook_compliance_fix import facebook_compliance_fix
 
 logger = logging.getLogger(__name__)
 
@@ -44,7 +49,7 @@ class GraphAPI:
         app_id: Optional[str] = None,
         app_secret: Optional[str] = None,
         access_token: Optional[str] = None,
-        application_only_auth: bool = False,
+        # application_only_auth: bool = False,
         oauth_flow: bool = False,
         version: Optional[str] = None,
         ignore_version_check: Optional[bool] = False,
@@ -65,6 +70,7 @@ class GraphAPI:
         self.access_token = access_token
 
         self.session = requests.Session()
+        self.client = httpx.AsyncClient()
         self.__timeout = timeout
         self.proxies = proxies
         self.sleep_on_rate_limit = sleep_on_rate_limit
@@ -108,9 +114,10 @@ class GraphAPI:
         # Token
         if access_token:
             self.access_token = access_token
-        elif application_only_auth and all([self.app_id, self.app_secret]):
-            data = self.get_app_token()
-            self.access_token = data["access_token"]
+        # I dont think we can automatically get app token now with async
+        # elif application_only_auth and all([self.app_id, self.app_secret]):
+        #     data = self.get_app_token()
+        #     self.access_token = data["access_token"]
         elif oauth_flow and all([self.app_id, self.app_secret]):
             pass
         else:
@@ -171,7 +178,7 @@ class GraphAPI:
         args["appsecret_proof"] = secret_proof
         return args
 
-    def _request(
+    async def _request(
         self,
         url: str,
         args: Optional[dict] = None,
@@ -202,17 +209,17 @@ class GraphAPI:
             url = self.base_url + url
 
         try:
-            response = self.session.request(
+            response = await self.client.request(
                 method=verb,
                 url=url,
                 timeout=self.__timeout,
                 params=args,
                 data=post_args,
                 files=files,
-                proxies=self.proxies,
+                # proxies=self.proxies, TODO: setup proxies
                 **kwargs,
             )
-        except requests.HTTPError as ex:
+        except httpx.HTTPError as ex:
             raise LibraryError({"message": ex.args})
 
         # check headers
@@ -222,7 +229,7 @@ class GraphAPI:
             sleep_seconds = self.rate_limit.get_sleep_seconds(
                 sleep_data=self.sleep_seconds_mapping
             )
-            time.sleep(sleep_seconds)
+            await asyncio.sleep(sleep_seconds)
         return response
 
     def _parse_response(self, response: Response) -> dict:
@@ -253,7 +260,7 @@ class GraphAPI:
         if "error" in data:
             raise FacebookError(data)
 
-    def get(self, path, args):
+    async def get(self, path, args) -> dict:
         """
         Send GET request.
 
@@ -261,14 +268,14 @@ class GraphAPI:
         :param args: args for request.
         :return: Response data
         """
-        resp = self._request(
+        resp = await self._request(
             url=f"{self.version}/{path}",
             args=args,
         )
         data = self._parse_response(resp)
         return data
 
-    def get_object(self, object_id: str, fields: str = "", **kwargs) -> dict:
+    async def get_object(self, object_id: str, fields: str = "", **kwargs) -> dict:
         """
         Get object information by object id.
 
@@ -281,14 +288,14 @@ class GraphAPI:
         if kwargs:
             args.update(kwargs)
 
-        resp = self._request(
+        resp = await self._request(
             url=f"{self.version}/{object_id}",
             args=args,
         )
         data = self._parse_response(resp)
         return data
 
-    def get_objects(self, ids: str, fields: str = "", **kwargs) -> dict:
+    async def get_objects(self, ids: str, fields: str = "", **kwargs) -> dict:
         """
         Get objects information by multi object ids.
 
@@ -301,11 +308,11 @@ class GraphAPI:
         if kwargs:
             args.update(kwargs)
 
-        resp = self._request(url=f"{self.version}", args=args)
+        resp = await self._request(url=f"{self.version}", args=args)
         data = self._parse_response(resp)
         return data
 
-    def get_connection(
+    async def get_connection(
         self,
         object_id: str,
         connection: str,
@@ -319,13 +326,13 @@ class GraphAPI:
         :param kwargs: Additional parameters for different connections.
         :return: Response data
         """
-        resp = self._request(
+        resp = await self._request(
             url=f"{self.version}/{object_id}/{connection}", args=kwargs
         )
         data = self._parse_response(resp)
         return data
 
-    def get_full_connections(
+    async def get_full_connections(
         self,
         object_id: str,
         connection: str,
@@ -351,7 +358,7 @@ class GraphAPI:
             if limit is not None:
                 kwargs["limit"] = limit
 
-            data = self.get_connection(
+            data = await self.get_connection(
                 object_id=object_id,
                 connection=connection,
                 **kwargs,
@@ -375,7 +382,7 @@ class GraphAPI:
         data["data"] = data_set
         return data
 
-    def discovery_user_media(
+    async def discovery_user_media(
         self,
         username: str,
         fields: str = "",
@@ -417,7 +424,7 @@ class GraphAPI:
             )
             args = {"fields": fds}
 
-            data = self.get(
+            data = await self.get(
                 path=self.instagram_business_id,
                 args=args,
             )
@@ -440,7 +447,7 @@ class GraphAPI:
         data["data"] = media_set
         return data
 
-    def post_object(
+    async def post_object(
         self,
         object_id: str,
         connection: Optional[str] = None,
@@ -465,7 +472,7 @@ class GraphAPI:
         if connection:
             path += f"/{connection}"
 
-        resp = self._request(
+        resp = await self._request(
             url=path,
             args=params,
             post_args=data,
@@ -476,7 +483,7 @@ class GraphAPI:
         data = self._parse_response(resp)
         return data
 
-    def delete_object(
+    async def delete_object(
         self,
         object_id: str,
         connection: Optional[str] = None,
@@ -494,7 +501,7 @@ class GraphAPI:
         if connection:
             path += f"/{connection}"
 
-        resp = self._request(
+        resp = await self._request(
             url=path,
             verb="DELETE",
             **kwargs,
@@ -508,7 +515,7 @@ class GraphAPI:
         scope: Optional[Union[List[str], str]] = None,
         state: Optional[str] = None,
         **kwargs,
-    ) -> OAuth2Session:
+    ) -> AsyncOAuth2Client:
         """
         :param redirect_uri: The URL that you want to redirect the person logging in back to.
         :param scope: A list of permission string to request from the person using your app.
@@ -527,14 +534,15 @@ class GraphAPI:
         if state is None:
             state = self.state
 
-        session = OAuth2Session(
+        session = AsyncOAuth2Client(
             client_id=self.app_id,
             scope=scope,
             redirect_uri=redirect_uri,
             state=state,
             **kwargs,
         )
-        session = facebook_compliance_fix(session)
+
+        session.register_compliance_hook("access_token_response", facebook_compliance_fix)
         return session
 
     def get_authorization_url(
@@ -561,12 +569,13 @@ class GraphAPI:
             redirect_uri=redirect_uri, scope=scope, state=state, **kwargs
         )
         url_kwargs = {} if url_kwargs is None else url_kwargs
-        authorization_url, state = session.authorization_url(
-            url=self.authorization_url, **url_kwargs
+        state = self.state if state is None else state
+        authorization_url, state = session.create_authorization_url(
+            url=self.authorization_url, state=state, **url_kwargs
         )
         return authorization_url, state
 
-    def exchange_user_access_token(
+    async def exchange_user_access_token(
         self,
         response: str,
         redirect_uri: Optional[str] = None,
@@ -586,16 +595,16 @@ class GraphAPI:
             redirect_uri=redirect_uri, scope=scope, state=state, **kwargs
         )
 
-        session.fetch_token(
-            self.access_token_url,
+        await session.fetch_token(
+            url=self.access_token_url,
             client_secret=self.app_secret,
             authorization_response=response,
         )
-        self.access_token = session.access_token
+        self.access_token = session.token["access_token"]
 
         return session.token
 
-    def exchange_page_access_token(
+    async def exchange_page_access_token(
         self, page_id: str, access_token: Optional[str] = None
     ) -> str:
         """
@@ -612,7 +621,7 @@ class GraphAPI:
         if access_token is None:
             access_token = self.access_token
 
-        resp = self._request(
+        resp = await self._request(
             url=f"{self.version}/{page_id}",
             args={"fields": "access_token", "access_token": access_token},
             auth_need=False,
@@ -629,7 +638,7 @@ class GraphAPI:
             )
         return data["access_token"]
 
-    def exchange_long_lived_user_access_token(self, access_token=None) -> dict:
+    async def exchange_long_lived_user_access_token(self, access_token=None) -> dict:
         """
         Generate long-lived token by short-lived token, Long-lived token generally lasts about 60 days.
 
@@ -645,7 +654,7 @@ class GraphAPI:
             "fb_exchange_token": access_token,
         }
 
-        resp = self._request(
+        resp = await self._request(
             url=self.access_token_url,
             args=args,
             auth_need=False,
@@ -653,7 +662,7 @@ class GraphAPI:
         data = self._parse_response(resp)
         return data
 
-    def exchange_long_lived_page_access_token(
+    async def exchange_long_lived_page_access_token(
         self, user_id: str, access_token: Optional[str] = None
     ) -> dict:
         """
@@ -664,14 +673,14 @@ class GraphAPI:
         :return: Data for Long-lived page token
         """
 
-        data = self.get_connection(
+        data = await self.get_connection(
             object_id=user_id,
             connection="accounts",
             access_token=access_token,
         )
         return data
 
-    def get_app_token(
+    async def get_app_token(
         self, app_id: Optional[str] = None, app_secret: Optional[str] = None
     ) -> dict:
         """
@@ -692,7 +701,7 @@ class GraphAPI:
         if app_secret is None:
             app_secret = self.app_secret
 
-        resp = self._request(
+        resp = await self._request(
             url=self.access_token_url,
             args={
                 "grant_type": "client_credentials",
@@ -704,7 +713,7 @@ class GraphAPI:
         data = self._parse_response(resp)
         return data
 
-    def debug_token(self, input_token: str, access_token: Optional[str] = None) -> dict:
+    async def debug_token(self, input_token: str, access_token: Optional[str] = None) -> dict:
         """
         Get information (such as the scopes or the token expiration dates) about the ``input_token``
         given optionally the an ``access_token``, which is an app token.
@@ -726,7 +735,7 @@ class GraphAPI:
         if access_token is None:
             access_token = self.access_token
 
-        resp = self._request(
+        resp = await self._request(
             url=f"{self.version}/debug_token",
             args={"input_token": input_token, "access_token": access_token},
             auth_need=False,
@@ -785,7 +794,7 @@ class BasicDisplayAPI(GraphAPI):
         """
         return None
 
-    def exchange_user_access_token(
+    async def exchange_user_access_token(
         self,
         response: str,
         redirect_uri: Optional[str] = None,
@@ -805,17 +814,17 @@ class BasicDisplayAPI(GraphAPI):
             redirect_uri=redirect_uri, scope=scope, state=state, **kwargs
         )
 
-        session.fetch_token(
+        await session.fetch_token(
             self.access_token_url,
             client_secret=self.app_secret,
             authorization_response=response,
             include_client_id=True,
         )
-        self.access_token = session.access_token
+        self.access_token = session.token['access_token']
 
         return session.token
 
-    def exchange_long_lived_user_access_token(self, access_token=None) -> dict:
+    async def exchange_long_lived_user_access_token(self, access_token=None) -> dict:
         """
         Exchange short-lived Instagram User Access Tokens for long-lived Instagram User Access Tokens.
         :param access_token: short-lived user token.
@@ -829,7 +838,7 @@ class BasicDisplayAPI(GraphAPI):
             "client_secret": self.app_secret,
             "access_token": access_token,
         }
-        resp = self._request(
+        resp = await self._request(
             url=f"access_token",
             args=args,
             auth_need=False,
@@ -837,13 +846,13 @@ class BasicDisplayAPI(GraphAPI):
         data = self._parse_response(resp)
         return data
 
-    def refresh_access_token(self, access_token: str):
+    async def refresh_access_token(self, access_token: str):
         """
         :param access_token: The valid (unexpired) long-lived Instagram User Access Token that you want to refresh.
         :return: New access token.
         """
         args = {"grant_type": "ig_refresh_token", "access_token": access_token}
-        resp = self._request(
+        resp = await self._request(
             url="refresh_access_token",
             args=args,
         )
@@ -915,12 +924,13 @@ class ThreadsGraphAPI(GraphAPI):
             redirect_uri=redirect_uri, scope=scope, state=state, **kwargs
         )
         url_kwargs = {} if url_kwargs is None else url_kwargs
-        authorization_url, state = session.authorization_url(
-            url=self.authorization_url, **url_kwargs
+        state = self.state if state is None else state
+        authorization_url, state = session.create_authorization_url(
+            url=self.authorization_url, state=state, **url_kwargs
         )
         return authorization_url, state
 
-    def exchange_user_access_token(
+    async def exchange_user_access_token(
         self,
         response: str,
         redirect_uri: Optional[str] = None,
@@ -944,17 +954,17 @@ class ThreadsGraphAPI(GraphAPI):
             redirect_uri=redirect_uri, scope=scope, state=state, **kwargs
         )
 
-        session.fetch_token(
+        await session.fetch_token(
             self.access_token_url,
             client_secret=self.app_secret,
             authorization_response=response,
             include_client_id=True,
         )
-        self.access_token = session.access_token
+        self.access_token = session.token["access_token"]
 
         return session.token
 
-    def exchange_long_lived_user_access_token(self, access_token=None) -> dict:
+    async def exchange_long_lived_user_access_token(self, access_token=None) -> dict:
         """
         Generate long-lived token by short-lived token, Long-lived token generally lasts about 60 days.
 
@@ -970,7 +980,7 @@ class ThreadsGraphAPI(GraphAPI):
             "access_token": access_token,
         }
 
-        resp = self._request(
+        resp = await self._request(
             url=self.access_token_url,
             args=args,
             auth_need=False,
@@ -978,13 +988,13 @@ class ThreadsGraphAPI(GraphAPI):
         data = self._parse_response(resp)
         return data
 
-    def refresh_access_token(self, access_token: str):
+    async def refresh_access_token(self, access_token: str):
         """
         :param access_token: The valid (unexpired) long-lived Instagram User Access Token that you want to refresh.
         :return: New access token.
         """
         args = {"grant_type": "th_refresh_token", "access_token": access_token}
-        resp = self._request(
+        resp = await self._request(
             url="refresh_access_token",
             args=args,
         )
