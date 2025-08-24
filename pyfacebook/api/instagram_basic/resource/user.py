@@ -11,7 +11,7 @@ from pyfacebook.utils.params_utils import enf_comma_separated
 
 
 class IGBasicUser(BaseResource):
-    def get_info(
+    async def get_info(
         self,
         user_id: Optional[str] = "me",
         fields: Optional[Union[str, list, tuple]] = None,
@@ -30,7 +30,7 @@ class IGBasicUser(BaseResource):
         if fields is None:
             fields = const.IG_BASIC_USER_FIELDS
 
-        data = self.client.get_object(
+        data = await self.client.get_object(
             object_id=user_id,
             fields=enf_comma_separated(field="fields", value=fields),
         )
@@ -39,7 +39,7 @@ class IGBasicUser(BaseResource):
         else:
             return IgBasicUser.new_from_json_dict(data=data)
 
-    def get_media(
+    async def get_media(
         self,
         user_id: Optional[str] = "me",
         fields: Optional[Union[str, list, tuple]] = None,
@@ -67,7 +67,7 @@ class IGBasicUser(BaseResource):
         if fields is None:
             fields = const.IG_BASIC_MEDIA_FIELDS
 
-        data = self.client.get_full_connections(
+        data = await self.client.get_full_connections(
             object_id=user_id,
             connection="media",
             count=count,

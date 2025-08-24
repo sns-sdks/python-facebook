@@ -12,7 +12,7 @@ from pyfacebook.utils.params_utils import enf_comma_separated
 class CommentsEdge:
     __slots__ = ()
 
-    def get_comments(
+    async def get_comments(
         self,
         object_id: str,
         fields: Optional[Union[str, list, dict]] = None,
@@ -50,7 +50,7 @@ class CommentsEdge:
         if fields is None:
             fields = const.COMMENT_PUBLIC_FIELDS
 
-        data = self.client.get_full_connections(
+        data = await self.client.get_full_connections(
             object_id=object_id,
             connection="comments",
             count=count,

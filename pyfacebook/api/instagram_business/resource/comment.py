@@ -11,7 +11,7 @@ from pyfacebook.utils.params_utils import enf_comma_separated
 
 
 class IGBusinessComment(BaseResource):
-    def get_info(
+    async def get_info(
         self,
         comment_id: str,
         fields: Optional[Union[str, list, tuple]] = None,
@@ -30,7 +30,7 @@ class IGBusinessComment(BaseResource):
         if fields is None:
             fields = const.IG_BUSINESS_MEDIA_PUBLIC_FIELDS
 
-        data = self.client.get_object(
+        data = await self.client.get_object(
             object_id=comment_id,
             fields=enf_comma_separated(field="fields", value=fields),
         )
@@ -39,7 +39,7 @@ class IGBusinessComment(BaseResource):
         else:
             return IgBusComment.new_from_json_dict(data=data)
 
-    def get_batch(
+    async def get_batch(
         self,
         ids: Optional[Union[str, list, tuple]],
         fields: Optional[Union[str, list, tuple]] = None,
@@ -60,7 +60,7 @@ class IGBusinessComment(BaseResource):
         if fields is None:
             fields = const.IG_BUSINESS_COMMENT_PUBLIC_FIELDS
 
-        data = self.client.get_objects(
+        data = await self.client.get_objects(
             ids=ids, fields=enf_comma_separated(field="fields", value=fields)
         )
         if return_json:
@@ -71,7 +71,7 @@ class IGBusinessComment(BaseResource):
                 for comment_id, item in data.items()
             }
 
-    def get_replies(
+    async def get_replies(
         self,
         comment_id: str,
         fields: Optional[Union[str, list, tuple]] = None,
@@ -96,7 +96,7 @@ class IGBusinessComment(BaseResource):
         if fields is None:
             fields = const.IG_BUSINESS_REPLY_PUBLIC_FIELDS
 
-        data = self.client.get_full_connections(
+        data = await self.client.get_full_connections(
             object_id=comment_id,
             connection="replies",
             fields=enf_comma_separated(field="fields", value=fields),
@@ -110,7 +110,7 @@ class IGBusinessComment(BaseResource):
 
 
 class IGBusinessReply(BaseResource):
-    def get_info(
+    async def get_info(
         self,
         reply_id: str,
         fields: Optional[Union[str, list, tuple]] = None,
@@ -129,7 +129,7 @@ class IGBusinessReply(BaseResource):
         if fields is None:
             fields = const.IG_BUSINESS_REPLY_PUBLIC_FIELDS
 
-        data = self.client.get_object(
+        data = await self.client.get_object(
             object_id=reply_id,
             fields=enf_comma_separated(field="fields", value=fields),
         )
@@ -138,7 +138,7 @@ class IGBusinessReply(BaseResource):
         else:
             return IgBusComment.new_from_json_dict(data=data)
 
-    def get_batch(
+    async def get_batch(
         self,
         ids: Optional[Union[str, list, tuple]],
         fields: Optional[Union[str, list, tuple]] = None,
@@ -159,7 +159,7 @@ class IGBusinessReply(BaseResource):
         if fields is None:
             fields = const.IG_BUSINESS_REPLY_PUBLIC_FIELDS
 
-        data = self.client.get_objects(
+        data = await self.client.get_objects(
             ids=ids, fields=enf_comma_separated(field="fields", value=fields)
         )
         if return_json:

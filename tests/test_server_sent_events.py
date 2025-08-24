@@ -5,8 +5,6 @@
 import random
 from unittest.mock import patch
 
-import pytest
-import requests
 import responses
 from responses import matchers
 

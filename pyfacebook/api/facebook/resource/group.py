@@ -24,7 +24,7 @@ class FacebookGroup(
     Note: Groups Edge will be deprecated after April 22, 2024.
     """
 
-    def get_info(
+    async def get_info(
         self,
         group_id: str,
         fields: Optional[Union[str, list, tuple]] = None,
@@ -42,7 +42,7 @@ class FacebookGroup(
         """
         if fields is None:
             fields = const.GROUP_PUBLIC_FIELDS
-        data = self.client.get_object(
+        data = await self.client.get_object(
             object_id=group_id, fields=enf_comma_separated(field="fields", value=fields)
         )
         if return_json:
@@ -50,7 +50,7 @@ class FacebookGroup(
         else:
             return Group.new_from_json_dict(data=data)
 
-    def get_batch(
+    async def get_batch(
         self,
         ids: Union[str, list, tuple],
         fields: Optional[Union[str, list, tuple]] = None,
@@ -72,7 +72,7 @@ class FacebookGroup(
         if fields is None:
             fields = const.GROUP_PUBLIC_FIELDS
 
-        data = self.client.get_objects(
+        data = await self.client.get_objects(
             ids=ids, fields=enf_comma_separated(field="fields", value=fields)
         )
         if return_json:

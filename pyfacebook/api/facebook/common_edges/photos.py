@@ -12,7 +12,7 @@ from pyfacebook.utils.params_utils import enf_comma_separated
 class PhotosEdge:
     __slots__ = ()
 
-    def get_photos(
+    async def get_photos(
         self,
         object_id: str,
         fields: Optional[Union[str, list, dict]] = None,
@@ -43,7 +43,7 @@ class PhotosEdge:
         if fields is None:
             fields = const.PHOTO_PUBLIC_FIELDS
 
-        data = self.client.get_full_connections(
+        data = await self.client.get_full_connections(
             object_id=object_id,
             connection="photos",
             count=count,

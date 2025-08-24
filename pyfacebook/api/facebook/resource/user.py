@@ -30,7 +30,7 @@ class FacebookUser(
     LikesEdge,
     LiveVideosEdge,
 ):
-    def get_info(
+    async def get_info(
         self,
         user_id: str,
         fields: Optional[Union[str, list, tuple]] = None,
@@ -49,7 +49,7 @@ class FacebookUser(
         if fields is None:
             fields = const.USER_PUBLIC_FIELDS
 
-        data = self.client.get_object(
+        data = await self.client.get_object(
             object_id=user_id,
             fields=enf_comma_separated(field="fields", value=fields),
         )
@@ -58,7 +58,7 @@ class FacebookUser(
         else:
             return User.new_from_json_dict(data=data)
 
-    def get_batch(
+    async def get_batch(
         self,
         ids: Optional[Union[str, list, tuple]],
         fields: Optional[Union[str, list, tuple]] = None,
@@ -79,7 +79,7 @@ class FacebookUser(
         if fields is None:
             fields = const.USER_PUBLIC_FIELDS
 
-        data = self.client.get_objects(
+        data = await self.client.get_objects(
             ids=ids, fields=enf_comma_separated(field="fields", value=fields)
         )
         if return_json:
@@ -89,7 +89,7 @@ class FacebookUser(
                 user_id: User.new_from_json_dict(item) for user_id, item in data.items()
             }
 
-    def get_accounts(
+    async def get_accounts(
         self,
         user_id: str,
         fields: Optional[Union[str, list, tuple]] = None,
@@ -119,7 +119,7 @@ class FacebookUser(
         if fields is None:
             fields = const.PAGE_PUBLIC_FIELDS
 
-        data = self.client.get_full_connections(
+        data = await self.client.get_full_connections(
             object_id=user_id,
             connection="accounts",
             count=count,
@@ -134,7 +134,7 @@ class FacebookUser(
         else:
             return PagesResponse.new_from_json_dict(data)
 
-    def get_posts(
+    async def get_posts(
         self,
         object_id: str,
         fields: Optional[Union[str, list, dict]] = None,
@@ -159,7 +159,7 @@ class FacebookUser(
             Or return json data. Default is false.
         :return: Posts information and paging
         """
-        return self._get_feed(
+        return await self._get_feed(
             object_id=object_id,
             fields=fields,
             since=since,
@@ -170,7 +170,7 @@ class FacebookUser(
             return_json=return_json,
         )
 
-    def get_businesses(
+    async def get_businesses(
         self,
         user_id: str,
         fields: Optional[Union[str, list, dict]] = None,
@@ -195,7 +195,7 @@ class FacebookUser(
         if fields is None:
             fields = const.BUSINESS_PUBLIC_FIELDS
 
-        data = self.client.get_full_connections(
+        data = await self.client.get_full_connections(
             object_id=user_id,
             connection="businesses",
             count=count,

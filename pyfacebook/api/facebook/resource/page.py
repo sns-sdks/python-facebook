@@ -31,7 +31,7 @@ class FacebookPage(
     LiveVideosEdge,
     CommentsEdge,
 ):
-    def get_info(
+    async def get_info(
         self,
         page_id: Optional[str] = None,
         username: Optional[str] = None,
@@ -61,7 +61,7 @@ class FacebookPage(
         if fields is None:
             fields = const.PAGE_PUBLIC_FIELDS
 
-        data = self.client.get_object(
+        data = await self.client.get_object(
             object_id=target,
             fields=enf_comma_separated(field="fields", value=fields),
         )
@@ -70,7 +70,7 @@ class FacebookPage(
         else:
             return Page.new_from_json_dict(data=data)
 
-    def get_batch(
+    async def get_batch(
         self,
         ids: Optional[Union[str, list, tuple]],
         fields: Optional[Union[str, list, tuple]] = None,
@@ -92,7 +92,7 @@ class FacebookPage(
         if fields is None:
             fields = const.PAGE_PUBLIC_FIELDS
 
-        data = self.client.get_objects(
+        data = await self.client.get_objects(
             ids=ids, fields=enf_comma_separated(field="fields", value=fields)
         )
         if return_json:
@@ -102,7 +102,7 @@ class FacebookPage(
                 page_id: Page.new_from_json_dict(item) for page_id, item in data.items()
             }
 
-    def get_posts(
+    async def get_posts(
         self,
         object_id: str,
         fields: Optional[Union[str, list, dict]] = None,
@@ -127,7 +127,7 @@ class FacebookPage(
             Or return json data. Default is false.
         :return: Posts response information
         """
-        return self._get_feed(
+        return await self._get_feed(
             object_id=object_id,
             fields=fields,
             since=since,
@@ -138,7 +138,7 @@ class FacebookPage(
             return_json=return_json,
         )
 
-    def get_published_posts(
+    async def get_published_posts(
         self,
         object_id: str,
         fields: Optional[Union[str, list, dict]] = None,
@@ -163,7 +163,7 @@ class FacebookPage(
             Or return json data. Default is false.
         :return: Posts response information
         """
-        return self._get_feed(
+        return await self._get_feed(
             object_id=object_id,
             fields=fields,
             since=since,
@@ -174,7 +174,7 @@ class FacebookPage(
             return_json=return_json,
         )
 
-    def get_tagged_posts(
+    async def get_tagged_posts(
         self,
         object_id: str,
         fields: Optional[Union[str, list, dict]] = None,
@@ -199,7 +199,7 @@ class FacebookPage(
             Or return json data. Default is false.
         :return: Posts response information.
         """
-        return self._get_feed(
+        return await self._get_feed(
             object_id=object_id,
             fields=fields,
             since=since,
@@ -210,7 +210,7 @@ class FacebookPage(
             return_json=return_json,
         )
 
-    def search(
+    async def search(
         self,
         q: str,
         fields: Optional[Union[str, list, dict]] = None,
@@ -234,7 +234,7 @@ class FacebookPage(
         if fields is None:
             fields = const.SEARCH_PAGES_PUBLIC_FIELDS
 
-        data = self.client.get_full_connections(
+        data = await self.client.get_full_connections(
             object_id="pages",
             connection="search",
             count=count,

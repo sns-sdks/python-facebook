@@ -11,7 +11,7 @@ from pyfacebook.utils.params_utils import enf_comma_separated
 
 
 class FacebookApplication(BaseResource):
-    def get_info(
+    async def get_info(
         self,
         fields: Optional[Union[str, list, tuple]] = None,
         return_json: bool = False,
@@ -28,7 +28,7 @@ class FacebookApplication(BaseResource):
         if fields is None:
             fields = const.APPLICATION_PUBLIC_FIELDS
 
-        data = self.client.get_object(
+        data = await self.client.get_object(
             object_id=self.client.app_id,
             fields=enf_comma_separated(field="fields", value=fields),
         )
@@ -37,7 +37,7 @@ class FacebookApplication(BaseResource):
         else:
             return Application.new_from_json_dict(data=data)
 
-    def get_accounts(
+    async def get_accounts(
         self,
         fields: Optional[Union[str, list, dict]] = None,
         count: Optional[int] = 10,
@@ -60,7 +60,7 @@ class FacebookApplication(BaseResource):
         if fields is None:
             fields = const.APPLICATION_ACCOUNT_PUBLIC_FIELDS
 
-        data = self.client.get_full_connections(
+        data = await self.client.get_full_connections(
             object_id=self.client.app_id,
             connection="accounts",
             count=count,

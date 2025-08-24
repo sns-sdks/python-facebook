@@ -31,17 +31,21 @@ packages = [
 
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.9"
 requests = "^2.27"
 requests-oauthlib = "^1.2.0"
 dataclasses-json = ">=0.5.7"
+httpx = "^0.28.1"
+authlib = "^1.6.0"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^7.1"
+pytest = "^8.2"
 pytest-cov = "^3.0.0"
+pytest-asyncio = "^1.0.0"
 responses = ">=0.23.1"
 tox = "^4.0.0"
 black = "^23.3.0"
+respx = "^0.22.0"
 
 [build-system]
 requires = ["poetry-core"]

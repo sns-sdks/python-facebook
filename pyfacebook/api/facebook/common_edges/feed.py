@@ -16,7 +16,7 @@ class FeedEdge:
 
     __slots__ = ()
 
-    def _get_feed(
+    async def _get_feed(
         self,
         object_id: str,
         fields: Optional[Union[str, list, dict]] = None,
@@ -49,7 +49,7 @@ class FeedEdge:
         if fields is None:
             fields = const.POST_PUBLIC_FIELDS + const.POST_CONNECTIONS_SUMMERY_FIELDS
 
-        data = self.client.get_full_connections(
+        data = await self.client.get_full_connections(
             object_id=object_id,
             connection=source,
             count=count,
@@ -64,7 +64,7 @@ class FeedEdge:
         else:
             return FeedResponse.new_from_json_dict(data)
 
-    def get_feed(
+    async def get_feed(
         self,
         object_id: str,
         fields: Optional[Union[str, list, dict]] = None,
@@ -91,7 +91,7 @@ class FeedEdge:
         :param kwargs: Additional parameters for different object.
         :return: Posts response information
         """
-        return self._get_feed(
+        return await self._get_feed(
             object_id=object_id,
             fields=fields,
             since=since,

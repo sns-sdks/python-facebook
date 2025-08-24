@@ -17,7 +17,7 @@ from pyfacebook.utils.params_utils import enf_comma_separated
 
 
 class IGBusinessMedia(BaseResource):
-    def get_info(
+    async def get_info(
         self,
         media_id: str,
         fields: Optional[Union[str, list, tuple]] = None,
@@ -36,7 +36,7 @@ class IGBusinessMedia(BaseResource):
         if fields is None:
             fields = const.IG_BUSINESS_MEDIA_PUBLIC_FIELDS
 
-        data = self.client.get_object(
+        data = await self.client.get_object(
             object_id=media_id,
             fields=enf_comma_separated(field="fields", value=fields),
         )
@@ -45,7 +45,7 @@ class IGBusinessMedia(BaseResource):
         else:
             return IgBusMedia.new_from_json_dict(data=data)
 
-    def get_batch(
+    async def get_batch(
         self,
         ids: Optional[Union[str, list, tuple]],
         fields: Optional[Union[str, list, tuple]] = None,
@@ -66,7 +66,7 @@ class IGBusinessMedia(BaseResource):
         if fields is None:
             fields = const.IG_BUSINESS_MEDIA_PUBLIC_FIELDS
 
-        data = self.client.get_objects(
+        data = await self.client.get_objects(
             ids=ids, fields=enf_comma_separated(field="fields", value=fields)
         )
         if return_json:
@@ -77,7 +77,7 @@ class IGBusinessMedia(BaseResource):
                 for media_id, item in data.items()
             }
 
-    def get_comments(
+    async def get_comments(
         self,
         media_id: str,
         fields: Optional[Union[str, list, tuple]] = None,
@@ -102,7 +102,7 @@ class IGBusinessMedia(BaseResource):
         if fields is None:
             fields = const.IG_BUSINESS_COMMENT_PUBLIC_FIELDS
 
-        data = self.client.get_full_connections(
+        data = await self.client.get_full_connections(
             object_id=media_id,
             connection="comments",
             count=count,
@@ -114,7 +114,7 @@ class IGBusinessMedia(BaseResource):
         else:
             return IgBusCommentResponse.new_from_json_dict(data)
 
-    def get_children(
+    async def get_children(
         self,
         media_id: str,
         fields: Optional[Union[str, list, tuple]] = None,
@@ -134,7 +134,7 @@ class IGBusinessMedia(BaseResource):
         if fields is None:
             fields = const.IG_BUSINESS_MEDIA_CHILDREN_PUBLIC_FIELDS
 
-        data = self.client.get_connection(
+        data = await self.client.get_connection(
             object_id=media_id,
             connection="children",
             fields=enf_comma_separated(field="fields", value=fields),
@@ -144,7 +144,7 @@ class IGBusinessMedia(BaseResource):
         else:
             return IgBusMediaChildren.new_from_json_dict(data)
 
-    def get_insights(
+    async def get_insights(
         self,
         media_id: str,
         metric: Union[str, list, tuple],
@@ -168,7 +168,7 @@ class IGBusinessMedia(BaseResource):
         if breakdown:
             args["breakdown"] = enf_comma_separated(field="breakdown", value=breakdown)
 
-        data = self.client.get_connection(
+        data = await self.client.get_connection(
             object_id=media_id, connection="insights", **args
         )
 
@@ -177,7 +177,7 @@ class IGBusinessMedia(BaseResource):
         else:
             return IgBusInsightsResponse.new_from_json_dict(data)
 
-    def get_product_tags(
+    async def get_product_tags(
         self, media_id: str, return_json: bool = False
     ) -> Union[IgBusProductTagsResponse, dict]:
         """
@@ -188,7 +188,7 @@ class IGBusinessMedia(BaseResource):
         :return: Media product tags
         """
 
-        data = self.client.get_connection(
+        data = await self.client.get_connection(
             object_id=media_id,
             connection="product_tags",
         )
