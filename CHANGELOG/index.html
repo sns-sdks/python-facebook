@@ -1,0 +1,3289 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Docs for python-facebook library">
+      
+      
+      
+        <link rel="canonical" href="https://sns-sdks.github.io/python-facebook/CHANGELOG/">
+      
+      
+        <link rel="prev" href="../usage/threads-graph-api/">
+      
+      
+        <link rel="next" href="../previous-version/readme/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Changelog - Python Facebook Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#changelog" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Python Facebook Docs" class="md-header__button md-logo" aria-label="Python Facebook Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Python Facebook Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Changelog
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/sns-sdks/python-facebook" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Introduction
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../installation/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Installation
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../usage/graph-api/" class="md-tabs__link">
+          
+  
+  
+  Usage
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Changelog
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../previous-version/readme/" class="md-tabs__link">
+          
+  
+  
+  Previous Version Docs
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Python Facebook Docs" class="md-nav__button md-logo" aria-label="Python Facebook Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Python Facebook Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/sns-sdks/python-facebook" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Usage
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Usage
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../usage/graph-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Graph API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../usage/server-send-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Server-Sent Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../usage/threads-graph-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Threads Graph API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0201-2024-10-08" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.20.1 (2024-10-08)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.20.1 (2024-10-08)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feat
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0200-2024-08-20" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.20.0 (2024-08-20)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.20.0 (2024-08-20)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feat_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feat
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0190-2024-03-18" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.19.0 (2024-03-18)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.19.0 (2024-03-18)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feat_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feat
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deprecations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deprecations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0180-2023-11-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.18.0 (2023-11-10)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.18.0 (2023-11-10)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feat_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feat
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deprecations_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deprecations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0171-2023-09-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.17.1 (2023-09-22)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.17.1 (2023-09-22)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fix
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0170-2023-08-07" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.17.0 (2023-08-07)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.17.0 (2023-08-07)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feat_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feat
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0150-2022-09-26" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.15.0 (2022-09-26)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.15.0 (2022-09-26)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feat_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feat
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deprecations_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deprecations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0145-2022-09-02" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.14.5 (2022-09-02)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.14.5 (2022-09-02)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feat_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feat
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0143-2022-08-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.14.3 (2022-08-17)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.14.3 (2022-08-17)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0142-2022-07-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.14.2 (2022-07-22)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.14.2 (2022-07-22)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0141-2022-06-28" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.14.1 (2022-06-28)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.14.1 (2022-06-28)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0140-2022-06-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.14.0 (2022-06-01)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.14.0 (2022-06-01)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deprecations_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deprecations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0131-2022-03-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.13.1 (2022-03-15)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.13.1 (2022-03-15)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fix_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fix
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0130-2022-02-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.13.0 (2022-02-15)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.13.0 (2022-02-15)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deprecations_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deprecations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0124-2021-12-03" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.12.4 (2021-12-03)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0123-2021-10-28" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.12.3 (2021-10-28)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0122-2021-10-28" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.12.2 (2021-10-28)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0121-2021-10-27" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.12.1 (2021-10-27)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0120-2021-10-21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.12.0 (2021-10-21)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0112-2021-09-02" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.11.2 (2021-09-02)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0111-2021-08-23" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.11.1 (2021-08-23)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0100-2021-07-07" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.10.0 (2021-07-07)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.10.0 (2021-07-07)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#broken-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Broken Change
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#095-2021-09-02" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.9.5 (2021-09-02)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.9.5 (2021-09-02)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#093-2021-04-28" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.9.3 (2021-04-28)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.9.3 (2021-04-28)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#broken-change_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Broken Change
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#092-2021-04-28" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.9.2 (2021-04-28)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.9.2 (2021-04-28)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#091-2021-04-27" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.9.1 (2021-04-27)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.9.1 (2021-04-27)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fix_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fix
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#090-2021-03-16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.9.0 (2021-03-16)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.9.0 (2021-03-16)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#081-2021-02-08" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.8.1 (2021-02-08)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.8.1 (2021-02-08)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fix_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fix
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#080-2021-01-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.8.0 (2021-01-17)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.8.0 (2021-01-17)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fix_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fix
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#072-2020-11-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.7.2 (2020-11-11)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.7.2 (2020-11-11)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#070-2020-09-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.7.0 (2020-09-13)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.7.0 (2020-09-13)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#061-2020-04-02" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.6.1 (2020-04-02)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.6.1 (2020-04-02)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#060-2020-03-12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.6.0 (2020-03-12)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.6.0 (2020-03-12)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#055-2020-02-24" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.5.5 (2020-02-24)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.5.5 (2020-02-24)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#054-2020-02-14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.5.4 (2020-02-14)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.5.4 (2020-02-14)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#053-2020-01-05" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.5.3 (2020-01-05)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.5.3 (2020-01-05)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#broken-change_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Broken Change
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#052-2019-11-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.5.2 (2019-11-13)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.5.2 (2019-11-13)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_18" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#051-2019-10-23" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.5.1 (2019-10-23)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.5.1 (2019-10-23)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_19" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Previous Version Docs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Previous Version Docs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../previous-version/readme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    README
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../previous-version/usage_en/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    usage-en
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../previous-version/usage_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    基础教程
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0201-2024-10-08" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.20.1 (2024-10-08)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.20.1 (2024-10-08)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feat
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0200-2024-08-20" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.20.0 (2024-08-20)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.20.0 (2024-08-20)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feat_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feat
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0190-2024-03-18" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.19.0 (2024-03-18)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.19.0 (2024-03-18)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feat_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feat
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deprecations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deprecations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0180-2023-11-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.18.0 (2023-11-10)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.18.0 (2023-11-10)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feat_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feat
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deprecations_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deprecations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0171-2023-09-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.17.1 (2023-09-22)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.17.1 (2023-09-22)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fix
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0170-2023-08-07" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.17.0 (2023-08-07)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.17.0 (2023-08-07)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feat_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feat
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0150-2022-09-26" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.15.0 (2022-09-26)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.15.0 (2022-09-26)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feat_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feat
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deprecations_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deprecations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0145-2022-09-02" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.14.5 (2022-09-02)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.14.5 (2022-09-02)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feat_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feat
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0143-2022-08-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.14.3 (2022-08-17)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.14.3 (2022-08-17)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0142-2022-07-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.14.2 (2022-07-22)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.14.2 (2022-07-22)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0141-2022-06-28" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.14.1 (2022-06-28)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.14.1 (2022-06-28)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0140-2022-06-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.14.0 (2022-06-01)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.14.0 (2022-06-01)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deprecations_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deprecations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0131-2022-03-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.13.1 (2022-03-15)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.13.1 (2022-03-15)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fix_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fix
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0130-2022-02-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.13.0 (2022-02-15)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.13.0 (2022-02-15)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deprecations_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deprecations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0124-2021-12-03" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.12.4 (2021-12-03)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0123-2021-10-28" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.12.3 (2021-10-28)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0122-2021-10-28" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.12.2 (2021-10-28)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0121-2021-10-27" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.12.1 (2021-10-27)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0120-2021-10-21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.12.0 (2021-10-21)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0112-2021-09-02" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.11.2 (2021-09-02)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0111-2021-08-23" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.11.1 (2021-08-23)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0100-2021-07-07" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.10.0 (2021-07-07)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.10.0 (2021-07-07)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#broken-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Broken Change
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#095-2021-09-02" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.9.5 (2021-09-02)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.9.5 (2021-09-02)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#093-2021-04-28" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.9.3 (2021-04-28)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.9.3 (2021-04-28)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#broken-change_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Broken Change
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#092-2021-04-28" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.9.2 (2021-04-28)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.9.2 (2021-04-28)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#091-2021-04-27" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.9.1 (2021-04-27)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.9.1 (2021-04-27)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fix_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fix
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#090-2021-03-16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.9.0 (2021-03-16)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.9.0 (2021-03-16)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#081-2021-02-08" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.8.1 (2021-02-08)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.8.1 (2021-02-08)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fix_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fix
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#080-2021-01-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.8.0 (2021-01-17)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.8.0 (2021-01-17)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fix_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fix
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#072-2020-11-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.7.2 (2020-11-11)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.7.2 (2020-11-11)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#070-2020-09-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.7.0 (2020-09-13)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.7.0 (2020-09-13)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#061-2020-04-02" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.6.1 (2020-04-02)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.6.1 (2020-04-02)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#060-2020-03-12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.6.0 (2020-03-12)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.6.0 (2020-03-12)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#055-2020-02-24" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.5.5 (2020-02-24)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.5.5 (2020-02-24)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#054-2020-02-14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.5.4 (2020-02-14)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.5.4 (2020-02-14)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#053-2020-01-05" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.5.3 (2020-01-05)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.5.3 (2020-01-05)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#broken-change_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Broken Change
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#052-2019-11-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.5.2 (2019-11-13)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.5.2 (2019-11-13)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_18" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#051-2019-10-23" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.5.1 (2019-10-23)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.5.1 (2019-10-23)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_19" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="changelog">Changelog</h1>
+<p>All notable changes to this project will be documented in this file.</p>
+<h2 id="0201-2024-10-08"><a href="https://github.com/sns-sdks/python-facebook/v0.20.1">0.20.1</a> (2024-10-08)</h2>
+<h3 id="feat">Feat</h3>
+<ul>
+<li>Add <a href="https://developers.facebook.com/docs/threads">Threads API</a> support.</li>
+</ul>
+<h2 id="0200-2024-08-20"><a href="https://github.com/sns-sdks/python-facebook/v0.20.0">0.20.0</a> (2024-08-20)</h2>
+<h3 id="feat_1">Feat</h3>
+<ul>
+<li>Add <a href="https://developers.facebook.com/docs/graph-api/changelog/version20.0">v20.0</a> support.</li>
+<li>update dataclasses-json version</li>
+<li>Add Business login support, If you try oauth with configuration.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="n">api</span> <span class="o">=</span> <span class="n">GraphAPI</span><span class="p">(</span><span class="n">app_id</span><span class="o">=</span><span class="n">xxx</span><span class="p">,</span> <span class="n">app_secret</span><span class="o">=</span><span class="s2">&quot;xxxx&quot;</span><span class="p">,</span> <span class="n">oauth_flow</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">api</span><span class="o">.</span><span class="n">get_authorization_url</span><span class="p">(</span><span class="n">redirect_uri</span><span class="o">=</span><span class="s2">&quot;https://example.com/callback&quot;</span><span class="p">,</span> <span class="n">url_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;config_id&quot;</span><span class="p">:</span> <span class="s2">&quot;id&quot;</span><span class="p">})</span>
+<span class="c1"># (&#39;https://www.facebook.com/dialog/oauth?response_type=code&amp;client_id=xxx&amp;redirect_uri=https%3A%2F%2Fexample.com%2Fcallback&amp;scope=public_profile&amp;state=PyFacebook&amp;config_id=id&#39;, &#39;PyFacebook&#39;)</span>
+</code></pre></div>
+<h2 id="0190-2024-03-18"><a href="https://github.com/sns-sdks/python-facebook/v0.19.0">0.19.0</a> (2024-03-18)</h2>
+<h3 id="feat_2">Feat</h3>
+<ul>
+<li>Add <a href="https://developers.facebook.com/docs/graph-api/changelog/version19.0">v19.0</a> support.</li>
+<li>Add parameters for OAuth flow.</li>
+</ul>
+<h3 id="deprecations">Deprecations</h3>
+<ul>
+<li>Remove outdate versions [<code>v12.0</code>]</li>
+<li>Groups API will be deprecated April 22, 2024.</li>
+</ul>
+<h2 id="0180-2023-11-10"><a href="https://github.com/sns-sdks/python-facebook/v0.18.0">0.18.0</a> (2023-11-10)</h2>
+<h3 id="feat_3">Feat</h3>
+<ul>
+<li>Add <a href="https://developers.facebook.com/docs/graph-api/changelog/version18.0">v18.0</a> support.</li>
+<li>Add support for instagram new insight metrics</li>
+<li>Add deprecation tip for Server-Sent-Event API.</li>
+</ul>
+<h3 id="deprecations_1">Deprecations</h3>
+<ul>
+<li>Remove outdate versions [<code>v10.0</code>, <code>v11.0</code>]</li>
+<li>Server-Sent Events are deprecated and will be removed December 31, 2023.</li>
+</ul>
+<h2 id="0171-2023-09-22"><a href="https://github.com/sns-sdks/python-facebook/v0.17.1">0.17.1</a> (2023-09-22)</h2>
+<h3 id="fix">Fix</h3>
+<ul>
+<li>Add support for new rate limit parameter</li>
+</ul>
+<h2 id="0170-2023-08-07"><a href="https://github.com/sns-sdks/python-facebook/v0.17.0">0.17.0</a> (2023-08-07)</h2>
+<h3 id="feat_4">Feat</h3>
+<ul>
+<li>Add <a href="https://developers.facebook.com/docs/graph-api/changelog/version16.0">v16.0</a> support.</li>
+<li>Add <a href="https://developers.facebook.com/docs/graph-api/changelog/version17.0">v17.0</a> support.</li>
+<li>Add more resource support for facebook.</li>
+</ul>
+<h2 id="0150-2022-09-26"><a href="https://github.com/sns-sdks/python-facebook/v0.15.0">0.15.0</a> (2022-09-26)</h2>
+<h3 id="feat_5">Feat</h3>
+<ul>
+<li>Add <a href="https://developers.facebook.com/docs/graph-api/changelog/version15.0">v15.0</a> support.</li>
+</ul>
+<h3 id="deprecations_2">Deprecations</h3>
+<ul>
+<li>Remove version <a href="https://developers.facebook.com/docs/graph-api/changelog/version7.0"><code>v7.0</code></a> support.</li>
+</ul>
+<h2 id="0145-2022-09-02"><a href="https://github.com/sns-sdks/python-facebook/v0.14.5">0.14.5</a> (2022-09-02)</h2>
+<h3 id="feat_6">Feat</h3>
+<ul>
+<li>Add simple support for facebook server sent events api.</li>
+<li>Make <code>scopes</code> work well in auth flow.</li>
+</ul>
+<h2 id="0143-2022-08-17"><a href="https://github.com/sns-sdks/python-facebook/v0.14.3">0.14.3</a> (2022-08-17)</h2>
+<h3 id="fixs">Fixs</h3>
+<ul>
+<li>Fix model repr if a post not have message</li>
+</ul>
+<h2 id="0142-2022-07-22"><a href="https://github.com/sns-sdks/python-facebook/v0.14.2">0.14.2</a> (2022-07-22)</h2>
+<h3 id="features">Features</h3>
+<ul>
+<li>Support reels for Instagram Business Account.</li>
+<li>Support product tagging apis for Instagram Business Account.</li>
+</ul>
+<h2 id="0141-2022-06-28"><a href="https://github.com/sns-sdks/python-facebook/v0.14.1">0.14.1</a> (2022-06-28)</h2>
+<h3 id="features_1">Features</h3>
+<ul>
+<li>Support more url config in init api.</li>
+<li>Remove version check to make version for support pre version.</li>
+</ul>
+<h2 id="0140-2022-06-01"><a href="https://github.com/sns-sdks/python-facebook/v0.14.0">0.14.0</a> (2022-06-01)</h2>
+<h3 id="features_2">Features</h3>
+<ul>
+<li>Add version <a href="https://developers.facebook.com/docs/graph-api/changelog/version14.0"><code>v14.0</code></a> support.</li>
+<li>Add some examples for library.</li>
+</ul>
+<h3 id="deprecations_3">Deprecations</h3>
+<ul>
+<li>Remove version <a href="https://developers.facebook.com/docs/graph-api/changelog/version6.0"><code>v6.0</code></a> support.</li>
+</ul>
+<h2 id="0131-2022-03-15"><a href="https://github.com/sns-sdks/python-facebook/v0.13.1">0.13.1</a> (2022-03-15)</h2>
+<h3 id="fix_1">Fix</h3>
+<ul>
+<li>Fix version for <code>v13.0</code> in check, thanks for <a href="https://github.com/pietzschke">@pietzschke</a> and <a href="https://github.com/pobk">@pobk</a>.</li>
+</ul>
+<h2 id="0130-2022-02-15"><a href="https://github.com/sns-sdks/python-facebook/v0.13.0">0.13.0</a> (2022-02-15)</h2>
+<h3 id="features_3">Features</h3>
+<ul>
+<li>Add version <a href="https://developers.facebook.com/docs/graph-api/changelog/version13.0"><code>v13.0</code></a> support.</li>
+<li>Update actions for project</li>
+</ul>
+<h3 id="deprecations_4">Deprecations</h3>
+<ul>
+<li>Remove version <a href="https://developers.facebook.com/docs/graph-api/changelog/version5.0"><code>v5.0</code></a> support.</li>
+</ul>
+<h2 id="0124-2021-12-03"><a href="https://github.com/sns-sdks/python-facebook/v0.12.4">0.12.4</a> (2021-12-03)</h2>
+<ul>
+<li>Remove v4.0 support.</li>
+<li>Update docs for usage.</li>
+<li>Add new changes for instagram business.</li>
+</ul>
+<h2 id="0123-2021-10-28"><a href="https://github.com/sns-sdks/python-facebook/v0.12.3">0.12.3</a> (2021-10-28)</h2>
+<ul>
+<li>Fix the rate limit not working.</li>
+</ul>
+<h2 id="0122-2021-10-28"><a href="https://github.com/sns-sdks/python-facebook/v0.12.2">0.12.2</a> (2021-10-28)</h2>
+<ul>
+<li>Update for exception.</li>
+</ul>
+<h2 id="0121-2021-10-27"><a href="https://github.com/sns-sdks/python-facebook/v0.12.1">0.12.1</a> (2021-10-27)</h2>
+<ul>
+<li>Add api to discover instagram user media to <code>GraphAPI</code>.</li>
+<li>Add parameters for discover instagram user media</li>
+</ul>
+<h2 id="0120-2021-10-21"><a href="https://github.com/sns-sdks/python-facebook/v0.12.0">0.12.0</a> (2021-10-21)</h2>
+<ul>
+<li>Add api for business object.</li>
+<li>Add api for search pages.</li>
+<li>Support new graph version <code>v12.0</code>.</li>
+<li>Update for new <code>from</code> field for ig business comment.</li>
+<li>Add tests for <code>Python 3.10</code>.</li>
+</ul>
+<h2 id="0112-2021-09-02"><a href="https://github.com/sns-sdks/python-facebook/v0.11.2">0.11.2</a> (2021-09-02)</h2>
+<ul>
+<li>GraphAPI for post and delete object.</li>
+<li>Add application apis.</li>
+<li>Remove Api version v3.3</li>
+</ul>
+<h2 id="0111-2021-08-23"><a href="https://github.com/sns-sdks/python-facebook/v0.11.1">0.11.1</a> (2021-08-23)</h2>
+<ul>
+<li>New structure for Facebook Graph API</li>
+<li>New structure for Instagram Graph API</li>
+<li>New structure for Instagram Basic Display API</li>
+</ul>
+<h2 id="0100-2021-07-07"><a href="https://github.com/sns-sdks/python-facebook/v0.10.0">0.10.0</a> (2021-07-07)</h2>
+<h3 id="features_4">Features</h3>
+<ul>
+<li>New structure for Graph API.</li>
+</ul>
+<h3 id="broken-change">Broken Change</h3>
+<ul>
+<li>Remove python2 support.</li>
+<li>Refactor all methods.</li>
+</ul>
+<h2 id="095-2021-09-02"><a href="https://github.com/sns-sdks/python-facebook/compare/v0.9.3...v0.9.5">0.9.5</a> (2021-09-02)</h2>
+<h3 id="features_5">Features</h3>
+<ul>
+<li>Add follower field for page</li>
+<li>Remove Api version v3.3</li>
+</ul>
+<h2 id="093-2021-04-28"><a href="https://github.com/sns-sdks/python-facebook/compare/v0.9.1...v0.9.2">0.9.3</a> (2021-04-28)</h2>
+<h3 id="features_6">Features</h3>
+<ul>
+<li>Update API version to V11.0</li>
+<li>Add parameters <code>since</code> and <code>until</code> for instaram media api.</li>
+</ul>
+<h3 id="broken-change_1">Broken Change</h3>
+<ul>
+<li>Replace IgProApi <code>get_user_medias</code> method parameter <code>since_time</code> and <code>until_time</code> With <code>since</code> and <code>until</code>.</li>
+</ul>
+<h2 id="092-2021-04-28"><a href="https://github.com/sns-sdks/python-facebook/compare/v0.9.1...v0.9.2">0.9.2</a> (2021-04-28)</h2>
+<h3 id="features_7">Features</h3>
+<ul>
+<li>error update</li>
+</ul>
+<h2 id="091-2021-04-27"><a href="https://github.com/sns-sdks/python-facebook/compare/v0.9.0...v0.9.1">0.9.1</a> (2021-04-27)</h2>
+<h3 id="features_8">Features</h3>
+<ul>
+<li>Add new fields for IG,FB</li>
+<li>New docs</li>
+</ul>
+<h3 id="fix_2">Fix</h3>
+<ul>
+<li>version bug  #107</li>
+</ul>
+<h2 id="090-2021-03-16"><a href="https://github.com/sns-sdks/python-facebook/compare/v0.8.1...v0.9.0">0.9.0</a> (2021-03-16)</h2>
+<h3 id="features_9">Features</h3>
+<ul>
+<li>Upgrade api to v10.0</li>
+<li>Instagram business publish content</li>
+</ul>
+<h2 id="081-2021-02-08"><a href="https://github.com/sns-sdks/python-facebook/compare/v0.8.0...v0.8.1">0.8.1</a> (2021-02-08)</h2>
+<h3 id="features_10">Features</h3>
+<ul>
+<li>Upgrade api to v9.0</li>
+</ul>
+<h3 id="fix_3">Fix</h3>
+<ul>
+<li>Bugs for #91 #93</li>
+</ul>
+<h2 id="080-2021-01-17"><a href="https://github.com/sns-sdks/python-facebook/compare/v0.7.2...v0.8.0">0.8.0</a> (2021-01-17)</h2>
+<h3 id="features_11">Features</h3>
+<ul>
+<li>Add new api for live videos</li>
+</ul>
+<h3 id="fix_4">Fix</h3>
+<ul>
+<li>Bug for lost children fields for check params. thanks for <a href="https://github.com/stevenviola">@stevenviola</a></li>
+</ul>
+<h2 id="072-2020-11-11"><a href="https://github.com/sns-sdks/python-facebook/compare/v0.7.0...v0.7.2">0.7.2</a> (2020-11-11)</h2>
+<h3 id="features_12">Features</h3>
+<ul>
+<li>Add new api for story, tags for IG.</li>
+<li>Modify Facebook OAuth flow method.</li>
+<li>Add support for Python 3.9.</li>
+</ul>
+<h2 id="070-2020-09-13"><a href="https://github.com/sns-sdks/python-facebook/compare/v0.6.1...v0.7.0">0.7.0</a> (2020-09-13)</h2>
+<h3 id="features_13">Features</h3>
+<ul>
+<li>Add new api for video,album and photos for facebook.</li>
+<li>Update to support for to Graph API V8.0    </li>
+</ul>
+<h2 id="061-2020-04-02"><a href="https://github.com/sns-sdks/python-facebook/compare/v0.6.0...v0.6.1">0.6.1</a> (2020-04-02)</h2>
+<h3 id="features_14">Features</h3>
+<ul>
+<li>Introduce simple sleep in requests to avoid reach the limit quickly.</li>
+</ul>
+<h2 id="060-2020-03-12"><a href="https://github.com/sns-sdks/python-facebook/compare/v0.5.5...v0.6.0">0.6.0</a> (2020-03-12)</h2>
+<h3 id="features_15">Features</h3>
+<ul>
+<li>Introduce new methods for <code>Instagram Basic Display Api</code>.</li>
+</ul>
+<h2 id="055-2020-02-24"><a href="https://github.com/sns-sdks/python-facebook/compare/v0.5.4...v0.5.5">0.5.5</a> (2020-02-24)</h2>
+<h3 id="features_16">Features</h3>
+<ul>
+<li>Introduce <code>instagram</code> business account mentions api.</li>
+<li>Add <code>facebook</code> post subattachments field.</li>
+</ul>
+<h2 id="054-2020-02-14"><a href="https://github.com/sns-sdks/python-facebook/compare/v0.5.3...v0.5.4">0.5.4</a> (2020-02-14)</h2>
+<h3 id="features_17">Features</h3>
+<ul>
+<li>Introduce <code>instagram</code> business account insights api.</li>
+<li>Introduce <code>instagram</code> business account hashtag api.</li>
+</ul>
+<p>Simple usage at <a href="https://github.com/sns-sdks/python-facebook/blob/master/README.rst#get-data-1">GET DATA</a>.</p>
+<h2 id="053-2020-01-05"><a href="https://github.com/sns-sdks/python-facebook/compare/v0.5.2...v0.5.3">0.5.3</a> (2020-01-05)</h2>
+<h4 id="broken-change_2">Broken Change</h4>
+<ul>
+<li>Now we refactor all api for this library.</li>
+</ul>
+<p>You can see the <a href="https://github.com/sns-sdks/python-facebook/blob/master/README.rst">README</a> to see the changes.</p>
+<h2 id="052-2019-11-13"><a href="https://github.com/sns-sdks/python-facebook/compare/v0.5.1...v0.5.2">0.5.2</a> (2019-11-13)</h2>
+<h4 id="features_18">Features</h4>
+<ul>
+<li><strong>facebook:</strong> <img alt="✨" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/2728.png" title=":sparkles:" /> add global_brand_page_name fields in page (<a href="https://github.com/sns-sdks/python-facebook/commit/34700f2">34700f2</a>)</li>
+<li><strong>facebook:</strong> <img alt="✨" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/2728.png" title=":sparkles:" /> add page default picture return. (<a href="https://github.com/sns-sdks/python-facebook/commit/6c8f9ff">6c8f9ff</a>)</li>
+</ul>
+<h2 id="051-2019-10-23"><a href="https://github.com/sns-sdks/python-facebook/compare/v0.4.3...v0.5.1">0.5.1</a> (2019-10-23)</h2>
+<h4 id="features_19">Features</h4>
+<ul>
+<li>
+<p><strong>instagram:</strong> <img alt="✨" class="emojione" src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.7/assets/png/2728.png" title=":sparkles:" /> instagram owner data api. (<a href="https://github.com/sns-sdks/python-facebook/commit/ad9fb89">ad9fb89</a>)</p>
+</li>
+<li>
+<p>Instagram API has refactored. (<a href="https://github.com/sns-sdks/python-facebook/commit/26b75ac">26b75ac</a>)</p>
+</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2019 - 2021 Ikaros kun
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://twitter.com/realllkk520" target="_blank" rel="noopener" title="twitter.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M459.4 151.7c.3 4.5.3 9.1.3 13.6 0 138.7-105.6 298.6-298.6 298.6-59.5 0-114.7-17.2-161.1-47.1 8.4 1 16.6 1.3 25.3 1.3 49.1 0 94.2-16.6 130.3-44.8-46.1-1-84.8-31.2-98.1-72.8 6.5 1 13 1.6 19.8 1.6 9.4 0 18.8-1.3 27.6-3.6-48.1-9.7-84.1-52-84.1-103v-1.3c14 7.8 30.2 12.7 47.4 13.3-28.3-18.8-46.8-51-46.8-87.4 0-19.5 5.2-37.4 14.3-53C87.4 130.8 165 172.4 252.1 176.9c-1.6-7.8-2.6-15.9-2.6-24C249.5 95.1 296.3 48 354.4 48c30.2 0 57.5 12.7 76.7 33.1 23.7-4.5 46.5-13.3 66.6-25.3-7.8 24.4-24.4 44.8-46.1 57.8 21.1-2.3 41.6-8.1 60.4-16.2-14.3 20.8-32.2 39.3-52.6 54.3"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/sns-sdks/python-facebook" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
