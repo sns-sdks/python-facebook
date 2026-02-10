@@ -1,7 +1,7 @@
 """
-    Model class for Message.
+Model class for Message.
 
-    Refer: https://developers.facebook.com/docs/graph-api/reference/message
+Refer: https://developers.facebook.com/docs/graph-api/reference/message
 """
 
 from dataclasses import dataclass

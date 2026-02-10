@@ -1,5 +1,5 @@
 """
-    Albums edge for resource.
+Albums edge for resource.
 """
 
 from typing import Optional, Union

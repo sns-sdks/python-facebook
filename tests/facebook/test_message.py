@@ -1,5 +1,5 @@
 """
-    Tests for message.
+Tests for message.
 """
 
 import responses

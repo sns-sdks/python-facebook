@@ -1,7 +1,7 @@
 """
-    Models for business.
+Models for business.
 
-    Refer: https://developers.facebook.com/docs/marketing-api/reference/business/
+Refer: https://developers.facebook.com/docs/marketing-api/reference/business/
 """
 
 from dataclasses import dataclass

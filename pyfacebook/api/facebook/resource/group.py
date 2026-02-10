@@ -1,5 +1,5 @@
 """
-    Apis for group.
+Apis for group.
 """
 
 from typing import Dict, Optional, Union

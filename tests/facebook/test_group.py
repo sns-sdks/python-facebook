@@ -1,5 +1,5 @@
 """
-    Tests for groups
+Tests for groups
 """
 
 import responses

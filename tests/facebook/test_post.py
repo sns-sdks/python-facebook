@@ -1,5 +1,5 @@
 """
-    Tests for post api
+Tests for post api
 """
 
 import responses

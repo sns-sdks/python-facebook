@@ -1,7 +1,7 @@
 """
-    This is an example for get post detail by FacebookApi class.
+This is an example for get post detail by FacebookApi class.
 
-    Refer: https://developers.facebook.com/docs/graph-api/reference/pagepost
+Refer: https://developers.facebook.com/docs/graph-api/reference/pagepost
 """
 
 import os

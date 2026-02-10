@@ -1,5 +1,5 @@
 """
-    Tests for basic media api.
+Tests for basic media api.
 """
 
 import responses

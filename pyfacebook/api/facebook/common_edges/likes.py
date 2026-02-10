@@ -1,7 +1,7 @@
 """
-    Likes edge for resource.
+Likes edge for resource.
 
-    Refer: https://developers.facebook.com/docs/graph-api/reference/object/likes
+Refer: https://developers.facebook.com/docs/graph-api/reference/object/likes
 """
 
 from typing import Optional, Union

@@ -1,7 +1,7 @@
 """
-    Models for application.
+Models for application.
 
-    Refer: https://developers.facebook.com/docs/graph-api/reference/application
+Refer: https://developers.facebook.com/docs/graph-api/reference/application
 """
 
 from dataclasses import dataclass

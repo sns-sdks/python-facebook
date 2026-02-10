@@ -1,7 +1,7 @@
 """
-    Models for event.
+Models for event.
 
-    Refer: https://developers.facebook.com/docs/graph-api/reference/event
+Refer: https://developers.facebook.com/docs/graph-api/reference/event
 """
 
 from dataclasses import dataclass

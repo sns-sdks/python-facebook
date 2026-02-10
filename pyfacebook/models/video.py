@@ -1,7 +1,7 @@
 """
-    Model for video.
+Model for video.
 
-    Refer: https://developers.facebook.com/docs/graph-api/reference/video/
+Refer: https://developers.facebook.com/docs/graph-api/reference/video/
 """
 
 from dataclasses import dataclass

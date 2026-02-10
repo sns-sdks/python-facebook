@@ -1,5 +1,5 @@
 """
-    Models for common
+Models for common
 """
 
 from dataclasses import dataclass

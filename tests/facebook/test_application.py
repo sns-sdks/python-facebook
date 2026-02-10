@@ -1,5 +1,5 @@
 """
-    Tests for application.
+Tests for application.
 """
 
 import responses

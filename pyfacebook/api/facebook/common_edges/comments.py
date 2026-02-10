@@ -1,5 +1,5 @@
 """
-    Comments edge for resource.
+Comments edge for resource.
 """
 
 from typing import Optional, Union

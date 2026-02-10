@@ -1,5 +1,5 @@
 """
-    Apis for page.
+Apis for page.
 """
 
 from typing import Dict, Optional, Union

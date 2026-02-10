@@ -1,5 +1,5 @@
 """
-    Model classes for instagram basic display.
+Model classes for instagram basic display.
 """
 
 from dataclasses import dataclass

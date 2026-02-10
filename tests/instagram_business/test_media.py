@@ -1,5 +1,5 @@
 """
-    Tests for media.
+Tests for media.
 """
 
 import responses

@@ -1,5 +1,5 @@
 """
-    Tests for likes edges.
+Tests for likes edges.
 """
 
 import responses

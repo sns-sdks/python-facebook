@@ -1,7 +1,7 @@
 """
-    Models for comment.
+Models for comment.
 
-    Refer: https://developers.facebook.com/docs/graph-api/reference/comment
+Refer: https://developers.facebook.com/docs/graph-api/reference/comment
 """
 
 from dataclasses import dataclass

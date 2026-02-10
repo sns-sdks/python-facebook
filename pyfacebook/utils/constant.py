@@ -1,5 +1,5 @@
 """
-    This is default fields for to retrieve data from Facebook graph API.
+This is default fields for to retrieve data from Facebook graph API.
 """
 
 # =============================================

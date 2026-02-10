@@ -1,5 +1,5 @@
 """
-    Extension models for graph api
+Extension models for graph api
 """
 
 from dataclasses import dataclass

@@ -1,5 +1,5 @@
 """
-    Model classes for instagram business.
+Model classes for instagram business.
 """
 
 from dataclasses import dataclass

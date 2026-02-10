@@ -1,7 +1,7 @@
 """
-    Model class for Photo.
+Model class for Photo.
 
-    Refer: https://developers.facebook.com/docs/graph-api/reference/photo/
+Refer: https://developers.facebook.com/docs/graph-api/reference/photo/
 """
 
 from dataclasses import dataclass

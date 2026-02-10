@@ -1,7 +1,7 @@
 """
-    Models for group.
+Models for group.
 
-    Refer: https://developers.facebook.com/docs/graph-api/reference/group
+Refer: https://developers.facebook.com/docs/graph-api/reference/group
 """
 
 from dataclasses import dataclass

@@ -1,5 +1,5 @@
 """
-    Tests for user api
+Tests for user api
 """
 
 import responses

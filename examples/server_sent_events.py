@@ -1,5 +1,5 @@
 """
-    A demo for sample streaming api.
+A demo for sample streaming api.
 """
 
 import json

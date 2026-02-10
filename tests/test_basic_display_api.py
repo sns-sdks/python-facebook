@@ -1,5 +1,5 @@
 """
-    tests for ig basic display api
+tests for ig basic display api
 """
 
 import pytest

@@ -1,5 +1,5 @@
 """
-    Resource base class
+Resource base class
 """
 
 from pyfacebook.api.graph import GraphAPI

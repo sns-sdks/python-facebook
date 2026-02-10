@@ -1,5 +1,5 @@
 """
-    Tests for event.
+Tests for event.
 """
 
 import responses

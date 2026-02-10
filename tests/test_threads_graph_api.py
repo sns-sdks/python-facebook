@@ -1,5 +1,5 @@
 """
-    tests for threads graph api
+tests for threads graph api
 """
 
 import responses

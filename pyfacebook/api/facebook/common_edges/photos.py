@@ -1,5 +1,5 @@
 """
-    Photos edge for resource.
+Photos edge for resource.
 """
 
 from typing import Optional, Union

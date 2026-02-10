@@ -1,5 +1,5 @@
 """
-    Exceptions for library
+Exceptions for library
 """
 
 

@@ -1,5 +1,5 @@
 """
-    Tests for comment.
+Tests for comment.
 """
 
 import responses

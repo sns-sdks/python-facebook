@@ -1,5 +1,5 @@
 """
-    Apis for media.
+Apis for media.
 """
 
 from typing import Dict, Optional, Union

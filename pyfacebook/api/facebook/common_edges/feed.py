@@ -1,5 +1,5 @@
 """
-    Feed edge for resource.
+Feed edge for resource.
 """
 
 from typing import Optional, Union

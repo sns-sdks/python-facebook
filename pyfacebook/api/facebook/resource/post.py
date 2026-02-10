@@ -1,5 +1,5 @@
 """
-    Apis for post.
+Apis for post.
 """
 
 from typing import Dict, Optional, Union

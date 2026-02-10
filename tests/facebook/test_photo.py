@@ -1,5 +1,5 @@
 """
-    Tests for photo api
+Tests for photo api
 """
 
 import pytest

@@ -1,5 +1,5 @@
 """
-    Apis for event.
+Apis for event.
 """
 
 from typing import Dict, Optional, Union

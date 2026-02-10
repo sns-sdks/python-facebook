@@ -1,7 +1,7 @@
 """
-    Models for Attachments
+Models for Attachments
 
-    Refer: https://developers.facebook.com/docs/graph-api/reference/post/attachments/
+Refer: https://developers.facebook.com/docs/graph-api/reference/post/attachments/
 """
 
 from dataclasses import dataclass

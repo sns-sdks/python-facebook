@@ -1,5 +1,5 @@
 """
-    Tests for videos.
+Tests for videos.
 """
 
 import responses
