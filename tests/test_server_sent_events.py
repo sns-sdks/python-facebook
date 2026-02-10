@@ -1,5 +1,5 @@
 """
-    Tests for ServerSentEventAPI
+Tests for ServerSentEventAPI
 """
 
 import random

@@ -1,5 +1,5 @@
 """
-    Videos edge for resource.
+Videos edge for resource.
 """
 
 from typing import Optional, Union

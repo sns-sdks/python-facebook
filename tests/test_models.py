@@ -1,5 +1,5 @@
 """
-    models tests
+models tests
 """
 
 import pyfacebook.models as md

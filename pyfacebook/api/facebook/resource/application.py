@@ -1,5 +1,5 @@
 """
-    Apis for application.
+Apis for application.
 """
 
 from typing import Dict, Optional, Union

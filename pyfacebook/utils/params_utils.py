@@ -1,5 +1,5 @@
 """
-    function's to validate parameters.
+function's to validate parameters.
 """
 
 from typing import Optional, Union

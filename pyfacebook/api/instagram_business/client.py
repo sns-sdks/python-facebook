@@ -1,5 +1,5 @@
 """
-    Client for Instagram Graph API.
+Client for Instagram Graph API.
 """
 
 from pyfacebook.api.base_client import BaseApi

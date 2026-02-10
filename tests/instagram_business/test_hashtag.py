@@ -1,5 +1,5 @@
 """
-    Tests for hashtag.
+Tests for hashtag.
 """
 
 import responses

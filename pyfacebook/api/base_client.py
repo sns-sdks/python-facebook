@@ -1,5 +1,5 @@
 """
-    Base client for API.
+Base client for API.
 """
 
 import inspect

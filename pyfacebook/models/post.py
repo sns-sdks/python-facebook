@@ -1,7 +1,7 @@
 """
-    Models for post.
+Models for post.
 
-    Refer: https://developers.facebook.com/docs/graph-api/reference/post/
+Refer: https://developers.facebook.com/docs/graph-api/reference/post/
 """
 
 from dataclasses import dataclass

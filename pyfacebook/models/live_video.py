@@ -1,7 +1,7 @@
 """
-    Models for live video.
+Models for live video.
 
-    Refer: https://developers.facebook.com/docs/graph-api/reference/live-video/
+Refer: https://developers.facebook.com/docs/graph-api/reference/live-video/
 """
 
 from dataclasses import dataclass

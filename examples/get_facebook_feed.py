@@ -1,7 +1,7 @@
 """
-    This is an example for page get recent 50 feeds
+This is an example for page get recent 50 feeds
 
-    Refer: https://developers.facebook.com/docs/graph-api/reference/page/feed#read
+Refer: https://developers.facebook.com/docs/graph-api/reference/page/feed#read
 """
 
 import json

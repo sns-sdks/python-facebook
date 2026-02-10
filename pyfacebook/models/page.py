@@ -1,7 +1,7 @@
 """
-    Model class for page.
+Model class for page.
 
-    Refer: https://developers.facebook.com/docs/graph-api/reference/page
+Refer: https://developers.facebook.com/docs/graph-api/reference/page
 """
 
 from dataclasses import dataclass

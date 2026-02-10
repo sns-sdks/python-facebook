@@ -1,5 +1,5 @@
 """
-    tests for custom exceptions
+tests for custom exceptions
 """
 
 from pyfacebook import LibraryError, FacebookError

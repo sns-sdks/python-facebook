@@ -1,5 +1,5 @@
 """
-    Client for Instagram Basic Display API.
+Client for Instagram Basic Display API.
 """
 
 from pyfacebook.api.base_client import BaseBasicDisplayApi

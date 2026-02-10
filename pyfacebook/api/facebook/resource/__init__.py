@@ -1,5 +1,5 @@
 """
-    Expose for outside
+Expose for outside
 """
 
 from pyfacebook.api.facebook.resource.application import FacebookApplication

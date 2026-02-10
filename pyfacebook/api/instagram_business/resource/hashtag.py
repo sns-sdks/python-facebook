@@ -1,5 +1,5 @@
 """
-    Apis for hashtag.
+Apis for hashtag.
 """
 
 from typing import Dict, Optional, Union

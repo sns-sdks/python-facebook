@@ -1,5 +1,5 @@
 """
-    Apis for photo.
+Apis for photo.
 """
 
 from typing import Dict, Optional, Union

@@ -1,5 +1,5 @@
 """
-    Tests for business
+Tests for business
 """
 
 import responses

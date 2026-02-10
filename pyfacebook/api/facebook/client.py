@@ -1,5 +1,5 @@
 """
-    Client for facebook graph api
+Client for facebook graph api
 """
 
 from pyfacebook.api.base_client import BaseApi

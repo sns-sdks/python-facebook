@@ -1,5 +1,5 @@
 """
-    Apis for basic user
+Apis for basic user
 """
 
 from typing import Optional, Union

@@ -1,5 +1,5 @@
 """
-    Tests for basic user api.
+Tests for basic user api.
 """
 
 import responses

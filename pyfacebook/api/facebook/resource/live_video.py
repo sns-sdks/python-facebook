@@ -1,5 +1,5 @@
 """
-    Apis for live video.
+Apis for live video.
 """
 
 from typing import Dict, Optional, Union

@@ -1,7 +1,7 @@
 """
-    Model class for album.
+Model class for album.
 
-    Refer: https://developers.facebook.com/docs/graph-api/reference/album/
+Refer: https://developers.facebook.com/docs/graph-api/reference/album/
 """
 
 from dataclasses import dataclass

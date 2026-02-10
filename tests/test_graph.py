@@ -1,5 +1,5 @@
 """
-    tests for base graph api.
+tests for base graph api.
 """
 
 import pytest

@@ -1,7 +1,7 @@
 """
-    Models for place relative.
+Models for place relative.
 
-    Refer: https://developers.facebook.com/docs/graph-api/reference/place/
+Refer: https://developers.facebook.com/docs/graph-api/reference/place/
 """
 
 from dataclasses import dataclass

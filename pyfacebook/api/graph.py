@@ -117,7 +117,7 @@ class GraphAPI:
 
     @staticmethod
     def _build_sleep_seconds_resource(
-        sleep_seconds_mapping: Optional[Dict[int, int]]
+        sleep_seconds_mapping: Optional[Dict[int, int]],
     ) -> Optional[List[PercentSecond]]:
         """
         Sort and convert data

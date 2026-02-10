@@ -1,5 +1,5 @@
 """
-    Tests for publishes.
+Tests for publishes.
 """
 
 import responses

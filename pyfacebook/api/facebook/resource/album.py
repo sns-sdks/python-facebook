@@ -1,5 +1,5 @@
 """
-    Apis for album.
+Apis for album.
 """
 
 from typing import Dict, Optional, Union

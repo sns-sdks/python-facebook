@@ -1,7 +1,7 @@
 """
-    Model class for user.
+Model class for user.
 
-    Refer: https://developers.facebook.com/docs/graph-api/reference/user
+Refer: https://developers.facebook.com/docs/graph-api/reference/user
 """
 
 from dataclasses import dataclass

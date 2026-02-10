@@ -1,7 +1,7 @@
 """
-    Model class for Conversation.
+Model class for Conversation.
 
-    Refer: https://developers.facebook.com/docs/graph-api/reference/conversation
+Refer: https://developers.facebook.com/docs/graph-api/reference/conversation
 """
 
 from dataclasses import dataclass

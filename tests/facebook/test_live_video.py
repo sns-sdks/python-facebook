@@ -1,5 +1,5 @@
 """
-    Tests for live video.
+Tests for live video.
 """
 
 import responses

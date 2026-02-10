@@ -1,5 +1,5 @@
 """
-    Apis for business.
+Apis for business.
 """
 
 from typing import Dict, Optional, Union

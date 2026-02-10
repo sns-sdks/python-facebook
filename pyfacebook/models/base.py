@@ -1,5 +1,5 @@
 """
-    Base model
+Base model
 """
 
 from copy import deepcopy
